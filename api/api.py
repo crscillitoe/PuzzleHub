@@ -20,7 +20,6 @@ db = client[database_name]
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Flask Configuration
 app = Flask(__name__)
-app.config['MONGOALCHEMY_DATABASE'] = 'library'
 
 # TODO - remove this line before going to production
 CORS(app, support_credentials=True)
