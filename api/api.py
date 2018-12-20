@@ -1,19 +1,27 @@
 from flask import Flask
 from flask import jsonify
-import pymongo
+import mysql.connector
 import json
-from bson import ObjectId
 
 # TODO - remove this line before going to production
 from flask_cors import CORS, cross_origin
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# Mongo Configuration
-mongo_db_url  = 'mongodb://localhost:27017/'
-database_name = 'puzzle_hub_database'
+# MySQL Configuration
+with open('config.json') as f:
+    json_data = json.load(f)
 
-client = pymongo.MongoClient(mongo_db_url)
-db = client[database_name]
+mysql_username = json_data['username']
+mysql_password = json_data['password']
+mysql_host     = 'localhost'
+mysql_database = 'puzzleDatabase'
+
+db = mysql.connector.connect(
+    host=mysql_host,
+    user=mysql_username,
+    passwd=mysql_password,
+    database=mysql_database,
+)
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
@@ -26,35 +34,26 @@ CORS(app, support_credentials=True)
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# Json encoder with support for mongodb ObjectId
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Adds a dummy entry into the users table
 @app.route('/addSampleData')
 @cross_origin(supports_credentials=True)
 def add_sample_data():
-    users_table = db['users']
+    cursor = db.cursor()
+
+    sql_query = '''
+        INSERT INTO users (Username, Email, Password)
+        VALUES (%(username)s, %(email)s, %(password)s)
+    '''
     sample_user = {
         "username":"Woohoojin",
         "email":"jingles341@gmail.com",
         "password":"1234567890",
-        "validated":False
     }
 
-    # Check if a user already exists with this email
-    user = users_table.find_one({"email":"jingles341@gmail.com"})
+    cursor.execute(sql_query, sample_user)
+    db.commit()
 
-    if user == None:
-        result = users_table.insert_one(sample_user)
-        return JSONEncoder().encode(result.inserted_id)
-    else:
-        return "User already exists"
+    return jsonify(cursor.lastrowid)
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -62,10 +61,9 @@ def add_sample_data():
 @app.route('/getAllUsers')
 @cross_origin(supports_credentials=True)
 def get_all_users():
-    users_table = db['users']
-    to_return = []
-    # .find() is the equivalent of SELECT *
-    for record in users_table.find():
-        to_return.append(record)
-    return JSONEncoder().encode(to_return)
+    cursor = db.cursor()
+    sql_query = 'SELECT * FROM users'
+    cursor.execute(sql_query)
+    data = cursor.fetchall()
+    return jsonify(data)
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
