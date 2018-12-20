@@ -43,7 +43,7 @@ def register_user():
     if repeat_char.match(password) is not None:
         abort(400, "ERROR: password has repeating chars")
     if check_inc_digit(password):
-        abort(400, "ERROR: pasword has repeating chars")
+        abort(400, "ERROR: pasword has incrementing nums")
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
     #TODO: add a cheeck for a set of common passwords (against a SQL table)
@@ -54,16 +54,16 @@ def register_user():
         abort(400, "ERROR: email is invalid")
 
     #hash the password
-    hash = argon2.hash(password)
+    password_hash = argon2.hash(password)
     
     cursor = db.cursor()
 
     #check if an account already exists with the given username
     sql_query = ''' 
         SELECT * FROM users
-        WHERE Username = %(username)s
+        WHERE Username = %(Username)s
     ''' 
-    cursor.execute(sql_query)
+    cursor.execute(sql_query, post_data)
     data = cursor.fetchall()
 
     if len(data) > 0:
@@ -72,9 +72,9 @@ def register_user():
     #check if an account already exists with the given email
     sql_query = ''' 
         SELECT * FROM users
-        WHERE Username = %(email)s
+        WHERE Username = %(Email)s
     ''' 
-    cursor.execute(sql_query)
+    cursor.execute(sql_query, post_data)
     data = cursor.fetchall()
 
     if len(data) > 0:
@@ -88,21 +88,20 @@ def register_user():
 
     user_entry = {
         "username":str(username),
-        "email":str(password),
-        "password":str(hash),
-        "validated":str(0)
+        "email":str(email),
+        "password":str(password_hash),
     }
 
     cursor.execute(sql_query, user_entry)
     db.commit()
 
-    uid = jsonify(cursor.lastrowid)
+    uid = cursor.lastrowid
     #generate validation id
     vid = uuiid.uuiid4()
 
     sql_query = '''
         INSERT INTO validations(UserId, ValId)
-        VALUES (%(username)s, %(email)s, %(password)s)
+        VALUES (%(userid)s, %(valid)s)
     '''
 
     validation_entry = {
