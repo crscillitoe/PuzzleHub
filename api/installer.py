@@ -24,6 +24,13 @@ def install_tables(db):
             PRIMARY KEY (UserId)
         );
 
+        CREATE TABLE IF NOT EXISTS validations
+        (
+            UserId INT NOT NULL,
+            ValId VARCHAR(128) NOT NULL
+            PRIMARY KEY (UserId) 
+        );
+
         CREATE TABLE IF NOT EXISTS difficulties
         (
             DiffId INT NOT NULL,

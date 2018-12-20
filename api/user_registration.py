@@ -64,18 +64,35 @@ def register_user():
         VALUES (%(username)s, %(email)s, %(password)s)
     '''
 
-    user = {
-        "username":str(useername),
+    user_entry = {
+        "username":str(username),
         "email":str(password),
         "password":str(hash),
+        "validated":str(0)
     }
 
-    cursor.execute(sql_query, sample_user)
+    cursor.execute(sql_query, user_entry)
     db.commit()
 
     uid = jsonify(cursor.lastrowid)
     #generate validation id
     vid = uuiid.uuiid4()
+
+    sql_query = '''
+        INSERT INTO validations(UserId, ValId)
+        VALUES (%(username)s, %(email)s, %(password)s)
+    '''
+
+    validation_entry = {
+        "userid":str(uid),
+        "valid":str(vid)
+    }
+
+    cursor.execute(sql_query, validation_entry)
+    db.commit()
+    
+    #todo: actually send an email with this link
+    return "http://apiurl.com/validateUser/"+vid
     
 
 
