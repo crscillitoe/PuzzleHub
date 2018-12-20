@@ -20,7 +20,7 @@ def login():
 #   GameID: int
 #   Difficulty: int
 # Returns on success:
-#   1
+#   Returns puzzle for given game id and difficulty
 # Returns on failure:
 #   0
 @app.route('/startTimer', methods=['POST'])
