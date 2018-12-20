@@ -1,3 +1,6 @@
+from flask import request
+from datetime import datetime
+
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # TODO - /login
 # Required POST parameters:
@@ -20,12 +23,41 @@ def login():
 #   GameID: int
 #   Difficulty: int
 # Returns on success:
-#   1
+#   Returns puzzle for given game id and difficulty
 # Returns on failure:
 #   0
 @app.route('/startTimer', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def start_timer():
+
+    cursor = db.cursor()
+
+    # sanity checks
+    sql_query = '''
+        SELECT * FROM games WHERE GameID=%(GameID)
+    '''   
+    cursor.execute(sql_query, request.form)
+    db.commit()
+
+    data = cursor.fetchall()
+    
+    if len(data) == 0:
+        return '0'
+    
+    sql_query = '''
+        SELECT * FROM difficulty WHERE Difficulty=%(Difficulty)
+    '''
+
+    cursor.execute(sql_query, request.form)
+    db.commit()
+
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        return '0'
+
+    
+
     return 'TODO'
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
