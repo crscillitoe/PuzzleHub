@@ -23,4 +23,10 @@ def install_tables(db):
             Validated BIT NOT NULL DEFAULT 0,
             PRIMARY KEY (UserId)
         );
+
+        CREATE TABLE IF NOT EXISTS difficulties
+        (
+            DiffId INT NOT NULL,
+            DiffName VARCHAR(16) NOT NULL
+        );
     '''
