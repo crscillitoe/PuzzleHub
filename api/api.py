@@ -52,7 +52,7 @@ def add_sample_data():
 
     if user == None:
         result = users_table.insert_one(sample_user)
-        return JSONEncoder().encode(to_return)
+        return JSONEncoder().encode(result.inserted_id)
     else:
         return "User already exists"
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
