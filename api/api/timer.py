@@ -1,4 +1,7 @@
 from api import app
+from flask import jsonify
+from flask_cors import cross_origin
+from api.database import get_db
 
 # TODO - /startTimer
 # Required POST parameters:
@@ -11,7 +14,7 @@ from api import app
 @app.route('/startTimer', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def start_timer():
-
+    db = get_db()
     cursor = db.cursor()
 
     # GameID sanity check

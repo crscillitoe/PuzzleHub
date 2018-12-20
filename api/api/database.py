@@ -1,4 +1,4 @@
-from api import app
+import json
 import mysql.connector
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -10,12 +10,14 @@ with open('config.json') as f:
 
 mysql_username = json_data['username']
 mysql_password = json_data['password']
-mysql_host     = 'localhost'
+mysql_host     = json_data['host']
 mysql_database = 'puzzleDatabase'
 
-db = mysql.connector.connect(
-    host=mysql_host,
-    user=mysql_username,
-    passwd=mysql_password,
-    database=mysql_database,
-)
+def get_db():
+    db = mysql.connector.connect(
+        host=mysql_host,
+        user=mysql_username,
+        passwd=mysql_password,
+        database=mysql_database
+    )
+    return db

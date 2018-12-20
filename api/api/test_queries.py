@@ -1,43 +1,14 @@
-from flask import Flask
+from api import app
+from flask_cors import cross_origin
 from flask import jsonify
-import mysql.connector
-import json
-
-# TODO - remove this line before going to production
-from flask_cors import CORS, cross_origin
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# MySQL Configuration
-with open('config.json') as f:
-    json_data = json.load(f)
-
-mysql_username = json_data['username']
-mysql_password = json_data['password']
-mysql_host     = 'localhost'
-mysql_database = 'puzzleDatabase'
-
-db = mysql.connector.connect(
-    host=mysql_host,
-    user=mysql_username,
-    passwd=mysql_password,
-    database=mysql_database,
-)
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# Flask Configuration
-app = Flask(__name__)
-
-# TODO - remove this line before going to production
-CORS(app, support_credentials=True)
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+from api.database import get_db
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Adds a dummy entry into the users table
 @app.route('/addSampleData')
 @cross_origin(supports_credentials=True)
 def add_sample_data():
+    db = get_db()
     cursor = db.cursor()
 
     sql_query = '''
@@ -61,6 +32,7 @@ def add_sample_data():
 @app.route('/getAllUsers')
 @cross_origin(supports_credentials=True)
 def get_all_users():
+    db = get_db()
     cursor = db.cursor()
     sql_query = 'SELECT * FROM users'
     cursor.execute(sql_query)
