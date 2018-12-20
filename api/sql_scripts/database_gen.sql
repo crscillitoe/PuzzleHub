@@ -9,3 +9,10 @@ CREATE TABLE IF NOT EXISTS users
     Validated BIT NOT NULL DEFAULT 0,
     PRIMARY KEY (UserId)
 );
+
+/*
+CREATE TABLE IF NOT EXISTS validation
+(
+    ValidationID
+
+);*/
