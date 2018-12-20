@@ -1,4 +1,4 @@
 env
 front-end/node_modules/
 front-end/dist
-api/config.json
+*/config.json
