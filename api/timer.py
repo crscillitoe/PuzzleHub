@@ -1,23 +1,5 @@
-from flask import request
-from datetime import datetime
 
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# TODO - /login
-# Required POST parameters:
-#   Username: string
-#   Password: string
-# Returns on success:
-#   Accept: bool - True
-#   Token: string - Encrypted token for future user validation
-# Returns on failure:
-#   Accept: bool - False
-#   Token: string - Empty string
-@app.route('/login', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def login():
-    return 'TODO'
 
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # TODO - /startTimer
 # Required POST parameters:
 #   GameID: int
@@ -35,14 +17,14 @@ def start_timer():
     # GameID sanity check
     sql_query = '''
         SELECT * FROM games WHERE GameID=%(GameID)s;
-    '''   
+    '''
     cursor.execute(sql_query, request.form)
     db.commit()
     data = cursor.fetchall()
     if len(data) == 0:
         return '0'
     game_id = request.forms["GameID"]
-    
+
     # Difficulty sanity check
     sql_query = '''
         SELECT * FROM difficulty WHERE Difficulty=%(Difficulty)s;
@@ -66,41 +48,10 @@ def start_timer():
     }
 
     sql_query = '''
-        INSERT INTO timers (UserID, GameID, Difficulty, TimeStarted) 
+        INSERT INTO timers (UserID, GameID, Difficulty, TimeStarted)
         VALUES (%(user_id)s, %(game_id)s, %(difficulty)s, %(time_started)s);
     '''
     cursor.execute(sql_query, new_timer)
     db.commit()
 
     return jsonify(cursor.lastrowid)
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# TODO - /stopTimer
-# Required POST parameters:
-#   GameID: int
-#   Difficulty: int
-# Returns on success:
-#   TimeElapsed: int - Time elapsed (milliseconds)
-# Returns on failure:
-#   Error
-@app.route('/stopTimer', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def stop_timer():
-    return 'TODO'
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# TODO - /getLeaderboards
-# Required POST parameters:
-#   GameID: int
-#   Difficulty: int
-# Returns on success:
-#   List <
-#       Username: string
-#       Score: <TBD>
-#   >
-# Returns on failure:
-#   Error
-@app.route('/getLeaderboards', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def stop_timer():
-    return 'TODO'

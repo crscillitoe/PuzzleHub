@@ -8,6 +8,7 @@ from database import *
 # TODO - remove this line before going to production
 from flask_cors import CORS, cross_origin
 
+
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Flask Configuration
 app = Flask(__name__)
