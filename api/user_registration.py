@@ -56,9 +56,31 @@ def register_user():
     #hash the password
     hash = argon2.hash(password)
     
-    #add to table
     cursor = db.cursor()
 
+    #check if an account already exists with the given username
+    sql_query = ''' 
+        SELECT * FROM users
+        WHERE Username = %(username)s
+    ''' 
+    cursor.execute(sql_query)
+    data = cursor.fetchall()
+
+    if len(data) > 0:
+        abort(400, "ERROR: an account with the username already exists")
+
+    #check if an account already exists with the given email
+    sql_query = ''' 
+        SELECT * FROM users
+        WHERE Username = %(email)s
+    ''' 
+    cursor.execute(sql_query)
+    data = cursor.fetchall()
+
+    if len(data) > 0:
+        abort(400, "ERROR: an account with the email already exists")
+
+    #add to table
     sql_query = '''
         INSERT INTO users (Username, Email, Password)
         VALUES (%(username)s, %(email)s, %(password)s)
@@ -94,6 +116,45 @@ def register_user():
     #todo: actually send an email with this link
     return "http://apiurl.com/validateUser/"+vid
     
+@app.route('/validateUser/<vid>')
+@cross_origin(supports_credentials=True)
+def validate_user(vid):
+
+    cursor = db.cursor()
+
+    sql_query = ''' 
+        SELECT * FROM validations
+        WHERE ValId = %(vid)s
+    '''
+    cursor.execute(sql_query)
+    data = cursor.fetchall()
+    
+    if len(data) != 1:
+        abort(400, "ERROR: validation token is not valid")
+
+    uid = data[0][1]
+
+    sql_query = '''
+        UPDATE users
+        SET column5 = 1
+        WHERE UserId = %(uid)s
+    '''
+    cursor.execute(sql_query)
+    db.commit()
+
+    sql_query = '''
+        DELETE FROM validations
+        WHERE ValID = %(vid)s
+    '''    
+    cursor.execute(sql_query)
+    db.commit()
+
+    
+
+
+##################################################
+# HELPERS
+#################################################
 
 
 def check_inc_digit(password):  
