@@ -7,13 +7,14 @@ export class TimerService {
   /*
    *
    */
-  constructor() { }
+  constructor() { 
+  }
 
   /*
    * 1 - Success
    * 0 - Failure
    */
-  int startTimer() { }
-  int pauseTimer() { }
-  int stopTimer() { }
+  startTimer(): number  { return 0; }
+  pauseTimer(): number  { return 0; }
+  stopTimer(): number   { return 0; }
 }

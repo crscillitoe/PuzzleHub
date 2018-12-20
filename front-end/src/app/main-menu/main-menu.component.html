@@ -1,0 +1,12 @@
+<p>
+  main-menu works!
+</p>
+
+
+{{sampleNumber}}
+
+<div *ngFor="let animal of sampleArray; let i=index">
+  <div (click)="objectClicked(animal)">
+    {{animal.name}} : {{animal.num}} {{i}}
+  </div>
+</div>
