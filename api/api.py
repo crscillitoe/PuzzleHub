@@ -20,7 +20,7 @@ db = mysql.connector.connect(
     host=mysql_host,
     user=mysql_username,
     passwd=mysql_password,
-    database=mysql_database
+    database=mysql_database,
 )
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
