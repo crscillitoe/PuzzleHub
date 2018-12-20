@@ -13,7 +13,7 @@ with open('config.json') as f:
 
 mysql_username = json_data['username']
 mysql_password = json_data['password']
-mysql_host     = 'localhost'
+mysql_host     = json_data['host']
 mysql_database = 'puzzleDatabase'
 
 db = mysql.connector.connect(
