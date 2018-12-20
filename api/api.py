@@ -3,27 +3,10 @@ from flask import jsonify
 import mysql.connector
 import json
 
+from database import *
+
 # TODO - remove this line before going to production
 from flask_cors import CORS, cross_origin
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# MySQL Configuration
-with open('config.json') as f:
-    json_data = json.load(f)
-
-mysql_username = json_data['username']
-mysql_password = json_data['password']
-mysql_host     = 'localhost'
-mysql_database = 'puzzleDatabase'
-
-db = mysql.connector.connect(
-    host=mysql_host,
-    user=mysql_username,
-    passwd=mysql_password,
-    database=mysql_database,
-)
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Flask Configuration

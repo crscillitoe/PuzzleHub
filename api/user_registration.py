@@ -7,8 +7,11 @@ import pymongo
 import json
 from bson import ObjectId
 
+from database import *
+
 from passlib.hash import argon2
 import re
+import uuid
 
 user_registration = Blueprint(  'user_registration', __name__, 
                                 template_folder='templates')
@@ -44,14 +47,36 @@ def register_user():
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
     #TODO: add a cheeck for a set of common passwords (against a SQL table)
+    #TODO: add a check for banned characters
     
+    #test that the email is valid 
+    if check_valid_password() is False:
+        abort(400, "ERROR: email is invalid")
+
     #hash the password
     hash = argon2.hash(password)
     
     #add to table
-    #addToSQLTable(username, hash, email)
+    cursor = db.cursor()
 
+    sql_query = '''
+        INSERT INTO users (Username, Email, Password)
+        VALUES (%(username)s, %(email)s, %(password)s)
+    '''
 
+    user = {
+        "username":str(useername),
+        "email":str(password),
+        "password":str(hash),
+    }
+
+    cursor.execute(sql_query, sample_user)
+    db.commit()
+
+    uid = jsonify(cursor.lastrowid)
+    #generate validation id
+    vid = uuiid.uuiid4()
+    
 
 
 def check_inc_digit(password):  
@@ -64,14 +89,16 @@ def check_inc_digit(password):
                 count += 1
             else:
                 last, count = None, 0
-
         except ValueError:
             last, count = None, 0
     
         if count >= 5:
             return True
-
     return False
 
-
+def check_valid_password(email):
+    if len(email) > 7:
+        if re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None:
+            return True
+        return False
 
