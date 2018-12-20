@@ -21,7 +21,7 @@ export class MainMenuComponent implements OnInit {
     console.log(obj);
 
     this.tunnelService.getNum()
-      subscribe( (data) => {
+      .subscribe( (data) => {
         console.log(data);
       });
   }
