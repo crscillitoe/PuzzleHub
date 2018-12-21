@@ -71,10 +71,6 @@ def register_user():
     if check_valid_email(email) is False:
         abort(400, "ERROR: email is invalid")
 
-    # TODO: test when I can test smtp properly
-    #if check_bad_email(email) is False:
-    #    abort(400, "ERROR: domain is faulty")
-
     if check_blacklisted_email(email) is False:
         abort(400, "ERROR: domain is blacklisted")
 
@@ -126,10 +122,10 @@ def register_user():
 
     user_id = cursor.lastrowid
     #generate validation id
-    validation_id = uuid.uuiid4()
+    validation_id = uuid.uuid4()
 
     sql_query = '''
-        INSERT INTO validations(UserId, ValId)
+        INSERT INTO validations(UserID, ValidationID)
         VALUES (%(user_id)s, %(validation_id)s)
     '''
 
@@ -142,10 +138,11 @@ def register_user():
     db.commit()
  
     validation_url = "http://apiurl.com/validateUser/"+str(validation_id)
-    send_validation_email(validation_url, email)
+    #send_validation_email(validation_url, email)
 
     print("We got to the end!")
-    return "Validation email sent!"
+    #return "Validation email sent!"
+    return validation_url
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     
 @app.route('/validateUser/<vid>')
@@ -157,7 +154,7 @@ def validate_user(vid):
 
     sql_query = ''' 
         SELECT * FROM validations
-        WHERE ValId = %(vid)s
+        WHERE ValdationID = %(vid)s
     '''
     cursor.execute(sql_query)
     data = cursor.fetchall()
@@ -213,30 +210,6 @@ def check_valid_email(email):
         if re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email) is not None:
             return True
     return False
-
-#check if the SMTP server associated with the email actually exists and is running
-def check_bad_email(email):
-    print("test")
-    domain_name = email.split('@')[1]
-    records = dns.resolver.query(domain_name, 'MX')
-    mx_record = str(records[0].exchange)
-
-    host = socket.gethostname()
-    server = smtplib.SMTP()
-    server.set_debuglevel(0)
-
-    print(mx_record)
-    server.connect(mx_record)
-    print("test")
-    server.hello(host)
-    server.mail('ecksdee@domain.com')
-    code, message = server.rcpt(str(email))
-    server.quit()
-
-    if code == 250:
-        return True
-    else:
-        return False
 
 #check if the email is coming from some meme temporary account
 def check_blacklisted_email(email):
