@@ -12,7 +12,16 @@ from database import *
 from passlib.hash import argon2
 import re
 import uuid
+import dns.resolver
+import socket
+import smtplib
+import urllib.request
+from email.mime.text import MIMEText
 
+WHOIS_APIKEY = '83709b8870cc5328217b341f63414c9d'
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# Registers a user account
 user_registration = Blueprint(  'user_registration', __name__, 
                                 template_folder='templates')
 
@@ -38,20 +47,29 @@ def register_user():
     #test that the password meets our guidelines
     if len(password) < 8:
         abort(400, "ERROR: password length too short")
+
     if len(password) > 64:
         abort(400, "ERROR: password length too long")
+
     if repeat_char.match(password) is not None:
         abort(400, "ERROR: password has repeating chars")
-    if check_inc_digit(password):
+
+    if check_digits(password):
         abort(400, "ERROR: pasword has incrementing nums")
+
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
-    #TODO: add a cheeck for a set of common passwords (against a SQL table)
+
+    #TODO: add a cheeck for a set of common passwords (from some API)
     #TODO: add a check for banned characters
     
     #test that the email is valid 
-    if check_valid_password() is False:
+    if check_valid_email(email) is False:
         abort(400, "ERROR: email is invalid")
+    if check_bad_email(email) is False:
+        abort(400, "ERROR: domain is faulty")
+    if check_blacklisted_email(email) is False:
+        abort(400, "ERROR: domain is blacklisted")
 
     #hash the password
     password_hash = argon2.hash(password)
@@ -111,9 +129,12 @@ def register_user():
 
     cursor.execute(sql_query, validation_entry)
     db.commit()
-    
-    #todo: actually send an email with this link
-    return "http://apiurl.com/validateUser/"+vid
+ 
+    vid_url = "http://apiurl.com/validateUser/"+str(vid)
+    send_validation_email(vid_url, email)
+
+    return "Validation email sent!"
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     
 @app.route('/validateUser/<vid>')
 @cross_origin(supports_credentials=True)
@@ -156,7 +177,7 @@ def validate_user(vid):
 #################################################
 
 
-def check_inc_digit(password):  
+def check_digits(password):  
     count, num = None, 0 
     for char in password:
         try:
@@ -173,9 +194,59 @@ def check_inc_digit(password):
             return True
     return False
 
-def check_valid_password(email):
+#check that the email provided looks like an actual email
+def check_valid_email(email):
     if len(email) > 7:
-        if re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None:
+        if re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) is not None:
             return True
+    return False
+
+#check if the SMTP server associated with the email actually exists and is running
+def check_bad_email(email):
+    domain_name = email.split('@')[1]
+    records = dns.resolver.query(domain_name, 'MX')
+    mx_record = str(records[0].exchange)
+
+    host = socket.gethostname()
+    server = smtplib.SMTP()
+    server.set_debuglevel(0)
+
+    server.connect(mx_record)
+    server.hello(host)
+    server.mail('ecksdee@domain.com')
+    code, message = server.rcpt(str(email))
+    server.quit()
+
+    if code == 250:
+        return True
+    else:
         return False
 
+#check if the email is coming from some meme temporary account
+def check_blacklisted_email(email):
+    domain_name = email.split('@')[1]
+    request = "http://api.whoapi.com/?domain=" + domain_name + "&r=blacklist&apikey=" + WHOIS_APIKEY
+    try:
+        content = urllib.request.urlopen(request).read()
+    except URLError:
+        return True
+
+    j = json.loads(content)
+    blacklist = int(j['blacklisted'])
+
+    if blacklist == 0:
+        return True
+    else:
+        return False
+
+#sends a validation email to validate a new account
+def send_validation_email(vid_url, email):
+    sender_email = 'noreply@puzzle-hub.com'
+    msg = MIMEText("Please click on the link to verify:\n" + str(vid_url))
+    msg['Subject'] = 'PuzzleHub Validation Email'
+    msg['From'] = sender_email
+    msg['To'] = email
+
+    s = smtplib.SMTP('localhost')
+    s.sendmail(sender_email, [email], msg.asstring())
+    s.quit()
