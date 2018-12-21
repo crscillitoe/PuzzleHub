@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 from werkzeug.exceptions import BadRequestKeyError
 from flask import jsonify
 import json
-from bson import ObjectId
+#from bson import ObjectId
 from passlib.hash import argon2
 import re
 import uuid
@@ -45,7 +45,7 @@ def register_user():
         abort(400, "ERROR: username length too long")
 
     repeat_char = re.compile(r'(.)\1\1\1\1\1')
-    # replace this with the actual name of the website
+    # TODO: replace this with the actual name of the website
     website_name = re.compile(r's[a@]mp[l1][e3]', re.IGNORECASE)
 
     # test that the password meets our guidelines
@@ -58,8 +58,8 @@ def register_user():
     if repeat_char.match(password) is not None:
         abort(400, "ERROR: password has repeating chars")
 
-    if check_digits(password):
-        abort(400, "ERROR: pasword has incrementing nums")
+    #if check_digits(password):
+    #    abort(400, "ERROR: pasword has incrementing nums")
 
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
@@ -70,8 +70,11 @@ def register_user():
     # test that the email is valid 
     if check_valid_email(email) is False:
         abort(400, "ERROR: email is invalid")
-    if check_bad_email(email) is False:
-        abort(400, "ERROR: domain is faulty")
+
+    # TODO: test when I can test smtp properly
+    #if check_bad_email(email) is False:
+    #    abort(400, "ERROR: domain is faulty")
+
     if check_blacklisted_email(email) is False:
         abort(400, "ERROR: domain is blacklisted")
 
@@ -123,7 +126,7 @@ def register_user():
 
     user_id = cursor.lastrowid
     #generate validation id
-    validation_id = uuiid.uuiid4()
+    validation_id = uuid.uuiid4()
 
     sql_query = '''
         INSERT INTO validations(UserId, ValId)
@@ -141,6 +144,7 @@ def register_user():
     validation_url = "http://apiurl.com/validateUser/"+str(validation_id)
     send_validation_email(validation_url, email)
 
+    print("We got to the end!")
     return "Validation email sent!"
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     
@@ -206,12 +210,13 @@ def check_digits(password):
 #check that the email provided looks like an actual email
 def check_valid_email(email):
     if len(email) > 7:
-        if re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) is not None:
+        if re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email) is not None:
             return True
     return False
 
 #check if the SMTP server associated with the email actually exists and is running
 def check_bad_email(email):
+    print("test")
     domain_name = email.split('@')[1]
     records = dns.resolver.query(domain_name, 'MX')
     mx_record = str(records[0].exchange)
@@ -220,7 +225,9 @@ def check_bad_email(email):
     server = smtplib.SMTP()
     server.set_debuglevel(0)
 
+    print(mx_record)
     server.connect(mx_record)
+    print("test")
     server.hello(host)
     server.mail('ecksdee@domain.com')
     code, message = server.rcpt(str(email))
