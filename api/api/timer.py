@@ -2,7 +2,7 @@ from api import app
 from flask import jsonify
 from flask import request
 from flask_cors import cross_origin
-from datetime import datetime
+from random import randint
 from api.database import get_db
 from api.auth import decrypt_token
 from api.auth import is_user_authenticated
@@ -38,7 +38,7 @@ def start_timer():
         "user_id":user_id,
         "game_id":game_id,
         "difficulty":difficulty,
-        "time_started":datetime.utcnow()
+        "seed":randint(0, 2000000000)
     }
 
     cursor = db.cursor()
@@ -57,20 +57,18 @@ def start_timer():
 
         cursor = db.cursor()
         sql_query = '''
-            INSERT INTO timers (UserID, GameID, Difficulty, TimeStarted)
-            VALUES (%(user_id)s, %(game_id)s, %(difficulty)s, %(time_started)s);
+            INSERT INTO timers (UserID, GameID, Difficulty, Seed, TimeStarted)
+            VALUES (%(user_id)s, %(game_id)s, %(difficulty)s, %(seed)s, NOW(3));
         '''
         cursor.execute(sql_query, new_timer)
         db.commit()
         cursor.close()
 
-        return jsonify(cursor.lastrowid)
-
     else:
 
         cursor = db.cursor()
         sql_query = '''
-            UPDATE timers SET TimeStarted=%(time_started)s WHERE 
+            UPDATE timers SET Seed=%(seed)s, TimeStarted=NOW(3) WHERE 
                 UserID=%(user_id)s AND
                 GameID=%(game_id)s AND
                 Difficulty=%(difficulty)s;        
@@ -79,7 +77,7 @@ def start_timer():
         db.commit()
         cursor.close()
 
-        return jsonify(cursor.lastrowid)
+    return jsonify({"seed":new_timer['seed']})
 
 # ------------------------------------------------------------ #
 
