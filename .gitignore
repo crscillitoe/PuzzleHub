@@ -1,2 +1,5 @@
 api/config.json
+api/api.egg-info/
+api/api/__pycache__/
 front-end/node_modules
+
