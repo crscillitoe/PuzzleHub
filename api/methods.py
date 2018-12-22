@@ -35,22 +35,6 @@ def get_leaderboards():
     return 'TODO'
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# TODO - /changePassword
-# Required POST parameters:
-#   OldPassword: string
-#   NewPassword: string
-# Returns on success:
-#   1
-# Returns on failure:
-#   Incorrect Old Password: -1
-#   Invalid New Password: -2
-#   Throw an error on any other failure
-@app.route('/changePassword', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def change_password():
-    return 'TODO'
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # TODO - /getPersonalBest
 # Required POST parameters:
 #   GameID
