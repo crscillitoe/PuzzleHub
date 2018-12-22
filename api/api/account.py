@@ -14,10 +14,12 @@ import dns.resolver
 import socket
 import smtplib
 import urllib.request
-from api.login import is_password_valid
+import hashlib
+import requests
 from email.mime.text import MIMEText
 from api.database import get_db
 
+xstr = lambda s: s or ""
 
 with open('config.json') as f:
     json_data = json.load(f)
@@ -65,7 +67,7 @@ def register_user():
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
 
-    if not is_password_valid(password):
+    if is_pwned_password(password):
         abort(400, "ERROR: password is on list of banned passwords") 
     
     # TODO: add a check for banned characters
@@ -182,12 +184,88 @@ def validate_user(vid):
     cursor.execute(sql_query)
     db.commit()
 
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /changePassword
+# Required POST parameters:
+#   OldPassword: string
+#   NewPassword: string
+# Returns on success:
+#   Accept: bool - True
+# Returns on failure:
+#   Accept: bool - False
+@app.route('/changePassword', methods=['POST'])    
+@cross_origin(supports_credentials=True)
+def change_password():
     
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            abort(500, 'Token verification failed')
+    except:
+        abort(500, 'Token verification failed')
 
+    try:
+        old_password = request.form["OldPassword"]
+    except:
+        abort(500, 'OldPassword not found')
+
+    try:
+        new_password = request.form["NewPassword"]
+    except:
+        abort(500, 'NewPassword not found')
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        SELECT Password FROM users WHERE UserID=%(user_id)s;
+    '''
+    query_model = {
+        "user_id":user_id,
+        "new_password":argon2.using(time_cost=160, memory_cost=10240, parallelism=8).hash(new_password)
+    }
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+    if len(data) == 0:
+        abort(500, 'UserID does not exist')
+    cursor.close()
+
+    old_hashed_password = (data[0])[0]
+    if not argon2.verify(old_password, old_hashed_password):
+        abort(400, 'OldPassword not correct')
+
+    cursor = db.cursor()
+    sql_query = '''
+        UPDATE users SET Password=%(new_password)s WHERE UserID=%(user_id)s;
+    '''
+    cursor.execute(sql_query, query_model)
+    db.commit()
+    cursor.close()
+
+    return jsonify({"Accept":"True"})
 
 ##################################################
 # HELPERS
 #################################################
+
+# is_pwned_password
+# Parameters:
+#   password: string
+# Return value:
+#   bool
+#       False - indicates password is not in haveibeenpwned database
+#       True - indicates password is in the database
+def is_pwned_password(password):
+    hash_pass = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+    url = "https://api.pwnedpasswords.com/range/" + hash_pass[0:5]
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        if hash_pass[5:] in response.text:
+            return True
+    return False
 
 
 def check_digits(password):  
