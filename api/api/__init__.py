@@ -11,3 +11,4 @@ CORS(app, support_credentials=True)
 import api.timer
 import api.test_queries
 import api.registration
+import api.test_encryption
