@@ -1,5 +1,6 @@
 from api import app
 from flask import jsonify
+from flask import abort
 from flask import request
 from flask_cors import cross_origin
 from random import randint
@@ -33,15 +34,21 @@ def start_timer():
     if user_id == -1:
         return '-1'
 
+    try:
+        game_id = request.form["GameID"]
+    except:
+        abort(500, 'GameID not found')
+
+    try:
+        difficulty = request.form["Difficulty"]
+    except:
+        abort(500, 'Difficulty not found')
+
     db = get_db()
 
     if (start_timer_sanity_checks(db, request.form) != 0):
         return '-1'
 
-    # TODO: extract user_id from encrypted token sent with request
-    # Compile values for new timer entry
-    game_id = request.form["GameID"]
-    difficulty = request.form["Difficulty"]
     new_timer = {
         "user_id":user_id,
         "game_id":game_id,

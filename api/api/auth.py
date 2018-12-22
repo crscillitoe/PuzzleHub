@@ -18,7 +18,7 @@ def get_user_id(encrypted_token):
     token = decrypt_token(encrypted_token)
     try:
         token_data = json.loads(token)
-        return token['user_id']
+        return token_data['user_id']
     except:
         return -1
 
