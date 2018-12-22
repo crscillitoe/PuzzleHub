@@ -17,6 +17,7 @@ import urllib.request
 import hashlib
 import requests
 from email.mime.text import MIMEText
+from api.auth import get_user_id
 from api.database import get_db
 
 xstr = lambda s: s or ""
@@ -31,9 +32,9 @@ WHOIS_APIKEY = json_data['who_is_api_key']
 @app.route('/registerUser', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def register_user():
+
     db = get_db()
-    #post_data = request.form
-    post_data = request.get_json(force=True)
+    post_data = request.form
 
     try:
         username = post_data["Username"]
@@ -42,33 +43,13 @@ def register_user():
     except BadRequestKeyError:
         # TODO - specify which field was not found
         abort(400, "ERROR: malformed post request")
-    
+   
     # check that the username meets our guidelines 
     if len(username) > 16:
         abort(400, "ERROR: username length too long")
 
-    repeat_char = re.compile(r'(.)\1\1\1\1\1')
-    # TODO: replace this with the actual name of the website
-    website_name = re.compile(r's[a@]mp[l1][e3]', re.IGNORECASE)
 
-    # test that the password meets our guidelines
-    if len(password) < 8:
-        abort(400, "ERROR: password length too short")
-
-    if len(password) > 64:
-        abort(400, "ERROR: password length too long")
-
-    if repeat_char.match(password) is not None:
-        abort(400, "ERROR: password has repeating chars")
-
-    if check_digits(password):
-        abort(400, "ERROR: pasword has incrementing nums")
-
-    if website_name.match(password) is not None:
-        abort(400, "ERROR: password has name of website")
-
-    if is_pwned_password(password):
-        abort(400, "ERROR: password is on list of banned passwords") 
+    check_is_valid_password(password)
     
     # TODO: add a check for banned characters
     
@@ -214,6 +195,10 @@ def change_password():
     except:
         abort(500, 'NewPassword not found')
 
+    check_is_valid_password(new_password)
+    if (new_password == old_password):
+        abort(400, 'New password cannot be the same as the old password')
+
     db = get_db()
 
     cursor = db.cursor()
@@ -247,6 +232,35 @@ def change_password():
 ##################################################
 # HELPERS
 #################################################
+
+# check_is_valid_password
+# Parameters:
+#   password: string
+# Return value:
+#   void (aborts API call if password is malformed)
+def check_is_valid_password(password):
+    repeat_char = re.compile(r'(.)\1\1\1\1\1')
+    # TODO: replace this with the actual name of the website
+    website_name = re.compile(r's[a@]mp[l1][e3]', re.IGNORECASE)
+
+    # test that the password meets our guidelines
+    if len(password) < 8:
+        abort(400, "ERROR: password length too short")
+
+    if len(password) > 64:
+        abort(400, "ERROR: password length too long")
+
+    if repeat_char.match(password) is not None:
+        abort(400, "ERROR: password has repeating chars")
+
+    if check_digits(password):
+        abort(400, "ERROR: pasword has incrementing nums")
+
+    if website_name.match(password) is not None:
+        abort(400, "ERROR: password has name of website")
+
+    if is_pwned_password(password):
+        abort(400, "ERROR: password is on list of banned passwords")
 
 # is_pwned_password
 # Parameters:
