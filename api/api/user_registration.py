@@ -58,8 +58,8 @@ def register_user():
     if repeat_char.match(password) is not None:
         abort(400, "ERROR: password has repeating chars")
 
-    #if check_digits(password):
-    #    abort(400, "ERROR: pasword has incrementing nums")
+    if check_digits(password):
+        abort(400, "ERROR: pasword has incrementing nums")
 
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
