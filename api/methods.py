@@ -18,46 +18,48 @@ def login():
     return 'TODO'
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# TODO - /startTimer
-# Required POST parameters:
-#   GameID: int
-#   Difficulty: int
-# Returns on success:
-#   Returns puzzle for given game id and difficulty
-# Returns on failure:
-#   0
-@app.route('/startTimer', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def start_timer():
-    return 'TODO'
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# TODO - /stopTimer
-# Required POST parameters:
-#   GameID: int
-#   Difficulty: int
-# Returns on success:
-#   TimeElapsed: int - Time elapsed (milliseconds)
-# Returns on failure:
-#   Error
-@app.route('/stopTimer', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def stop_timer():
-    return 'TODO'
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # TODO - /getLeaderboards
 # Required POST parameters:
 #   GameID: int
 #   Difficulty: int
 # Returns on success:
-#   List <
+#   List (length 10) <
 #       Username: string
-#       Score: <TBD>
+#       Time: TimeString
 #   >
 # Returns on failure:
-#   Error
+#   No return, throw error on failure.
 @app.route('/getLeaderboards', methods=['POST'])
 @cross_origin(supports_credentials=True)
-def stop_timer():
+def get_leaderboards():
+    return 'TODO'
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# TODO - /changePassword
+# Required POST parameters:
+#   OldPassword: string
+#   NewPassword: string
+# Returns on success:
+#   1
+# Returns on failure:
+#   Incorrect Old Password: -1
+#   Invalid New Password: -2
+#   Throw an error on any other failure
+@app.route('/changePassword', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def change_password():
+    return 'TODO'
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# TODO - /getPersonalBest
+# Required POST parameters:
+#   GameID
+#   Difficulty
+# Returns on success:
+#   PersonalBest: TimeString (return -1 if no time on record)
+# Returns on failure:
+#   No return, throw error on failure.
+@app.route('/getPersonalBest', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_personal_best():
     return 'TODO'
