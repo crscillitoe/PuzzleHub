@@ -12,6 +12,3 @@ def is_password_valid(password):
         if hash_pass[5:] in response.text:
             return False
     return True
-
-print(is_password_valid("123456789"))
-print(is_password_valid("watashino_fa3f3ap"))

@@ -14,6 +14,7 @@ import dns.resolver
 import socket
 import smtplib
 import urllib.request
+from api.login import is_password_valid
 from email.mime.text import MIMEText
 from api.database import get_db
 
@@ -64,7 +65,9 @@ def register_user():
     if website_name.match(password) is not None:
         abort(400, "ERROR: password has name of website")
 
-    # TODO: add a cheeck for a set of common passwords (from some API)
+    if not is_password_valid(password):
+        abort(400, "ERROR: password is on list of banned passwords") 
+    
     # TODO: add a check for banned characters
     
     # test that the email is valid 
