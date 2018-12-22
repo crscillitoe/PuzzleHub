@@ -28,10 +28,9 @@ xstr = lambda s: s or ""
 def start_timer():
     try:
         user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1
+            return -1
     except:
-        return '-1'
-
-    if user_id == -1:
         return '-1'
 
     try:
