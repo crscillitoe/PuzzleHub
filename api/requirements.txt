@@ -2,3 +2,6 @@ Flask
 flask-cors
 mysql-connector-python
 pycrypto
+passlib
+dnspython
+argon2_cffi
