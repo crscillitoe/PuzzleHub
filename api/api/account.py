@@ -19,6 +19,7 @@ import requests
 from email.mime.text import MIMEText
 from api.auth import get_user_id
 from api.database import get_db
+from api.auth import encrypt_token
 
 xstr = lambda s: s or ""
 
@@ -131,39 +132,101 @@ def register_user():
     return validation_url
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     
-@app.route('/validateUser/<vid>')
+@app.route('/validateUser/<validation_id>')
 @cross_origin(supports_credentials=True)
-def validate_user(vid):
+def validate_user(validation_id):
     db = get_db()
 
     cursor = db.cursor()
+    query_params = {
+        'validation_id':validation_id
+    }
 
     sql_query = ''' 
-        SELECT * FROM validations
-        WHERE ValdationID = %(vid)s
+        SELECT UserID FROM validations
+        WHERE ValidationID = %(validation_id)s
     '''
-    cursor.execute(sql_query)
+    cursor.execute(sql_query, query_params)
     data = cursor.fetchall()
     
     if len(data) != 1:
         abort(400, "ERROR: validation token is not valid")
 
-    uid = data[0][1]
+    user_id = (data[0])[0]
+    query_params = {
+        'validation_id':validation_id,
+        'user_id':user_id
+    }
 
     sql_query = '''
         UPDATE users
-        SET column5 = 1
-        WHERE UserId = %(uid)s
+        SET Validated = 1
+        WHERE UserID = %(user_id)s
     '''
-    cursor.execute(sql_query)
+    cursor.execute(sql_query, query_params)
     db.commit()
 
     sql_query = '''
         DELETE FROM validations
-        WHERE ValID = %(vid)s
+        WHERE ValidationID = %(validation_id)s
     '''    
-    cursor.execute(sql_query)
+    cursor.execute(sql_query, query_params)
     db.commit()
+
+    return 'User Validated'
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /login
+# Required POST parameters:
+#   Username: string
+#   Password: string
+# Returns on success:
+#   Accept: bool - True
+#   Token: string - Encrypted token for future user validation
+# Returns on failure:
+#   Accept: bool - False
+#   Token: string - Empty string
+@app.route('/login', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def login():
+    try:
+        username = request.form["Username"]
+    except:
+        abort(500, 'Username not found')
+
+    try:
+        password = request.form["Password"]
+    except:
+        abort(500, 'Password not found')
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        SELECT Password, UserID, NOW(3), Validated AS CurDate 
+        FROM users WHERE Username=%(username)s;
+    '''
+    query_model = {
+        "username":username
+    }
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+    if len(data) == 0:
+        abort(500, 'Username not found')
+
+    hashed_pw = (data[0])[0]
+    validated = (data[0])[3]
+    if not validated or not argon2.verify(password, hashed_pw):
+        return jsonify({'Accept':False, 'Token':''})
+    else:
+        user_id = (data[0])[1]
+        curr_date = (data[0])[2]
+        to_encrypt = str({'user_id':user_id, 'time_issued':str(curr_date)})
+
+        print(to_encrypt)
+
+        encrypted_token = encrypt_token(to_encrypt).decode()
+        return jsonify({'Accept':True, 'Token':encrypted_token})
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /changePassword
@@ -227,7 +290,7 @@ def change_password():
     db.commit()
     cursor.close()
 
-    return jsonify({"Accept":"True"})
+    return jsonify({"Accept":True})
 
 ##################################################
 # HELPERS
