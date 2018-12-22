@@ -188,15 +188,15 @@ def validate_user(vid):
 
 
 def check_digits(password):  
-    count, num = None, 0 
+    last, count = None, 0 
     for char in password:
         try:
-            num = int(char)
-            if (last is None) or (last+1 == num):
-                last = num
+            curr = int(char)
+            if (last is None) or (last + 1 == curr):
+                last = curr
                 count += 1
             else:
-                last, count = None, 0
+                last, count = None, 1
         except ValueError:
             last, count = None, 0
     
