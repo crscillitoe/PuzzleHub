@@ -221,7 +221,7 @@ def login():
     else:
         user_id = (data[0])[1]
         curr_date = (data[0])[2]
-        to_encrypt = str({'user_id':user_id, 'time_issued':str(curr_date)})
+        to_encrypt = json.dumps({"user_id":user_id, "time_issued":str(curr_date)})
 
         print(to_encrypt)
 

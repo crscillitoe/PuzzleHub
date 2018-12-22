@@ -21,14 +21,12 @@ xstr = lambda s: s or ""
 #   -1
 
 @app.route('/startTimer', methods=['POST'])
-# TODO: remove before moving to production
 @cross_origin(supports_credentials=True)
-
 def start_timer():
     try:
         user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
         if user_id == -1:
-            return -1
+            return '-1'
     except:
         return '-1'
 
