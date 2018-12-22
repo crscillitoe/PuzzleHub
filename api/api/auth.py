@@ -14,10 +14,13 @@ unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 
 password = json_data['encryption_password']
 
-def is_user_authenticated(encrypted_token):
+def get_user_id(encrypted_token):
     token = decrypt_token(encrypted_token)
-    token_data = json.load(token)
-    return True # TODO - parse token
+    try:
+        token_data = json.loads(token)
+        return token_data['user_id']
+    except:
+        return -1
 
 def decrypt_token(token):
     private_key = hashlib.sha256(password.encode("utf-8")).digest()

@@ -1,11 +1,14 @@
 from api import app
 from flask import jsonify
+from flask import abort
 from flask import request
 from flask_cors import cross_origin
 from random import randint
 from api.database import get_db
 from api.auth import decrypt_token
-from api.auth import is_user_authenticated
+from api.auth import get_user_id
+
+xstr = lambda s: s or ""
 
 # ============================================================ #
 
@@ -23,17 +26,29 @@ from api.auth import is_user_authenticated
 @cross_origin(supports_credentials=True)
 
 def start_timer():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+    except:
+        return '-1'
+
+    if user_id == -1:
+        return '-1'
+
+    try:
+        game_id = request.form["GameID"]
+    except:
+        abort(500, 'GameID not found')
+
+    try:
+        difficulty = request.form["Difficulty"]
+    except:
+        abort(500, 'Difficulty not found')
 
     db = get_db()
 
     if (start_timer_sanity_checks(db, request.form) != 0):
         return '-1'
 
-    # TODO: extract user_id from encrypted token sent with request
-    # Compile values for new timer entry
-    game_id = request.form["GameID"]
-    difficulty = request.form["Difficulty"]
-    user_id = "1"
     new_timer = {
         "user_id":user_id,
         "game_id":game_id,
