@@ -5,7 +5,9 @@ from flask_cors import cross_origin
 from random import randint
 from api.database import get_db
 from api.auth import decrypt_token
-from api.auth import is_user_authenticated
+from api.auth import get_user_id
+
+xstr = lambda s: s or ""
 
 # ============================================================ #
 
@@ -23,6 +25,13 @@ from api.auth import is_user_authenticated
 @cross_origin(supports_credentials=True)
 
 def start_timer():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+    except:
+        return '-1'
+
+    if user_id == -1:
+        return '-1'
 
     db = get_db()
 
@@ -33,7 +42,6 @@ def start_timer():
     # Compile values for new timer entry
     game_id = request.form["GameID"]
     difficulty = request.form["Difficulty"]
-    user_id = "1"
     new_timer = {
         "user_id":user_id,
         "game_id":game_id,
