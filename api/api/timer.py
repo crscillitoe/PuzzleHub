@@ -11,8 +11,7 @@ from api.auth import get_user_id
 xstr = lambda s: s or ""
 
 # ============================================================ #
-
-# TODO - /startTimer
+# /startTimer
 # Required POST parameters:
 #   GameID: int
 #   Difficulty: int
@@ -28,7 +27,7 @@ xstr = lambda s: s or ""
 def start_timer():
     try:
         user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
-        if user_id == -1
+        if user_id == -1:
             return -1
     except:
         return '-1'
@@ -45,7 +44,7 @@ def start_timer():
 
     db = get_db()
 
-    if (start_timer_sanity_checks(db, request.form) != 0):
+    if (timer_sanity_checks(db, request.form) != 0):
         return '-1'
 
     new_timer = {
@@ -93,9 +92,125 @@ def start_timer():
 
     return jsonify({"seed":new_timer['seed']})
 
-# ------------------------------------------------------------ #
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /stopTimer
+# Required POST parameters:
+#   GameID: int
+#   Difficulty: int
+#   BoardSolution: string
+# Returns on success:
+#   TimeElapsed: TimeString (HH:MM:SS.mmm)
+#   NewRecord: Bool - Indicates if the current time is better than the previous
+# Returns on failure:
+#   -1
+@app.route('/stopTimer', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def stop_timer():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            return -1
+    except:
+        return '-1'
 
-def start_timer_sanity_checks(db, form_values):
+    try:
+        game_id = request.form["GameID"]
+    except:
+        abort(500, 'GameID not found')
+
+    try:
+        difficulty = request.form["Difficulty"]
+    except:
+        abort(500, 'Difficulty not found')
+
+    try:
+        board_solution = request.form["BoardSolution"]
+    except:
+        abort(500, 'BoardSolution not found')
+
+    db = get_db()
+
+    if (timer_sanity_checks(db, request.form) != 0):
+        return '-1'
+
+    cursor = db.cursor()
+    sql_query = '''
+        SELECT Seed, TIMEDIFF(NOW(3), TimeStarted) AS TimeElapsed FROM timers
+        WHERE
+            UserID = %(user_id)s AND
+            GameID = %(game_id)s AND
+            Difficulty = %(difficulty)s;
+    '''
+    query_model = {
+        "user_id":user_id,
+        "game_id":game_id,
+        "difficulty":difficulty
+    }
+    cursor.execute(sql_query, query_model)
+
+    data = cursor.fetchall()
+    if len(data) == 0:
+        return -1
+    cursor.close()
+
+    seed = (data[0])[0]
+    time_elapsed = (data[0])[1]
+
+    # Check if a leaderboard entry exists
+    cursor = db.cursor()
+    sql_query = '''
+        SELECT TimeElapsed FROM leaderboards WHERE
+            UserID=%(user_id)s AND 
+            GameID=%(game_id)s AND 
+            Difficulty=%(difficulty)s;
+    '''
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+    cursor.close()
+
+    new_record = False
+
+    if len(data) == 0:
+        # Insert new leaderboard entry for this user
+        new_record = True
+        sql_query = '''
+            INSERT INTO leaderboards (UserID, GameID, Difficulty, Seed, TimeElapsed, BoardSolution)
+            VALUES (%(user_id)s, %(game_id)s, %(difficulty)s, %(seed)s, %(time_elapsed)s, %(board_solution)s);
+        '''
+    else:
+        previous_time_elapsed = (data[0])[0]
+        if time_elapsed < previous_time_elapsed:
+            new_record = True
+            sql_query = '''
+                UPDATE leaderboards
+                SET Seed = %(seed)s,
+                    TimeElapsed = %(time_elapsed)s,
+                    BoardSolution = %(board_solution)s
+                WHERE
+                    UserID=%(user_id)s AND 
+                    GameID=%(game_id)s AND 
+                    Difficulty=%(difficulty)s;
+            '''
+
+    if new_record:
+        cursor = db.cursor()
+        query_model = {
+            "user_id":user_id,
+            "game_id":game_id,
+            "difficulty":difficulty,
+            "seed":seed,
+            "time_elapsed":time_elapsed,
+            "board_solution":board_solution
+        }
+        cursor.execute(sql_query, query_model)
+        db.commit()
+        cursor.close()
+
+    return jsonify({"TimeElapsed":str(time_elapsed),"NewRecord":new_record})
+
+# ------------------------------------------------------------ #
+def timer_sanity_checks(db, form_values):
 
     # GameID sanity check
     cursor = db.cursor()
