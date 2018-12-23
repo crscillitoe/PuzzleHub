@@ -14,7 +14,7 @@ from api.auth import encrypt_token
 #   EncryptedString: string
 # Returns on failure:
 #   aborts on failure
-@app.route('/encryptString', methods=['POST'])
+@app.route('/api/encryptString', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def encrypt_string():
     try:
@@ -34,7 +34,7 @@ def encrypt_string():
 #   DecryptedString: string
 # Returns on failure:
 #   aborts on failure
-@app.route('/decryptString', methods=['POST'])
+@app.route('/api/decryptString', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def decrypt_string():
     try:

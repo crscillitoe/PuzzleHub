@@ -30,7 +30,7 @@ WHOIS_APIKEY = json_data['who_is_api_key']
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Registers a user account
-@app.route('/registerUser', methods=['POST'])
+@app.route('/api/registerUser', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def register_user():
 
@@ -131,7 +131,7 @@ def register_user():
     return validation_url
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     
-@app.route('/validateUser/<validation_id>')
+@app.route('/api/validateUser/<validation_id>')
 @cross_origin(supports_credentials=True)
 def validate_user(validation_id):
     db = get_db()
@@ -185,7 +185,7 @@ def validate_user(validation_id):
 # Returns on failure:
 #   Accept: bool - False
 #   Token: string - Empty string
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
     try:
@@ -233,7 +233,7 @@ def login():
 #   Accept: bool - True
 # Returns on failure:
 #   Accept: bool - False
-@app.route('/changePassword', methods=['POST'])    
+@app.route('/api/changePassword', methods=['POST'])    
 @cross_origin(supports_credentials=True)
 def change_password():
     

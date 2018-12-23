@@ -12,7 +12,7 @@ from datetime import datetime
 # Returns on failure:
 #   Accept: bool - False
 #   Token: string - Empty string
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
     return 'TODO'
@@ -29,7 +29,7 @@ def login():
 #   >
 # Returns on failure:
 #   No return, throw error on failure.
-@app.route('/getLeaderboards', methods=['POST'])
+@app.route('/api/getLeaderboards', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def get_leaderboards():
     return 'TODO'
@@ -43,7 +43,7 @@ def get_leaderboards():
 #   PersonalBest: TimeString (return -1 if no time on record)
 # Returns on failure:
 #   No return, throw error on failure.
-@app.route('/getPersonalBest', methods=['POST'])
+@app.route('/api/getPersonalBest', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def get_personal_best():
     return 'TODO'

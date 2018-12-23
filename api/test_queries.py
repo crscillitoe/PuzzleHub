@@ -4,31 +4,7 @@ from flask import jsonify
 from flask import request
 from api.database import get_db
 
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# Adds a dummy entry into the users table
-@app.route('/addSampleData')
-@cross_origin(supports_credentials=True)
-def add_sample_data():
-    db = get_db()
-    cursor = db.cursor()
-
-    sql_query = '''
-        INSERT INTO users (Username, Email, Password)
-        VALUES (%(username)s, %(email)s, %(password)s)
-    '''
-    sample_user = {
-        "username":"Woohoojin",
-        "email":"jingles341@gmail.com",
-        "password":"1234567890",
-    }
-
-    cursor.execute(sql_query, sample_user)
-    db.commit()
-
-    return jsonify(cursor.lastrowid)
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-@app.route('/addNumbers', methods=['POST'])
+@app.route('/api/addNumbers', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def add_numbers():
     print(request.headers.get('PuzzleHubToken'))
@@ -39,7 +15,7 @@ def add_numbers():
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Returns all entries in the users table
-@app.route('/getAllUsers')
+@app.route('/api/getAllUsers')
 @cross_origin(supports_credentials=True)
 def get_all_users():
     db = get_db()

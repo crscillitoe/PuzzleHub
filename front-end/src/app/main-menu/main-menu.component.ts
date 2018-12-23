@@ -13,11 +13,18 @@ export class MainMenuComponent implements OnInit {
               private tunnelService: TunnelService) { 
   }
 
-  ngOnInit() {
-    this.timerService.startTimer(2, 1)
-      .subscribe( (seed) => {
-        console.log(seed);
-      });
+  addNumbers() {
+    let m = {
+      num1: 5,
+      num2: 10
+    }
+
+    this.tunnelService.addNumbers(m)
+      .subscribe((data) => {
+        console.log(data);
+      })
   }
 
+  ngOnInit() {
+  }
 }

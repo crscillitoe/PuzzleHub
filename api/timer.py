@@ -20,7 +20,7 @@ xstr = lambda s: s or ""
 # Returns on failure:
 #   -1
 
-@app.route('/startTimer', methods=['POST'])
+@app.route('/api/startTimer', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def start_timer():
     try:
@@ -101,7 +101,7 @@ def start_timer():
 #   NewRecord: Bool - Indicates if the current time is better than the previous
 # Returns on failure:
 #   -1
-@app.route('/stopTimer', methods=['POST'])
+@app.route('/api/stopTimer', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def stop_timer():
     try:
