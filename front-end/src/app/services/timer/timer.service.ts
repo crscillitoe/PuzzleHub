@@ -1,20 +1,26 @@
 import { Injectable } from '@angular/core';
+import { TunnelService } from '../tunnel/tunnel.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimerService {
-  /*
-   *
-   */
-  constructor() { 
+  constructor(private tunnel: TunnelService) { 
   }
 
-  /*
-   * 1 - Success
-   * 0 - Failure
-   */
-  startTimer(): number  { return 0; }
-  pauseTimer(): number  { return 0; }
-  stopTimer(): number   { return 0; }
+  startTimer(GameID, Difficulty) { 
+    let m = {
+      'GameID':GameID,
+      'Difficulty':Difficulty
+    }
+    return this.tunnel.startTimer(m);
+  }
+
+  stopTimer(GameID, Difficulty) {
+    let m = {
+      'GameID':GameID,
+      'Difficulty':Difficulty
+    }
+    return this.tunnel.startTimer(m);
+  }
 }
