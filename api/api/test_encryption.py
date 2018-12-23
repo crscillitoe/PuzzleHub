@@ -18,7 +18,7 @@ from api.auth import encrypt_token
 @cross_origin(supports_credentials=True)
 def encrypt_string():
     try:
-        to_encrypt = request.form['String']
+        to_encrypt = request.json['String']
     except:
         abort(500, 'variable String not present')
 
@@ -38,7 +38,7 @@ def encrypt_string():
 @cross_origin(supports_credentials=True)
 def decrypt_string():
     try:
-        to_decrypt = request.form['String']
+        to_decrypt = request.json['String']
     except:
         abort(500, 'variable String not present')
 
