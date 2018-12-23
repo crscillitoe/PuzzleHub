@@ -127,7 +127,6 @@ def register_user():
     validation_url = "http://apiurl.com/validateUser/"+str(validation_id)
     #send_validation_email(validation_url, email)
 
-    print("We got to the end!")
     #return "Validation email sent!"
     return validation_url
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -222,9 +221,6 @@ def login():
         user_id = (data[0])[1]
         curr_date = (data[0])[2]
         to_encrypt = json.dumps({"user_id":user_id, "time_issued":str(curr_date)})
-
-        print(to_encrypt)
-
         encrypted_token = encrypt_token(to_encrypt).decode()
         return jsonify({'Accept':True, 'Token':encrypted_token})
 
