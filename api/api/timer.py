@@ -31,18 +31,18 @@ def start_timer():
         return '-1'
 
     try:
-        game_id = request.form["GameID"]
+        game_id = request.json["GameID"]
     except:
         abort(500, 'GameID not found')
 
     try:
-        difficulty = request.form["Difficulty"]
+        difficulty = request.json["Difficulty"]
     except:
         abort(500, 'Difficulty not found')
 
     db = get_db()
 
-    if (timer_sanity_checks(db, request.form) != 0):
+    if (timer_sanity_checks(db, request.json) != 0):
         return '-1'
 
     new_timer = {
@@ -112,23 +112,23 @@ def stop_timer():
         return '-1'
 
     try:
-        game_id = request.form["GameID"]
+        game_id = request.json["GameID"]
     except:
         abort(500, 'GameID not found')
 
     try:
-        difficulty = request.form["Difficulty"]
+        difficulty = request.json["Difficulty"]
     except:
         abort(500, 'Difficulty not found')
 
     try:
-        board_solution = request.form["BoardSolution"]
+        board_solution = request.json["BoardSolution"]
     except:
         abort(500, 'BoardSolution not found')
 
     db = get_db()
 
-    if (timer_sanity_checks(db, request.form) != 0):
+    if (timer_sanity_checks(db, request.json) != 0):
         return '-1'
 
     cursor = db.cursor()
@@ -226,7 +226,7 @@ def timer_sanity_checks(db, form_values):
     sql_query = '''
         SELECT * FROM difficulties WHERE Difficulty=%(Difficulty)s;
     '''
-    cursor.execute(sql_query, request.form)
+    cursor.execute(sql_query, form_values)
     data = cursor.fetchall()
     if len(data) == 0:
         return 1

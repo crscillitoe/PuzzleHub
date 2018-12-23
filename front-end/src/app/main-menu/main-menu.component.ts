@@ -19,8 +19,11 @@ export class MainMenuComponent implements OnInit {
 
   objectClicked(obj) {
     console.log(obj);
-
-    this.tunnelService.getNum()
+    let m = {
+      num1: 5,
+      num2: 10
+    }
+    this.tunnelService.addNumbers(m)
       .subscribe( (data) => {
         console.log(data);
       });

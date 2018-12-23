@@ -35,7 +35,7 @@ WHOIS_APIKEY = json_data['who_is_api_key']
 def register_user():
 
     db = get_db()
-    post_data = request.form
+    post_data = request.json
 
     try:
         username = post_data["Username"]
@@ -190,12 +190,12 @@ def validate_user(validation_id):
 @cross_origin(supports_credentials=True)
 def login():
     try:
-        username = request.form["Username"]
+        username = request.json["Username"]
     except:
         abort(500, 'Username not found')
 
     try:
-        password = request.form["Password"]
+        password = request.json["Password"]
     except:
         abort(500, 'Password not found')
 
@@ -249,12 +249,12 @@ def change_password():
         abort(500, 'Token verification failed')
 
     try:
-        old_password = request.form["OldPassword"]
+        old_password = request.json["OldPassword"]
     except:
         abort(500, 'OldPassword not found')
 
     try:
-        new_password = request.form["NewPassword"]
+        new_password = request.json["NewPassword"]
     except:
         abort(500, 'NewPassword not found')
 

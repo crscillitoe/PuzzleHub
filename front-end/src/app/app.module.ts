@@ -1,9 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { MainMenuComponent } from './main-menu/main-menu.component';
+import { HeaderInterceptorService } from './services/header-interceptor/header-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -12,10 +13,15 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
-    HttpHeaders
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HeaderInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

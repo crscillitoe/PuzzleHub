@@ -1,6 +1,7 @@
 from api import app
 from flask_cors import cross_origin
 from flask import jsonify
+from flask import request
 from api.database import get_db
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -26,6 +27,15 @@ def add_sample_data():
 
     return jsonify(cursor.lastrowid)
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+@app.route('/addNumbers', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def add_numbers():
+    print(request.headers.get('PuzzleHubToken'))
+    post_data = request.json
+    num_1 = post_data['num1']
+    num_2 = post_data['num2']
+    return str(num_1 + num_2)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Returns all entries in the users table

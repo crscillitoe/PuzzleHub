@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,7 @@ export class TunnelService {
 
   constructor(private http: HttpClient) { }
 
+  /*
   getCookie(cookieName) {
     var name = cookieName + '=';
     var cookies = document.cookie.split(';');
@@ -33,15 +34,13 @@ export class TunnelService {
     headers.append('Accept', 'application/json');
     headers.append('Authorization', token);
     return headers;
-  }
+  }*/
 
-  getNum() { 
-    return this.http.get(this.ipAddress + '/getNum')
+  addNumbers(model) {
+    return this.http.post(this.ipAddress + '/addNumbers', model);
   }
 
   sampleGetRequest() {
-    return this.http.get(this.ipAddress + '/endpoint' , {
-      headers: this.createHeader()
-    });
+    return this.http.get(this.ipAddress + '/endpoint');
   }
 }
