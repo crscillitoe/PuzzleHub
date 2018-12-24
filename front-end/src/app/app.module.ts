@@ -9,10 +9,13 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { HeaderInterceptorService } from './services/header-interceptor/header-interceptor.service';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
+import { LeaderboardsComponent } from './leaderboards/leaderboards.component';
+import { FooterComponent } from './footer/footer.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
-    { path: 'login', component: LoginComponent}
+    { path: 'login', component: LoginComponent},
+    { path: 'leaderboards', component: LeaderboardsComponent}
 ];
 
 @NgModule({
@@ -20,7 +23,9 @@ const appRoutes: Routes = [
     AppComponent,
     MainMenuComponent,
     HeaderComponent,
-    LoginComponent
+    LoginComponent,
+    LeaderboardsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

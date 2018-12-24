@@ -1,9 +1,16 @@
-<html>
-  <div id="logo">
-    I'm a logo
+<nav class="navbar navbar-dark bg-dark">
+  <a routerLink="/" routerLinkActive="active" class="navbar-brand">Puzzle Hub</a>
+  <div class="navbar-expand mr-auto">
+    <div class="navbar-nav">
+      <a routerLink="/" routerLinkActive="active" class="nav-item nav-link">Games</a>
+      <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link">Leaderboards</a>
+    </div>
   </div>
-  <nav>
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-    <a routerLink="/" routerLinkActive="active">Main Menu</a>
-  </nav>
-</html>
+  <div class="navbar-expand ml-auto navbar-nav">
+    <div class="navbar-nav">
+      <a routerLink="/login" routerLinkActive="active" class="nav-item nav-link">
+        <i style="margin-right:5px" class="fa fa-lock"></i> Sign In
+      </a>
+    </div>
+  </div>
+</nav>

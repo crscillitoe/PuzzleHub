@@ -1,0 +1,25 @@
+.body {
+  height:calc(100vh - 7rem);
+  overflow-y: scroll;
+  background-color: #2C2C2C;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  height:100%;
+}
+
+.puzzle-button {
+  width:6rem;
+}
+
+.puzzle-card {
+  padding-top:10px;
+  padding-bottom:10px;
+  width: 30rem;
+}
+
+.flex-element {
+}
