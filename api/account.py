@@ -192,12 +192,12 @@ def login():
     try:
         username = request.json["Username"]
     except:
-        abort(500, 'Username not found')
+        return jsonify({'Accept':False, 'Token':'Username not found'})
 
     try:
         password = request.json["Password"]
     except:
-        abort(500, 'Password not found')
+        return jsonify({'Accept':False, 'Token':'Password not found'})
 
     db = get_db()
 
@@ -212,7 +212,7 @@ def login():
     cursor.execute(sql_query, query_model)
     data = cursor.fetchall()
     if len(data) == 0:
-        abort(500, 'Username not found')
+        return jsonify({'Accept':False, 'Token':'Username not found'})
 
     hashed_pw = (data[0])[0]
     validated = (data[0])[3]

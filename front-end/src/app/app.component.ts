@@ -14,7 +14,6 @@ export class AppComponent {
   ) {
     loader.loading
       .subscribe( (data) => {
-        console.log(data);
         this.loading = data;
       });
   }
