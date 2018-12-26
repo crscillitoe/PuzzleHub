@@ -13,7 +13,7 @@ export class AppComponent {
     private loader: LoaderService
   ) {
     loader.loading
-      .subscribe( (data) => {
+     .subscribe( (data) => {
         this.loading = data;
       });
   }

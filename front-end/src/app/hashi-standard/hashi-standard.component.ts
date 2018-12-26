@@ -7,9 +7,8 @@ import { Board, MyNode, Bridge } from '../services/boards/hashi/board.service';
   styleUrls: ['./hashi-standard.component.css']
 })
 export class HashiStandardComponent implements OnInit {
-
-
-  constructor() { }
+  constructor(
+  ) { }
 
   ngOnInit() {
   }

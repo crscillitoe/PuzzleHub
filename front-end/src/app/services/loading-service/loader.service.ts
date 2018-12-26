@@ -11,10 +11,12 @@ export class LoaderService {
   constructor() { }
 
   startLoadingAnimation() {
+    console.log('load on');
     this.loading.next(true);
   }
 
   stopLoadingAnimation() {
+    console.log('load off');
     this.loading.next(false);
   }
 }

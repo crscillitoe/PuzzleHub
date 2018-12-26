@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service';
 import { HashiStandardComponent } from '../../hashi-standard/hashi-standard.component';
+import { LoaderService } from '../../services/loading-service/loader.service';
 
 @Component({
   selector: 'app-hashi',
@@ -79,7 +80,9 @@ export class HashiComponent implements OnInit {
 
   startDate: any;
 
-  constructor(private route: ActivatedRoute, private router: Router) { 
+  constructor(private route: ActivatedRoute, 
+    private router: Router,
+    private loader: LoaderService) { 
       this.pause = false;
       this.mouseX = -1;
       this.mouseY = -1;
