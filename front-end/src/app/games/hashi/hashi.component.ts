@@ -5,6 +5,7 @@ import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service
 import { HashiStandardComponent } from '../../hashi-standard/hashi-standard.component';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-hashi',
@@ -84,6 +85,7 @@ export class HashiComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, 
     private router: Router,
+    private userService: UserService,
     private timer: TimerService,
     private loader: LoaderService) { 
       this.pause = false;

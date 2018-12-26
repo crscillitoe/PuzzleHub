@@ -6,10 +6,16 @@ import { Subject } from 'rxjs/Subject';
 })
 export class UserService {
   public username: any = new Subject();
+  private loggedIn: boolean = false;
 
   constructor() { }
 
   setUserName(name) {
+    this.loggedIn = name != "";
     this.username.next(name);
+  }
+
+  isLoggedIn() {
+    return this.loggedIn;
   }
 }

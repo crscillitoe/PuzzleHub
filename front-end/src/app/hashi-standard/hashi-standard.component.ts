@@ -908,10 +908,14 @@ export class HashiStandardComponent implements OnInit {
           }
       }
 
-      that.timer.stopTimer(2, that.diff, that.board.toString())
-        .subscribe( (data) => {
-            console.log(data);
-          });
+      if(that.userService.isLoggedIn()) {
+        that.timer.stopTimer(2, that.diff, that.board.toString())
+          .subscribe( (data) => {
+              console.log(data);
+            });
+      } else {
+        console.log('done - not logged in');
+      }
     }
 
     public static toggleCoords(that) {
@@ -1422,20 +1426,26 @@ export class HashiStandardComponent implements OnInit {
           that.extreme = true;
         }
 
-        that.seed = Number(that.route.snapshot.paramMap.get('seed'));
         if(numNodes === 0) {
             numNodes = Math.floor(Math.sqrt(that.width * that.height)) * 2;
         }
 
         that.numNodes = numNodes;
 
-        that.timer.startTimer(2, that.diff)
-          .subscribe( (data) => {
-            that.seed = data['seed'];
-            that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
-            that.board.generateBoard();
-            this.play(that)
-          });
+        if(that.userService.isLoggedIn()) {
+          that.timer.startTimer(2, that.diff)
+            .subscribe( (data) => {
+              that.seed = data['seed'];
+              that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
+              that.board.generateBoard();
+              this.play(that)
+            });
+        } else {
+          that.seed = 0;
+          that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
+          that.board.generateBoard();
+          this.play(that);
+        }
     }
 
     public static play(that) {
