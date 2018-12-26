@@ -16,11 +16,12 @@ export class TimerService {
     return this.tunnel.startTimer(m);
   }
 
-  stopTimer(GameID, Difficulty) {
+  stopTimer(GameID, Difficulty, Solution) {
     let m = {
       'GameID':GameID,
-      'Difficulty':Difficulty
+      'Difficulty':Difficulty,
+      'BoardSolution':Solution
     }
-    return this.tunnel.startTimer(m);
+    return this.tunnel.stopTimer(m);
   }
 }

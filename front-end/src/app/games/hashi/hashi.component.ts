@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service';
 import { HashiStandardComponent } from '../../hashi-standard/hashi-standard.component';
 import { LoaderService } from '../../services/loading-service/loader.service';
+import { TimerService } from '../../services/timer/timer.service';
 
 @Component({
   selector: 'app-hashi',
@@ -12,6 +13,7 @@ import { LoaderService } from '../../services/loading-service/loader.service';
 })
 export class HashiComponent implements OnInit {
 
+  diff: any;
   timePaused: any;
   startPause: any;
   version: string;
@@ -82,6 +84,7 @@ export class HashiComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, 
     private router: Router,
+    private timer: TimerService,
     private loader: LoaderService) { 
       this.pause = false;
       this.mouseX = -1;
@@ -126,47 +129,6 @@ export class HashiComponent implements OnInit {
   pauseGame() {
     var that = this;
     return HashiStandardComponent.pauseGame(that);
-  }
-
-  add(___this) {
-      var h1 = document.getElementsByTagName("h1")[0];
-
-      if(!this.pause && !this.solved) {
-        var now = +new Date();
-
-        if(this.startPause != null) {
-          this.timePaused += ((now - this.startPause)/10);
-          this.startPause = null;
-        }
-
-        var diff = ((now - this.startDate)/10) - this.timePaused;
-
-        ___this.hours = Math.trunc(diff / (60 * 60 * 100));
-        ___this.minutes = Math.trunc(diff / (60 * 100)) % 60;
-        ___this.seconds = Math.trunc(diff / 100) % 60;
-        ___this.millis = Math.trunc(diff % 100);
-        
-        try {
-          h1.textContent = (___this.hours ? (___this.hours > 9 ? ___this.hours : "0" + ___this.hours) : "00") + ":" + (___this.minutes ? (___this.minutes > 9 ? ___this.minutes : "0" + ___this.minutes) : "00") + ":" + (___this.seconds > 9 ? ___this.seconds : "0" + ___this.seconds);
-        } catch {
-        }
-      } else {
-        if(this.startPause == null) {
-          this.startPause = new Date();
-        }
-      }
-
-      var elem = document.getElementById("gameScreen");
-      if(elem != null) {
-          ___this.timer();
-      }
-  }
-
-  timer() {
-      if(!this.solved) {
-          var ___this = this;
-          this.t = setTimeout(function() {___this.add(___this)}, 1000);
-      }
   }
 
   colorblindMode() {
