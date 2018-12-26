@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TimerService } from '../services/timer/timer.service'
 import { TunnelService } from '../services/tunnel/tunnel.service'
 import { LoaderService } from '../services/loading-service/loader.service'
+import { UserService } from '../services/user/user.service';
 import { Router } from "@angular/router";
 
 @Component({
@@ -42,6 +43,7 @@ export class MainMenuComponent implements OnInit {
     private timerService: TimerService,
     private tunnelService: TunnelService,
     private router: Router,
+    private user: UserService,
     private loader: LoaderService
   ) { 
   }

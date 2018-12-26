@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
+import { UserService } from '../services/user/user.service';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +15,9 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private loader: LoaderService,
-    private tunnel: TunnelService
+    private tunnel: TunnelService,
+    private router: Router,
+    private user: UserService
   ) { }
 
   ngOnInit() {
@@ -28,10 +32,18 @@ export class LoginComponent implements OnInit {
     this.tunnel.login(m)
       .subscribe((data) => {
           if(data['Accept']) {
-            document.cookie = 'PuzzleHubToken=' + data['Token'];
+            document.cookie = 'PuzzleHubToken=' + data['Token'] + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+            this.tunnel.getUsername()
+              .subscribe( (name) => {
+                this.user.setUserName(name['username']);
+                this.loader.stopLoadingAnimation();
+
+                this.router.navigate(['/']);
+              });
+          } else {
+              this.loader.stopLoadingAnimation();
           }
 
-          this.loader.stopLoadingAnimation();
         });
   }
 }

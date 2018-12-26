@@ -226,6 +226,37 @@ def login():
         return jsonify({'Accept':True, 'Token':encrypted_token})
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getUsername
+# Returns on success:
+#   username: string
+# Returns on failure:
+#   N / A
+@app.route('/api/getUsername', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_username():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            return jsonify({'username':''})
+    except:
+        return jsonify({'username':''})
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        SELECT Username FROM users WHERE UserID=%(user_id)s;
+    '''
+    query_model = {
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    return jsonify({'username':(data[0])[0]})
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /changePassword
 # Required POST parameters:
 #   OldPassword: string
