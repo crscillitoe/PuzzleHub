@@ -13,6 +13,8 @@ export class LoginComponent implements OnInit {
   private username: string;
   private password: string;
 
+  private selectedTab: string = "login";
+
   constructor(
     private loader: LoaderService,
     private tunnel: TunnelService,
