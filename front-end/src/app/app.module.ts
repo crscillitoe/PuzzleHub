@@ -16,9 +16,11 @@ import { HashiComponent } from './games/hashi/hashi.component';
 import { SudokuComponent } from './games/sudoku/sudoku.component';
 import { TakuzuComponent } from './games/takuzu/takuzu.component';
 import { HashiStandardComponent } from './hashi-standard/hashi-standard.component';
+import { CustomGamesComponent } from './custom-games/custom-games.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
+    { path: 'games', component: CustomGamesComponent},
     { path: 'login', component: LoginComponent},
     { path: 'leaderboards', component: LeaderboardsComponent},
     { path: 'hashi', component: HashiComponent},
@@ -37,7 +39,8 @@ const appRoutes: Routes = [
     HashiComponent,
     SudokuComponent,
     TakuzuComponent,
-    HashiStandardComponent
+    HashiStandardComponent,
+    CustomGamesComponent
   ],
   imports: [
     BrowserModule,
