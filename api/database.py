@@ -1,11 +1,12 @@
 import json
 import mysql.connector
+from api.config import get_config_path
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # MySQL Configuration
 
-with open('config.json') as f:
+with open(get_config_path()) as f:
     json_data = json.load(f)
 
 mysql_username = json_data['username']

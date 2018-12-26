@@ -3,8 +3,9 @@ import base64
 import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
+from api.config import get_config_path
 
-with open('config.json') as f:
+with open(get_config_path()) as f:
     json_data = json.load(f)
 
 BLOCK_SIZE = 16

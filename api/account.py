@@ -20,10 +20,11 @@ from email.mime.text import MIMEText
 from api.auth import get_user_id
 from api.database import get_db
 from api.auth import encrypt_token
+from api.config import get_config_path
 
 xstr = lambda s: s or ""
 
-with open('config.json') as f:
+with open(get_config_path()) as f:
     json_data = json.load(f)
 
 WHOIS_APIKEY = json_data['who_is_api_key']
