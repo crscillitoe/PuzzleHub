@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TimerService } from '../services/timer/timer.service'
 import { TunnelService } from '../services/tunnel/tunnel.service'
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-main-menu',
@@ -36,24 +37,22 @@ export class MainMenuComponent implements OnInit {
       'Description': 'Sudoku blah blah blah numbers blah blah square blah blah blah Sudoku blah blah this is text description blah.'}
   ]
 
-  constructor(private timerService: TimerService,
-              private tunnelService: TunnelService) { 
-  }
-
-  addNumbers() {
-    let m = {
-      num1: 5,
-      num2: 10
-    }
-
-    this.tunnelService.addNumbers(m)
-      .subscribe((data) => {
-        console.log(data);
-      })
+  constructor(
+    private timerService: TimerService,
+    private tunnelService: TunnelService,
+    private router: Router
+  ) { 
   }
 
   playGame(id, diff) {
     console.log({id, diff});
+    let m = {
+      diff: diff
+    }
+    console.log(m);
+    if(id == 2) {
+      this.router.navigate(['hashi', m]);
+    }
   }
 
   ngOnInit() {

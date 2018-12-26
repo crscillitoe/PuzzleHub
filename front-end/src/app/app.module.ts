@@ -12,11 +12,18 @@ import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { LeaderboardsComponent } from './leaderboards/leaderboards.component';
 import { FooterComponent } from './footer/footer.component';
+import { HashiComponent } from './games/hashi/hashi.component';
+import { SudokuComponent } from './games/sudoku/sudoku.component';
+import { TakuzuComponent } from './games/takuzu/takuzu.component';
+import { HashiStandardComponent } from './hashi-standard/hashi-standard.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
     { path: 'login', component: LoginComponent},
-    { path: 'leaderboards', component: LeaderboardsComponent}
+    { path: 'leaderboards', component: LeaderboardsComponent},
+    { path: 'hashi', component: HashiComponent},
+    { path: 'sudoku', component: SudokuComponent},
+    { path: 'takuzu', component: TakuzuComponent}
 ];
 
 @NgModule({
@@ -26,7 +33,11 @@ const appRoutes: Routes = [
     HeaderComponent,
     LoginComponent,
     LeaderboardsComponent,
-    FooterComponent
+    FooterComponent,
+    HashiComponent,
+    SudokuComponent,
+    TakuzuComponent,
+    HashiStandardComponent
   ],
   imports: [
     BrowserModule,
