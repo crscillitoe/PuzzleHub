@@ -898,16 +898,23 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static done(that) {
-      if(!that.skip) {
-          for(let n of that.board.getNodes()) {
-              var total = 0;
-              for(let b of n.bridges) {
-                  total += b.num;
-              }
-              if(total != n.val) {
-                  return;
-              }
+      for(let n of that.board.getNodes()) {
+          var total = 0;
+          for(let b of n.bridges) {
+              total += b.num;
           }
+          if(total != n.val) {
+              return;
+          }
+      }
+
+      if(that.userService.isLoggedIn()) {
+        that.timer.stopTimer(2, that.diff, that.board.toString())
+          .subscribe( (data) => {
+              console.log(data);
+            });
+      } else {
+        console.log('done - not logged in');
       }
     }
 
@@ -1393,10 +1400,8 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static ngOnInitOverwrite(that) {
-        that.loading = true;
-        that.playing = false;
-
         var diff = Number(that.route.snapshot.paramMap.get('diff'));
+        that.diff = diff;
         var numNodes;
 
         if(diff == 1) {
@@ -1421,22 +1426,26 @@ export class HashiStandardComponent implements OnInit {
           that.extreme = true;
         }
 
-        that.seed = Number(that.route.snapshot.paramMap.get('seed'));
         if(numNodes === 0) {
             numNodes = Math.floor(Math.sqrt(that.width * that.height)) * 2;
         }
 
         that.numNodes = numNodes;
 
-        if(that.seed == 0) {
-            that.generateFairBoard(numNodes);
+        if(that.userService.isLoggedIn()) {
+          that.timer.startTimer(2, that.diff)
+            .subscribe( (data) => {
+              that.seed = data['seed'];
+              that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
+              that.board.generateBoard();
+              this.play(that)
+            });
         } else {
-            that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
-            that.board.generateBoard();
+          that.seed = 0;
+          that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
+          that.board.generateBoard();
+          this.play(that);
         }
-
-        that.loading = false;
-        this.play(that)
     }
 
     public static play(that) {
@@ -1455,9 +1464,6 @@ export class HashiStandardComponent implements OnInit {
         that.drawGridBool = true;
         that.drawTextColorBool = false;
         that.solved = false;
-
-        that.drawLetters = true;
-        that.drawGridBool = true;
         that.gauntlet = false;
 
         that.canvas = document.getElementById('myCanvas');
@@ -1473,8 +1479,6 @@ export class HashiStandardComponent implements OnInit {
         window.addEventListener('keyup', function(e) {__that.keyReleased(e, __that) }, false);
 
         that.nightTheme();
-
-        that.startDate = new Date();
         that.fixSizes();
     }
 
@@ -1518,7 +1522,6 @@ export class HashiStandardComponent implements OnInit {
         that.hours = 0;
         if(that.solved) {
             that.solved = false;
-            that.timer();
         }
 
         that.solved = false;

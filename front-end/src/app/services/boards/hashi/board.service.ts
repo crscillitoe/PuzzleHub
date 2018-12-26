@@ -41,6 +41,35 @@ export class Board {
         this.dailyDiff = dailyDiff;
     }
 
+    public toString() {
+      var m = [];
+      for(let n of this.nodes) {
+        let nodeModel = {
+          x: n.x,
+          y: n.y,
+          val: n.val
+        }
+
+        var bridges = [];
+        for(let b of n.bridges) {
+          let bridgeModel = {
+            n1x: b.n1.x,
+            n2x: b.n2.x,
+            n1y: b.n1.y,
+            n2y: b.n2.y,
+            num: b.num
+          }
+          bridges.push(bridgeModel);
+        }
+
+        nodeModel['bridges'] = bridges;
+
+        m.push(nodeModel);
+      }
+
+      return JSON.stringify(m);
+    }
+
     public generateBoard() {
         var chance = 8;
         var nodesToAdd = this.numNodes;
