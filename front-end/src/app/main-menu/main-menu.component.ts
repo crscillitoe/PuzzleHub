@@ -31,7 +31,7 @@ export class MainMenuComponent implements OnInit {
 
     {'GameID': GameID.TILE_GAME, 
       'Name': 'Tile Game', 
-      'Image': 'assets/images/animations/loading.svg',
+      'Image': 'assets/images/game-splashes/tilegame.png',
       'Description': 'This is a description for tile game is has to be a similar length to the other descriptions so it looks nice.'},
 
     {'GameID': GameID.SUDOKU, 
