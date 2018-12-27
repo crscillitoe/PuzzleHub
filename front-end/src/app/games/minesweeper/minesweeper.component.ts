@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/minesweeper/board.service';
+import { ColorService } from '../../services/colors/color.service';
 
 @Component({
   selector: 'app-minesweeper',
@@ -16,6 +17,8 @@ export class MinesweeperComponent implements OnInit {
   // Used for drawing to the screen
   canvas: any;
   context: any;
+
+  colors: any;
   
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
@@ -25,10 +28,12 @@ export class MinesweeperComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, 
+    private colorService: ColorService,
     private router: Router,
     private userService: UserService,
     private timer: TimerService,
     private loader: LoaderService) { 
+    this.colors = colorService.getColorScheme();
   }
 
   ngOnInit() {
@@ -89,7 +94,7 @@ export class MinesweeperComponent implements OnInit {
   }
 
   drawBackground() {
-    this.context.fillStyle = '#2C2C2C'; // Background color
+    this.context.fillStyle = this.colors.BACKGROUND; // Background color
     this.context.fillRect(0, 0, this.canvas.offsetWidth * 2, this.canvas.offsetHeight * 2);
   }
 
