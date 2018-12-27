@@ -155,42 +155,35 @@ export class TileGameComponent implements OnInit {
         var tileString = "" + boardValue;
         if(tileString == '0') tileString = '';
 
-        this.context.font = 'bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Arial';
+        this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
+        this.context.textAlign = "center";
 
-        switch(boardValue % 8) {
-          case(0):
-            this.context.fillStyle = this.colors.COLOR_7;
-            break;
-          case(1):
-            this.context.fillStyle = this.colors.COLOR_0;
-            break;
-          case(2):
-            this.context.fillStyle = this.colors.COLOR_1;
-            break;
-          case(3):
-            this.context.fillStyle = this.colors.COLOR_2;
-            break;
-          case(4):
-            this.context.fillStyle = this.colors.COLOR_3;
-            break;
-          case(5):
-            this.context.fillStyle = this.colors.COLOR_4;
-            break;
-          case(6):
-            this.context.fillStyle = this.colors.COLOR_5;
-            break;
-          case(7):
-            this.context.fillStyle = this.colors.COLOR_6;
-            break;
+        if(boardValue <= this.board.width ||
+           (boardValue % this.board.width) == 1) {
+          this.context.fillStyle = this.colors.COLOR_0;
+        } else if(boardValue <= (this.board.width * 2) ||
+                  (boardValue % this.board.width) == 2) {
+          this.context.fillStyle = this.colors.COLOR_6;
+        } else if(boardValue <= (this.board.width * 3) ||
+                  (boardValue % this.board.width) == 3) {
+          this.context.fillStyle = this.colors.COLOR_4;
+        } else if(boardValue <= (this.board.width * 4) ||
+                  (boardValue % this.board.width) == 4) {
+          this.context.fillStyle = this.colors.COLOR_3;
+        } else if(boardValue <= (this.board.width * 5) ||
+                  (boardValue % this.board.width) == 5) {
+          this.context.fillStyle = this.colors.COLOR_2;
         }
 
-        if(tileString.length == 2) {
-          this.context.fillText(tileString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 8),
-                                            (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
-        } else {
-          this.context.fillText(tileString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 3.5),
-                                            (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
+        if(boardValue != 0) {
+          this.context.fillRect((this.gridOffsetX + (i * this.gridBoxSize )) + 1, 
+                                (this.gridOffsetY + (j * this.gridBoxSize )) + 1,
+                                this.gridBoxSize - 2, this.gridBoxSize - 2);
         }
+
+        this.context.fillStyle = this.colors.BACKGROUND;
+        this.context.fillText(tileString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
+                                          (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
       }
     }
   }
