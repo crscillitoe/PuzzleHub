@@ -91,10 +91,12 @@ export class TileGameComponent implements OnInit {
 
 
     // Start timer if we are logged in
+    console.log(this.userService.isLoggedIn());
     if(this.userService.isLoggedIn()) {
       this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
         .subscribe( (data) => {
           // Generate board with given seed
+          console.log(data);
           this.seed = data['seed'];
 
           this.board = new Board(width, height, this.seed); 
