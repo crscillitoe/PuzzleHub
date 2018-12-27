@@ -19,6 +19,7 @@ import { HashiStandardComponent } from './hashi-standard/hashi-standard.componen
 import { CustomGamesComponent } from './custom-games/custom-games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { TileGameComponent } from './games/tile-game/tile-game.component';
+import { TemplateComponent } from './games/template/template.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
@@ -46,7 +47,8 @@ const appRoutes: Routes = [
     HashiStandardComponent,
     CustomGamesComponent,
     MinesweeperComponent,
-    TileGameComponent
+    TileGameComponent,
+    TemplateComponent
   ],
   imports: [
     BrowserModule,
