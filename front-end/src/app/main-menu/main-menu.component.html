@@ -8,10 +8,10 @@
             <h5 style="padding-left:11px" class="card-title">{{game.Name}}</h5>
             <p style="padding-left:30px; padding-right:30px;" class="card-text">{{game.Description}}</p>
             <div class="flex-container">
-              <a (click)="playGame(game.GameID, 1)" class="puzzle-button btn btn-success">Easy</a>
-              <a (click)="playGame(game.GameID, 2)" class="puzzle-button btn btn-info">Medium</a>
-              <a (click)="playGame(game.GameID, 3)" class="puzzle-button btn btn-primary">Hard</a>
-              <a (click)="playGame(game.GameID, 4)" class="puzzle-button btn btn-danger">Extreme</a>
+              <a (click)="playGame(game.Name, 1)" class="puzzle-button btn btn-success">Easy</a>
+              <a (click)="playGame(game.Name, 2)" class="puzzle-button btn btn-info">Medium</a>
+              <a (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary">Hard</a>
+              <a (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger">Extreme</a>
             </div>
           </div>
         </div>

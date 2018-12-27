@@ -17,15 +17,19 @@ import { SudokuComponent } from './games/sudoku/sudoku.component';
 import { TakuzuComponent } from './games/takuzu/takuzu.component';
 import { HashiStandardComponent } from './hashi-standard/hashi-standard.component';
 import { CustomGamesComponent } from './custom-games/custom-games.component';
+import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
+import { TileGameComponent } from './games/tile-game/tile-game.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
     { path: 'games', component: CustomGamesComponent},
     { path: 'login', component: LoginComponent},
     { path: 'leaderboards', component: LeaderboardsComponent},
-    { path: 'hashi', component: HashiComponent},
-    { path: 'sudoku', component: SudokuComponent},
-    { path: 'takuzu', component: TakuzuComponent}
+    { path: 'Hashi', component: HashiComponent},
+    { path: 'Sudoku', component: SudokuComponent},
+    { path: 'Takuzu', component: TakuzuComponent},
+    { path: 'Minesweeper', component: MinesweeperComponent},
+    { path: 'Tile Game', component: TileGameComponent}
 ];
 
 @NgModule({
@@ -40,7 +44,9 @@ const appRoutes: Routes = [
     SudokuComponent,
     TakuzuComponent,
     HashiStandardComponent,
-    CustomGamesComponent
+    CustomGamesComponent,
+    MinesweeperComponent,
+    TileGameComponent
   ],
   imports: [
     BrowserModule,

@@ -1400,6 +1400,7 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static ngOnInitOverwrite(that) {
+      that.loader.startLoadingAnimation();
         var diff = Number(that.route.snapshot.paramMap.get('diff'));
         that.diff = diff;
         var numNodes;
@@ -1479,6 +1480,9 @@ export class HashiStandardComponent implements OnInit {
         window.addEventListener('keyup', function(e) {__that.keyReleased(e, __that) }, false);
 
         that.nightTheme();
+
+        that.loader.stopLoadingAnimation();  
+
         that.fixSizes();
     }
 
