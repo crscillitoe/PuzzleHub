@@ -1,0 +1,14 @@
+#myCanvas {
+    position: absolute;
+    left: 225px;
+    top:3.5rem;
+    height: calc(100vh - 7rem);
+    width: calc(100vw - 225px);
+    background-color: black;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
