@@ -197,11 +197,13 @@ export class TileGameComponent implements OnInit {
           this.context.fillStyle = this.colors.COLOR_2;
         }
 
+        var spacing = this.gridBoxSize/40;
+
         if(boardValue != 0) {
-          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + 2, 
-                                (this.gridOffsetY + (j * this.gridBoxSize )) + 2,
-                                this.gridBoxSize - 4, 
-                                this.gridBoxSize - 4, 
+          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
+                                (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
+                                this.gridBoxSize - (spacing * 2), 
+                                this.gridBoxSize - (spacing * 2), 
                                 (this.gridBoxSize/20), 
                                 true, 
                                 false);
