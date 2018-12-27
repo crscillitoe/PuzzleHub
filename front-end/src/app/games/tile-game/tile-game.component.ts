@@ -120,7 +120,7 @@ export class TileGameComponent implements OnInit {
   draw() {
     this.context.beginPath();
     this.drawBackground();
-    this.drawGrid();
+    //this.drawGrid();
     this.drawTiles();
   }
 
@@ -147,6 +147,28 @@ export class TileGameComponent implements OnInit {
     }
   }
 
+  roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+      radius = {tl: radius, tr: radius, br: radius, bl: radius};
+      ctx.beginPath();
+      ctx.moveTo(x + radius.tl, y);
+      ctx.lineTo(x + width - radius.tr, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+      ctx.lineTo(x + width, y + height - radius.br);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+      ctx.lineTo(x + radius.bl, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+      ctx.lineTo(x, y + radius.tl);
+      ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+      ctx.closePath();
+      if (fill) {
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.stroke();
+      }
+
+  }
+
   drawTiles() {
     for(var j = 0 ; j < this.board.height ; j++) {
       for(var i = 0 ; i < this.board.width; i++) {
@@ -160,25 +182,29 @@ export class TileGameComponent implements OnInit {
 
         if(boardValue <= this.board.width ||
            (boardValue % this.board.width) == 1) {
-          this.context.fillStyle = this.colors.COLOR_0;
+          this.context.fillStyle = this.colors.COLOR_6_ALT;
         } else if(boardValue <= (this.board.width * 2) ||
                   (boardValue % this.board.width) == 2) {
-          this.context.fillStyle = this.colors.COLOR_6;
+          this.context.fillStyle = this.colors.COLOR_4_ALT;
         } else if(boardValue <= (this.board.width * 3) ||
                   (boardValue % this.board.width) == 3) {
-          this.context.fillStyle = this.colors.COLOR_4;
+          this.context.fillStyle = this.colors.COLOR_3_ALT;
         } else if(boardValue <= (this.board.width * 4) ||
                   (boardValue % this.board.width) == 4) {
-          this.context.fillStyle = this.colors.COLOR_3;
+          this.context.fillStyle = this.colors.COLOR_5_ALT;
         } else if(boardValue <= (this.board.width * 5) ||
                   (boardValue % this.board.width) == 5) {
           this.context.fillStyle = this.colors.COLOR_2;
         }
 
         if(boardValue != 0) {
-          this.context.fillRect((this.gridOffsetX + (i * this.gridBoxSize )) + 1, 
-                                (this.gridOffsetY + (j * this.gridBoxSize )) + 1,
-                                this.gridBoxSize - 2, this.gridBoxSize - 2);
+          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + 2, 
+                                (this.gridOffsetY + (j * this.gridBoxSize )) + 2,
+                                this.gridBoxSize - 4, 
+                                this.gridBoxSize - 4, 
+                                (this.gridBoxSize/20), 
+                                true, 
+                                false);
         }
 
         this.context.fillStyle = this.colors.BACKGROUND;
