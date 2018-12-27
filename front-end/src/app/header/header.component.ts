@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
   }
 
   signOut() {
-    this.username = "";
+    this.user.setUserName("");
     document.cookie = "PuzzleHubToken=; Max-Age=0";
   }
 
