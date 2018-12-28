@@ -19,6 +19,8 @@ export class TileGameComponent implements OnInit {
   canvas: any;
   context: any;
 
+  solved: boolean = false;
+
 
   gridBoxSize: number;
   colors: any;
@@ -55,52 +57,47 @@ export class TileGameComponent implements OnInit {
 
     // Easy
     if(this.difficulty == 1) {
-      console.log('Easy difficulty');
       width = 3;
       height = 3;
     } 
     
     // Medium
     else if (this.difficulty == 2) {
-      console.log('Medium difficulty');
       width = 4;
       height = 4;
     } 
     
     // Hard
     else if (this.difficulty == 3) {
-      console.log('Hard difficulty');
       width = 5;
       height = 5;
     } 
     
     // Extreme
     else if (this.difficulty == 4) {
-      console.log('Extreme difficulty');
       width = 6;
       height= 6;
     }
 
     // Uncomment these to add event listeners
-    this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
-    window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
 
 
     // Start timer if we are logged in
-    console.log(this.userService.isLoggedIn());
     if(this.userService.isLoggedIn()) {
       this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
         .subscribe( (data) => {
           // Generate board with given seed
-          console.log(data);
           this.seed = data['seed'];
 
           this.board = new Board(width, height, this.seed); 
           this.board.generateBoard();
+
+          this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+          window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
 
           this.fixSizes();
           this.draw();
@@ -112,7 +109,37 @@ export class TileGameComponent implements OnInit {
       this.board = new Board(width, height, this.seed); 
       this.board.generateBoard();
 
-      console.log(this.board.tilePuzzle);
+      this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+      window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+
+      this.fixSizes();
+      this.draw();
+    }
+  }
+
+  newGame() {
+    if(this.userService.isLoggedIn()) {
+      this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
+        .subscribe( (data) => {
+          // Generate board with given seed
+          this.seed = data['seed'];
+
+          this.board.seed = this.seed;
+          this.board.generateBoard();
+
+          this.solved = false;
+
+          this.fixSizes();
+          this.draw();
+        });
+    } else {
+      // Generate board with random seed
+      this.seed = Math.floor(Math.random() * (2000000000));
+
+      this.board.seed = this.seed;
+      this.board.generateBoard();
+
+      this.solved = false;
 
       this.fixSizes();
       this.draw();
@@ -261,6 +288,7 @@ export class TileGameComponent implements OnInit {
    */
 
   done() {
+    this.solved = true;
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
@@ -304,11 +332,13 @@ export class TileGameComponent implements OnInit {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
 
-    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
-    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-    this.board.moveTile(x, y);
-    this.draw();
+      this.board.moveTile(x, y);
+      this.draw();
+    }
   }
   mouseReleased(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
@@ -322,58 +352,58 @@ export class TileGameComponent implements OnInit {
   }
 
   keyPressed(keyEvent) {
-    //console.log({'keyPressed':keyEvent.keyCode});
-
     let code = keyEvent.keyCode;
-    var directions = this.board.getValidDirections();
-    switch(code) {
-      // UP
-      case(40):
-      case(83):
-          if(directions.includes(0)) {
-            this.board.moveUp();
-            this.draw();
-            if(this.board.isSolved()) {
-              this.done();
+    if(!this.solved) {
+      var directions = this.board.getValidDirections();
+      switch(code) {
+        // UP
+        case(40):
+        case(83):
+            if(directions.includes(0)) {
+              this.board.moveUp();
+              this.draw();
+              if(this.board.isSolved()) {
+                this.done();
+              }
             }
-          }
-        break;
+          break;
 
-      // DOWN
-      case(38):
-      case(87):
-          if(directions.includes(1)) {
-            this.board.moveDown();
-            this.draw();
-            if(this.board.isSolved()) {
-              this.done();
+        // DOWN
+        case(38):
+        case(87):
+            if(directions.includes(1)) {
+              this.board.moveDown();
+              this.draw();
+              if(this.board.isSolved()) {
+                this.done();
+              }
             }
-          }
-        break;
+          break;
 
-      // LEFT
-      case(39):
-      case(68):
-          if(directions.includes(2)) {
-            this.board.moveLeft();
-            this.draw();
-            if(this.board.isSolved()) {
-              this.done();
+        // LEFT
+        case(39):
+        case(68):
+            if(directions.includes(2)) {
+              this.board.moveLeft();
+              this.draw();
+              if(this.board.isSolved()) {
+                this.done();
+              }
             }
-          }
-        break;
+          break;
 
-      // RIGHT
-      case(37):
-      case(65):
-          if(directions.includes(3)) {
-            this.board.moveRight();
-            this.draw();
-            if(this.board.isSolved()) {
-              this.done();
+        // RIGHT
+        case(37):
+        case(65):
+            if(directions.includes(3)) {
+              this.board.moveRight();
+              this.draw();
+              if(this.board.isSolved()) {
+                this.done();
+              }
             }
-          }
-        break;
+          break;
+      }
     }
   }
   keyReleased(keyEvent) {
