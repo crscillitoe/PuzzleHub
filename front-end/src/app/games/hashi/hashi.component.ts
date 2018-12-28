@@ -59,6 +59,8 @@ export class HashiComponent implements OnInit {
   previousTime: string;
   difficulty: string;
 
+  hoveredNode: any;
+
   circleColor: string[];
   circleTextColor: string;
   circleTextColors: string[];

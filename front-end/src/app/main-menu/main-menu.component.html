@@ -3,16 +3,17 @@
     <ng-container *ngFor="let game of games">
       <div class="flex-element puzzle-card">
         <div class="card text-white bg-dark mb-3">
-          <img class="card-img-top" src={{game.Image}} width=500 height=500>
+          <img class="card-img-top" src={{game.Image}} height=300>
           <div class="card-body">
-            <h5 style="padding-left:11px" class="card-title">{{game.Name}}</h5>
-            <p style="padding-left:30px; padding-right:30px;" class="card-text">{{game.Description}}</p>
             <div class="flex-container">
-              <a (click)="playGame(game.Name, 1)" class="puzzle-button btn btn-success">Easy</a>
-              <a (click)="playGame(game.Name, 2)" class="puzzle-button btn btn-info">Medium</a>
-              <a (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary">Hard</a>
-              <a (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger">Extreme</a>
+              <a (click)="playGame(game.Name, 1)" class="puzzle-button btn btn-success">easy</a>
+              <a (click)="playGame(game.Name, 2)" class="puzzle-button btn btn-info">medium</a>
+              <a (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary">hard</a>
+              <a (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger">extreme</a>
             </div>
+
+            <h5 style="padding-top:30px;margin-bottom:0px;padding-left:11px">{{game.Name}}</h5>
+            <p style="padding-left:11px; padding-right:30px;">{{game.Description}}</p>
           </div>
         </div>
       </div>

@@ -1318,6 +1318,7 @@ export class HashiStandardComponent implements OnInit {
         that.drawBridges();
         that.drawCircles();
         that.drawCircleRed(that.coloredNode);
+        that.drawCircleRed(that.hoveredNode);
     }
 
     public static drawGrid(that) {
@@ -1495,10 +1496,10 @@ export class HashiStandardComponent implements OnInit {
       that.mouseY = Math.round((mouseEventData.clientY - 56 - that.yAdd)/that.factor);
       
       if(that.isCircleHere(that.mouseX, that.mouseY)) {
-        that.coloredNode = that.getCircleHere(that.mouseX, that.mouseY);
+        that.hoveredNode = that.getCircleHere(that.mouseX, that.mouseY);
         that.drawCircleRed(that.coloredNode);
       } else {
-        that.coloredNode = null;
+        that.hoveredNode = null;
       }
 
       that.draw();

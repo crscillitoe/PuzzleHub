@@ -2,7 +2,27 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~font-awesome/css/font-awesome.css";
 @import url('https://fonts.googleapis.com/css?family=Poppins');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
 
 html {
   background-color: #2C2C2C;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: gray; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666; 
+}
+
+::-webkit-scrollbar-thumb:active { 
+  background-color: #555;
+}  

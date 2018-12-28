@@ -12,14 +12,26 @@
 }
 
 .puzzle-button {
-  width:6rem;
+  width:5.5rem;
 }
 
 .puzzle-card {
-  padding-top:10px;
-  padding-bottom:10px;
-  width: 30rem;
+  padding-top:20px;
+  padding-bottom:20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 500px;
+  height: 590px;
+}
+
+.card {
+  height: 100%;
+  border-radius: 25px;
 }
 
 .flex-element {
+}
+
+* {
+  font-family: 'Raleway', sans-serif;
 }
