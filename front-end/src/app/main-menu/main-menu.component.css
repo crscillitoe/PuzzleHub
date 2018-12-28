@@ -29,6 +29,20 @@
   border-radius: 25px;
 }
 
+.card-body {
+  padding-top: 50px;
+}
+
+.card-img-top {
+  height: 100%;
+  padding-top: 70px;
+  padding-bottom: 20px;
+}
+
+h5 {
+  font-size: 24pt;
+}
+
 .flex-element {
 }
 
