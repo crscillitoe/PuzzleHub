@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
+import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -21,6 +22,7 @@ export class TileGameComponent implements OnInit {
 
   solved: boolean = false;
 
+  personalBest: string;
 
   gridBoxSize: number;
   colors: any;
@@ -34,12 +36,16 @@ export class TileGameComponent implements OnInit {
   difficulty: number;
   seed: number;
 
+  startDate: any;
+  t: any;
+
   board: Board;
 
   constructor(
     private route: ActivatedRoute, 
     private colorService: ColorService,
     private router: Router,
+    private tunnel: TunnelService,
     private userService: UserService,
     private timer: TimerService,
     private loader: LoaderService) { 
@@ -88,6 +94,15 @@ export class TileGameComponent implements OnInit {
 
     // Start timer if we are logged in
     if(this.userService.isLoggedIn()) {
+      let m = {
+        GameID: GameID.TILE_GAME,
+        Difficulty: this.difficulty
+      }
+      this.tunnel.getPersonalBest(m)
+        .subscribe( (data) => {
+          this.personalBest = data['time'];
+        });
+
       this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
         .subscribe( (data) => {
           // Generate board with given seed
@@ -98,6 +113,9 @@ export class TileGameComponent implements OnInit {
 
           this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
           window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+
+          this.startDate = new Date();
+          this.displayTimer();
 
           this.fixSizes();
           this.draw();
@@ -112,8 +130,42 @@ export class TileGameComponent implements OnInit {
       this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
       window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
 
+      this.startDate = new Date();
+      this.displayTimer();
+
       this.fixSizes();
       this.draw();
+    }
+  }
+
+  add(that) {
+    var display = document.getElementById("timer");
+    var now = +new Date();
+
+    var diff = ((now - that.startDate));
+
+    var hours   = Math.trunc(diff / (60 * 60 * 1000));
+    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    var seconds = Math.trunc(diff / (1000)) % 60;
+    var millis  = diff % 1000;
+
+    try {
+      display.textContent = 
+        hours + ":" + 
+        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
+        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
+        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+
+      that.displayTimer();
+    } catch {
+      // Do nothing - page probably re-routed
+    }
+  }
+
+  displayTimer() {
+    if(!this.solved) {
+      var _this = this;
+      this.t = setTimeout(function() {_this.add(_this)}, 10);
     }
   }
 
@@ -129,6 +181,9 @@ export class TileGameComponent implements OnInit {
 
           this.solved = false;
 
+          this.startDate = new Date();
+          this.displayTimer();
+
           this.fixSizes();
           this.draw();
         });
@@ -140,6 +195,9 @@ export class TileGameComponent implements OnInit {
       this.board.generateBoard();
 
       this.solved = false;
+
+      this.startDate = new Date();
+      this.displayTimer();
 
       this.fixSizes();
       this.draw();
@@ -263,36 +321,16 @@ export class TileGameComponent implements OnInit {
     }
   }
 
-  /* Line
-    context.lineWidth = 1;
-    context.strokeStyle = that.gridColor;
-    context.moveTo(circleX, circleY);
-    context.lineTo(circleX, circleY2);
-    context.stroke();
-
-    Image
-    var img = document.getElementById("scream"); // ensure display:none on html
-    context.drawImage(img, 10, 10);
-
-    Circle
-    ellipse(cx, cy, rx, ry) {
-        context.save(); // save state
-        context.beginPath();
-        context.translate(cx, cy);
-        context.scale(rx/2, ry/2);
-        context.arc(1, 1, 1, 0, 2 * Math.PI, false);
-        context.fill();
-
-        context.restore(); // restore to original state
-    }
-   */
-
   done() {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          console.log(data);
+          if(data['NewRecord']) {
+            this.personalBest = data['TimeElapsed'];
+          }
+          var display = document.getElementById("timer");
+          display.textContent = data['TimeElapsed'];
         });
     } else {
       console.log('done - not logged in');
@@ -337,6 +375,9 @@ export class TileGameComponent implements OnInit {
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
       this.board.moveTile(x, y);
+      if(this.board.isSolved()) {
+        this.done();
+      }
       this.draw();
     }
   }

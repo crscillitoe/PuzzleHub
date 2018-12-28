@@ -48,3 +48,19 @@
 .others {
     color:#C0C0C0;
 }
+
+.easy {
+    border: lightcoral solid;
+}
+
+.medium {
+    border: cyan solid;
+}
+
+.hard {
+    border: lightgreen solid;
+}
+
+.extreme {
+    border: lightskyblue solid;
+}

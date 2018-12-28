@@ -16,12 +16,11 @@ export class Board {
     this.width = width;
     this.height = height;
     this.seed = seed;
-
-    this.emptyX = width - 1;
-    this.emptyY = height - 1;
   }
 
   generateBoard() { 
+    this.emptyX = this.width - 1;
+    this.emptyY = this.height - 1;
     var rows = [];
     for(var i = 0 ; i < this.height ; i++) {
       var column = [];

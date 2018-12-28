@@ -14,7 +14,8 @@
   <div class="gridContainer">
       <div class="columnContainer">
         <ng-container *ngFor="let diff of difficulties;let i=index">
-          <div class="leaderboardEntry">
+          <div [ngClass]="i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'"
+            class="leaderboardEntry">
             <h2>{{diff}}</h2>
             <table>
               <thead>
@@ -25,19 +26,7 @@
               </thead>
               <tbody>
                 <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
-                  <tr class="first" *ngIf="k==0">
-                    <td>{{entry.username}}</td>
-                    <td>{{entry.time}}</td>
-                  </tr>
-                  <tr class="second" *ngIf="k==1">
-                    <td>{{entry.username}}</td>
-                    <td>{{entry.time}}</td>
-                  </tr>
-                  <tr class="third" *ngIf="k==2">
-                    <td>{{entry.username}}</td>
-                    <td>{{entry.time}}</td>
-                  </tr>
-                  <tr class="others" *ngIf="k >= 3">
+                  <tr [ngClass]="k==0 ? 'first' : k==1 ? 'second' : k==2 ? 'third' : 'others'">
                     <td>{{entry.username}}</td>
                     <td>{{entry.time}}</td>
                   </tr>

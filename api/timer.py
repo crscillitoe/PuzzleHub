@@ -205,7 +205,7 @@ def stop_timer():
         db.commit()
         cursor.close()
 
-    return jsonify({"TimeElapsed":str(time_elapsed),"NewRecord":new_record})
+    return jsonify({"TimeElapsed":str(time_elapsed)[:-3],"NewRecord":new_record})
 
 # ------------------------------------------------------------ #
 def timer_sanity_checks(db, form_values):

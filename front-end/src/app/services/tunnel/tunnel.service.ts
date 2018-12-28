@@ -36,4 +36,8 @@ export class TunnelService {
   getLeaderboards(m) {
     return this.http.post(this.ipAddress + '/getLeaderboards', m);
   }
+
+  getPersonalBest(m) {
+    return this.http.post(this.ipAddress + '/getPersonalBest', m);
+  }
 }
