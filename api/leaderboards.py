@@ -59,7 +59,7 @@ def get_leaderboards():
     for d in data:
         model = {
             "username":d[0],
-            "time":str(d[1])
+            "time":str(d[1])[:-3]
         }
         to_return.append(model)
 
@@ -118,6 +118,6 @@ def get_personal_best():
     if len(data) == 0:
         return jsonify({"time":'N/A'})
     else:
-        return jsonify({"time":str((data[0])[0])})
+        return jsonify({"time":str((data[0])[0])[:-3]})
 
 
