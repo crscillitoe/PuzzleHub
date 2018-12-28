@@ -115,6 +115,18 @@ export class Board {
     this.emptyX++;
   }
 
+  moveTile(x, y) {
+    if(x - 1 == this.emptyX && y == this.emptyY) {
+      this.moveRight();
+    } else if(x + 1 == this.emptyX && y == this.emptyY) {
+      this.moveLeft();
+    } else if(x == this.emptyX && y + 1 == this.emptyY) {
+      this.moveUp();
+    } else if(x == this.emptyX && y - 1 == this.emptyY) {
+      this.moveDown();
+    }
+  }
+
   isSolved() { 
     for(var j = 0 ; j < this.height ; j++) {
       for(var i = 0 ; i < this.width ; i++) {

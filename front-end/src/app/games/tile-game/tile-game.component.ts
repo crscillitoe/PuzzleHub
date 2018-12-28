@@ -82,7 +82,7 @@ export class TileGameComponent implements OnInit {
     }
 
     // Uncomment these to add event listeners
-    //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+    this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
@@ -303,7 +303,12 @@ export class TileGameComponent implements OnInit {
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mousePressedX':x, 'mousePressedY':y});
+
+    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+    this.board.moveTile(x, y);
+    this.draw();
   }
   mouseReleased(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
