@@ -1173,6 +1173,7 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static drawCircleRed(that, node: MyNode) {
+      try {
         var circleX = (node.getX() * (that.factor)) - that.factor/2;
         var circleY = (node.getY() * (that.factor)) - that.factor/2;
 
@@ -1194,7 +1195,9 @@ export class HashiStandardComponent implements OnInit {
             }
             that.context.fillText(circleString, that.xAdd + circleX + that.factor/4.3, that.yAdd + circleY + that.factor/1.2);
         }
-
+      } catch {
+        return;
+      }
     }
 
     public static zoomOut(that) {
@@ -1314,6 +1317,7 @@ export class HashiStandardComponent implements OnInit {
         that.drawGrid();    
         that.drawBridges();
         that.drawCircles();
+        that.drawCircleRed(that.coloredNode);
     }
 
     public static drawGrid(that) {
@@ -1489,6 +1493,15 @@ export class HashiStandardComponent implements OnInit {
     public static mouseMove(that, mouseEventData) {
       that.mouseX = Math.round((mouseEventData.clientX - 225 - that.xAdd)/that.factor);
       that.mouseY = Math.round((mouseEventData.clientY - 56 - that.yAdd)/that.factor);
+      
+      if(that.isCircleHere(that.mouseX, that.mouseY)) {
+        that.coloredNode = that.getCircleHere(that.mouseX, that.mouseY);
+        that.drawCircleRed(that.coloredNode);
+      } else {
+        that.coloredNode = null;
+      }
+
+      that.draw();
     }
 
     public static pauseGame(that) {

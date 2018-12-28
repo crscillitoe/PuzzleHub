@@ -197,7 +197,25 @@ export class TileGameComponent implements OnInit {
         } else if(boardValue <= (this.board.width * 5) ||
                   (boardValue % this.board.width) == 5) {
           this.context.fillStyle = this.colors.COLOR_2;
+        } else if(boardValue <= (this.board.width * 6) ||
+                  (boardValue % this.board.width) == 6) {
+          this.context.fillStyle = this.colors.COLOR_1;
+        } else if(boardValue <= (this.board.width * 7) ||
+                  (boardValue % this.board.width) == 7) {
+          this.context.fillStyle = this.colors.COLOR_4;
+        } else if(boardValue <= (this.board.width * 8) ||
+                  (boardValue % this.board.width) == 8) {
+          this.context.fillStyle = this.colors.COLOR_2_ALT;
+        } else if(boardValue <= (this.board.width * 9) ||
+                  (boardValue % this.board.width) == 9) {
+          this.context.fillStyle = this.colors.COLOR_4;
+        } else if(boardValue <= (this.board.width * 10) ||
+                  (boardValue % this.board.width) == 10) {
+          this.context.fillStyle = this.colors.COLOR_1_ALT;
+        } else {
+          this.context.fillStyle = this.colors.COLOR_1_ALT;
         }
+
 
         var spacing = this.gridBoxSize/40;
 
