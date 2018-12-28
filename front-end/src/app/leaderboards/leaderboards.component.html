@@ -1,3 +1,51 @@
-<p>
-  leaderboards works!
-</p>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="navbar-expand mr-auto">
+    <div class="navbar-nav">
+      <a (click)="setGame( getEnum('TILE_GAME') )" class="nav-item nav-link">Tile Game</a>
+      <a (click)="setGame( getEnum('HASHI') )" class="nav-item nav-link">Hashi</a>
+      <a (click)="setGame( getEnum('SUDOKU') )" class="nav-item nav-link">Sudoku</a>
+      <a (click)="setGame( getEnum('TAKUZU') )" class="nav-item nav-link">Takuzu</a>
+      <a (click)="setGame( getEnum('MINESWEEPER') )" class="nav-item nav-link">Minesweeper</a>
+    </div>
+  </div>
+</nav>
+
+<div id="page">
+  <div class="gridContainer">
+      <div class="columnContainer">
+        <ng-container *ngFor="let diff of difficulties;let i=index">
+          <div class="leaderboardEntry">
+            <h2>{{diff}}</h2>
+            <table>
+              <thead>
+                <tr>
+                  <td style="width:180px"><b>Name</b></td>
+                  <td style="width:180px"><b>Time</b></td>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let entry of leaderboards[i];let k=index">
+                  <tr class="first" *ngIf="k==0">
+                    <td>{{entry.username}}</td>
+                    <td>{{entry.time}}</td>
+                  </tr>
+                  <tr class="second" *ngIf="k==1">
+                    <td>{{entry.username}}</td>
+                    <td>{{entry.time}}</td>
+                  </tr>
+                  <tr class="third" *ngIf="k==2">
+                    <td>{{entry.username}}</td>
+                    <td>{{entry.time}}</td>
+                  </tr>
+                  <tr class="others" *ngIf="k >= 3">
+                    <td>{{entry.username}}</td>
+                    <td>{{entry.time}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TunnelService } from '../services/tunnel/tunnel.service'
 import { UserService } from '../services/user/user.service';
 import { LoaderService } from '../services/loading-service/loader.service'
+import { GameID } from '../enums/game-id.enum';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,10 @@ export class HeaderComponent implements OnInit {
       .subscribe( (data) => {
         user.setUserName(data['username']);
       });
+  }
+
+  getEnum(name) {
+    return GameID[name];
   }
 
   signOut() {

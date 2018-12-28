@@ -1,0 +1,50 @@
+.gridContainer {
+    height:100%;
+    display:flex;
+}
+
+#page {
+  background: #2C2C2C;
+  width: 100vw;
+  height: calc(100vh - 7rem);
+}
+
+.leaderboardEntry {
+    color: white;   
+    border: white solid;
+    flex:1;
+    margin: auto;
+    
+    font-size:18px;
+    max-width:350px;
+    min-width: 350px;
+    height:350px;
+    max-height:350px;
+    min-height:350px;
+    text-align: center;
+}
+
+.columnContainer {
+    display:flex;
+    flex-wrap: wrap;
+    min-height: 800px;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+}
+
+.first {
+    color:yellow;
+}
+
+.second {
+    color:white;
+}
+
+.third {
+    color:#CD7F32;
+}
+
+.others {
+    color:#C0C0C0;
+}

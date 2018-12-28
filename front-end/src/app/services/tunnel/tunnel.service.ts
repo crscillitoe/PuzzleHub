@@ -32,4 +32,8 @@ export class TunnelService {
   sampleGetRequest() {
     return this.http.get(this.ipAddress + '/endpoint');
   }
+
+  getLeaderboards(m) {
+    return this.http.post(this.ipAddress + '/getLeaderboards', m);
+  }
 }
