@@ -179,10 +179,14 @@ export class TileGameComponent implements OnInit {
           this.board.seed = this.seed;
           this.board.generateBoard();
 
-          this.solved = false;
+          if(this.solved) {
+            this.solved = false;
 
-          this.startDate = new Date();
-          this.displayTimer();
+            this.startDate = new Date();
+            this.displayTimer();
+          } else {
+            this.startDate = new Date();
+          }
 
           this.fixSizes();
           this.draw();
@@ -194,10 +198,14 @@ export class TileGameComponent implements OnInit {
       this.board.seed = this.seed;
       this.board.generateBoard();
 
-      this.solved = false;
+      if(this.solved) {
+        this.solved = false;
 
-      this.startDate = new Date();
-      this.displayTimer();
+        this.startDate = new Date();
+        this.displayTimer();
+      } else {
+        this.startDate = new Date();
+      }
 
       this.fixSizes();
       this.draw();

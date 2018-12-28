@@ -5,7 +5,9 @@ import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service
 import { HashiStandardComponent } from '../../hashi-standard/hashi-standard.component';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
+import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
+import { GameID } from '../../enums/game-id.enum';
 
 @Component({
   selector: 'app-hashi',
@@ -59,6 +61,8 @@ export class HashiComponent implements OnInit {
   previousTime: string;
   difficulty: string;
 
+  personalBest: string;
+
   hoveredNode: any;
 
   circleColor: string[];
@@ -88,11 +92,43 @@ export class HashiComponent implements OnInit {
   constructor(private route: ActivatedRoute, 
     private router: Router,
     private userService: UserService,
+    private tunnel: TunnelService,
     private timer: TimerService,
     private loader: LoaderService) { 
       this.pause = false;
       this.mouseX = -1;
       this.mouseY = -1;
+  }
+
+  add(that) {
+    var display = document.getElementById("timer");
+    var now = +new Date();
+
+    var diff = ((now - that.startDate));
+
+    var hours   = Math.trunc(diff / (60 * 60 * 1000));
+    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    var seconds = Math.trunc(diff / (1000)) % 60;
+    var millis  = diff % 1000;
+
+    try {
+      display.textContent = 
+        hours + ":" + 
+        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
+        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
+        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+
+      that.displayTimer();
+    } catch {
+      // Do nothing - page probably re-routed
+    }
+  }
+
+  displayTimer() {
+    if(!this.solved) {
+      var _this = this;
+      this.t = setTimeout(function() {_this.add(_this)}, 10);
+    }
   }
 
   fullscreen() {
@@ -104,7 +140,7 @@ export class HashiComponent implements OnInit {
     return HashiStandardComponent.back(that);
   }
 
-  newBoard() {
+  newGame() {
     var that = this;
     return HashiStandardComponent.newBoard(that);
   }

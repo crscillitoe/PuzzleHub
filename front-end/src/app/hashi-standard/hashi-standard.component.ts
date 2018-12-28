@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Board, MyNode, Bridge } from '../services/boards/hashi/board.service';
+import { GameID } from '../enums/game-id.enum';
 
 @Component({
   selector: 'app-hashi-standard',
@@ -908,10 +909,17 @@ export class HashiStandardComponent implements OnInit {
           }
       }
 
+      that.solved = true;
+
       if(that.userService.isLoggedIn()) {
-        that.timer.stopTimer(2, that.diff, that.board.toString())
+        that.timer.stopTimer(GameID.HASHI, that.diff, that.board.toString())
           .subscribe( (data) => {
-              console.log(data);
+            console.log(data);
+              if(data['NewRecord']) {
+                that.personalBest = data['TimeElapsed'];
+              }
+              var display = document.getElementById("timer");
+              display.textContent = data['TimeElapsed'];
             });
       } else {
         console.log('done - not logged in');
@@ -1426,8 +1434,8 @@ export class HashiStandardComponent implements OnInit {
           numNodes = 500000;
           that.extreme = false;
         } else if(diff == 4) {
-          that.width = 25;
-          that.height = 25;
+          that.width = 29;
+          that.height = 29;
           numNodes = 500000;
           that.extreme = true;
         }
@@ -1439,17 +1447,25 @@ export class HashiStandardComponent implements OnInit {
         that.numNodes = numNodes;
 
         if(that.userService.isLoggedIn()) {
-          that.timer.startTimer(2, that.diff)
+          let m = {
+            GameID: GameID.HASHI,
+            Difficulty: that.diff
+          }
+          that.tunnel.getPersonalBest(m)
+            .subscribe( (data) => {
+              that.personalBest = data['time'];
+            });
+          that.timer.startTimer(GameID.HASHI, that.diff)
             .subscribe( (data) => {
               that.seed = data['seed'];
               that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
-              that.board.generateBoard();
+              that.generateFairBoard(that.numNodes);
               this.play(that)
             });
         } else {
           that.seed = 0;
           that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
-          that.board.generateBoard();
+          that.generateFairBoard(that.numNodes);
           this.play(that);
         }
     }
@@ -1459,6 +1475,8 @@ export class HashiStandardComponent implements OnInit {
         var numNodes = Number(that.route.snapshot.paramMap.get('numNodes'));
         that.displayCoords = false;
         that.scrollMode = false;
+
+        that.startDate = new Date();
 
         that.timePaused = 0;
         that.startPause = null;
@@ -1487,6 +1505,7 @@ export class HashiStandardComponent implements OnInit {
         that.nightTheme();
 
         that.loader.stopLoadingAnimation();  
+        that.displayTimer();
 
         that.fixSizes();
     }
@@ -1523,124 +1542,71 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static newBoard(that) {
-        var numNodes = Number(that.route.snapshot.paramMap.get('numNodes'));
-        if(numNodes === 0) {
-            numNodes = Math.floor(Math.sqrt(that.width * that.height)) * 2;
-        }
-        that.seed = 0;
+        var numNodes = that.numNodes;
 
+        if(that.userService.isLoggedIn()) {
+          that.timer.startTimer(GameID.HASHI, that.diff)
+            .subscribe( (data) => {
+              that.seed = data['seed'];
+              that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
+              that.generateFairBoard(that.numNodes);
+              that.timePaused = 0;
+              that.startPause = null;
+              that.name = "";
+              that.millis = 0;
+              that.seconds = 0;
+              that.minutes = 0;
+              that.hours = 0;
 
-        that.timePaused = 0;
-        that.startPause = null;
-        that.generateFairBoard(numNodes);
-        that.name = "";
-        that.millis = 0;
-        that.seconds = 0;
-        that.minutes = 0;
-        that.hours = 0;
-        if(that.solved) {
+              if(that.solved) {
+                that.solved = false;
+                that.startDate = new Date();
+                that.displayTimer();
+              } else {
+                that.startDate = new Date();
+              }
+
+              that.draw();
+
+            });
+        } else {
+          that.seed = 0;
+          that.board = new Board(that.width, that.height, numNodes, that.extreme, that.seed, null, null, null, null, null, that.gauntlet, null);
+          that.generateFairBoard(that.numNodes);
+          that.timePaused = 0;
+          that.startPause = null;
+          that.name = "";
+          that.millis = 0;
+          that.seconds = 0;
+          that.minutes = 0;
+          that.hours = 0;
+          if(that.solved) {
             that.solved = false;
+            that.startDate = new Date();
+            that.displayTimer();
+          } else {
+            that.startDate = new Date();
+          }
+
+          that.startDate = new Date();
         }
-
-        that.solved = false;
-
-        that.startDate = new Date();
-        that.draw();
     }
 
     public static generateFairBoard(that, numNodes) {
         var min = 0;
         var max = 0;
-        if(that.width == 40 && that.height == 40 && numNodes == 500000 && !that.extreme) {
+        if(that.width == 10 && that.height == 10 && numNodes == 20 && !that.extreme) {
             //board = "40x40hard";
-            min = 190;
-            max = 220;
-        } else if(that.width == 7 && that.height == 7 && numNodes == 14) {
+            min = 20;
+            max = 20;
+        } else if(that.width == 15 && that.height == 15 && numNodes == 15000) {
             //board = "7x7easy";
-            min = 7;
-            max = 7;
-        }  else if(that.width == 7 && that.height == 7 && numNodes == 21) {
+            min = 28;
+            max = 35;
+        }  else if(that.width == 25 && that.height == 25 && numNodes == 500000 && !that.extreme) {
             //board = "7x7medium";
-            min = 7;
-            max = 7;
-        } else if(that.width == 15 && that.height == 15 && numNodes == 30) {
-            //board = "15x15easy";
-            min = 30;
-            max = 30;
-        } else if(that.width == 15 && that.height == 15 && numNodes == 45) {
-            //board = "15x15medium";
-            min = 32;
-            max = 36;
-        } else if(that.width == 25 && that.height == 25 && numNodes == 50) {
-            //board = "25x25easy";
-            min = 50;
-            max = 50;
-        } else if(that.width == 40 && that.height == 40 && numNodes == 80) {
-            //board = "40x40easy";
             min = 80;
-            max = 80;
-        } else if(that.width == 40 && that.height == 40 && numNodes == 120) {
-            //board = "40x40medium";
-            min = 110;
-            max = 130;
-        } else if(that.width == 100 && that.height == 100 && numNodes == 200) {
-            //board = "100x100easy";
-        } else if(that.width == 100 && that.height == 100 && numNodes == 300) {
-            //board = "100x100medium";
-        } else if(that.width == 25 && that.height == 25 && numNodes == 75) {
-            //board = "25x25medium";
-            min = 68;
-            max = 80;
-        } else if(that.width == 7 && that.height == 7 && numNodes == 500000 && !that.extreme) {
-            //board = "7x7hard";
-            min = 7;
-            max = 7;
-        } else if(that.width == 7 && that.height == 7 && numNodes == 500000 && that.extreme) {
-            //board = "7x7extreme";
-            min = 8;
-            max = 8;
-        } else if(that.width == 10 && that.height == 10 && numNodes == 20 && !that.extreme) {
-            //board = "10x10easy";
-            min = 13;
-            max = 15;
-        } else if(that.width == 10 && that.height == 10 && numNodes == 30 && !that.extreme) {
-            //board = "10x10medium";
-            min = 15;
-            max = 17;
-        } else if(that.width == 10 && that.height == 10 && numNodes == 500000 && !that.extreme) {
-            //board = "10x10hard";
-            min = 15;
-            max = 17;
-        } else if(that.width == 10 && that.height == 10 && numNodes == 500000 && that.extreme) {
-            //board = "10x10extreme";
-            min = 19;
-            max = 21;
-        } else if(that.width == 60 && that.height == 60 && numNodes == 120 && !that.extreme) {
-            //board = "60x60easy";
-        } else if(that.width == 60 && that.height == 60 && numNodes == 180 && !that.extreme) {
-            //board = "60x60medium";
-        } else if(that.width == 60 && that.height == 60 && numNodes == 500000 && !that.extreme) {
-            //board = "60x60hard";
-        } else if(that.width == 60 && that.height == 60 && numNodes == 500000 && that.extreme) {
-            //board = "60x60extreme";
-        } else if(that.width == 25 && that.height == 25 && that.extreme) {
-            //board = "25x25extreme";
-        } else if(that.width == 15 && that.height == 15 && numNodes == 500000 && !that.extreme) {
-            //board = "15x15hard";
-            min = 38;
-            max = 42;
-        } else if(that.width == 100 && that.height == 100 && numNodes == 500000 && !that.extreme) {
-            //board = "100x100hard";
-        } else if(that.width == 100 && that.height == 100 && that.extreme) {
-            //board = "100x100extreme";
-        } else if(that.width==15 && that.height == 15 && that.extreme) {
-            //board = "15x15extreme";
-        } else if(that.width==40 && that.height == 40 && that.extreme) {
-            //board = "40x40extreme";
-        } else if(that.width==25 && that.height==25 && !that.extreme && numNodes == 500000) {
-            //board = "25x25hard";
-            min = 82;
-            max = 94;
+            max = 100;
         }
 
         if(min != 0 && max != 0) {
