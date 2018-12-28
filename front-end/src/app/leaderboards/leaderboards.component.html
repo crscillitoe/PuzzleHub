@@ -24,7 +24,7 @@
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let entry of leaderboards[i];let k=index">
+                <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
                   <tr class="first" *ngIf="k==0">
                     <td>{{entry.username}}</td>
                     <td>{{entry.time}}</td>
