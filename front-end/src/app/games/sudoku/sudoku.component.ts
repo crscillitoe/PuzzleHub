@@ -353,7 +353,11 @@ export class SudokuComponent implements OnInit {
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.SUDOKU, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          console.log(data);
+          if(data['NewRecord']) {
+            this.personalBest = data['TimeElapsed'];
+          }
+          var display = document.getElementById("timer");
+          display.textContent = data['TimeElapsed'];
         });
     } else {
       console.log('done - not logged in');
