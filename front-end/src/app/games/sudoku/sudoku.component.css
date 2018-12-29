@@ -1,14 +1,79 @@
 #myCanvas {
     position: absolute;
-    left: 225px;
+    left: 500px;
     top:3.5rem;
     height: calc(100vh - 7rem);
-    width: calc(100vw - 225px);
-    background-color: black;
+    width: calc(100vw - 500px);
+    background-color: #2C2C2C;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+#leftControlPanel {
+  background-color: #2C2C2C;
+  height: calc(100vh - 7rem);
+}
+
+.previousBest {
+  top:50px;
+  left: 22px;
+  background: #FFD79D;
+  text-align: center;
+}
+
+.timer, .previousBest {
+  position: relative;
+  font-size:30px;
+  width: 180px;
+  border-radius: 8px;
+}
+
+.rules {
+  position: relative;
+  top: 150px;
+  left: 22px;
+  width: 180px;
+  border: 1px solid white;
+  border-radius: 8px;
+}
+
+hr {
+  border-top: 1px solid white;
+}
+
+.text {
+  color: white;
+  padding: 5px;
+}
+
+.timer {
+  top: 100px;
+  left: 22px;
+  text-align:center;
+  background: #FF9289;
+}
+
+.controls {
+  position: absolute;
+  top: 106px;
+  left: 242px;
+  display: block;
+  width: 180px;
+}
+
+.buttons {
+  position: absolute;
+  bottom: 100px;
+  left: 22px;
+  display: block;
+  width: 180px;
+}
+
+.center {
+  margin: auto;
+  display: block;
 }

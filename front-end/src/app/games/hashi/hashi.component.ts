@@ -127,7 +127,7 @@ export class HashiComponent implements OnInit {
   displayTimer() {
     if(!this.solved) {
       var _this = this;
-      this.t = setTimeout(function() {_this.add(_this)}, 10);
+      this.t = setTimeout(function() {_this.add(_this)}, 50);
     }
   }
 
