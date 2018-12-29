@@ -39,6 +39,7 @@ export class SudokuComponent implements OnInit {
   takingNotes: boolean = false;
   notes: any = {};
   solved: boolean = false;
+  personalBest: string;
 
   startDate: any;
   t: any;
