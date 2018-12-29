@@ -308,6 +308,7 @@ export class SudokuComponent implements OnInit {
           this.board = new Board(this.numCarved);
 
           this.board.generateBoard();
+          this.notes = {};
 
           this.fixSizes();
           this.loader.stopLoadingAnimation();
@@ -329,6 +330,7 @@ export class SudokuComponent implements OnInit {
 
       this.board = new Board(this.numCarved);
       this.board.generateBoard();
+      this.notes = {};
 
       this.fixSizes();
       this.loader.stopLoadingAnimation();

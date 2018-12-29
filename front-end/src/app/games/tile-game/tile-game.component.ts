@@ -178,7 +178,6 @@ export class TileGameComponent implements OnInit {
 
           this.board.seed = this.seed;
           this.board.generateBoard();
-          this.notes = {}
 
           if(this.solved) {
             this.solved = false;
@@ -198,7 +197,6 @@ export class TileGameComponent implements OnInit {
 
       this.board.seed = this.seed;
       this.board.generateBoard();
-      this.notes = {}
 
       if(this.solved) {
         this.solved = false;
