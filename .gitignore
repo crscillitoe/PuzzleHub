@@ -5,4 +5,5 @@ front-end/node_modules
 api/tests
 env/
 api/api/config.json
+aws
 
