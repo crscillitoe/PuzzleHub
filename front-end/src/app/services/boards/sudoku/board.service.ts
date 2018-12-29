@@ -26,6 +26,122 @@ export class Board {
       return x - Math.floor(x);
   }
 
+  isInvalidTile(x, y, tileValue) {
+    if(tileValue == 0) return false;
+
+    for(var i = 0 ; i < 9 ; i++) {
+      if(i != x) {
+        if(this.sudokuPuzzle[i][y] == tileValue) return true;
+      }
+
+      if(i != y) {
+        if(this.sudokuPuzzle[x][i] == tileValue) return true;
+      }
+    }
+
+    if(x % 3 == 0 && y % 3 == 0) {
+      if(this.sudokuPuzzle[x + 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y + 2] == tileValue) return true;
+    }
+
+    else if(x % 3 == 1 && y % 3 == 0) {
+      if(this.sudokuPuzzle[x - 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y + 2] == tileValue) return true;
+    }
+
+    else if(x % 3 == 2 && y % 3 == 0) {
+      if(this.sudokuPuzzle[x - 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y + 2] == tileValue) return true;
+    }
+
+    else if(x % 3 == 0 && y % 3 == 1) {
+      if(this.sudokuPuzzle[x][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y + 1] == tileValue) return true;
+    }
+
+    else if(x % 3 == 0 && y % 3 == 2) {
+      if(this.sudokuPuzzle[x][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y - 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y - 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 2][y - 2] == tileValue) return true;
+    }
+
+    else if(x % 3 == 1 && y % 3 == 1) {
+      if(this.sudokuPuzzle[x - 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y + 1] == tileValue) return true;
+    }
+    
+    else if(x % 3 == 2 && y % 3 == 1) {
+      if(this.sudokuPuzzle[x][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y + 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y] == tileValue) return true;
+    }
+
+    else if(x % 3 == 1 && y % 3 == 2) {
+      if(this.sudokuPuzzle[x + 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y - 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x + 1][y - 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y - 2] == tileValue) return true;
+    }
+
+    else if(x % 3 == 2 && y % 3 == 2) {
+      if(this.sudokuPuzzle[x][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x][y - 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 1][y - 2] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y - 1] == tileValue) return true;
+      if(this.sudokuPuzzle[x - 2][y - 2] == tileValue) return true;
+    }
+
+
+    return false;
+  }
+
   valid(arraySolution) {
       for (var y = 0; y < 9; ++y) {
           for (var x = 0; x < 9; ++x) {

@@ -175,6 +175,7 @@ export class SudokuComponent implements OnInit {
     this.context.beginPath();
     this.drawBackground();
     this.drawSelectedBox();
+    this.drawBadBoxes();
     this.drawGrid();
     this.drawBoard();
     this.drawNotes();
@@ -195,6 +196,20 @@ export class SudokuComponent implements OnInit {
     }
   }
 
+  drawBadBoxes() {
+    for(var i = 0 ; i < 9 ; i++) {
+      for(var j = 0 ; j < 9 ; j++) {
+        var tileValue = this.board.sudokuPuzzle[i][j];
+        if(this.board.isInvalidTile(i, j, tileValue)) {
+          this.context.fillStyle = "#FF3D3D";
+          this.context.fillRect(this.gridOffsetX + (i * this.gridBoxSize),
+                                this.gridOffsetY + (j * this.gridBoxSize),
+                                  this.gridBoxSize, this.gridBoxSize);
+        }
+      }
+    }
+  }
+
   drawNotes() {
     for(let key of Object.keys(this.notes)) {
       var x = Math.trunc(Number(key)/10);
@@ -209,6 +224,14 @@ export class SudokuComponent implements OnInit {
           if(num != 0) {
             var row = Math.trunc(num / 3.1);
             var col = (num + 2) % 3;
+
+            /*
+              if(this.board.isInvalidTile(x, y, num) {
+                this.context.fillStyle = this.colors.COLOR_7_ALT;
+              } else {
+                this.context.fillStyle = this.colors.COLOR_3_ALT;
+              }
+             */
 
             this.context.fillText('' + num, 
               (this.gridOffsetX) + (x * this.gridBoxSize) + (col * (this.gridBoxSize/3)) + (this.gridBoxSize/6),
@@ -404,7 +427,13 @@ export class SudokuComponent implements OnInit {
            this.selectedY <= 8 && this.selectedY >= 0) {
           if(!this.takingNotes) {
             if(this.board.originalPuzzle[this.selectedX][this.selectedY] == 0) {
-              this.board.sudokuPuzzle[this.selectedX][this.selectedY] = pressed;
+
+              if(this.board.sudokuPuzzle[this.selectedX][this.selectedY] == pressed) {
+                this.board.sudokuPuzzle[this.selectedX][this.selectedY] = 0;
+              } else {
+                this.board.sudokuPuzzle[this.selectedX][this.selectedY] = pressed;
+              }
+
               if(this.board.isSolved()) {
                 this.done();
               }
