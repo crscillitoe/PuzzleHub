@@ -1542,6 +1542,7 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static newBoard(that) {
+        that.loader.startLoadingAnimation();
         var numNodes = that.numNodes;
 
         if(that.userService.isLoggedIn()) {
@@ -1565,6 +1566,7 @@ export class HashiStandardComponent implements OnInit {
               } else {
                 that.startDate = new Date();
               }
+              that.loader.stopLoadingAnimation();
 
               that.draw();
 
@@ -1590,6 +1592,7 @@ export class HashiStandardComponent implements OnInit {
 
           that.startDate = new Date();
 
+          that.loader.stopLoadingAnimation();
           that.draw();
         }
     }

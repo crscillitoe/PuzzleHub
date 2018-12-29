@@ -390,42 +390,44 @@ export class SudokuComponent implements OnInit {
   }
 
   keyPressed(keyEvent) {
-    var numPressed = keyEvent.keyCode;
-    var pressed = -1;
-    if(numPressed >= 48 && numPressed <= 57) {
-      pressed = numPressed - 48;
-    } else if(numPressed >= 96 && numPressed <= 105) {
-      pressed = numPressed - 96;
-    }
+    if(!this.solved) {
+      var numPressed = keyEvent.keyCode;
+      var pressed = -1;
+      if(numPressed >= 48 && numPressed <= 57) {
+        pressed = numPressed - 48;
+      } else if(numPressed >= 96 && numPressed <= 105) {
+        pressed = numPressed - 96;
+      }
 
-    if(pressed >= 0) {
-      if(this.selectedX <= 8 && this.selectedX >= 0 &&
-         this.selectedY <= 8 && this.selectedY >= 0) {
-        if(!this.takingNotes) {
-          if(this.board.originalPuzzle[this.selectedX][this.selectedY] == 0) {
-            this.board.sudokuPuzzle[this.selectedX][this.selectedY] = pressed;
-            if(this.board.isSolved()) {
-              this.done();
-            }
-          }
-        } else {
-          if(this.notes['' + this.selectedX + '' + this.selectedY + ''] == undefined) {
-            this.notes['' + this.selectedX + '' + this.selectedY + ''] = [pressed];
-          } else {
-            if(this.notes['' + this.selectedX + '' + this.selectedY + ''].includes(pressed)) {
-              var index = this.notes['' + this.selectedX + '' + this.selectedY + ''].indexOf(pressed);
-
-              if(index > -1) {
-                this.notes['' + this.selectedX + '' + this.selectedY + ''].splice(index, 1);
+      if(pressed >= 0) {
+        if(this.selectedX <= 8 && this.selectedX >= 0 &&
+           this.selectedY <= 8 && this.selectedY >= 0) {
+          if(!this.takingNotes) {
+            if(this.board.originalPuzzle[this.selectedX][this.selectedY] == 0) {
+              this.board.sudokuPuzzle[this.selectedX][this.selectedY] = pressed;
+              if(this.board.isSolved()) {
+                this.done();
               }
+            }
+          } else {
+            if(this.notes['' + this.selectedX + '' + this.selectedY + ''] == undefined) {
+              this.notes['' + this.selectedX + '' + this.selectedY + ''] = [pressed];
             } else {
-              this.notes['' + this.selectedX + '' + this.selectedY + ''].push(pressed);
+              if(this.notes['' + this.selectedX + '' + this.selectedY + ''].includes(pressed)) {
+                var index = this.notes['' + this.selectedX + '' + this.selectedY + ''].indexOf(pressed);
+
+                if(index > -1) {
+                  this.notes['' + this.selectedX + '' + this.selectedY + ''].splice(index, 1);
+                }
+              } else {
+                this.notes['' + this.selectedX + '' + this.selectedY + ''].push(pressed);
+              }
             }
           }
         }
-      }
 
-      this.draw();
+        this.draw();
+      }
     }
   }
   keyReleased(keyEvent) {

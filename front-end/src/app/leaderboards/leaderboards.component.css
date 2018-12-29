@@ -65,8 +65,8 @@
   background: #2C2C2C;
   position: absolute;
   top:3.5rem;
-  left:10vw;
-  width: 90vw;
+  left:200px;
+  width: calc(100% - 200px);
   height: calc(100vh - 7rem);
 }
 
@@ -75,8 +75,8 @@
   position: absolute;
   top:40vh;
   left: 0px;
-  width: 10vw;
-  height: calc(100vh - 7rem);
+  width: 200px;
+  height: calc(60vh - 7rem);
   color: white;
 }
 

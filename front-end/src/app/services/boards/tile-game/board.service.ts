@@ -34,9 +34,26 @@ export class Board {
     this.tilePuzzle = rows;
     this.tilePuzzle[this.height - 1][this.width - 1] = 0;
 
-    for(var _ = 0 ; _ < this.NUM_SWITCHES ; _++) {
-      this.switchTiles();
+    var numTiles = (this.width * this.height) - 1;
+    while( this.numTilesInCorrectPosition() > Math.round(numTiles/4) ) {
+      for(var _ = 0 ; _ < this.NUM_SWITCHES ; _++) {
+        this.switchTiles();
+      }
     }
+  }
+
+  numTilesInCorrectPosition() {
+    var toReturn = 0;
+    for(var j = 0 ; j < this.height ; j++) {
+      for(var i = 0 ; i < this.width ; i++) {
+        var val = this.tilePuzzle[j][i];
+        if(val == (i + 1) + (j * this.width) && val != 0) {
+          toReturn++;
+        }
+      }
+    }
+
+    return toReturn;
   }
 
   switchTiles() {
