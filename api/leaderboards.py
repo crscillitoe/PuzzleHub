@@ -37,7 +37,7 @@ def get_leaderboards():
 
     cursor = db.cursor()
     sql_query = '''
-        SELECT Username, TimeElapsed 
+        SELECT Username, TimeElapsed, Role
         FROM leaderboards AS L
         INNER JOIN users AS U ON
         U.UserID = L.UserID
@@ -59,7 +59,8 @@ def get_leaderboards():
     for d in data:
         model = {
             "username":d[0],
-            "time":str(d[1])[:-3]
+            "time":str(d[1])[:-3],
+            "role":str(d[2])
         }
         to_return.append(model)
 

@@ -1,14 +1,24 @@
-<nav class="navbar navbar-dark bg-dark">
-  <div class="navbar-expand mr-auto">
-    <div class="navbar-nav">
-      <a (click)="setGame( getEnum('TILE_GAME') )" class="nav-item nav-link">Tile Game</a>
-      <a (click)="setGame( getEnum('HASHI') )" class="nav-item nav-link">Hashi</a>
-      <a (click)="setGame( getEnum('SUDOKU') )" class="nav-item nav-link">Sudoku</a>
-      <a (click)="setGame( getEnum('TAKUZU') )" class="nav-item nav-link">Takuzu</a>
-      <a (click)="setGame( getEnum('MINESWEEPER') )" class="nav-item nav-link">Minesweeper</a>
-    </div>
-  </div>
-</nav>
+<div id="navController" class="">
+  <a (click)="setGame( getEnum('TILE_GAME') )" 
+    [ngClass]="gameID == getEnum('TILE_GAME') ? 'navActive' : 'navInactive'" 
+      class="navItem nav-item nav-link">Tile Game</a>
+
+  <a (click)="setGame( getEnum('HASHI') )" 
+    [ngClass]="gameID == getEnum('HASHI') ? 'navActive' : 'navInactive'" 
+    class="navItem nav-item nav-link">Hashi</a>
+
+  <a (click)="setGame( getEnum('SUDOKU') )" 
+    [ngClass]="gameID == getEnum('SUDOKU') ? 'navActive' : 'navInactive'" 
+    class="navItem nav-item nav-link">Sudoku</a>
+
+  <a (click)="setGame( getEnum('TAKUZU') )" 
+    [ngClass]="gameID == getEnum('TAKUZU') ? 'navActive' : 'navInactive'" 
+    class="navItem nav-item nav-link">Takuzu</a>
+
+  <a (click)="setGame( getEnum('MINESWEEPER') )" 
+    [ngClass]="gameID == getEnum('MINESWEEPER') ? 'navActive' : 'navInactive'" 
+    class="navItem nav-item nav-link">Minesweeper</a>
+</div>
 
 <div id="page">
   <div class="gridContainer">
@@ -16,19 +26,24 @@
         <ng-container *ngFor="let diff of difficulties;let i=index">
           <div [ngClass]="i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'"
             class="leaderboardEntry">
-            <h2>{{diff}}</h2>
+            <h3 style="padding-top:10px">{{diff}}</h3>
             <table>
               <thead>
                 <tr>
-                  <td style="width:180px"><b>Name</b></td>
-                  <td style="width:180px"><b>Time</b></td>
+                  <td style="width:180px" class="name"><b>Name</b></td>
+                  <td style="width:180px" class="time"><b>Time</b></td>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
                   <tr [ngClass]="k==0 ? 'first' : k==1 ? 'second' : k==2 ? 'third' : 'others'">
-                    <td>{{entry.username}}</td>
-                    <td>{{entry.time}}</td>
+                    <td class="name">
+                      {{entry.username}}
+                    </td>
+
+                    <td class="time">
+                      {{entry.time}}
+                    </td>
                   </tr>
                 </ng-container>
               </tbody>
