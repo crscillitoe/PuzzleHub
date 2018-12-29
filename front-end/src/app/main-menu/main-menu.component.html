@@ -3,7 +3,7 @@
     <ng-container *ngFor="let game of games">
       <div class="flex-element puzzle-card">
         <div class="card text-white bg-dark mb-3">
-          <img class="card-img-top" src={{game.Image}} height=250>
+          <img class="svg-image card-img-top" src={{game.Image}}>
           <div class="card-body">
             <div class="flex-container">
               <a (click)="playGame(game.Name, 1)" class="puzzle-button btn btn-success">easy</a>

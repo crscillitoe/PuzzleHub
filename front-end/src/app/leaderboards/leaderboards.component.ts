@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameID } from '../enums/game-id.enum';
 import { ActivatedRoute } from '@angular/router';
+import { LoaderService } from '../services/loading-service/loader.service';
 
 @Component({
   selector: 'app-leaderboards',
@@ -49,6 +50,7 @@ export class LeaderboardsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, 
+    private loader: LoaderService,
     private tunnel: TunnelService
   ) { }
 
@@ -58,6 +60,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   loadScores() {
+    this.loader.startLoadingAnimation();
     this.leaderboards = {};
 
     for(var i = 1 ; i <= 4 ; i++) {
@@ -68,7 +71,11 @@ export class LeaderboardsComponent implements OnInit {
 
       this.tunnel.getLeaderboards(m)
         .subscribe( (data) => {
-          this.leaderboards[m['Difficulty']] = data;
+          var that = this;
+          setTimeout(function() {
+            that.loader.stopLoadingAnimation()
+            that.leaderboards[m['Difficulty']] = data;
+          }, 500);
         });
     }
   }

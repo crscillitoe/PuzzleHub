@@ -170,6 +170,7 @@ export class TileGameComponent implements OnInit {
   }
 
   newGame() {
+    this.loader.startLoadingAnimation();
     if(this.userService.isLoggedIn()) {
       this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
         .subscribe( (data) => {
@@ -189,6 +190,8 @@ export class TileGameComponent implements OnInit {
           }
 
           this.fixSizes();
+
+          this.loader.stopLoadingAnimation();
           this.draw();
         });
     } else {
@@ -208,6 +211,8 @@ export class TileGameComponent implements OnInit {
       }
 
       this.fixSizes();
+
+      this.loader.stopLoadingAnimation();
       this.draw();
     }
   }

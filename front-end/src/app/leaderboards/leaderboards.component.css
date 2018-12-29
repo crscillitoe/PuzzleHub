@@ -2,11 +2,94 @@
     height:100%;
     display:flex;
 }
+.mytooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.mytooltip .tooltiptext {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.mytooltip:hover .tooltiptext {
+  opacity: 1;
+}
+
+.name {
+  text-align: left;
+  padding-left: 15px;
+}
+
+.time {
+  text-align: right;
+  padding-right: 15px;
+}
+
+.mytooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 100%; /* To the right of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent black;
+}
+
+/* Tooltip text */
+.mytooltip .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+
+  top: -5px;
+  right: 115%; 
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.mytooltip:hover .tooltiptext {
+  visibility: visible;
+}
 
 #page {
   background: #2C2C2C;
-  width: 100vw;
+  position: absolute;
+  top:3.5rem;
+  left:200px;
+  width: calc(100% - 200px);
   height: calc(100vh - 7rem);
+}
+
+#navController {
+  background: #2C2C2C;
+  position: absolute;
+  top:40vh;
+  left: 0px;
+  width: 200px;
+  height: calc(60vh - 7rem);
+  color: white;
+}
+
+.navActive {
+  background: #2C2C2C;
+}
+
+.navInactive {
+  background: #3D3D3D;
+}
+
+.navItem {
+  cursor:pointer;
 }
 
 .leaderboardEntry {
@@ -14,6 +97,7 @@
     border: white solid;
     flex:1;
     margin: auto;
+    border-radius: 25px;
     
     font-size:18px;
     max-width:350px;
