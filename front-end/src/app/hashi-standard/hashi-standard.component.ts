@@ -1589,6 +1589,8 @@ export class HashiStandardComponent implements OnInit {
           }
 
           that.startDate = new Date();
+
+          that.draw();
         }
     }
 
