@@ -391,17 +391,21 @@ export class MinesweeperComponent implements OnInit {
 
   /* EVENT LISTENERS */
   mousePressed(mouseEvent) { 
-    this.isPressed = true;
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
 
     x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
     y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-    this.selectedX = x;
-    this.selectedY = y;
-
-    this.draw();
+    if(mouseEvent.button == 2) {
+      this.board.flagTile(x, y);
+      this.draw();
+    } else {
+      this.isPressed = true;
+      this.selectedX = x;
+      this.selectedY = y;
+      this.draw();
+    }
   }
 
   mouseReleased(mouseEvent) { 
@@ -419,8 +423,6 @@ export class MinesweeperComponent implements OnInit {
     }
     
     if(mouseEvent.button == 2){
-      this.board.flagTile(x, y);
-      this.draw();
     }
     else if(this.firstPress){ 
       if(this.board.visible[y][x] != 2){

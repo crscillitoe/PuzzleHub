@@ -16,7 +16,7 @@ export class MainMenuComponent implements OnInit {
   games: any = [
     {'GameID': GameID.MINESWEEPER, 
       'Name': 'Minesweeper', 
-      'Image': 'assets/images/minesweeper/bomb.svg',
+      'Image': 'assets/images/game-splashes/minesweeper.svg',
       'Description': 'Minesweeper is a single-player puzzle video game. The objective of the game is to clear a rectangular board containing hidden mines.'},
 
     {'GameID': GameID.HASHI, 
