@@ -100,9 +100,23 @@ def register_user():
         return jsonify({"success":False,"message":"Username length must be less than 16 characters."})
 
 
-    check_is_valid_password(password)
-    
-    # TODO: add a check for banned characters
+    repeat_char = re.compile(r'(.)\1\1\1\1\1')
+
+    # test that the password meets our guidelines
+    if len(password) < 8:
+        return jsonify({"success":False,"message":"Password length too short"})
+
+    if len(password) > 64:
+        return jsonify({"success":False,"message":"Password length too long"})
+
+    if repeat_char.match(password) is not None:
+        return jsonify({"success":False,"message":"Password has repeating characters"})
+
+    if check_digits(password):
+        return jsonify({"success":False,"message":"Password has incrementing numbers"})
+
+    if is_pwned_password(password):
+        return jsonify({"success":False,"message":"This password appears in a known password database. Please choose a different password"})
     
     # test that the email is valid 
     if check_valid_email(email_address) is False:
@@ -131,7 +145,7 @@ def register_user():
     # check if an account already exists with the given email
     sql_query = ''' 
         SELECT * FROM users
-        WHERE Username = %(Email)s
+        WHERE Email = %(Email)s
     ''' 
     cursor.execute(sql_query, post_data)
     data = cursor.fetchall()
@@ -495,7 +509,7 @@ def check_blacklisted_email(email):
     except URLError:
         return True
 
-    j = json.loads(content)
+    j = json.loads(content.decode())
     blacklist = int(j['blacklisted'])
 
     if blacklist == 0:

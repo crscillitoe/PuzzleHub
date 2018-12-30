@@ -9,18 +9,24 @@
                   <ng-container *ngIf="selectedTab=='login'">
 							    		<li (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab" class="active">Sign In</a></li>
                       <li (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" >Register</a></li>
+                      <!--
 							    		<li (click)="selectedTab = 'forgot'"><a id="profile-forgot-tab" data-toggle="tab" role="tab" >Forgot Password</a></li>
+                      -->
                   </ng-container>
                   <ng-container *ngIf="selectedTab=='register'">
 							    		<li (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab">Sign In</a></li>
                       <li (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" class="active">Register</a></li>
+                      <!--
 							    		<li (click)="selectedTab = 'forgot'"><a id="profile-forgot-tab" data-toggle="tab" role="tab" >Forgot Password</a></li>
+                      -->
                   </ng-container>
+                  <!--
                   <ng-container *ngIf="selectedTab=='forgot'">
 							    		<li (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab">Sign In</a></li>
                       <li (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" >Register</a></li>
 							    		<li (click)="selectedTab = 'forgot'"><a id="profile-forgot-tab" data-toggle="tab" role="tab" class="active">Forgot Password</a></li>
                   </ng-container>
+                  -->
                 </ul>
                 
             <div class="tab-content">
@@ -52,20 +58,45 @@
                 <div id="profile-register" class="booked-tab-content tab-pane fade show active" role="tabpanel" aria-labelledby="profile-forgot-tab">
                   <div class="booked-form-wrap bookedClearFix">
                     <form name="registrationform" id="registrationform" action="#" method="get">
-                      <div class="form-group registration-email">
-                        <input type="text" name="email" id="user_email" class="form-control" value="" size="20" placeholder="Email">
-                      </div>
                       <div class="form-group registration-username">
-                        <input type="text" name="user" id="user_login" class="form-control" value="" size="20" placeholder="Username">
+                        <input type="text" name="user" id="user_login" 
+                               [(ngModel)]="registerUsername"
+                              (ngModelChange)="canRegister()"
+                               class="form-control" value="" size="20" placeholder="Username">
+                      </div>
+                      <div class="form-group registration-email">
+                        <input type="text" name="email" id="user_email" 
+                               [(ngModel)]="email1"
+                              (ngModelChange)="canRegister()"
+                               class="form-control" value="" size="20" placeholder="Email">
+                      </div>
+                      <div class="form-group registration-email">
+                        <input type="text" name="email" id="user_email_2" 
+                               [(ngModel)]="email2"
+                              (ngModelChange)="canRegister()"
+                               class="form-control" value="" size="20" placeholder="Confirm Email">
                       </div>
                       <div class="form-group registration-password">
-                        <input type="password" name="pass" id="user_pass" class="form-control" value="" size="20" placeholder="Password">
+                        <input type="password" name="pass" id="user_pass" 
+                               [(ngModel)]="registerPass1"
+                              (ngModelChange)="canRegister()"
+                               class="form-control" value="" size="20" placeholder="Password">
                       </div>
                       <div class="form-group registration-password">
-                        <input type="password" name="pass" id="user_pass" class="form-control" value="" size="20" placeholder="Confirm Password">
+                        <input type="password" name="pass" id="user_pass_2" 
+                               [(ngModel)]="registerPass2"
+                              (ngModelChange)="canRegister()"
+                               class="form-control" value="" size="20" placeholder="Confirm Password">
                       </div>
+                      <ng-container *ngIf="errorMessage != ''">
+                        <p style="color:red">* {{errorMessage}}</p>
+                      </ng-container>
                       <div class="login-submit">
-                        <input type="submit" name="register-submit" id="register-submit" class="btn btn-lg btn-primary" value="Register">
+                        <input type="submit" name="register-submit" 
+                          [disabled]="errorMessage != ''" 
+                          (click)="register()"
+                          id="register-submit" 
+                          class="btn btn-lg btn-primary" value="Register">
                       </div>
                     </form>
                   </div>
