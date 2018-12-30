@@ -660,9 +660,9 @@ export class TileGameComponent implements OnInit {
       console.log(x);
       console.log(y);
       if(x > -1 
-      && x <  3
+      && x <  this.board.width
       && y > -1
-      && y < 3) {
+      && y < this.board.height) {
         this.moveTile(x, y);
         if(this.board.isSolved()) {
           this.done();
