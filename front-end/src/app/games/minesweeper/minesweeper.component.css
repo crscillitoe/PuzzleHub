@@ -18,6 +18,10 @@
   height: calc(100vh - 7rem);
 }
 
+.hidden {
+  display: none;
+}
+
 .previousBest {
   top:50px;
   left: 22px;

@@ -122,7 +122,10 @@ export class MinesweeperComponent implements OnInit {
 
           this.loader.stopLoadingAnimation();
           this.fixSizes();
-          this.draw();
+          var img = document.getElementById("flag");
+          img.onload = () => {
+            this.draw();
+          }
         });
     } else {
       // Generate board with random seed
@@ -141,7 +144,10 @@ export class MinesweeperComponent implements OnInit {
       this.loader.stopLoadingAnimation();
 
       this.fixSizes();
-      this.draw();
+      var img = document.getElementById("flag");
+      img.onload = () => {
+        this.draw();
+      }
     }
   }
 
@@ -196,7 +202,7 @@ export class MinesweeperComponent implements OnInit {
   draw() {
     this.context.beginPath();
     this.drawBackground();
-    this.drawGrid();
+
     this.drawTiles();
     this.highlightTile();
   }
@@ -249,60 +255,51 @@ export class MinesweeperComponent implements OnInit {
                                       (this.gridOffsetY) + ( (y + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
   }
 
+  drawPressedTile(x, y) {
+    var startX = (this.gridOffsetX) + ( x * this.gridBoxSize ) ;
+    var startY = (this.gridOffsetY) + ( y * this.gridBoxSize ) ;
+    var width = this.gridBoxSize ;
+    var height = this.gridBoxSize ;
+
+    this.context.fillStyle = this.colors.BACKGROUND;
+    this.context.fillRect(startX, startY, width, height);
+  }
+
   drawHiddenTile(x, y, color){
+    var startX = (this.gridOffsetX) + ( x * this.gridBoxSize ) ;
+    var startY = (this.gridOffsetY) + ( y * this.gridBoxSize ) ;
+    var width = this.gridBoxSize ;
+    var height = this.gridBoxSize ;
 
-    //TODO: replace these with rounded rects and get rid of the grid
-    let startX = (this.gridOffsetX) + ( x * this.gridBoxSize ) + 1;
-    let startY = (this.gridOffsetY) + ( y * this.gridBoxSize ) + 1;
-    let width = this.gridBoxSize - 2;
-    let height = this.gridBoxSize - 2;
-
-    this.context.fillStyle = color;
-    //debug purposes only
-    /*if(this.board.mineField[y][x] < 0){ 
-      this.context.fillStyle = this.colors.COLOR_4;
-    }*/
-
-    this.context.beginPath();
-    this.context.moveTo(startX, startY);
-    this.context.lineTo(startX+width, startY);
-    this.context.lineTo(startX+width, startY + height);
-    this.context.lineTo(startX, startY+height);
-    this.context.lineTo(startX, startY);
-    this.context.closePath();
-    this.context.fill();
-    this.context.stroke();
+    var img = document.getElementById("tile");
+    this.context.drawImage(img, startX, startY, width, height);
   }
 
   drawFlaggedTile(x, y){
     this.drawHiddenTile(x, y, this.colors.COLOR_2);
+    let startX = (this.gridOffsetX) + ( x * this.gridBoxSize ) + (this.gridBoxSize/4);
+    let startY = (this.gridOffsetY) + ( y * this.gridBoxSize ) + (this.gridBoxSize/4);
+    let width = this.gridBoxSize - (this.gridBoxSize/2);
+    let height = this.gridBoxSize - (this.gridBoxSize/2);
     
-    var tileString = "F";
-
-    this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.6) + 'px Poppins';
-    this.context.textAlign = "center";
-    this.context.fillStyle = this.colors.COLOR_5;
-    
-    this.context.fillText(tileString, (this.gridOffsetX) + ( x * this.gridBoxSize ) + (this.gridBoxSize / 2),
-                                      (this.gridOffsetY) + ( (y + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
+    var img = document.getElementById("flag");
+    this.context.drawImage(img, startX, startY, width, height);
   }
   
   drawTiles() {
     for(var j = 0; j < this.board.height; j++) {
       for(var i = 0; i < this.board.width; i++) {
-
         if(this.board.visible[j][i] == 2){
           this.drawFlaggedTile(i, j);
         }
-        else if(this.board.visible[j][i] == 0){
-          this.drawHiddenTile(i, j, this.colors.COLOR_2);
+        else if(this.board.visible[j][i] != 0) {
+          this.drawVisibleTile(i, j);
         } 
         else {
-          this.drawVisibleTile(i, j);
+          this.drawHiddenTile(i, j, this.colors.COLOR_5_ALT);
         } 
       }
     }
-
   }
 
   highlightTile(){
@@ -313,7 +310,7 @@ export class MinesweeperComponent implements OnInit {
       return;
     }
     if(this.board.visible[this.selectedY][this.selectedX] == 0){
-      this.drawHiddenTile(this.selectedX, this.selectedY, this.colors.COLOR_2_ALT);
+      this.drawPressedTile(this.selectedX, this.selectedY);
     }
   }
 
@@ -405,8 +402,6 @@ export class MinesweeperComponent implements OnInit {
     this.selectedY = y;
 
     this.draw();
-
-    return; 
   }
 
   mouseReleased(mouseEvent) { 
