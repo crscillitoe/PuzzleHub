@@ -21,6 +21,10 @@ from api.auth import get_user_id
 from api.database import get_db
 from api.auth import encrypt_token
 from api.config import get_config_path
+import smtplib
+import email.utils
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 xstr = lambda s: s or ""
 
@@ -28,6 +32,52 @@ with open(get_config_path()) as f:
     json_data = json.load(f)
 
 WHOIS_APIKEY = json_data['who_is_api_key']
+
+@app.route('/api/sendTestEmail', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def send_test_email():
+
+    SENDER = "noreply@puzzle-hub.com"
+    SENDERNAME = "Puzzle Hub Admin"
+    RECIPIENT = "jingles341@gmail.com"
+
+    USERNAME_SMTP = json_data['email_username']
+    PASSWORD_SMTP = json_data['email_password']
+
+    HOST = "email-smtp.us-east-1.amazonaws.com"
+    PORT = 587
+
+    SUBJECT = "AWS puzzle-hub test email"
+    BODY_TEXT = "This is a test email from puzzle-hub.com using aws SES"
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = SUBJECT
+    msg['From'] = email.utils.formataddr((SENDERNAME, SENDER))
+    msg['To'] = RECIPIENT
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(BODY_TEXT, 'plain')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+
+    # Try to send the message.
+    try:  
+        server = smtplib.SMTP(HOST, PORT)
+        server.ehlo()
+        server.starttls()
+        #stmplib docs recommend calling ehlo() before & after starttls()
+        server.ehlo()
+        server.login(USERNAME_SMTP, PASSWORD_SMTP)
+        server.sendmail(SENDER, RECIPIENT, msg.as_string())
+        server.close()
+    except Exception as e:
+        print ("Error: ", e)
+    
+    return '1'
+
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Registers a user account
