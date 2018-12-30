@@ -72,17 +72,17 @@ export class SudokuComponent implements OnInit {
     
     // Medium
     else if (this.difficulty == 2) {
-      this.numCarved = 3;
+      this.numCarved = 44;
     } 
     
     // Hard
     else if (this.difficulty == 3) {
-      this.numCarved = 52;
+      this.numCarved = 50;
     } 
     
     // Extreme
     else if (this.difficulty == 4) {
-      this.numCarved = 57;
+      this.numCarved = 55;
     }
 
     // Uncomment these to add event listeners
