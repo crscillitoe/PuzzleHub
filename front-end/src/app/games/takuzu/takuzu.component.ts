@@ -125,14 +125,6 @@ export class TakuzuComponent implements OnInit {
       this.board = new Board(size, this.seed);
       this.board.generateBoard();
 
-      /* TEMP */
-      this.board.originalPuzzle[0][0] = 1;
-      this.board.takuzuPuzzle[0][0] = 1;
-
-      this.board.originalPuzzle[1][2] = 0;
-      this.board.takuzuPuzzle[1][2] = 0;
-      /* DELETE THEM */
-
       this.startDate = new Date();
       this.displayTimer();
 
@@ -245,9 +237,6 @@ export class TakuzuComponent implements OnInit {
 
   drawGrid() {
     for (var i = 0; i <= this.board.size; i++) {
-      if (i != 0 && i != this.board.size) {
-        continue;
-      }      
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.COLOR_1;
@@ -258,9 +247,6 @@ export class TakuzuComponent implements OnInit {
     }
 
     for (var j = 0; j <= this.board.size; j++) {
-      if (j != 0 && j != this.board.size) {
-        continue;
-      }
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.FOREGROUND;
