@@ -55,7 +55,10 @@ export class Board {
       do {
         mineXPos = Math.floor(this.random() * this.width);
         mineYPos = Math.floor(this.random()* this.height);
+        console.log(mineXPos, mineYPos);
       } while (!this.checkValidMine(mineXPos, mineYPos, firstX, firstY));    
+
+      //console.log(mineXPos, mineYPos);
 
       for(var i = -1; i <= 1; i++){
         for(var j = -1; j <= 1; j++){
@@ -68,8 +71,6 @@ export class Board {
         } 
       }
     }
-    console.log(this.mineField);
-    console.log(this.visible);
   }
 
   checkValidMine(x, y, firstX, firstY){
@@ -77,7 +78,8 @@ export class Board {
       return false;
     }
 
-    if(Math.abs(x - firstX) <= 1 || Math.abs(y - firstY) <= 1){
+    if((Math.abs(x - firstX) <= 1) && (Math.abs(y - firstY)) <= 1){
+      console.log("Returning");
       return false;
     }
 
@@ -97,8 +99,7 @@ export class Board {
       return false;
     }
 
-    return true;
-    
+    return true;  
   }
 
   updateNeighborTile(x, y){

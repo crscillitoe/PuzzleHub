@@ -31,8 +31,8 @@ export class MinesweeperComponent implements OnInit {
   firstPress: boolean = true;
   isPressed: boolean = false;
 
-  lastX: number;
-  lastY: number;
+  selectedX: number;
+  selectedY: number;
   personalBest: string;
   
   startDate: any;
@@ -196,6 +196,7 @@ export class MinesweeperComponent implements OnInit {
     this.drawBackground();
     this.drawGrid();
     this.drawTiles();
+    this.highlightTile();
   }
 
   drawBackground() {
@@ -302,9 +303,15 @@ export class MinesweeperComponent implements OnInit {
 
   }
 
-  highlightTile(x, y){
-    if(this.board.visible[y][x] == 0){
-      this.drawHiddenTile(x, y, this.colors.COLOR_2_ALT);
+  highlightTile(){
+    if(this.selectedX < 0 || this.selectedX >= this.board.width || this.selectedY < 0 || this.selectedY >= this.board.height){
+      return;
+    }
+    if(!this.isPressed){
+      return;
+    }
+    if(this.board.visible[this.selectedY][this.selectedX] == 0){
+      this.drawHiddenTile(this.selectedX, this.selectedY, this.colors.COLOR_2_ALT);
     }
   }
 
@@ -392,9 +399,10 @@ export class MinesweeperComponent implements OnInit {
     x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
     y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-    this.highlightTile(x, y);
-    this.lastX = x;
-    this.lastY = y;
+    this.selectedX = x;
+    this.selectedY = y;
+
+    this.draw();
 
     return; 
   }
@@ -408,6 +416,10 @@ export class MinesweeperComponent implements OnInit {
     y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
     console.log(mouseEvent);
+
+    if(x < 0 || x >= this.board.width || y < 0 || y >= this.board.height){
+      return;
+    }
     
     if(mouseEvent.button == 2){
       this.board.flagTile(x, y);
@@ -440,15 +452,11 @@ export class MinesweeperComponent implements OnInit {
     y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
     if(this.isPressed){
-      this.highlightTile(x, y);
-      if(this.lastX != x || this.lastY != y){
-        this.drawHiddenTile(this.lastX, this.lastY, this.colors.COLOR_2);
-        this.lastX = x;
-        this.lastY = y;
-      }
-    }
-    
-    
+      this.selectedX = x;
+      this.selectedY = y;
+      this.draw();
+    } 
+
   }
 
   keyPressed(keyEvent) {
