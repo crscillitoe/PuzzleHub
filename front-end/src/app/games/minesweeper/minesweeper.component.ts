@@ -256,9 +256,9 @@ export class MinesweeperComponent implements OnInit {
 
     this.context.fillStyle = color;
     //debug purposes only
-    if(this.board.mineField[y][x] < 0){ 
+    /*if(this.board.mineField[y][x] < 0){ 
       this.context.fillStyle = this.colors.COLOR_4;
-    }
+    }*/
 
     this.context.beginPath();
     this.context.moveTo(startX, startY);
@@ -291,7 +291,7 @@ export class MinesweeperComponent implements OnInit {
         if(this.board.visible[j][i] == 2){
           this.drawFlaggedTile(i, j);
         }
-        if(this.board.visible[j][i] == 0){
+        else if(this.board.visible[j][i] == 0){
           this.drawHiddenTile(i, j, this.colors.COLOR_2);
         } 
         else {
@@ -304,7 +304,9 @@ export class MinesweeperComponent implements OnInit {
 
   highlightTile(x, y){
     if(this.board.visible[y][x] == 0){
-      this.drawHiddenTile(x, y, this.colors.COLOR_2_ALT)
+      this.drawHiddenTile(x, y, this.colors.COLOR_2_ALT);
+    }
+  }
 
   add(that) {
     var display = document.getElementById("timer");
@@ -322,7 +324,7 @@ export class MinesweeperComponent implements OnInit {
         hours + ":" + 
         (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
         (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
-        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000");
 
       that.displayTimer();
     } catch {
@@ -338,6 +340,7 @@ export class MinesweeperComponent implements OnInit {
   }
 
   done() {
+    this.solved = true;
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.MINESWEEPER, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
@@ -418,7 +421,10 @@ export class MinesweeperComponent implements OnInit {
       this.draw();
     }
     else{
-      this.board.click(x, y);
+      var goodPress = this.board.click(x, y);
+      if(!goodPress){
+        console.log("Hit a mine!");
+      }
       this.draw();
     }
     if(this.board.isSolved()) {

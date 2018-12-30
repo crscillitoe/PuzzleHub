@@ -158,14 +158,15 @@ export class Board {
 
   click(x, y){
     if(this.visible[y][x] == 2){
-      return;
+      return true;
     }
 
     if(this.mineField[y][x] < 0){
-      console.log("Touching a mine!");
+      return false;
     }
     else{
       this.floodFill(x, y);
+      return true;
     }
 
   }
