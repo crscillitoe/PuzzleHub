@@ -65,8 +65,8 @@ export class Board {
 
     // create a list of strings of the values of each row and column
     for (var i = 0; i < this.size; i++) {
-      row = "";
-      col = "";
+      var row = "";
+      var col = "";
       
       for (var j = 0; j < this.size; j++) {
         row += this.takuzuPuzzle[i][j];
@@ -90,7 +90,7 @@ export class Board {
           numZeroes > this.size/2 ||
           curr.includes(invalidOnes) || 
           curr.includes(invalidZeroes) || 
-          curr.includes('-') {
+          curr.includes('-')) {
         return false;
       }
     }
@@ -104,7 +104,7 @@ export class Board {
           numZeroes > this.size/2 ||
           curr.includes(invalidOnes) || 
           curr.includes(invalidZeroes) || 
-          curr.includes('-') {
+          curr.includes('-')) {
         return false;
       }
     }
