@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
+import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -20,21 +21,33 @@ export class TakuzuComponent implements OnInit {
   context: any;
 
   colors: any;
-  
+  oColor: any;
+  cColor: any;
+
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
 
+  gridOffsetX: number = 100;
+  gridOffsetY: number = 100;
+  gridBoxSize: number;
+
   difficulty: number;
   seed: number;
+
+  board: Board;
+  solved: boolean = false;
 
   constructor(
     private route: ActivatedRoute, 
     private colorService: ColorService,
     private router: Router,
+    private tunnel: TunnelService,
     private userService: UserService,
     private timer: TimerService,
     private loader: LoaderService) { 
     this.colors = colorService.getColorScheme();
+    this.oColor = this.colors.COLOR_2;
+    this.cColor = this.colors.COLOR_0;
   }
 
   ngOnInit() {
@@ -43,28 +56,30 @@ export class TakuzuComponent implements OnInit {
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
 
+    var size;
+
     // Easy
     if(this.difficulty == 1) {
-      console.log('Easy difficulty');
+        size = 4;
     } 
     
     // Medium
     else if (this.difficulty == 2) {
-      console.log('Medium difficulty');
+        size = 6;    
     } 
     
     // Hard
     else if (this.difficulty == 3) {
-      console.log('Hard difficulty');
+        size = 8;    
     } 
     
     // Extreme
     else if (this.difficulty == 4) {
-      console.log('Extreme difficulty');
+        size = 10;
     }
 
     // Uncomment these to add event listeners
-    //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+    this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
@@ -79,12 +94,20 @@ export class TakuzuComponent implements OnInit {
           // Generate board with given seed
           this.seed = data['seed'];
 
+          this.board = new Board(size, this.seed);
+          this.board.generateBoard();
+
+          this.fixSizes();
           this.draw();
         });
     } else {
       // Generate board with random seed
       this.seed = Math.floor(Math.random() * (2000000000));
+      
+      this.board = new Board(size, this.seed);
+      this.board.generateBoard();
 
+      this.fixSizes();
       this.draw();
     }
   }
@@ -92,6 +115,8 @@ export class TakuzuComponent implements OnInit {
   draw() {
     this.context.beginPath();
     this.drawBackground();
+    this.drawGrid();
+    this.drawValues();
   }
 
   drawBackground() {
@@ -99,7 +124,129 @@ export class TakuzuComponent implements OnInit {
     this.context.fillRect(0, 0, this.canvas.offsetWidth * 2, this.canvas.offsetHeight * 2);
   }
 
+  drawGrid() {
+    for (var i = 0; i <= this.board.size; i++) {
+      if (i != 0 && i != this.board.size) {
+        continue;
+      }      
+
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = this.colors.COLOR_1;
+      this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
+
+      this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + (this.board.size * this.gridBoxSize));
+      this.context.stroke();
+    }
+
+    for (var j = 0; j <= this.board.size; j++) {
+      if (j != 0 && j != this.board.size) {
+        continue;
+      }
+
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = this.colors.FOREGROUND;
+      this.context.moveTo(this.gridOffsetX, 
+                          this.gridOffsetY + (j * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize),
+                          this.gridOffsetY + (j * this.gridBoxSize));
+      this.context.stroke();
+    }
+
+  }
+
+
+  roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+      radius = {tl: radius, tr: radius, br: radius, bl: radius};
+      ctx.beginPath();
+      ctx.moveTo(x + radius.tl, y);
+      ctx.lineTo(x + width - radius.tr, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+      ctx.lineTo(x + width, y + height - radius.br);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+      ctx.lineTo(x + radius.bl, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+      ctx.lineTo(x, y + radius.tl);
+      ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+      ctx.closePath();
+      if (fill) {
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.stroke();
+      }
+  }
+
+
+  drawValues() {
+    for (var j = 0; j < this.board.size; j++) {
+      for (var i = 0; i < this.board.size; i++) {
+        var boardValue = this.board.takuzuPuzzle[j][i];
+        var original = this.board.isOriginal(i, j);  
+          
+        var entryString = "" + boardValue;
+        this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
+        this.context.textAlign = "center";
+        
+        var spacing = this.gridBoxSize / 40;
+
+        if (boardValue == 1) {
+          if (original) {
+            this.context.fillStyle = this.oColor;
+          } else {
+            this.context.fillStyle = this.cColor; 
+          }
+        
+          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + spacing,
+                                       (this.gridOffsetY + (j * this.gridBoxSize)) + spacing,
+                                       this.gridBoxSize - (spacing * 2),
+                                       this.gridBoxSize - (spacing * 2),
+                                       (this.gridBoxSize/20),
+                                       true,
+                                       false);
+        
+          this.context.fillStyle = this.colors.BACKGROUND;  
+          this.context.fillText(entryString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
+                                             (this.gridOffsetY) + ( (j+1) * this.gridBoxSize ) - (this.gridBoxSize/4));
+        
+
+        } else if (boardValue == 0) {  
+          if (original) {
+            this.context.fillStyle = this.oColor;
+          } else {
+            this.context.fillStyle = this.cColor; 
+          }
+            
+          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + spacing,
+                                       (this.gridOffsetY + (j * this.gridBoxSize)) + spacing,
+                                       this.gridBoxSize - (spacing * 2),
+                                       this.gridBoxSize - (spacing * 2),
+                                       (this.gridBoxSize/20),
+                                       true,
+                                       false);
+        
+          this.context.fillStyle = this.colors.BACKGROUND;
+          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + (spacing * 3),
+                                       (this.gridOffsetY + (j * this.gridBoxSize)) + (spacing * 3),
+                                       this.gridBoxSize - (spacing * 6),
+                                       this.gridBoxSize - (spacing * 6),
+                                       (this.gridBoxSize/20),
+                                       true,
+                                       false);
+            
+          if (original) {
+            this.context.fillStyle = this.oColor;
+          } else {
+            this.context.fillStyle = this.cColor; 
+          }
+          this.context.fillText(entryString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
+                                             (this.gridOffsetY) + ( (j+1) * this.gridBoxSize ) - (this.gridBoxSize/4));
+        }
+      }
+    }
+  }
+
   done() {
+    this.solved = true;
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.TAKUZU, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
@@ -110,11 +257,50 @@ export class TakuzuComponent implements OnInit {
     }
   }
 
+  fixSizes() {
+    this.context.beginPath();
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.canvas.width = window.innerWidth - this.canvasOffsetX;
+    this.canvas.height = window.innerHeight - (this.canvasOffsetY * 2);
+    this.context.translate(0.5, 0.5);
+
+    this.gridOffsetX = this.canvas.width / 20;
+    this.gridOffsetY = this.canvas.height / 20;
+
+    var boardSize = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
+                             this.canvas.offsetHeight - (this.gridOffsetY * 2));
+
+    let w = this.canvas.offsetWidth;
+    let h = this.canvas.offsetHeight;
+    if (w > h) {
+        this.gridOffsetX = Math.round( ( w - h ) / 2 ) + this.gridOffsetX;
+    } else {
+        this.gridOffsetY = Math.round( ( h - w ) / 2 ) + this.gridOffsetY; 
+    }
+
+    this.gridBoxSize = Math.round((boardSize / this.board.size));
+    this.draw();
+  }
+
   /* EVENT LISTENERS */
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mousePressedX':x, 'mousePressedY':y});
+    
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      this.board.rotateValue(x, y);
+      this.draw();
+      
+      if (this.board.isSolved()) {
+        this.done();
+      }
+    }
+
   }
   mouseReleased(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
