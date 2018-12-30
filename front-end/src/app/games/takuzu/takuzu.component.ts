@@ -394,7 +394,12 @@ export class TakuzuComponent implements OnInit {
       x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-      this.board.rotateValue(x, y);
+
+      if (mouseEvent.button == 2) {
+        this.board.rotateValue(x, y, false);
+      } else {
+        this.board.rotateValue(x, y, true);
+      }
       this.draw();
       
       if (this.board.isSolved()) {

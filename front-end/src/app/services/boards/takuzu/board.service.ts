@@ -19,18 +19,18 @@ export class Board {
   /*                  BOARD GENERATION                      */
 
   generateBoard() { 
+    
     var rows = [];
     for (var i = 0; i < this.size; i++) {
       var column = [];
       for (var j = 0; j < this.size; j++) {
         column.push(-1);
       }
-
       rows.push(column);
     }
-
     this.originalPuzzle = rows;
     this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
+    
     console.log(this.takuzuPuzzle);
   }
 
@@ -52,15 +52,23 @@ export class Board {
     }
   }
 
-  rotateValue(x, y) {
+  rotateValue(x, y, forward) {
     if (x >= this.size || y >= this.size || this.isOriginal(x, y)) {
       return;
     }
 
-    this.takuzuPuzzle[y][x] += 1;
-    if (this.takuzuPuzzle[y][x] == 2)
-    {
+    if (forward) {
+      this.takuzuPuzzle[y][x] += 1;
+      if (this.takuzuPuzzle[y][x] == 2)
+      {
         this.takuzuPuzzle[y][x] = -1;
+      }
+    } else {
+      this.takuzuPuzzle[y][x] -= 1;
+      if (this.takuzuPuzzle[y][x] == -2)
+      {
+        this.takuzuPuzzle[y][x] = 1;
+      }
     }
   }
 
