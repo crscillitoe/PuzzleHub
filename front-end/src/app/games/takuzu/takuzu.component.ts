@@ -31,6 +31,9 @@ export class TakuzuComponent implements OnInit {
   gridOffsetY: number = 100;
   gridBoxSize: number;
 
+  selectedX: number = -1;
+  selectedY: number = -1;
+
   personalBest: string;
 
   difficulty: number;
@@ -50,8 +53,8 @@ export class TakuzuComponent implements OnInit {
     private timer: TimerService,
     private loader: LoaderService) { 
     this.colors = colorService.getColorScheme();
-    this.oColor = this.colors.COLOR_2;
-    this.cColor = this.colors.COLOR_0;
+    this.oColor = this.colors.FOREGROUND;
+    this.cColor = this.colors.COLOR_2_ALT;
   }
 
   ngOnInit() {
@@ -85,7 +88,7 @@ export class TakuzuComponent implements OnInit {
     // Uncomment these to add event listeners
     this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+    this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
     //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
@@ -121,6 +124,14 @@ export class TakuzuComponent implements OnInit {
       
       this.board = new Board(size, this.seed);
       this.board.generateBoard();
+
+      /* TEMP */
+      this.board.originalPuzzle[0][0] = 1;
+      this.board.takuzuPuzzle[0][0] = 1;
+
+      this.board.originalPuzzle[1][2] = 0;
+      this.board.takuzuPuzzle[1][2] = 0;
+      /* DELETE THEM */
 
       this.startDate = new Date();
       this.displayTimer();
@@ -212,8 +223,19 @@ export class TakuzuComponent implements OnInit {
   draw() {
     this.context.beginPath();
     this.drawBackground();
+    this.drawSelectedBox();
     this.drawGrid();
     this.drawValues();
+  }
+
+  drawSelectedBox() {
+    if(this.selectedX < this.board.size && this.selectedX >= 0 &&
+       this.selectedY < this.board.size && this.selectedY >= 0) {
+      this.context.fillStyle = "#3D3D3D";
+      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize),
+                            this.gridOffsetY + (this.selectedY * this.gridBoxSize),
+                              this.gridBoxSize, this.gridBoxSize);
+    }
   }
 
   drawBackground() {
@@ -416,7 +438,12 @@ export class TakuzuComponent implements OnInit {
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseMoveX':x, 'mouseMoveY':y});
+
+    if(!this.solved) {
+      this.selectedX = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+      this.draw();
+    }
   }
 
   keyPressed(keyEvent) {
