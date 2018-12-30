@@ -155,6 +155,7 @@ export class MinesweeperComponent implements OnInit {
 
           this.board.seed = this.seed;
           this.board.generateBoard();
+          this.firstPress = true;
 
           if(this.solved) {
             this.solved = false;
@@ -175,6 +176,7 @@ export class MinesweeperComponent implements OnInit {
       
       this.board.seed = this.seed;
       this.board.generateBoard();
+      this.firstPress = true;
 
       if(this.solved) {
         this.solved = false;
