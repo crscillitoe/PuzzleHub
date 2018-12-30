@@ -57,13 +57,20 @@ def get_leaderboards():
     to_return = []
 
     for d in data:
-        model = {
-            "username":d[0],
-            "time":str(d[1])[:-3],
-            "role":str(d[2])
-        }
-        to_return.append(model)
-
+        if len( str(d[1]).split(':')[2] ) != 2:
+            model = {
+                "username":d[0],
+                "time":str(d[1])[:-3],
+                "role":str(d[2])
+            }
+            to_return.append(model)
+        else :
+            model = {
+                "username":d[0],
+                "time":str(d[1]) + '.000',
+                "role":str(d[2])
+            }
+            to_return.append(model)
 
     return jsonify(to_return)
 
@@ -119,6 +126,9 @@ def get_personal_best():
     if len(data) == 0:
         return jsonify({"time":'N/A'})
     else:
-        return jsonify({"time":str((data[0])[0])[:-3]})
+        if len( str((data[0])[0]).split(':')[2] ) != 2:
+            return jsonify({"time":str((data[0])[0])[:-3]})
+        else:
+            return jsonify({"time":str((data[0])[0]) + '.000'})
 
 
