@@ -15,12 +15,15 @@ export class Board {
     }
   }
 
+  /* ------------------------------------------------------ */
+  /*                  BOARD GENERATION                      */
+
   generateBoard() { 
     var rows = [];
     for (var i = 0; i < this.size; i++) {
       var column = [];
       for (var j = 0; j < this.size; j++) {
-        column.push(Math.round(this.random() * 2) - 1);
+        column.push(-1);
       }
 
       rows.push(column);
@@ -30,6 +33,8 @@ export class Board {
     this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
     console.log(this.takuzuPuzzle);
   }
+
+  /* ------------------------------------------------------ */
 
   random() {
       var x = Math.sin(++this.seed) * 10000;
