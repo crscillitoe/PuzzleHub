@@ -201,7 +201,7 @@ export class SudokuComponent implements OnInit {
       for(var j = 0 ; j < 9 ; j++) {
         var tileValue = this.board.sudokuPuzzle[i][j];
         if(this.board.isInvalidTile(i, j, tileValue)) {
-          this.context.fillStyle = "#FF3D3D";
+          this.context.fillStyle = this.colors.COLOR_7;
           this.context.fillRect(this.gridOffsetX + (i * this.gridBoxSize),
                                 this.gridOffsetY + (j * this.gridBoxSize),
                                   this.gridBoxSize, this.gridBoxSize);
@@ -253,7 +253,7 @@ export class SudokuComponent implements OnInit {
         this.context.textAlign = "center";
 
         if(startValue != 0) {
-          this.context.fillStyle = this.colors.COLOR_6_ALT;
+          this.context.fillStyle = '#e8d9be';
           this.context.fillText('' + startValue, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
                                             (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
         } else if(boardValue != 0) {
@@ -268,7 +268,7 @@ export class SudokuComponent implements OnInit {
   drawGrid() {
     for(var i = 0 ; i <= 9 ; i++) {
       this.context.lineWidth = 1;
-      this.context.strokeStyle = this.colors.COLOR_1;
+      this.context.strokeStyle = '#e8d9be';
       this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
       this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + (9 * this.gridBoxSize));
       this.context.stroke();
@@ -276,19 +276,19 @@ export class SudokuComponent implements OnInit {
 
     for(var j = 0 ; j <= 9 ; j++) {
       this.context.lineWidth = 1;
-      this.context.strokeStyle = this.colors.FOREGROUND;
+      this.context.strokeStyle = '#e8d9be';
       this.context.moveTo(this.gridOffsetX, this.gridOffsetY + (j * this.gridBoxSize));
       this.context.lineTo(this.gridOffsetX + (9 * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
       this.context.stroke();
     }
 
     for(var i = 1 ; i <= 2; i++) {
-      this.context.fillStyle = this.colors.FOREGROUND;
+      this.context.fillStyle = '#e8d9be';
       this.context.fillRect(this.gridOffsetX + ((i * 3) * this.gridBoxSize) - 5, this.gridOffsetY, 10, (9 * this.gridBoxSize));
     }
 
     for(var j = 1 ; j <= 2 ; j++) {
-      this.context.fillStyle = this.colors.FOREGROUND;
+      this.context.fillStyle = '#e8d9be';
       this.context.fillRect(this.gridOffsetX, this.gridOffsetY + ((j * 3) * this.gridBoxSize) - 5, (9 * this.gridBoxSize), 10);
     }
   }

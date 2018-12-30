@@ -43,7 +43,7 @@ export class TileGameComponent implements OnInit {
   t: any;
 
   animationDelta: number = 10;
-  animationSpeed: number = 16.666;
+  animationSpeed: number = 10;
 
   board: Board;
 
@@ -382,7 +382,7 @@ export class TileGameComponent implements OnInit {
     }
 
     this.gridBoxSize = Math.round((size / boardLength));
-    this.animationDelta = this.gridBoxSize/10;
+    this.animationDelta = this.gridBoxSize/5;
 
     this.draw();
   }
