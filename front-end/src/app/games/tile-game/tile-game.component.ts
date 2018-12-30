@@ -36,8 +36,14 @@ export class TileGameComponent implements OnInit {
   difficulty: number;
   seed: number;
 
+  animatingX: number;
+  animatingY: number;
+
   startDate: any;
   t: any;
+
+  animationDelta: number = 10;
+  animationSpeed: number = 16.666;
 
   board: Board;
 
@@ -317,19 +323,21 @@ export class TileGameComponent implements OnInit {
 
         var spacing = this.gridBoxSize/40;
 
-        if(boardValue != 0) {
-          this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
-                                (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
-                                this.gridBoxSize - (spacing * 2), 
-                                this.gridBoxSize - (spacing * 2), 
-                                (this.gridBoxSize/20), 
-                                true, 
-                                false);
-        }
+        if(i != this.animatingX || j != this.animatingY) {
+          if(boardValue != 0) {
+            this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
+                                  (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
+                                  this.gridBoxSize - (spacing * 2), 
+                                  this.gridBoxSize - (spacing * 2), 
+                                  (this.gridBoxSize/20), 
+                                  true, 
+                                  false);
+          }
 
-        this.context.fillStyle = this.colors.BACKGROUND;
-        this.context.fillText(tileString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
-                                          (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
+          this.context.fillStyle = this.colors.BACKGROUND;
+          this.context.fillText(tileString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
+                                            (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
+        }
       }
     }
   }
@@ -374,8 +382,270 @@ export class TileGameComponent implements OnInit {
     }
 
     this.gridBoxSize = Math.round((size / boardLength));
+    this.animationDelta = this.gridBoxSize/10;
 
     this.draw();
+  }
+
+  animateTileUp(animx, animy, y, x, destY, destX) {
+    if(this.animatingX != animx || this.animatingY != animy) {
+      return;
+    } else if(y > destY) {
+      this.animatingX = -1;
+      this.animatingY = -1;
+      this.draw();
+      return;
+    } else {
+
+      var dist = this.animationDelta;
+      var boardValue = this.board.tilePuzzle[animy][animx];
+      this.drawBlankTile(animx, animy - 1);
+      this.drawTile(x, y, boardValue);
+
+      var that = this;
+      setTimeout(
+        function() {
+          that.animateTileUp(animx, animy, y + dist, x, destY, destX);
+        }, that.animationSpeed);
+    }
+  }
+
+  animateTileDown(animx, animy, y, x, destY, destX) {
+    if(this.animatingX != animx || this.animatingY != animy) {
+      return;
+    } else if(y < destY) {
+      this.animatingX = -1;
+      this.animatingY = -1;
+      this.draw();
+      return;
+    } else {
+
+      var dist = this.animationDelta;
+      var boardValue = this.board.tilePuzzle[animy][animx];
+      this.drawBlankTile(animx, animy + 1);
+      this.drawTile(x, y, boardValue);
+
+      var that = this;
+      setTimeout(
+        function() {
+          that.animateTileDown(animx, animy, y - dist, x, destY, destX);
+        }, that.animationSpeed);
+    }
+  }
+
+  animateTileLeft(animx, animy, y, x, destY, destX) {
+    if(this.animatingX != animx || this.animatingY != animy) {
+      return;
+    } else if(x > destX) {
+      this.animatingX = -1;
+      this.animatingY = -1;
+      this.draw();
+      return;
+    } else {
+
+      var dist = this.animationDelta;
+      var boardValue = this.board.tilePuzzle[animy][animx];
+      this.drawBlankTile(animx - 1, animy);
+      this.drawTile(x, y, boardValue);
+
+      var that = this;
+      setTimeout(
+        function() {
+          that.animateTileLeft(animx, animy, y, x + dist, destY, destX);
+        }, that.animationSpeed);
+    }
+  }
+
+  animateTileRight(animx, animy, y, x, destY, destX) {
+    if(this.animatingX != animx || this.animatingY != animy) {
+      return;
+    } else if(x < destX) {
+      this.animatingX = -1;
+      this.animatingY = -1;
+      this.draw();
+      return;
+    } else {
+
+      var dist = this.animationDelta;
+      var boardValue = this.board.tilePuzzle[animy][animx];
+      this.drawBlankTile(animx + 1, animy);
+      this.drawTile(x, y, boardValue);
+
+      var that = this;
+      setTimeout(
+        function() {
+          that.animateTileRight(animx, animy, y, x - dist, destY, destX);
+        }, that.animationSpeed);
+    }
+  }
+
+  drawBlankTile(x, y) {
+    var spacing = 0;
+    this.context.fillStyle = this.colors.BACKGROUND;
+    this.context.fillRect(
+      (this.gridOffsetX + (x * this.gridBoxSize)) + spacing,
+      (this.gridOffsetY + (y * this.gridBoxSize)) + spacing,
+                          this.gridBoxSize - (spacing * 2), 
+                          this.gridBoxSize - (spacing * 2))
+  }
+
+  drawTile(x, y, boardValue) {
+    if(boardValue <= this.board.width ||
+       (boardValue % this.board.width) == 1) {
+      this.context.fillStyle = this.colors.COLOR_6_ALT;
+    } else if(boardValue <= (this.board.width * 2) ||
+              (boardValue % this.board.width) == 2) {
+      this.context.fillStyle = this.colors.COLOR_4_ALT;
+    } else if(boardValue <= (this.board.width * 3) ||
+              (boardValue % this.board.width) == 3) {
+      this.context.fillStyle = this.colors.COLOR_3_ALT;
+    } else if(boardValue <= (this.board.width * 4) ||
+              (boardValue % this.board.width) == 4) {
+      this.context.fillStyle = this.colors.COLOR_5_ALT;
+    } else if(boardValue <= (this.board.width * 5) ||
+              (boardValue % this.board.width) == 5) {
+      this.context.fillStyle = this.colors.COLOR_2;
+    } else if(boardValue <= (this.board.width * 6) ||
+              (boardValue % this.board.width) == 6) {
+      this.context.fillStyle = this.colors.COLOR_1;
+    } else if(boardValue <= (this.board.width * 7) ||
+              (boardValue % this.board.width) == 7) {
+      this.context.fillStyle = this.colors.COLOR_4;
+    } else if(boardValue <= (this.board.width * 8) ||
+              (boardValue % this.board.width) == 8) {
+      this.context.fillStyle = this.colors.COLOR_2_ALT;
+    } else if(boardValue <= (this.board.width * 9) ||
+              (boardValue % this.board.width) == 9) {
+      this.context.fillStyle = this.colors.COLOR_4;
+    } else if(boardValue <= (this.board.width * 10) ||
+              (boardValue % this.board.width) == 10) {
+      this.context.fillStyle = this.colors.COLOR_1_ALT;
+    } else {
+      this.context.fillStyle = this.colors.COLOR_1_ALT;
+    }
+
+    var tileString = "" + boardValue;
+    var spacing = this.gridBoxSize/40;
+    this.roundRect(this.context, x, y,
+                          this.gridBoxSize - (spacing * 2), 
+                          this.gridBoxSize - (spacing * 2), 
+                          (this.gridBoxSize/20), 
+                          true, 
+                          false);
+
+    this.context.fillStyle = this.colors.BACKGROUND;
+    var textX = (x + (this.gridBoxSize/2) - spacing);
+    var j  = (y - spacing - this.gridOffsetY)/this.gridBoxSize;
+    var textY = (this.gridOffsetY + ( (j + 1) * this.gridBoxSize) - (this.gridBoxSize / 4));
+    this.context.fillText(tileString, textX, textY);
+  }
+
+  moveUp() {
+    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX];
+    this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX] = 0;
+    this.board.emptyY--;
+
+    this.animatingX = this.board.emptyX;
+    this.animatingY = this.board.emptyY + 1;
+
+    this.draw();
+
+    var spacing = this.gridBoxSize/40;
+    let y1 = this.board.emptyY + 1;
+    let x1 = this.board.emptyX;
+    let y2 = this.board.emptyY;
+    let x2 = this.board.emptyX;
+    this.animateTileUp(
+      this.animatingX, this.animatingY,
+      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+    );
+  }
+
+  moveDown() {
+    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX];
+    this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX] = 0;
+    this.board.emptyY++;
+
+    this.animatingX = this.board.emptyX;
+    this.animatingY = this.board.emptyY - 1;
+
+    this.draw();
+
+    var spacing = this.gridBoxSize/40;
+    let y1 = this.board.emptyY - 1;
+    let x1 = this.board.emptyX;
+    let y2 = this.board.emptyY;
+    let x2 = this.board.emptyX;
+    this.animateTileDown(
+      this.animatingX, this.animatingY,
+      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+    );
+  }
+
+  moveLeft() {
+    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1];
+    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1] = 0;
+    this.board.emptyX--;
+
+    this.animatingX = this.board.emptyX + 1;
+    this.animatingY = this.board.emptyY;
+
+    this.draw();
+
+    var spacing = this.gridBoxSize/40;
+    let y1 = this.board.emptyY;
+    let x1 = this.board.emptyX + 1;
+    let y2 = this.board.emptyY;
+    let x2 = this.board.emptyX;
+    this.animateTileLeft(
+      this.animatingX, this.animatingY,
+      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+    );
+  }
+
+  moveRight() {
+    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1];
+    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1] = 0;
+    this.board.emptyX++;
+
+    this.animatingX = this.board.emptyX - 1;
+    this.animatingY = this.board.emptyY;
+
+    this.draw();
+
+    var spacing = this.gridBoxSize/40;
+    let y1 = this.board.emptyY;
+    let x1 = this.board.emptyX - 1;
+    let y2 = this.board.emptyY;
+    let x2 = this.board.emptyX;
+    this.animateTileRight(
+      this.animatingX, this.animatingY,
+      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+    );
+  }
+
+  moveTile(x, y) {
+    if(x - 1 == this.board.emptyX && y == this.board.emptyY) {
+      this.moveRight();
+    } else if(x + 1 == this.board.emptyX && y == this.board.emptyY) {
+      this.moveLeft();
+    } else if(x == this.board.emptyX && y + 1 == this.board.emptyY) {
+      this.moveUp();
+    } else if(x == this.board.emptyX && y - 1 == this.board.emptyY) {
+      this.moveDown();
+    }
   }
 
   /* EVENT LISTENERS */
@@ -387,11 +657,17 @@ export class TileGameComponent implements OnInit {
       x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-      this.board.moveTile(x, y);
-      if(this.board.isSolved()) {
-        this.done();
+      console.log(x);
+      console.log(y);
+      if(x > -1 
+      && x <  3
+      && y > -1
+      && y < 3) {
+        this.moveTile(x, y);
+        if(this.board.isSolved()) {
+          this.done();
+        }
       }
-      this.draw();
     }
   }
   mouseReleased(mouseEvent) { 
@@ -414,8 +690,7 @@ export class TileGameComponent implements OnInit {
         case(40):
         case(83):
             if(directions.includes(0)) {
-              this.board.moveUp();
-              this.draw();
+              this.moveUp();
               if(this.board.isSolved()) {
                 this.done();
               }
@@ -426,8 +701,7 @@ export class TileGameComponent implements OnInit {
         case(38):
         case(87):
             if(directions.includes(1)) {
-              this.board.moveDown();
-              this.draw();
+              this.moveDown();
               if(this.board.isSolved()) {
                 this.done();
               }
@@ -438,8 +712,7 @@ export class TileGameComponent implements OnInit {
         case(39):
         case(68):
             if(directions.includes(2)) {
-              this.board.moveLeft();
-              this.draw();
+              this.moveLeft();
               if(this.board.isSolved()) {
                 this.done();
               }
@@ -450,8 +723,7 @@ export class TileGameComponent implements OnInit {
         case(37):
         case(65):
             if(directions.includes(3)) {
-              this.board.moveRight();
-              this.draw();
+              this.moveRight();
               if(this.board.isSolved()) {
                 this.done();
               }
