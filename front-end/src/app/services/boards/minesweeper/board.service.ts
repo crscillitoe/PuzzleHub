@@ -6,6 +6,13 @@ export class Board {
   bombCount: number;
 
   mineField: number[][];
+  lastMineX: number = 0;
+  lastMineY: number = 0;
+
+  //0 for not seen
+  //1 for seen
+  //2 for flagged
+  visible: number[][];
 
   constructor(width, height, bombCount, seed) {
     this.width = width;
@@ -28,6 +35,17 @@ export class Board {
 
     this.mineField = rows;
 
+    var vRows = [];
+    for(var j  = 0; j < this.height; j++) {
+      var vColumn = [];
+      for(var i = 0; i < this.width; i++) {
+        vColumn.push(0);
+      }
+
+      vRows.push(vColumn);
+    }
+    this.visible = vRows;
+
     var mineXPos;
     var mineYPos;
 
@@ -45,15 +63,18 @@ export class Board {
           else{
             this.updateNeighborTile(mineXPos+i, mineYPos+j);
           }
-        }
+        } 
       }
     }
 
+    this.lastMineX = mineXPos;
+    this.lastMineY = mineYPos;
+
     console.log(this.mineField);
+    console.log(this.visible);
   }
 
   checkValidMine(x, y){
-
     if(this.mineField[y][x] < 0){
       return false;
     }
@@ -67,10 +88,10 @@ export class Board {
             nbrMineCount += 1;
           }
         } 
-      }
-    
+      } 
     }
-    if(nbrMineCount >= 2){
+
+    if(nbrMineCount > 4){
       return false;
     }
 
@@ -86,6 +107,74 @@ export class Board {
       }
     }
   }
+
+  //turns a mine into an empty tile
+  replaceMine(x, y){
+    this.mineField[y][x] = 0;
+    for(var i = x-1; i <= x+1; i++){
+      for(var j = y-1; j <= y+1; j++){
+        if(i >= 0 && i < this.width && j >= 0 && j < this.height){
+          if(this.mineField[j][i] >= 0){
+            this.mineField[j][i] -= 1;
+          }
+          else{
+            this.mineField[y][x] += 1;
+          }
+        }
+      }
+    }
+  }
+
+  floodFill(x, y){
+    if(x < 0 || y < 0 || x >= this.width || y >= this.height){
+      return;
+    }
+    if(this.mineField[y][x] < 0 || this.visible[y][x] == 1){
+      return;
+    }
+
+    this.visible[y][x] = 1;
+    if(this.mineField[y][x] != 0){
+      return;
+    }
+
+    for(var i = x-1; i <= x+1; i++){
+      for(var j = y-1; j <= y+1; j++){
+        this.floodFill(i, j);
+      }
+    }
+    
+  }
+ 
+  firstClick(x, y){
+    if(this.visible[y][x] == 2){
+      //we dont let you click on something you flagged.
+      return;
+    }
+
+    if(this.mineField[y][x] < 0){
+      this.replaceMine(x, y); 
+    }
+    else{
+      this.replaceMine(this.lastMineX, this.lastMineY);
+    }
+    this.floodFill(x, y);
+  }
+
+  click(x, y){
+    if(this.visible[y][x] == 2){
+      return;
+    }
+
+    if(this.mineField[y][x] < 0){
+      console.log("Touching a mine!");
+    }
+    else{
+      this.floodFill(x, y);
+    }
+
+  }
+
 
   random() {
       var x = Math.sin(++this.seed) * 10000;
