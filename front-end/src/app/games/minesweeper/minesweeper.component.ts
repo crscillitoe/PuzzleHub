@@ -29,6 +29,10 @@ export class MinesweeperComponent implements OnInit {
   gridOffsetY: number = 100;
 
   firstPress: boolean = true;
+  isPressed: boolean = false;
+
+  lastX: number;
+  lastY: number;
   
   difficulty: number;
   seed: number;
@@ -104,6 +108,7 @@ export class MinesweeperComponent implements OnInit {
           
           this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
           this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+          this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
           //this.displayTimer();
 
           this.fixSizes();
@@ -118,6 +123,7 @@ export class MinesweeperComponent implements OnInit {
  
       this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
       this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+      this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
       
       //this.displayTimer();
 
@@ -181,7 +187,7 @@ export class MinesweeperComponent implements OnInit {
                                       (this.gridOffsetY) + ( (y + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
   }
 
-  drawHiddenTile(x, y){
+  drawHiddenTile(x, y, color){
 
     //TODO: replace these with rounded rects and get rid of the grid
     let startX = (this.gridOffsetX) + ( x * this.gridBoxSize ) + 1;
@@ -189,7 +195,11 @@ export class MinesweeperComponent implements OnInit {
     let width = this.gridBoxSize - 2;
     let height = this.gridBoxSize - 2;
 
-    this.context.fillStyle = this.colors.COLOR_2;
+    this.context.fillStyle = color;
+    //debug purposes only
+    if(this.board.mineField[y][x] < 0){ 
+      this.context.fillStyle = this.colors.COLOR_4;
+    }
 
     this.context.beginPath();
     this.context.moveTo(startX, startY);
@@ -201,13 +211,29 @@ export class MinesweeperComponent implements OnInit {
     this.context.fill();
     this.context.stroke();
   }
+
+  drawFlaggedTile(x, y){
+    this.drawHiddenTile(x, y, this.colors.COLOR_2);
+    
+    var tileString = "F";
+
+    this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.6) + 'px Poppins';
+    this.context.textAlign = "center";
+    this.context.fillStyle = this.colors.COLOR_5;
+    
+    this.context.fillText(tileString, (this.gridOffsetX) + ( x * this.gridBoxSize ) + (this.gridBoxSize / 2),
+                                      (this.gridOffsetY) + ( (y + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
+  }
   
   drawTiles() {
     for(var j = 0; j < this.board.height; j++) {
       for(var i = 0; i < this.board.width; i++) {
 
+        if(this.board.visible[j][i] == 2){
+          this.drawFlaggedTile(i, j);
+        }
         if(this.board.visible[j][i] == 0){
-          this.drawHiddenTile(i, j);
+          this.drawHiddenTile(i, j, this.colors.COLOR_2);
         } 
         else {
           this.drawVisibleTile(i, j);
@@ -215,6 +241,12 @@ export class MinesweeperComponent implements OnInit {
       }
     }
 
+  }
+
+  highlightTile(x, y){
+    if(this.board.visible[y][x] == 0){
+      this.drawHiddenTile(x, y, this.colors.COLOR_2_ALT)
+    }
   }
 
   done() {
@@ -258,34 +290,67 @@ export class MinesweeperComponent implements OnInit {
 
   /* EVENT LISTENERS */
   mousePressed(mouseEvent) { 
+    this.isPressed = true;
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
 
     x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
     y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+    this.highlightTile(x, y);
+    this.lastX = x;
+    this.lastY = y;
+
+    return; 
+  }
+
+  mouseReleased(mouseEvent) { 
+    this.isPressed = false;
+    let x = mouseEvent.clientX - this.canvasOffsetX;
+    let y = mouseEvent.clientY - this.canvasOffsetY;
+
+    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+    console.log(mouseEvent);
     
-    if(this.firstPress){
-      this.board.firstClick(x, y);
-      /*if(this.board.isSolved()) {
-        this.done();
-      }*/
-      this.firstPress = false;
+    if(mouseEvent.button == 2){
+      this.board.flagTile(x, y);
+      this.draw();
+    }
+    else if(this.firstPress){ 
+      if(this.board.visible[y][x] != 2){
+        this.board.firstClick(x, y);
+        this.firstPress = false;
+      }
       this.draw();
     }
     else{
       this.board.click(x, y);
       this.draw();
     }
+    if(this.board.isSolved()) {
+      this.done();
+    }
   }
-  mouseReleased(mouseEvent) { 
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
-  }
+
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseMoveX':x, 'mouseMoveY':y});
+
+    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+    if(this.isPressed){
+      this.highlightTile(x, y);
+      if(this.lastX != x || this.lastY != y){
+        this.drawHiddenTile(this.lastX, this.lastY, this.colors.COLOR_2);
+        this.lastX = x;
+        this.lastY = y;
+      }
+    }
+    
+    
   }
 
   keyPressed(keyEvent) {

@@ -44,8 +44,10 @@ export class Board {
 
       vRows.push(vColumn);
     }
-    this.visible = vRows;
+    this.visible = vRows; 
+  }
 
+  fillBoard(firstX, firstY){
     var mineXPos;
     var mineYPos;
 
@@ -53,7 +55,7 @@ export class Board {
       do {
         mineXPos = Math.floor(this.random() * this.width);
         mineYPos = Math.floor(this.random()* this.height);
-      } while (!this.checkValidMine(mineXPos, mineYPos));    
+      } while (!this.checkValidMine(mineXPos, mineYPos, firstX, firstY));    
 
       for(var i = -1; i <= 1; i++){
         for(var j = -1; j <= 1; j++){
@@ -66,16 +68,16 @@ export class Board {
         } 
       }
     }
-
-    this.lastMineX = mineXPos;
-    this.lastMineY = mineYPos;
-
     console.log(this.mineField);
     console.log(this.visible);
   }
 
-  checkValidMine(x, y){
+  checkValidMine(x, y, firstX, firstY){
     if(this.mineField[y][x] < 0){
+      return false;
+    }
+
+    if(Math.abs(x - firstX) <= 1 || Math.abs(y - firstY) <= 1){
       return false;
     }
 
@@ -97,7 +99,6 @@ export class Board {
 
     return true;
     
-    //TODO: check for overdistant mines
   }
 
   updateNeighborTile(x, y){
@@ -109,21 +110,21 @@ export class Board {
   }
 
   //turns a mine into an empty tile
-  replaceMine(x, y){
+    /*replaceMine(x, y){
     this.mineField[y][x] = 0;
     for(var i = x-1; i <= x+1; i++){
       for(var j = y-1; j <= y+1; j++){
-        if(i >= 0 && i < this.width && j >= 0 && j < this.height){
+        if(i >= 0 && i < this.width && j >= 0 && j < this.height && !(i == x && j == y)){
           if(this.mineField[j][i] >= 0){
             this.mineField[j][i] -= 1;
           }
-          else{
+          if(this.mineField[j][i] < 0){
             this.mineField[y][x] += 1;
           }
         }
       }
     }
-  }
+  }*/
 
   floodFill(x, y){
     if(x < 0 || y < 0 || x >= this.width || y >= this.height){
@@ -148,16 +149,10 @@ export class Board {
  
   firstClick(x, y){
     if(this.visible[y][x] == 2){
-      //we dont let you click on something you flagged.
       return;
     }
 
-    if(this.mineField[y][x] < 0){
-      this.replaceMine(x, y); 
-    }
-    else{
-      this.replaceMine(this.lastMineX, this.lastMineY);
-    }
+    this.fillBoard(x, y);
     this.floodFill(x, y);
   }
 
@@ -173,6 +168,26 @@ export class Board {
       this.floodFill(x, y);
     }
 
+  }
+
+  flagTile(x, y){
+    if(this.visible[y][x] == 2){
+      this.visible[y][x] = 0;
+    }
+    else if(this.visible[y][x] == 0){
+      this.visible[y][x] = 2;
+    }
+  }
+
+  isSolved() {
+    for(var j = 0 ; j < this.height ; j++) {
+      for(var i = 0 ; i < this.width ; i++) {
+        if(this.mineField[j][i] >= 0 && this.visible[j][i] == 0){
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
 
