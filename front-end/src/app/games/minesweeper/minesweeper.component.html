@@ -1,1 +1,27 @@
+<div id="leftControlPanel">
+  <div class="previousBest">
+    High Score
+    <a style="font-family: 'Inconsolata', monospace;">{{personalBest}}</a>
+  </div>
+
+  <div class="timer">
+    Timer
+    <a id="timer" style="font-family: 'Inconsolata', monospace;">0:00:00.000</a>
+  </div>
+
+  <div class="rules">
+    <div class="text">
+      <b>Rules</b><br>
+      Blah blah rules here
+      <hr>
+      <b>Controls</b><br>
+      Controls here blah blah
+    </div>
+  </div>
+  
+  <div class="buttons">
+    <a (click)="newGame()" style="font-family: 'Poppins', sans-serif;" class="center btn btn-info">New Game</a>
+  </div>
+</div>
+
 <canvas id="myCanvas" (window:resize)="fixSizes()" (contextmenu)="false"></canvas>

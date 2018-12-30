@@ -33,6 +33,11 @@ export class MinesweeperComponent implements OnInit {
 
   lastX: number;
   lastY: number;
+  personalBest: string;
+  
+  startDate: any;
+  t: any;
+  solved: boolean = false;
   
   difficulty: number;
   seed: number;
@@ -96,6 +101,7 @@ export class MinesweeperComponent implements OnInit {
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
 
 
+    this.loader.startLoadingAnimation();
     // Start timer if we are logged in
     if(this.userService.isLoggedIn()) {
       this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
@@ -111,6 +117,10 @@ export class MinesweeperComponent implements OnInit {
           this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
           //this.displayTimer();
 
+          this.startDate = new Date();
+          this.displayTimer();
+
+          this.loader.stopLoadingAnimation();
           this.fixSizes();
           this.draw();
         });
@@ -125,8 +135,57 @@ export class MinesweeperComponent implements OnInit {
       this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
       this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
       
-      //this.displayTimer();
+      this.startDate = new Date();
+      this.displayTimer();
 
+      this.loader.stopLoadingAnimation();
+
+      this.fixSizes();
+      this.draw();
+    }
+  }
+
+  newGame() {
+    this.loader.startLoadingAnimation();
+    if(this.userService.isLoggedIn()) {
+      this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
+        .subscribe( (data) => {
+          // Generate board with given seed
+          this.seed = data['seed'];
+
+          this.board.seed = this.seed;
+          this.board.generateBoard();
+
+          if(this.solved) {
+            this.solved = false;
+
+            this.startDate = new Date();
+            this.displayTimer();
+          } else {
+            this.startDate = new Date();
+          }
+
+          this.loader.stopLoadingAnimation();
+          this.fixSizes();
+          this.draw();
+        });
+    } else {
+      // Generate board with random seed
+      this.seed = Math.floor(Math.random() * (2000000000));
+      
+      this.board.seed = this.seed;
+      this.board.generateBoard();
+
+      if(this.solved) {
+        this.solved = false;
+
+        this.startDate = new Date();
+        this.displayTimer();
+      } else {
+        this.startDate = new Date();
+      }
+
+      this.loader.stopLoadingAnimation();
       this.fixSizes();
       this.draw();
     }
@@ -246,6 +305,35 @@ export class MinesweeperComponent implements OnInit {
   highlightTile(x, y){
     if(this.board.visible[y][x] == 0){
       this.drawHiddenTile(x, y, this.colors.COLOR_2_ALT)
+
+  add(that) {
+    var display = document.getElementById("timer");
+    var now = +new Date();
+
+    var diff = ((now - that.startDate));
+
+    var hours   = Math.trunc(diff / (60 * 60 * 1000));
+    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    var seconds = Math.trunc(diff / (1000)) % 60;
+    var millis  = diff % 1000;
+
+    try {
+      display.textContent = 
+        hours + ":" + 
+        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
+        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
+        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+
+      that.displayTimer();
+    } catch {
+      // Do nothing - page probably re-routed
+    }
+  }
+
+  displayTimer() {
+    if(!this.solved) {
+      var _this = this;
+      this.t = setTimeout(function() {_this.add(_this)}, 50);
     }
   }
 
@@ -253,7 +341,11 @@ export class MinesweeperComponent implements OnInit {
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.MINESWEEPER, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          console.log(data);
+          if(data['NewRecord']) {
+            this.personalBest = data['TimeElapsed'];
+          }
+          var display = document.getElementById("timer");
+          display.textContent = data['TimeElapsed'];
         });
     } else {
       console.log('done - not logged in');
