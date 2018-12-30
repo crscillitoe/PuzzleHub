@@ -38,8 +38,8 @@ WHOIS_APIKEY = json_data['who_is_api_key']
 def send_test_email():
 
     SENDER = "noreply@puzzle-hub.com"
-    SENDERNAME = "Puzzle Hub Admin"
-    RECIPIENT = "jingles341@gmail.com"
+    SENDERNAME = "No Reply"
+    RECIPIENT = "joel@teknogeek.io"
 
     USERNAME_SMTP = json_data['email_username']
     PASSWORD_SMTP = json_data['email_password']
@@ -91,14 +91,13 @@ def register_user():
     try:
         username = post_data["Username"]
         password = post_data["Password"]
-        email = post_data["Email"]
+        email_address = post_data["Email"]
     except BadRequestKeyError:
-        # TODO - specify which field was not found
         abort(400, "ERROR: malformed post request")
    
     # check that the username meets our guidelines 
     if len(username) > 16:
-        abort(400, "ERROR: username length too long")
+        return jsonify({"success":False,"message":"Username length must be less than 16 characters."})
 
 
     check_is_valid_password(password)
@@ -106,20 +105,18 @@ def register_user():
     # TODO: add a check for banned characters
     
     # test that the email is valid 
-    if check_valid_email(email) is False:
-        abort(400, "ERROR: email is invalid")
+    if check_valid_email(email_address) is False:
+        return jsonify({"success":False,"message":"Email is invalid."})
 
-    if check_blacklisted_email(email) is False:
-        abort(400, "ERROR: domain is blacklisted")
+    if check_blacklisted_email(email_address) is False:
+        return jsonify({"success":False,"message":"This email is from a blacklisted domain."})
 
     # hash the password
-    # TODO - test how long it takes to hash, edit parameters to get it to around 250ms
     password_hash = argon2.using(time_cost=160, memory_cost=10240, parallelism=8).hash(password)
     
     cursor = db.cursor()
 
     # ---------------------------------------------------------------
-    # TODO - put this in another method
     # check if an account already exists with the given username
     sql_query = ''' 
         SELECT * FROM users
@@ -129,7 +126,7 @@ def register_user():
     data = cursor.fetchall()
 
     if len(data) > 0:
-        abort(400, "ERROR: an account with the username already exists")
+        return jsonify({"success":False,"message":"This username is already taken!"})
 
     # check if an account already exists with the given email
     sql_query = ''' 
@@ -140,7 +137,7 @@ def register_user():
     data = cursor.fetchall()
 
     if len(data) > 0:
-        abort(400, "ERROR: an account with the email already exists")
+        return jsonify({"success":False,"message":"This email is already taken!"})
     # ---------------------------------------------------------------
 
     #add to table
@@ -151,7 +148,7 @@ def register_user():
 
     user_entry = {
         "username":str(username),
-        "email":str(email),
+        "email":str(email_address),
         "password":str(password_hash),
     }
 
@@ -176,10 +173,52 @@ def register_user():
     db.commit()
  
     validation_url = "https://puzzle-hub.com/EmailVerify;code="+str(validation_id)
-    #send_validation_email(validation_url, email)
 
-    #return "Validation email sent!"
-    return validation_url
+    # Send validation url
+    SENDER = "noreply@puzzle-hub.com"
+    SENDERNAME = "No Reply"
+    RECIPIENT = str(email_address)
+
+    USERNAME_SMTP = json_data['email_username']
+    PASSWORD_SMTP = json_data['email_password']
+
+    HOST = "email-smtp.us-east-1.amazonaws.com"
+    PORT = 587
+
+    SUBJECT = "Puzzle Hub Email Verification"
+    BODY_TEXT = '''
+        Thank you for registering for an account on puzzle-hub.com! 
+        Please click the following link to verify your account
+        \n\n
+        ''' + validation_url
+
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = SUBJECT
+    msg['From'] = email.utils.formataddr((SENDERNAME, SENDER))
+    msg['To'] = RECIPIENT
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(BODY_TEXT, 'plain')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+
+    # Try to send the message.
+    try:  
+        server = smtplib.SMTP(HOST, PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(USERNAME_SMTP, PASSWORD_SMTP)
+        server.sendmail(SENDER, RECIPIENT, msg.as_string())
+        server.close()
+    except Exception as e:
+        print ("Error: ", e)
+
+    return jsonify({"success":True})
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     
 @app.route('/api/validateUser/<validation_id>')
