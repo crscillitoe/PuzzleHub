@@ -28,9 +28,16 @@ export class Board {
       }
       rows.push(column);
     }
+   
     this.originalPuzzle = rows;
     this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
-    
+    this.ones = JSON.parse(JSON.stringify(this.originalPuzzle));
+    this.zeroes = JSON.parse(JSON.stringify(this.originalPuzzle));
+
+    var totalBoards = 0;
+
+    for 
+
     console.log(this.takuzuPuzzle);
   }
 
