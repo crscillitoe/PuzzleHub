@@ -25,6 +25,10 @@ export class TunnelService {
     return this.http.post(this.ipAddress + '/stopTimer', model);
   }
 
+  verifyEmail(path) {
+    return this.http.get(this.ipAddress + '/validateUser/' + path);
+  }
+
   login(model) {
     return this.http.post(this.ipAddress + '/login', model);
   }

@@ -20,6 +20,7 @@ import { CustomGamesComponent } from './custom-games/custom-games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { TileGameComponent } from './games/tile-game/tile-game.component';
 import { TemplateComponent } from './games/template/template.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
     { path: 'Sudoku', component: SudokuComponent},
     { path: 'Takuzu', component: TakuzuComponent},
     { path: 'Minesweeper', component: MinesweeperComponent},
-    { path: 'Tile Game', component: TileGameComponent}
+    { path: 'Tile Game', component: TileGameComponent},
+    { path: 'EmailVerify', component: VerifyEmailComponent}
 ];
 
 @NgModule({
@@ -48,7 +50,8 @@ const appRoutes: Routes = [
     CustomGamesComponent,
     MinesweeperComponent,
     TileGameComponent,
-    TemplateComponent
+    TemplateComponent,
+    VerifyEmailComponent
   ],
   imports: [
     BrowserModule,

@@ -175,7 +175,7 @@ def register_user():
     cursor.execute(sql_query, validation_entry)
     db.commit()
  
-    validation_url = "http://apiurl.com/validateUser/"+str(validation_id)
+    validation_url = "https://puzzle-hub.com/EmailVerify;code="+str(validation_id)
     #send_validation_email(validation_url, email)
 
     #return "Validation email sent!"
@@ -200,7 +200,7 @@ def validate_user(validation_id):
     data = cursor.fetchall()
     
     if len(data) != 1:
-        abort(400, "ERROR: validation token is not valid")
+        return jsonify({"validated":False})
 
     user_id = (data[0])[0]
     query_params = {
@@ -223,7 +223,7 @@ def validate_user(validation_id):
     cursor.execute(sql_query, query_params)
     db.commit()
 
-    return 'User Validated'
+    return jsonify({"validated":True})
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /login
