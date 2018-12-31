@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
+import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -55,6 +56,7 @@ export class MinesweeperComponent implements OnInit {
     private route: ActivatedRoute, 
     private colorService: ColorService,
     private router: Router,
+    private tunnel: TunnelService,
     private userService: UserService,
     private timer: TimerService,
     private loader: LoaderService) { 
