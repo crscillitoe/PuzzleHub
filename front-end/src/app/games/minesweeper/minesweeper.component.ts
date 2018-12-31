@@ -20,7 +20,6 @@ export class MinesweeperComponent implements OnInit {
 
   colors: any;
 
-  personalBest: string;
   
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
