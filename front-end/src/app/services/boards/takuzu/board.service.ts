@@ -27,7 +27,7 @@ export class Board {
     for (var i = 0; i < this.size; i++) {
       
       if (used[i][col] && board[row][col] == board[i][col]) {
-        totalInCols++;
+        totalInCol++;
         consecutiveColVals++;
       } else {
         consecutiveColVals = 0;
@@ -38,7 +38,7 @@ export class Board {
       }
 
       if (used[row][i] && board[row][col] == board[row][i]) {
-        totalInRows++;
+        totalInRow++;
         consecutiveRowVals++;
       } else {
         consecutiveRowVals = 0;
@@ -181,7 +181,7 @@ export class Board {
       for (var i = 0; i < row; i++) {
         var duplicateFound = true;
         for (var j = 0; j < col; j++) {
-          if (board[row][j] != board][i][j]) {
+          if (board[row][j] != board[i][j]) {
             duplicateFound = false;
             break;
           }
@@ -408,7 +408,7 @@ export class Board {
           break;
         }
 
-        var curr = order.pop();
+        curr = order.pop();
         order[order.length - 1].usedPositions.push(curr);
         board[curr.row][curr.col] = -1;
         used[curr.row][curr.col] = false;
@@ -527,7 +527,7 @@ export class Position {
   row : number;
   col : number;
   val : number;
-  usedPositions: [] = [];
+  usedPositions: any = [];
 }
 
 export class BooleanResult {
