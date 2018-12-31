@@ -314,138 +314,106 @@ export class Board {
       }
     } 
 
-    for (var i = 0; i < this.size; i++) {
-      var numTotOnes = 0;
-      var numTotZeroes = 0;
-      var recentOnes = 0;
-      var recentZeroes = 0;
-
-      for (var j = 0; j < this.size; j++) {
-        var choice = Math.round(this.random());
-      
-        if (numTotOnes < this.size/2 && choice == 1 && recentOnes < 2) {
-          recentZeroes = 0;
-          recentOnes++;
-          numTotOnes++;
-          board[i][j] = choice;
-        } else if (choice == 1) {
-          board[i][j] = 0;
-        }
-  
-        if (numTotZeroes < this.size/2 && choice == 0 && recentZeroes < 2) {
-          recentOnes = 0;
-          recentZeroes++;
-          numTotZeroes++;
-          board[i][j] = choice;
-        } else if (choice == 0) {
-          board[i][j] = 1;
-        }
-      }
-    }
-
-    console.log(board);
-
-    /*for (var i = 0; i < this.size; i++) {
-      var row = Math.round(this.random() * (this.size - 1));
-      var col = Math.round(this.random() * (this.size - 1));
-      
-      if (!used[row][col])
-      {
-        board[row][col] = Math.round(this.random());
-        if (!this.hasError(board, row, col, used)) {
-          used[row][col] = true;
-          
-          var curr = new Position();
-          curr.row = row;
-          curr.col = col;
-          curr.val = board[row][col];
-          order.push(curr);
-        } else {
-          i--;
-        }
-      } else {
-        i--;
-      }
-    }
-     
-    while (true) {
-    
-    
-      for (var i = 0; i < this.size; i++) {
-        for (var j = 0; j < this.size; j++) {
-          zeroes[i][j] = 0;
-          ones[i][j] = 0;
-        }
-      }
-
-      this.getPossibleBoards(board, 0, 0, used, zeroes, ones);
-      console.log(zeroes);
-      console.log(ones);
-    
-      var lowestZero = 0;
-      var lowestZeroRow = 0;
-      var lowestZeroCol = 0;
-      var lowestOne = 0;
-      var lowestOneRow = 0;
-      var lowestOneCol = 0;
-
-      for (var i = 0; i < this.size; i++) {
-        for (var j = 0; j < this.size; j++) {
-          if (!(this.containsPosition(order[order.length - 1].usedPositions, i, j, 0)) && (zeroes[i][j] != 0) && ((lowestZero == 0) || (zeroes[i][j] < lowestZero)))
-          {
-            lowestZero = zeroes[i][j];
-            lowestZeroRow = i;
-            lowestZeroCol = j;
-          }
-
-          if (!(this.containsPosition(order[order.length - 1].usedPositions, i, j, 1)) && (ones[i][j] != 0) && ((lowestOne == 0) || (ones[i][j] < lowestOne)))
-          { 
-            lowestOne = ones[i][j];
-            lowestOneRow = i;
-            lowestOneCol = j;
-          }
-        }
-      }
-      
-      if (lowestZero == 0 || lowestOne == 0) {
-        break;
-      }
-
-      if (lowestZero < lowestOne) {
-        board[lowestZeroRow][lowestZeroCol] = 0;
-        used[lowestZeroRow][lowestZeroCol] = true;
-
-        var adder = new Position();
-        adder.row = lowestZeroRow;
-        adder.col = lowestZeroCol;
-        adder.val = 0;
-        order.push(adder);
-      } else {
-        board[lowestOneRow][lowestOneCol] = 1;
-        used[lowestOneRow][lowestOneCol] = true;
-
-        var adder = new Position();
-        adder.row = lowestOneRow;
-        adder.col = lowestOneCol;
-        adder.val = 1;
-        order.push(adder);
-      }
-
-      if (lowestZero == 1 || lowestOne == 1) {
-        totalBoards++;
-        if (totalBoards > 10) {
-          break;
-        }
-
-        curr = order.pop();
-        order[order.length - 1].usedPositions.push(curr);
-        board[curr.row][curr.col] = -1;
-        used[curr.row][curr.col] = false;
-      }
-    }
-  */
+    console.log('' + board);
 
     this.originalPuzzle = board;
+      this.takuzuPuzzle = board;
+
+    while(!this.isSolved()) {
+
+      var columnData = {};
+
+      for ( var i = 0 ; i < this.size ; i ++) {
+        let m = {
+          'numTotOnes':0,
+          'numTotZeroes':0,
+          'recentOnes':0,
+          'recentZeroes':0
+        }
+        columnData[i] = m;
+      }
+
+      for (var i = 0; i < this.size; i++) {
+        var numTotOnes = 0;
+        var numTotZeroes = 0;
+        var recentOnes = 0;
+        var recentZeroes = 0;
+        var added = false;
+
+        for (var j = 0; j < this.size; j++) {
+          var choice = Math.round(this.random());
+          added = false;
+
+          let column = columnData[j];
+        
+          if (numTotOnes < this.size/2 && choice == 1 && recentOnes < 2 &&
+              column['numTotOnes'] < this.size/2 && column['recentOnes'] < 2
+          ) {
+            column['recentZeroes'] = 0;
+            column['recentOnes']++;
+            column['numTotOnes']++;
+
+            recentZeroes = 0;
+            recentOnes++;
+            numTotOnes++;
+
+            board[i][j] = choice;
+            added = true;
+          } else if (numTotZeroes < this.size/2 && choice == 1 && recentZeroes < 2 &&
+              column['numTotZeroes'] < this.size/2 && column['recentZeroes'] < 2) {
+            column['recentOnes'] = 0;
+            column['recentZeroes']++;
+            column['numTotZeroes']++;
+
+            recentOnes = 0;
+            recentZeroes++;
+            numTotZeroes++;
+
+            board[i][j] = 0;
+            added = true;
+          }
+  
+          if (numTotZeroes < this.size/2 && choice == 0 && recentZeroes < 2 &&
+              column['numTotZeroes'] < this.size/2 && column['recentZeroes'] < 2) {
+            column['recentOnes'] = 0;
+            column['recentZeroes']++;
+            column['numTotZeroes']++;
+
+            recentOnes = 0;
+            recentZeroes++;
+            numTotZeroes++;
+
+            board[i][j] = choice;
+            added = true;
+          } else if (numTotOnes < this.size/2 && choice == 0 && recentOnes < 2 &&
+                     column['numTotOnes'] < this.size/2 && column['recentOnes'] < 2) {
+            column['recentZeroes'] = 0;
+            column['recentOnes']++;
+            column['numTotOnes']++;
+
+            recentZeroes = 0;
+            recentOnes++;
+            numTotOnes++;
+
+            board[i][j] = 1;
+            added = true;
+          }
+
+          if(added = false) {
+            break;
+          }
+        }
+
+        if(added = false) {
+          break;
+        }
+      }
+
+      this.originalPuzzle = board;
+      this.takuzuPuzzle = board;
+    }
+
+
     this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
   }
 
