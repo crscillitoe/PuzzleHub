@@ -19,6 +19,8 @@ export class MinesweeperComponent implements OnInit {
   context: any;
 
   colors: any;
+
+  personalBest: string;
   
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
@@ -110,6 +112,15 @@ export class MinesweeperComponent implements OnInit {
     this.loader.startLoadingAnimation();
     // Start timer if we are logged in
     if(this.userService.isLoggedIn()) {
+      let m = {
+        GameID: GameID.MINESWEEPER,
+        Difficulty: this.difficulty
+      }
+      this.tunnel.getPersonalBest(m)
+        .subscribe( (data) => {
+          this.personalBest = data['time'];
+        });
+
       this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
         .subscribe( (data) => {
           // Generate board with given seed
