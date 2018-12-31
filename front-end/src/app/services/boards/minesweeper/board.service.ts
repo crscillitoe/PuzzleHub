@@ -55,7 +55,6 @@ export class Board {
       do {
         mineXPos = Math.floor(this.random() * this.width);
         mineYPos = Math.floor(this.random()* this.height);
-        console.log(mineXPos, mineYPos);
       } while (!this.checkValidMine(mineXPos, mineYPos, firstX, firstY));    
 
       //console.log(mineXPos, mineYPos);
@@ -102,7 +101,101 @@ export class Board {
     return true;  
   }
 
-  updateNeighborTile(x, y){
+  doubleClick(x, y) {
+    var val = this.mineField[y][x];
+    if(val == this.countFlagNeighbors(x, y) && val != 0) {
+      for(let neighbor of this.getNeighbors(x, y)) {
+        var goodPress = this.click(neighbor.x, neighbor.y);
+        if(!goodPress) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  countFlagNeighbors(x, y) {
+    var toReturn = 0;
+    for(let neighbor of this.getNeighbors(x, y)) {
+      if(this.visible[neighbor.y][neighbor.x] == 2) {
+        toReturn++;
+      }
+    }
+
+    return toReturn;
+  }
+
+  getNeighbors(x, y) {
+    var toReturn = [];
+    if(x + 1 < this.width) {
+      let m1 = {
+        'x': x + 1,
+        'y': y
+      }
+      toReturn.push(m1);
+
+      if(y + 1 < this.height) {
+        let m2 = {
+          'x': x + 1,
+          'y': y + 1
+        }
+        toReturn.push(m2);
+      }
+
+      if(y - 1 >= 0) {
+        let m3 = {
+          'x': x + 1,
+          'y': y - 1
+        }
+        toReturn.push(m3);
+      }
+    }
+
+    if(x - 1 >= 0) {
+      let m4 = {
+        'x': x - 1,
+        'y': y
+      }
+      toReturn.push(m4);
+
+      if(y + 1 < this.height) {
+        let m5 = {
+          'x': x - 1,
+          'y': y + 1
+        }
+        toReturn.push(m5);
+      }
+
+      if(y - 1 >= 0) {
+        let m6 = {
+          'x': x - 1,
+          'y': y - 1
+        }
+        toReturn.push(m6);
+      }
+    }
+
+    if(y + 1 < this.height) {
+      let m7 = {
+        'x': x,
+        'y': y + 1
+      }
+      toReturn.push(m7);
+    }
+
+    if(y - 1 >= 0) {
+      let m8 = {
+        'x': x,
+        'y': y - 1
+      }
+      toReturn.push(m8);
+    }
+
+    return toReturn;
+  }
+
+  updateNeighborTile(x, y) {
     if(x >=0 && x < this.width && y >= 0 && y < this.height){
       if(this.mineField[y][x] >= 0){
         this.mineField[y][x] += 1;
@@ -131,7 +224,7 @@ export class Board {
     if(x < 0 || y < 0 || x >= this.width || y >= this.height){
       return;
     }
-    if(this.mineField[y][x] < 0 || this.visible[y][x] == 1){
+    if(this.mineField[y][x] < 0 || this.visible[y][x] > 0){
       return;
     }
 
@@ -189,6 +282,15 @@ export class Board {
         }
       }
     }
+
+    for(var j = 0 ; j < this.height ; j++) {
+      for(var i = 0 ; i < this.width ; i++) {
+        if(this.mineField[j][i] == -1){
+          this.visible[j][i] = 2;
+        }
+      }
+    }
+
     return true;
   }
 

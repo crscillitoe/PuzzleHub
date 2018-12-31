@@ -237,9 +237,6 @@ export class TakuzuComponent implements OnInit {
 
   drawGrid() {
     for (var i = 0; i <= this.board.size; i++) {
-      if (i != 0 && i != this.board.size) {
-        continue;
-      }      
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.COLOR_1;
@@ -250,9 +247,6 @@ export class TakuzuComponent implements OnInit {
     }
 
     for (var j = 0; j <= this.board.size; j++) {
-      if (j != 0 && j != this.board.size) {
-        continue;
-      }
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.FOREGROUND;
