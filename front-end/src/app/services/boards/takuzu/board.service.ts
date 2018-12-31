@@ -1,14 +1,16 @@
 export class Board {
   seed: number;
   size: number;
+  removePerc: number;
 
   takuzuPuzzle: number[][];
   originalPuzzle: number[][];
 
-  constructor(size, seed) {
+  constructor(size, seed, removePerc) {
 
     this.size = size;
     this.seed = seed;
+    this.removePerc = removePerc;
     
     if (this.size % 2 != 0) {
       this.size++;
@@ -293,33 +295,15 @@ export class Board {
   generateBoard()
   {  
     var board = [];
-    //var used = [];
-    //var zeroes = [];
-    //var ones = [];
-
-    //var order = [];
-    //var totalBoards = 0;
 
     for (var i = 0; i < this.size; i++) {
       board.push([]);
-      //used.push([]);
-      //zeroes.push([]);
-      //ones.push([]);
-
       for (var j = 0; j < this.size; j++) {
         board[i].push(-1);
-        //used[i].push(false);
-        //zeroes[i].push(-1);
-        //ones[i].push(-1);
       }
     } 
 
-    console.log('' + board);
-
-    this.originalPuzzle = board;
-      this.takuzuPuzzle = board;
-
-    while(!this.isSolved()) {
+    while(!this.isSolvedArg(board)) {
 
       var columnData = {};
 
@@ -408,12 +392,22 @@ export class Board {
           break;
         }
       }
+    }
 
-      this.originalPuzzle = board;
-      this.takuzuPuzzle = board;
+    for (var i = 0; i < (this.removePerc * (this.size * this.size)); i++) {
+      var row = Math.trunc(this.random() * this.size);
+      var col = Math.trunc(this.random() * this.size);
+    
+      if (board[row][col] == -1) {
+        i--;
+        continue;
+      }
+
+      board[row][col] = -1;
     }
 
 
+    this.originalPuzzle = board;
     this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
   }
 
@@ -456,6 +450,10 @@ export class Board {
   }
 
   isSolved() {
+    return this.isSolvedArg(this.takuzuPuzzle);
+  }
+
+  isSolvedArg(takuzuPuzzle) {
     var rows = []
     var cols = []
 
@@ -465,14 +463,13 @@ export class Board {
       var col = "";
       
       for (var j = 0; j < this.size; j++) {
-        row += this.takuzuPuzzle[i][j];
-        col += this.takuzuPuzzle[j][i];
+        row += takuzuPuzzle[i][j];
+        col += takuzuPuzzle[j][i];
       }
 
       rows.push(row);
       cols.push(col);
     }
-
 
     var invalidOnes = "111";
     var invalidZeroes = "000";
@@ -500,7 +497,7 @@ export class Board {
           numZeroes > this.size/2 ||
           curr.includes(invalidOnes) || 
           curr.includes(invalidZeroes) || 
-          curr.includes('-')) {
+        curr.includes('-')) {
         return false;
       }
     }
@@ -517,6 +514,7 @@ export class Board {
       }
     }
 
+    console.log("VALID BOARD");
     return true;
   }
 }

@@ -64,25 +64,30 @@ export class TakuzuComponent implements OnInit {
     this.context = this.canvas.getContext('2d');
 
     var size;
+    var removePerc;
 
     // Easy
     if(this.difficulty == 1) {
-        size = 4;
+      size = 4;
+      removePerc = 0.6;
     } 
     
     // Medium
     else if (this.difficulty == 2) {
-        size = 6;    
+      size = 6;    
+      removePerc = 0.5;
     } 
     
     // Hard
     else if (this.difficulty == 3) {
-        size = 8;    
+      size = 8;    
+      removePerc = 0.4;
     } 
     
     // Extreme
     else if (this.difficulty == 4) {
-        size = 10;
+      size = 10;
+      removePerc = 0.7;
     }
 
     // Uncomment these to add event listeners
@@ -109,7 +114,7 @@ export class TakuzuComponent implements OnInit {
           // Generate board with given seed
           this.seed = data['seed'];
 
-          this.board = new Board(size, this.seed);
+          this.board = new Board(size, this.seed, removePerc);
           this.board.generateBoard();
 
           this.startDate = new Date();
@@ -122,7 +127,7 @@ export class TakuzuComponent implements OnInit {
       // Generate board with random seed
       this.seed = Math.floor(Math.random() * (2000000000));
       
-      this.board = new Board(size, this.seed);
+      this.board = new Board(size, this.seed, removePerc);
       this.board.generateBoard();
 
       this.startDate = new Date();
