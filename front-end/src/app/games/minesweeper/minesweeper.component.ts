@@ -34,6 +34,10 @@ export class MinesweeperComponent implements OnInit {
   selectedX: number;
   selectedY: number;
   personalBest: string;
+
+  mb1Pressed: boolean = false;
+  mb2Pressed: boolean = false;
+
   
   startDate: any;
   t: any;
@@ -41,6 +45,8 @@ export class MinesweeperComponent implements OnInit {
   
   difficulty: number;
   seed: number;
+
+  lose: boolean = false;
 
   board: Board;
 
@@ -153,6 +159,7 @@ export class MinesweeperComponent implements OnInit {
 
   newGame() {
     this.loader.startLoadingAnimation();
+    this.lose = false;
     if(this.userService.isLoggedIn()) {
       this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
         .subscribe( (data) => {
@@ -203,8 +210,14 @@ export class MinesweeperComponent implements OnInit {
     this.context.beginPath();
     this.drawBackground();
 
+    this.drawGrid();
     this.drawTiles();
-    this.highlightTile();
+
+    if(!this.lose) {
+      this.highlightTile();
+    } else {
+      this.drawBombs();
+    }
   }
 
   drawBackground() {
@@ -213,21 +226,42 @@ export class MinesweeperComponent implements OnInit {
   }
 
   drawGrid() {
+    this.context.strokeStyle = '#606060';
+    this.context.lineWidth = 1;
     for(var i = 0; i <= this.board.width; i++) {
-      this.context.lineWidth = 1;
-      this.context.strokeStyle = this.colors.FOREGROUND;
       this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
       this.context.lineTo(this.gridOffsetX + (i* this.gridBoxSize), this.gridOffsetY + (this.board.height * this.gridBoxSize));
       this.context.stroke();
     }
 
     for(var j = 0; j <= this.board.height; j++) {
-      this.context.lineWidth = 1;
-      this.context.strokeStyle = this.colors.FOREGROUND;
       this.context.moveTo(this.gridOffsetX, this.gridOffsetY + (j * this.gridBoxSize));
       this.context.lineTo(this.gridOffsetX + (this.board.width * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
       this.context.stroke();
     }
+  }
+
+  drawBombs() {
+    for(var j = 0; j < this.board.height; j++) {
+      for(var i = 0; i < this.board.width; i++) {
+        if(this.board.mineField[j][i] == -1) {
+          this.drawBomb(i, j);
+        }
+      }
+    }
+  }
+
+  drawBomb(x, y) {
+    var startX = (this.gridOffsetX) + ( x * this.gridBoxSize );
+    var startY = (this.gridOffsetY) + ( y * this.gridBoxSize );
+    var width = this.gridBoxSize;
+    var height = this.gridBoxSize;
+
+    this.context.fillStyle= '#FF0000';
+    this.context.fillRect(startX, startY, width, height);
+
+    var img = document.getElementById("bomb");
+    this.context.drawImage(img, startX, startY, width, height);
   }
 
   drawVisibleTile(x, y){
@@ -261,7 +295,7 @@ export class MinesweeperComponent implements OnInit {
     var width = this.gridBoxSize ;
     var height = this.gridBoxSize ;
 
-    this.context.fillStyle = this.colors.BACKGROUND;
+    this.context.fillStyle = '#A0A0A0';
     this.context.fillRect(startX, startY, width, height);
   }
 
@@ -306,11 +340,71 @@ export class MinesweeperComponent implements OnInit {
     if(this.selectedX < 0 || this.selectedX >= this.board.width || this.selectedY < 0 || this.selectedY >= this.board.height){
       return;
     }
-    if(!this.isPressed){
+    if(!this.isPressed && (!this.mb1Pressed || !this.mb2Pressed)) {
       return;
     }
-    if(this.board.visible[this.selectedY][this.selectedX] == 0){
-      this.drawPressedTile(this.selectedX, this.selectedY);
+
+    if(this.mb1Pressed && this.mb2Pressed) {
+      let x = this.selectedX;
+      let y = this.selectedY;
+
+      if(this.board.visible[y][x] == 0) {
+        this.drawPressedTile(x, y);
+      }
+
+      if(x + 1 < this.board.width) {
+        if(this.board.visible[y][x + 1] == 0) {
+          this.drawPressedTile(x + 1, y);
+        }
+
+        if(y + 1 < this.board.height) {
+          if(this.board.visible[y + 1][x + 1] == 0) {
+            this.drawPressedTile(x + 1, y + 1);
+          }
+        }
+
+        if(y - 1 >= 0) {
+          if(this.board.visible[y - 1][x + 1] == 0) {
+            this.drawPressedTile(x + 1, y - 1);
+          }
+        }
+      }
+
+      if(x - 1 >= 0) {
+        if(this.board.visible[y][x - 1] == 0) {
+          this.drawPressedTile(x - 1, y);
+        }
+
+        if(y + 1 < this.board.height) {
+          if(this.board.visible[y + 1][x - 1] == 0) {
+            this.drawPressedTile(x - 1, y + 1);
+          }
+        }
+
+        if(y - 1 >= 0) {
+          if(this.board.visible[y - 1][x - 1] == 0) {
+            this.drawPressedTile(x - 1, y - 1);
+          }
+        }
+      }
+
+      if(y + 1 < this.board.height) {
+        if(this.board.visible[y + 1][x] == 0) {
+          this.drawPressedTile(x, y + 1);
+        }
+      }
+
+      if(y - 1 >= 0) {
+        if(this.board.visible[y - 1][x] == 0) {
+          this.drawPressedTile(x, y - 1);
+        }
+      }
+
+
+    } else {
+      if(this.board.visible[this.selectedY][this.selectedX] == 0){
+        this.drawPressedTile(this.selectedX, this.selectedY);
+      }
     }
   }
 
@@ -393,53 +487,80 @@ export class MinesweeperComponent implements OnInit {
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
-    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
-
-    if(mouseEvent.button == 2) {
-      this.board.flagTile(x, y);
-      this.draw();
-    } else {
-      this.isPressed = true;
-      this.selectedX = x;
-      this.selectedY = y;
-      this.draw();
+      if(mouseEvent.button == 2 && !this.mb1Pressed) {
+        this.mb2Pressed = true;
+        this.board.flagTile(x, y);
+        this.draw();
+      } else if(mouseEvent.button == 0 && !this.mb2Pressed) {
+        this.isPressed = true;
+        this.mb1Pressed = true;
+        this.selectedX = x;
+        this.selectedY = y;
+        this.draw();
+      } else {
+        this.mb1Pressed = true;
+        this.mb2Pressed = true;
+        this.selectedX = x;
+        this.selectedY = y;
+        this.draw();
+      }
     }
   }
 
   mouseReleased(mouseEvent) { 
-    this.isPressed = false;
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-
-    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
-    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
-
-    console.log(mouseEvent);
-
-    if(x < 0 || x >= this.board.width || y < 0 || y >= this.board.height){
-      return;
-    }
-    
-    if(mouseEvent.button == 2){
-    }
-    else if(this.firstPress){ 
-      if(this.board.visible[y][x] != 2){
-        this.board.firstClick(x, y);
-        this.firstPress = false;
+    if(!this.solved) {
+      if(mouseEvent.button == 2) {
+        this.mb2Pressed = false;
+        this.draw();
       }
-      this.draw();
-    }
-    else{
-      var goodPress = this.board.click(x, y);
-      if(!goodPress){
-        console.log("Hit a mine!");
+
+      if(mouseEvent.button == 0) {
+        this.isPressed = false;
+        this.mb1Pressed = false;
+        this.draw();
       }
-      this.draw();
-    }
-    if(this.board.isSolved()) {
-      this.done();
+      let x = mouseEvent.clientX - this.canvasOffsetX;
+      let y = mouseEvent.clientY - this.canvasOffsetY;
+
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      if(x < 0 || x >= this.board.width || y < 0 || y >= this.board.height){
+        return;
+      }
+      
+      if(mouseEvent.button == 2 && !this.mb1Pressed){
+        this.mb2Pressed = false;
+      } else if(mouseEvent.button == 0 && this.firstPress && !this.mb2Pressed) { 
+        if(this.board.visible[y][x] != 2){
+          this.board.firstClick(x, y);
+          this.firstPress = false;
+        }
+        this.draw();
+      } else if(mouseEvent.button == 0 && !this.mb2Pressed) {
+        var goodPress = this.board.click(x, y);
+        if(!goodPress) {
+          this.lose = true;
+          this.solved = true;
+        }
+        this.draw();
+      } else {
+        var goodPress = this.board.doubleClick(x, y);
+        if(!goodPress) {
+          this.lose = true;
+          this.solved = true;
+        }
+        this.draw();
+      }
+
+      if(this.board.isSolved()) {
+        this.draw();
+        this.done();
+      }
     }
   }
 
@@ -447,15 +568,16 @@ export class MinesweeperComponent implements OnInit {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
 
-    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
-    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-    if(this.isPressed){
-      this.selectedX = x;
-      this.selectedY = y;
-      this.draw();
-    } 
-
+      if(this.isPressed || (this.mb1Pressed && this.mb2Pressed)){
+        this.selectedX = x;
+        this.selectedY = y;
+        this.draw();
+      } 
+    }
   }
 
   keyPressed(keyEvent) {
