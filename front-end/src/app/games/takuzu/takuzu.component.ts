@@ -125,14 +125,6 @@ export class TakuzuComponent implements OnInit {
       this.board = new Board(size, this.seed);
       this.board.generateBoard();
 
-      /* TEMP */
-      this.board.originalPuzzle[0][0] = 1;
-      this.board.takuzuPuzzle[0][0] = 1;
-
-      this.board.originalPuzzle[1][2] = 0;
-      this.board.takuzuPuzzle[1][2] = 0;
-      /* DELETE THEM */
-
       this.startDate = new Date();
       this.displayTimer();
 
