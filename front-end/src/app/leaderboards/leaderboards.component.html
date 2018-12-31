@@ -30,18 +30,20 @@
             <table>
               <thead>
                 <tr>
+                  <td style="width:20px"></td>
                   <td style="width:180px" class="name"><b>Name</b></td>
                   <td style="width:180px" class="time"><b>Time</b></td>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
-                  <tr [ngClass]="k==0 ? 'first' : k==1 ? 'second' : k==2 ? 'third' : 'others'">
+                  <tr class="others">
+                    <td> {{k + 1}}</td>
                     <td class="name">
                       {{entry.username}}
                     </td>
 
-                    <td class="time">
+                    <td class="time monospace">
                       {{entry.time}}
                     </td>
                   </tr>
