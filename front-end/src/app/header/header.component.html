@@ -2,12 +2,14 @@
   <a routerLink="/" routerLinkActive="active" class="navbar-brand"><img src="/assets/images/logos/headerLogo.svg" height="24" width="180"></a>
   <div class="navbar-expand mr-auto">
     <div class="navbar-nav">
-      <a routerLink="/games" routerLinkActive="active" class="nav-item nav-link">Games</a>
       <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link">Leaderboards</a>
     </div>
   </div>
   <div class="navbar-expand ml-auto navbar-nav">
     <div class="navbar-nav">
+      <div style="color:rgba(255, 255, 255, 0.5)">
+        <a style="margin-right:50px;" class="nav-item">Send bug reports/feature requests to christian.scillitoe@gmail.com</a>
+      </div>
       <ng-container *ngIf="username==''">
         <a routerLink="/login" routerLinkActive="active" class="nav-item nav-link">
           <i style="margin-right:5px" class="fa fa-lock"></i> Sign In
@@ -20,7 +22,6 @@
             Sign Out <i style="margin-left:5px" class="fa fa-sign-in"></i>
           </a>
         </div>
-
       </ng-container>
     </div>
   </div>

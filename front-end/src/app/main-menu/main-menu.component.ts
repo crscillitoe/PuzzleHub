@@ -32,12 +32,12 @@ export class MainMenuComponent implements OnInit {
     {'GameID': GameID.TILE_GAME, 
       'Name': 'Tile Game', 
       'Image': 'assets/images/game-splashes/tilegame.svg',
-      'Description': 'This is a description for tile game is has to be a similar length to the other descriptions so it looks nice.'},
+      'Description': 'Tile game is a common puzzle where the user slides tiles into the correct order.'},
 
     {'GameID': GameID.SUDOKU, 
       'Name': 'Sudoku', 
       'Image': 'assets/images/game-splashes/sudoku.svg',
-      'Description': 'Sudoku blah blah blah numbers blah blah square blah blah blah Sudoku blah blah this is text description blah.'}
+      'Description': 'A classic puzzle game where you must fill out the board with numbers 1-9.'}
   ]
 
   constructor(

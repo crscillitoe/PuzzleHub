@@ -7,15 +7,15 @@
             
               <ul class="booked-tabs nav login bookedClearFix" id="booked-tabs" role="tablist">
                   <ng-container *ngIf="selectedTab=='login'">
-							    		<li (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab" class="active">Sign In</a></li>
-                      <li (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" >Register</a></li>
+							    		<li style="cursor:pointer;" (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab" class="active">Sign In</a></li>
+                      <li style="cursor:pointer;" (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" >Register</a></li>
                       <!--
 							    		<li (click)="selectedTab = 'forgot'"><a id="profile-forgot-tab" data-toggle="tab" role="tab" >Forgot Password</a></li>
                       -->
                   </ng-container>
                   <ng-container *ngIf="selectedTab=='register'">
-							    		<li (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab">Sign In</a></li>
-                      <li (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" class="active">Register</a></li>
+							    		<li style="cursor:pointer;" (click)="selectedTab = 'login'"><a id="profile-login-tab" data-toggle="tab" role="tab">Sign In</a></li>
+                      <li style="cursor:pointer;" (click)="selectedTab = 'register'"><a id="profile-register-tab" data-toggle="tab" role="tab" class="active">Register</a></li>
                       <!--
 							    		<li (click)="selectedTab = 'forgot'"><a id="profile-forgot-tab" data-toggle="tab" role="tab" >Forgot Password</a></li>
                       -->
