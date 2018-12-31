@@ -131,7 +131,7 @@ export class Board {
     if(x < 0 || y < 0 || x >= this.width || y >= this.height){
       return;
     }
-    if(this.mineField[y][x] < 0 || this.visible[y][x] == 1){
+    if(this.mineField[y][x] < 0 || this.visible[y][x] > 0){
       return;
     }
 
