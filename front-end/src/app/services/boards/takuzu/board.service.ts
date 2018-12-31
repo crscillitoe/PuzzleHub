@@ -293,28 +293,59 @@ export class Board {
   generateBoard()
   {  
     var board = [];
-    var used = [];
-    var zeroes = [];
-    var ones = [];
+    //var used = [];
+    //var zeroes = [];
+    //var ones = [];
 
-    var order = [];
-    var totalBoards = 0;
+    //var order = [];
+    //var totalBoards = 0;
 
     for (var i = 0; i < this.size; i++) {
       board.push([]);
-      used.push([]);
-      zeroes.push([]);
-      ones.push([]);
+      //used.push([]);
+      //zeroes.push([]);
+      //ones.push([]);
 
       for (var j = 0; j < this.size; j++) {
-        board[i].push(0);
-        used[i].push(false);
-        zeroes[i].push(-1);
-        ones[i].push(-1);
+        board[i].push(-1);
+        //used[i].push(false);
+        //zeroes[i].push(-1);
+        //ones[i].push(-1);
       }
     } 
 
-    for (var i = 0; i < this.size/4; i++) {
+    for (var i = 0; i < this.size; i++) {
+      var numTotOnes = 0;
+      var numTotZeroes = 0;
+      var recentOnes = 0;
+      var recentZeroes = 0;
+
+      for (var j = 0; j < this.size; j++) {
+        var choice = Math.round(this.random());
+      
+        if (numTotOnes < this.size/2 && choice == 1 && recentOnes < 2) {
+          recentZeroes = 0;
+          recentOnes++;
+          numTotOnes++;
+          board[i][j] = choice;
+        } else if (choice == 1) {
+          board[i][j] = 0;
+        }
+  
+        if (numTotZeroes < this.size/2 && choice == 0 && recentZeroes < 2) {
+          recentOnes = 0;
+          recentZeroes++;
+          numTotZeroes++;
+          board[i][j] = choice;
+        } else if (choice == 0) {
+          board[i][j] = 1;
+        }
+      }
+    }
+
+    console.log(board);
+
+    /*for (var i = 0; i < this.size; i++) {
       var row = Math.round(this.random() * (this.size - 1));
       var col = Math.round(this.random() * (this.size - 1));
       
@@ -330,15 +361,13 @@ export class Board {
           curr.val = board[row][col];
           order.push(curr);
         } else {
-          board[row][col] = -1;
           i--;
         }
       } else {
         i--;
       }
     }
-
-    
+     
     while (true) {
     
     
@@ -414,7 +443,8 @@ export class Board {
         used[curr.row][curr.col] = false;
       }
     }
-    
+  */
+
     this.originalPuzzle = board;
     this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
   }
