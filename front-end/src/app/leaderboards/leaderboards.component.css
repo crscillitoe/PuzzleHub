@@ -160,17 +160,17 @@
 }
 
 .easy {
-    border: lightcoral solid;
+    border: #28a745 solid;
 }
 
 .medium {
-    border: cyan solid;
+    border: #17a2b8 solid;
 }
 
 .hard {
-    border: lightgreen solid;
+    border: #007bff solid;
 }
 
 .extreme {
-    border: lightskyblue solid;
+    border: #dc3545 solid;
 }
