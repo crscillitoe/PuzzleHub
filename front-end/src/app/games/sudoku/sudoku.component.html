@@ -1,24 +1,35 @@
 <div id="leftControlPanel">
-  <div class="previousBest">
-    High Score
-    <a class="monospace">{{personalBest}}</a>
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>HIGH SCORE</b></a>
+    <a class="monospace time">{{personalBest}}</a>
   </div>
 
-  <div class="timer">
-    Timer
-    <a id="timer" class="monospace">0:00:00.000</a>
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>TIMER</b></a>
+    <a id="timer" class="monospace time">0:00:00.000</a>
   </div>
 
-  <div class="rules">
-    <div class="text">
-      <b>Rules</b><br>
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>CONRTROLS</b></a>
+    <a class="descriptionText">
+      Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box
+    </a>
+  </div>
+
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>RULES</b></a>
+    <a class="descriptionText">
       Each of the nine blocks must contain the numbers 1-9
       in its' squares. Each number can only appear once in
       a row, column, or box.
-      <hr>
-      <b>Controls</b><br>
-      Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box
-    </div>
+    </a>
+  </div>
+  
+  <div class="buttons">
+    <a (click)="newGame()" class="center new-game">
+      <a class="buttonHeader"><b>NEW GAME</b></a>
+      <a class="buttonFooter">spacebar</a>
+    </a>
   </div>
 
   <div class="controls">
@@ -26,10 +37,6 @@
       [ngClass]="takingNotes ? 'btn-warning' : 'btn-danger'"
       style="font-family: 'Poppins', sans-serif;" 
       class="center btn">Taking Notes: {{takingNotes}}</a>
-  </div>
-  
-  <div class="buttons">
-    <a (click)="newGame()" style="font-family: 'Poppins', sans-serif;" class="center btn btn-info">New Game</a>
   </div>
 </div>
 

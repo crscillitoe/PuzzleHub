@@ -1,27 +1,34 @@
 <div id="leftControlPanel">
-  <div class="previousBest">
-    High Score
-    <a class="monospace">{{personalBest}}</a>
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>HIGH SCORE</b></a>
+    <a class="monospace time">{{personalBest}}</a>
   </div>
 
-  <div class="timer">
-    Timer
-    <a id="timer" class="monospace">0:00:00.000</a>
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>TIMER</b></a>
+    <a id="timer" class="monospace time">0:00:00.000</a>
   </div>
 
-  <div class="rules">
-    <div class="text">
-      <b>Rules</b><br>
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>CONRTROLS</b></a>
+    <a class="descriptionText">
+      Left/Right click
+    </a>
+  </div>
+
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>RULES</b></a>
+    <a class="descriptionText">
       The objective is to fill a grid with 1s and 0s, where there is an equal number of 1s and 0s in each row and column 
       and no more than two of either number adjacent to each other. Additionally, there can be no identical rows or columns.
-      <hr>
-      <b>Controls</b><br>
-      Left/Right click
-    </div>
+    </a>
   </div>
   
   <div class="buttons">
-    <a (click)="newGame()" style="font-family: 'Poppins', sans-serif;" class="center btn btn-info">New Game</a>
+    <a (click)="newGame()" class="center new-game">
+      <a class="buttonHeader"><b>NEW GAME</b></a>
+      <a class="buttonFooter">spacebar</a>
+    </a>
   </div>
 </div>
 

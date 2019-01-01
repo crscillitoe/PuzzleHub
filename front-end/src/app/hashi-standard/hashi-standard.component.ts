@@ -775,6 +775,10 @@ export class HashiStandardComponent implements OnInit {
     }
 
     public static keyPressed(that, event, __that) {
+        if(event.keyCode == 32) {
+          that.newGame();
+          return;
+        }
         if(event.code == "ControlLeft") {
             __that.scrollMode = true;
         }

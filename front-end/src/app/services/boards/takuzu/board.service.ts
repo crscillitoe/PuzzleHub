@@ -514,7 +514,6 @@ export class Board {
       }
     }
 
-    console.log("VALID BOARD");
     return true;
   }
 }

@@ -657,8 +657,6 @@ export class TileGameComponent implements OnInit {
       x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-      console.log(x);
-      console.log(y);
       if(x > -1 
       && x <  this.board.width
       && y > -1
@@ -686,6 +684,10 @@ export class TileGameComponent implements OnInit {
     if(!this.solved) {
       var directions = this.board.getValidDirections();
       switch(code) {
+        // Spacebar
+        case(32):
+          this.newGame();
+          break;
         // UP
         case(40):
         case(83):

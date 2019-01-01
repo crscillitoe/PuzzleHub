@@ -56,13 +56,14 @@ export class LeaderboardsComponent implements OnInit {
     private tunnel: TunnelService,
     private user: UserService
   ) { 
-    user.username
-      .subscribe( (data) => {
-        this.username = data;
-      });
   }
 
   ngOnInit() {
+    this.username = this.user.user;
+    this.user.username
+      .subscribe( (data) => {
+        this.username = data;
+      });
     this.gameID = 5;
     this.loadScores();
   }

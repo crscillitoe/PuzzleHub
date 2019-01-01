@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 export class UserService {
   public username: any = new Subject();
   private loggedIn: boolean = false;
+  public user: string;
 
   constructor() { }
 
@@ -16,7 +17,8 @@ export class UserService {
     } else {
       this.loggedIn = false;
     }
-
+    
+    this.user = name;
     this.username.next(name);
   }
 

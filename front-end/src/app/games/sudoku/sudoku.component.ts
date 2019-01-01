@@ -415,6 +415,11 @@ export class SudokuComponent implements OnInit {
   keyPressed(keyEvent) {
     if(!this.solved) {
       var numPressed = keyEvent.keyCode;
+      if(numPressed == 32) {
+        this.newGame();
+        return;
+      }
+
       var pressed = -1;
       if(numPressed >= 48 && numPressed <= 57) {
         pressed = numPressed - 48;

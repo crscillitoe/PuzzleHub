@@ -106,7 +106,7 @@ export class MinesweeperComponent implements OnInit {
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
-    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+    window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
 
 
@@ -593,7 +593,10 @@ export class MinesweeperComponent implements OnInit {
   }
 
   keyPressed(keyEvent) {
-    console.log({'keyPressed':keyEvent.keyCode});
+    if(keyEvent.keyCode == 32) {
+      this.newGame();
+      return;
+    }
   }
   keyReleased(keyEvent) {
     console.log({'keyReleased':keyEvent.keyCode});

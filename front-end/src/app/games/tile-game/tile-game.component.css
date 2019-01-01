@@ -16,29 +16,18 @@
 #leftControlPanel {
   background-color: #2C2C2C;
   height: calc(100vh - 7rem);
+  width: 200px;
+  position: absolute;
+  left: 20px;
+  top: 3.5rem;
+  height: calc(100vh - 7rem);
 }
 
-.previousBest {
-  top:50px;
-  left: 22px;
-  background: #FFD79D;
-  text-align: center;
-}
-
-.timer, .previousBest {
-  position: relative;
-  font-size:30px;
-  width: 180px;
-  border-radius: 8px;
-}
-
-.rules {
-  position: relative;
-  top: 150px;
-  left: 22px;
-  width: 180px;
-  border: 1px solid white;
-  border-radius: 8px;
+.descriptionBlock {
+  width: 100%;
+  margin-top: 30px;
+  vertical-align: top;
+  color: white;
 }
 
 hr {
@@ -54,15 +43,67 @@ hr {
   top: 100px;
   left: 22px;
   text-align:center;
-  background: #FF9289;
+  color: white;
+}
+
+.time {
+  display: inline-block;
+  width: 100%;
+  font-size: 23pt;
+}
+
+* {
+  line-height: 1;
+}
+
+.descriptionText {
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+
+.descriptionHeader {
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  font-size: 15pt;
 }
 
 .buttons {
   position: absolute;
-  bottom: 100px;
+  bottom: 10px;
   left: 22px;
   display: block;
   width: 180px;
+}
+
+.buttonHeader {
+  font-size: 15pt;
+}
+
+.buttonFooter {
+  font-size: 8pt;
+}
+
+.buttonFooter, .buttonHeader{
+  display: inline-block;
+  width: 100%;
+}
+
+.new-game:hover {
+  background: #3c3c3c;
+}
+
+.new-game {
+  color: white !important;
+  background: #4c4c4d;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
 }
 
 .center {
