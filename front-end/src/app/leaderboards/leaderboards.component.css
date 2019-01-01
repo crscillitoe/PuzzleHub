@@ -17,11 +17,19 @@
 }
 
 .name {
+  color: white;
+  font-size: 13pt;
   text-align: left;
   padding-left: 15px;
 }
 
+.pos {
+  font-size: 8pt;
+}
+
 .time {
+  color: white;
+  font-size: 13pt;
   text-align: right;
   padding-right: 15px;
 }
@@ -65,18 +73,18 @@
   background: #2C2C2C;
   position: absolute;
   top:3.5rem;
-  left:200px;
-  overflow-y: scroll;
-  width: calc(100% - 200px);
+  left:100px;
+  overflow-y: auto;
+  width: calc(100% - 100px);
   height: calc(100vh - 7rem);
 }
 
 #navController {
   background: #2C2C2C;
   position: absolute;
-  top:40vh;
+  top:calc(50vh - 250px);
   left: 0px;
-  width: 200px;
+  width: 100px;
   height: calc(60vh - 7rem);
   color: white;
 }
@@ -96,15 +104,29 @@
 .leaderboardEntry {
     color: white;   
     border: white solid;
-    flex:1;
     margin: auto;
     border-radius: 25px;
     
+    margin-top: 2rem;
     max-width:409px;
     min-width: 409px;
     max-height:calc(100vh - 11rem);
     min-height:calc(100vh - 11rem);
     text-align: center;
+}
+
+.scrollable {
+  overflow-y: auto;
+}
+
+.flexElement {
+    flex:1;
+    max-width:420px;
+    min-width: 420px;
+    margin: auto;
+
+    max-height:calc(100vh - 7rem);
+    min-height:calc(100vh - 7rem);
 }
 
 .columnContainer {
@@ -130,6 +152,11 @@
 
 .others {
     color:#C0C0C0;
+}
+
+.you {
+    color:#C0C0C0;
+    background: #4c4c4d;
 }
 
 .easy {

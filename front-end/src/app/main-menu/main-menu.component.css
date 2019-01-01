@@ -1,6 +1,6 @@
 .body {
   height:calc(100vh - 7rem);
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: #2C2C2C;
 }
 
@@ -14,6 +14,8 @@
 .puzzle-button {
   width:5.5rem;
   height:40px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .svg-image {

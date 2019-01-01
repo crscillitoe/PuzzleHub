@@ -3,7 +3,7 @@
 @import "~font-awesome/css/font-awesome.css";
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
 html {
   background-color: #2C2C2C;
@@ -11,27 +11,33 @@ html {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 20px;
+  width: 10px;
 }
 
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: gray; 
+  background: #afafb0; 
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #666; 
+  background: #888; 
 }
 
 ::-webkit-scrollbar-thumb:active { 
-  background-color: #555;
+  background-color: #777;
 }  
+
+::-webkit-scrollbar-track {
+  background: #3a3a3a; 
+  border-radius: 10px;
+}
 
 * {
   font-family: 'Open Sans', sans-serif;
 }
 
 .monospace {
-  font-family: 'Inconsolata', monospace;
+  font-family: 'Roboto Mono', monospace;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../services/user/user.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameID } from '../enums/game-id.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -11,30 +12,30 @@ import { LoaderService } from '../services/loading-service/loader.service';
 })
 export class LeaderboardsComponent implements OnInit {
   games: any = [
-    {'GameID': GameID.MINESWEEPER, 
-      'Name': 'Minesweeper', 
-      'Image': 'assets/images/game-splashes/minesweeper.svg',
-      'Description': 'Minesweeper is a single-player puzzle video game. The objective of the game is to clear a rectangular board containing hidden mines.'},
+    {'GameID': GameID.TILE_GAME, 
+      'Name': 'Tile Game', 
+      'Image': 'assets/images/game-splashes/tilegame.svg',
+      'Description': 'Tile game is a common puzzle where the user slides tiles into the correct order.'},
 
     {'GameID': GameID.HASHI, 
       'Name': 'Hashi', 
       'Image': 'assets/images/game-splashes/hashi.svg',
       'Description': 'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and challenging solutions.'},
 
+    {'GameID': GameID.SUDOKU, 
+      'Name': 'Sudoku', 
+      'Image': 'assets/images/game-splashes/sudoku.svg',
+      'Description': 'A classic puzzle game where you must fill out the board with numbers 1-9.'},
+
     {'GameID': GameID.TAKUZU, 
       'Name': 'Takuzu', 
       'Image': 'assets/images/game-splashes/takuzu.svg',
       'Description': 'Takuzu is a logic-based number placement puzzle. The objective is to fill a (usually 10×10) grid with 1s and 0s.'},
 
-    {'GameID': GameID.TILE_GAME, 
-      'Name': 'Tile Game', 
-      'Image': 'assets/images/game-splashes/tilegame.svg',
-      'Description': 'This is a description for tile game is has to be a similar length to the other descriptions so it looks nice.'},
-
-    {'GameID': GameID.SUDOKU, 
-      'Name': 'Sudoku', 
-      'Image': 'assets/images/game-splashes/sudoku.svg',
-      'Description': 'Sudoku blah blah blah numbers blah blah square blah blah blah Sudoku blah blah this is text description blah.'}
+    {'GameID': GameID.MINESWEEPER, 
+      'Name': 'Minesweeper', 
+      'Image': 'assets/images/game-splashes/minesweeper.svg',
+      'Description': 'Minesweeper is a single-player puzzle video game. The objective of the game is to clear a rectangular board containing hidden mines.'}
   ]
 
   leaderboards: any;
@@ -47,12 +48,19 @@ export class LeaderboardsComponent implements OnInit {
   ]
 
   gameID: number;
+  username: string = "";
 
   constructor(
     private route: ActivatedRoute, 
     private loader: LoaderService,
-    private tunnel: TunnelService
-  ) { }
+    private tunnel: TunnelService,
+    private user: UserService
+  ) { 
+    user.username
+      .subscribe( (data) => {
+        this.username = data;
+      });
+  }
 
   ngOnInit() {
     this.gameID = 5;
