@@ -681,13 +681,14 @@ export class TileGameComponent implements OnInit {
 
   keyPressed(keyEvent) {
     let code = keyEvent.keyCode;
+    if(code == 32) {
+      this.newGame();
+      return;
+    }
+
     if(!this.solved) {
       var directions = this.board.getValidDirections();
       switch(code) {
-        // Spacebar
-        case(32):
-          this.newGame();
-          break;
         // UP
         case(40):
         case(83):
