@@ -122,7 +122,7 @@ export class Board {
   }
 
   static sameVal(board, i1, j1, i2, j2) {
-    return (board[i1][j1] == board[i2][j2])
+    return (board[i1][j1] == board[i2][j2] && board[i1][j1] != -1);
   }
 
   static negate(board, i, j) {
@@ -131,17 +131,50 @@ export class Board {
     else { return -1; }
   }
 
-  static getPermutations(n) {
-    var i = 2;
+  static setCharAt(str,index,chr) {
+    if(index > str.length-1) {return str};
+    return str.substr(0,index) + chr + str.substr(index+1);
+  }
+
+  static getPermutations(n) 
+  {
+    if (n < 2) { return []; }
+    
+    var i = 0;
+    if (n > 2) { i = Math.pow(2, n - 3); } // start with 001..
     var b = i.toString(2);
+    
     var result = [];
     while (b.length <= n) {
+
+      // prepend zeroes
+      if (n - b.length == 2){
+        b = "00" + b;
+      } else if (n - b.length == 1) {
+        b = "0" + b;
+      }
       if (!b.includes("111") && !b.includes("000")) {
         result.push(b);
       }
-      b = (i++).toString(2);
+
+      b = (++i).toString(2);
     }
     return result;
+  }
+
+  static writeStringToLocation(board, i, j, str, toRow) {
+    for (var ii = 0; ii < str.length; ii++) {
+
+      var writeChar = str.charAt(ii);
+      if (writeChar == "-") { writeChar = "-1"; }
+      writeChar = parseInt(writeChar);
+
+      if (!toRow && Board.canAccess(board, i + ii, j)) {
+        board[i + ii][j] = writeChar;
+      } else if (toRow && Board.canAccess(board, i, j + ii)) {
+        board[i][j + ii] = writeChar;
+      }
+    }
   }
 
   static wrapTwos(board) {
@@ -290,7 +323,6 @@ export class Board {
 
     for (var i = 0; i < board.length; i++) {
       var row = "";
-      var col = "";
       var idx = -1;
       var matches = [];
 
@@ -300,7 +332,57 @@ export class Board {
         } else {
           row += board[i][j];
         }
+      }
 
+      if (row.includes("--")) {
+        matches = row.match(/((.)\2*)/g);
+        idx = 0;
+        for (var k = 0; k < matches.length; k++) {
+          if (matches[k].includes("--")) {
+            
+            var possibilities = Board.getPermutations(matches[k].length);
+            var validPossibilities = [];
+            
+            // try all possibilities and record ones that make a valid board
+            for (var l = 0; l < possibilities.length; l++) {
+              Board.writeStringToLocation(testBoard, i, idx, possibilities[l], true);
+              if (!Board.hasErrorArg(testBoard)) {
+                validPossibilities.push(possibilities[l]);
+              }
+              Board.writeStringToLocation(testBoard, i, idx, matches[k], true);
+            }
+
+            if (validPossibilities.length != 0)
+            {  
+              // find any values that are shared between all valid possibilities
+              var boardAdditions = validPossibilities[0];
+              for (var m = 1; m < validPossibilities.length; m++) {
+                for (var n = 0; n < validPossibilities[m].length; n++) {
+                  if (boardAdditions.charAt(n) != "-" && validPossibilities[m].charAt(n) != boardAdditions.charAt(n)) {
+                    boardAdditions = Board.setCharAt(boardAdditions, n, "-");
+                  }
+                }
+              }
+              if (boardAdditions.includes("0") || boardAdditions.includes("1")) { 
+                didSomething = true;
+                Board.writeStringToLocation(board, i, idx, boardAdditions, true);
+              }
+            }  
+          }
+          idx += matches[k].length
+        }
+      }
+    }
+
+    // repeat for cols
+    testBoard = JSON.parse(JSON.stringify(board));
+
+    for (var i = 0; i < board.length; i++) {
+      var col = "";
+      var idx = -1;
+      var matches = [];
+
+      for (var j = 0; j < board[0].length; j++) {
         if (board[j][i] == -1) {
           col += "-";
         } else {
@@ -308,9 +390,43 @@ export class Board {
         }
       }
 
-      if (row.includes("--")) {
-        matches = row.match(/((.)\2*)/g);
-        //for (var i 
+      if (col.includes("--")) {
+        matches = col.match(/((.)\2*)/g);
+        idx = 0;
+        for (var k = 0; k < matches.length; k++) {
+          if (matches[k].includes("--")) {
+            
+            var possibilities = Board.getPermutations(matches[k].length);
+            var validPossibilities = [];
+            
+            // try all possibilities and record ones that make a valid board
+            for (var l = 0; l < possibilities.length; l++) {
+              Board.writeStringToLocation(testBoard, idx, i, possibilities[l], false);
+              if (!Board.hasErrorArg(testBoard)) {
+                validPossibilities.push(possibilities[l]);
+              }
+              Board.writeStringToLocation(testBoard, idx, i, matches[k], false);
+            }
+
+            if (validPossibilities.length != 0)
+            {  
+              // find any values that are shared between all valid possibilities
+              var boardAdditions = validPossibilities[0];
+              for (var m = 1; m < validPossibilities.length; m++) {
+                for (var n = 0; n < validPossibilities[m].length; n++) {
+                  if (boardAdditions.charAt(n) != "-" && validPossibilities[m].charAt(n) != boardAdditions.charAt(n)) {
+                    boardAdditions = Board.setCharAt(boardAdditions, n, "-");
+                  }
+                }
+              }
+              if (boardAdditions.includes("0") || boardAdditions.includes("1")) { 
+                didSomething = true;
+                Board.writeStringToLocation(board, idx, i, boardAdditions, false);
+              }
+            }  
+          }
+          idx += matches[k].length
+        }
       }
     }
 
@@ -363,6 +479,25 @@ export class Board {
     }
 
     return (Board.isSolvedArg(thisBoard)); 
+  }
+
+  static canSolveOptimized(board, i, j, val)
+  {
+    if (board[i][j] == val) { return true; }
+
+    var thisBoard = JSON.parse(JSON.stringify(board));
+
+    while (true) {
+      var didSomething = true;
+
+      didSomething = Board.useTechniques(thisBoard);
+
+      if (!didSomething || thisBoard[i][j] == val) {
+        break;
+      }
+    }
+
+    return (thisBoard[i][j] == val || Board.isSolvedArg(thisBoard));
   }
 
   /* ------------------------------------------------------ */
