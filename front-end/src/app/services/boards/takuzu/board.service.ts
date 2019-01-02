@@ -204,68 +204,6 @@ export class Board {
     return didSomething;
   }
 
-/*  static finishLines(board) {
-    
-    var didSomething = false;
- 
-    for (var i = 0; i < board.length; i++) {
-      var row = "";
-      var col = "";
-      var otherIdx = 0;
-      var numZeroes = 0;
-      var numOnes = 0;
-
-      // convert rows and columns into strings
-      // DOES NOT WORK IF BOARD IS NOT SQUARE
-      for (var j = 0; j < board[0].length; j++) {
-        if (board[i][j] == -1) {
-          row += "-";
-        } else {
-          row += board[i][j];
-        }
-
-        if (board[j][i] == -1) {
-          col += "-";
-        } else {
-          col += board[j][i];
-        }
-      }
-
-      // if row has only one blank spot, figure out which number is missing
-      if ((row.split("-").length - 1) == 1)
-      {
-        otherIdx = row.indexOf("-");
-        numZeroes = (row.split("0").length - 1);
-        numOnes = (row.split("1").length - 1);
-        
-        if (numZeroes == board.length/2) {
-          board[i][otherIdx] = 1;
-          didSomething = true;
-        } else if (numOnes == board.length/2) {
-          board[i][otherIdx] = 0;
-          didSomething = true;
-        }
-      }
-
-      // if col has only one blank spot, figure out which number is missing
-      if ((col.split("-").length - 1) == 1) {
-        otherIdx = col.indexOf("-");
-        numZeroes = (col.split("0").length - 1);
-        numOnes = (col.split("1").length - 1);
-
-        if (numZeroes == board[i].length/2) {
-          board[otherIdx][i] = 1;
-          didSomething = true;
-        } else if (numOnes == board[i].length/2) {
-          board[otherIdx][i] = 0;
-          didSomething = true;
-        } 
-      }
-    }
-
-    return didSomething;
-  } */
-
   static completeParity(board)
   {
     var didSomething = false;
