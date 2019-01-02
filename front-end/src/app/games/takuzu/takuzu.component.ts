@@ -69,7 +69,7 @@ export class TakuzuComponent implements OnInit {
     // Easy
     if(this.difficulty == 1) {
       size = 4;
-      removePerc = 0.6;
+      removePerc = 0.5;
     } 
     
     // Medium
@@ -81,7 +81,7 @@ export class TakuzuComponent implements OnInit {
     // Hard
     else if (this.difficulty == 3) {
       size = 8;    
-      removePerc = 0.4;
+      removePerc = 0.3;
     } 
     
     // Extreme
