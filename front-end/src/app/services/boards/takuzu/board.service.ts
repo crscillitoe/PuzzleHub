@@ -131,6 +131,19 @@ export class Board {
     else { return -1; }
   }
 
+  static getPermutations(n) {
+    var i = 2;
+    var b = i.toString(2);
+    var result = [];
+    while (b.length <= n) {
+      if (!b.includes("111") && !b.includes("000")) {
+        result.push(b);
+      }
+      b = (i++).toString(2);
+    }
+    return result;
+  }
+
   static wrapTwos(board) {
 
     var didSomething = false;
@@ -270,6 +283,39 @@ export class Board {
     return didSomething;
   }
 
+  static eliminateImpossibilities(board)
+  {
+    var didSomething = false;
+    var testBoard = JSON.parse(JSON.stringify(board));
+
+    for (var i = 0; i < board.length; i++) {
+      var row = "";
+      var col = "";
+      var idx = -1;
+      var matches = [];
+
+      for (var j = 0; j < board[0].length; j++) {
+        if (board[i][j] == -1) {
+          row += "-";
+        } else {
+          row += board[i][j];
+        }
+
+        if (board[j][i] == -1) {
+          col += "-";
+        } else {
+          col += board[j][i];
+        }
+      }
+
+      if (row.includes("--")) {
+        matches = row.match(/((.)\2*)/g);
+        //for (var i 
+      }
+    }
+
+    return didSomething;
+  }
 
   static useTechniques(board) {
 
@@ -283,6 +329,14 @@ export class Board {
 
       if (!didSomething) {
         didSomething = (didSomething || Board.completeParity(board));
+      }
+
+      if (!didSomething) {
+        didSomething = (didSomething || Board.eliminateImpossibilities(board));
+
+          // get possible solutions
+          // eliminate impossible ones using hasError
+          // find commonalities between possible solutions
       }
 
       if (!didSomething) {
