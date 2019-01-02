@@ -75,30 +75,30 @@ export class MinesweeperComponent implements OnInit {
 
     // Easy
     if(this.difficulty == 1) {
-      width = 9;
-      height = 9;
+      width = 8;
+      height = 8;
       bombCount = 10; //ratio of 8
     } 
     
     // Medium
     else if (this.difficulty == 2) {
       width = 16;
-      height = 16;
-      bombCount = 40; //ratio of 6.2
+      height = 13;
+      bombCount = 40;
     } 
     
     // Hard
     else if (this.difficulty == 3) {
-      width = 16;
-      height = 30;
+      width = 30;
+      height = 16;
       bombCount = 99; //ratio of 4.8
     } 
     
     // Extreme
     else if (this.difficulty == 4) {
-      width = 30;
+      width = 45;
       height = 30;
-      bombCount = 280; //ratio of 3.2
+      bombCount = 280;
     }
 
     // Uncomment these to add event listeners
