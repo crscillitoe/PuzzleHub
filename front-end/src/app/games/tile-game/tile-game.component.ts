@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -117,8 +117,8 @@ export class TileGameComponent implements OnInit {
           this.board = new Board(width, height, this.seed); 
           this.board.generateBoard();
 
-          this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-          window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+          //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+          //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
 
           this.startDate = new Date();
           this.displayTimer();
@@ -133,8 +133,8 @@ export class TileGameComponent implements OnInit {
       this.board = new Board(width, height, this.seed); 
       this.board.generateBoard();
 
-      this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-      window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+      //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+      //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
 
       this.startDate = new Date();
       this.displayTimer();
@@ -649,6 +649,7 @@ export class TileGameComponent implements OnInit {
   }
 
   /* EVENT LISTENERS */
+  @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
@@ -679,6 +680,7 @@ export class TileGameComponent implements OnInit {
     console.log({'mouseMoveX':x, 'mouseMoveY':y});
   }
 
+  @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     let code = keyEvent.keyCode;
     if(code == 32) {

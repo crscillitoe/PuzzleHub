@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { HostListener, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service';
@@ -161,6 +161,7 @@ export class HashiComponent implements OnInit {
     return HashiStandardComponent.play(that);
   }
 
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEventData) {
     var that = this;
     return HashiStandardComponent.mouseMove(that, mouseEventData);
@@ -394,6 +395,7 @@ export class HashiComponent implements OnInit {
     return HashiStandardComponent.getCircleHere(that, x, y);
   }
 
+  @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEventData) {
     var that = this;
     return HashiStandardComponent.mousePressed(that, mouseEventData);
@@ -489,6 +491,7 @@ export class HashiComponent implements OnInit {
     return HashiStandardComponent.bridgeRight(that);
   }
 
+  @HostListener('document:mouseup', ['$event'])
   mouseReleased(mouseEventData) {
     var that = this;
     return HashiStandardComponent.mouseReleased(that, mouseEventData);
@@ -504,14 +507,16 @@ export class HashiComponent implements OnInit {
     return HashiStandardComponent.getUid(that);
   }
 
-  keyPressed(event, __this) {
+  @HostListener('document:keydown', ['$event'])
+  keyPressed(event) {
     var that = this;
-    return HashiStandardComponent.keyPressed(that, event, __this);
+    return HashiStandardComponent.keyPressed(that, event, that);
   }
 
+  @HostListener('document:keyup', ['$event'])
   keyReleased(event, __this) {
     var that = this;
-    return HashiStandardComponent.keyReleased(that, event, __this);
+    return HashiStandardComponent.keyReleased(that, event, that);
   }
 
   done() {

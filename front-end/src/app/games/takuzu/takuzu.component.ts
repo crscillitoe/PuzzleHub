@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -91,11 +91,11 @@ export class TakuzuComponent implements OnInit {
     }
 
     // Uncomment these to add event listeners
-    this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+    //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
-    window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
 
 
@@ -398,6 +398,7 @@ export class TakuzuComponent implements OnInit {
   }
 
   /* EVENT LISTENERS */
+  @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
@@ -425,6 +426,8 @@ export class TakuzuComponent implements OnInit {
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
   }
+
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
@@ -436,6 +439,7 @@ export class TakuzuComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     if(keyEvent.keyCode == 32) {
       this.newGame();

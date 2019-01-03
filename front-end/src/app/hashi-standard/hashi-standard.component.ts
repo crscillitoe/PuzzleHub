@@ -1499,12 +1499,12 @@ export class HashiStandardComponent implements OnInit {
 
         var __that = that;
 
-        that.canvas.addEventListener('mousedown', (e) => that.mousePressed(e), false);
-        that.canvas.addEventListener('mouseup', (e) => that.mouseReleased(e), false);
+        //that.canvas.addEventListener('mousedown', (e) => that.mousePressed(e), false);
+        //that.canvas.addEventListener('mouseup', (e) => that.mouseReleased(e), false);
         
-        that.canvas.addEventListener('mousemove', (e) => that.mouseMove(e), false);
-        window.addEventListener('keydown', function(e) {__that.keyPressed(e, __that) }, false);
-        window.addEventListener('keyup', function(e) {__that.keyReleased(e, __that) }, false);
+        //that.canvas.addEventListener('mousemove', (e) => that.mouseMove(e), false);
+        //window.addEventListener('keydown', function(e) {__that.keyPressed(e, __that) }, false);
+        //window.addEventListener('keyup', function(e) {__that.keyReleased(e, __that) }, false);
 
         that.nightTheme();
 

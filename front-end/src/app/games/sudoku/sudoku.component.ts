@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { HostListener, Component, OnInit } from '@angular/core';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
@@ -88,9 +88,9 @@ export class SudokuComponent implements OnInit {
     // Uncomment these to add event listeners
     //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
-    window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
 
 
@@ -398,6 +398,8 @@ export class SudokuComponent implements OnInit {
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
   }
+
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
@@ -412,6 +414,7 @@ export class SudokuComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     if(!this.solved) {
       var numPressed = keyEvent.keyCode;

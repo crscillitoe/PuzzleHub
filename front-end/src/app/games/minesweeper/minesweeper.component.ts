@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -106,7 +106,7 @@ export class MinesweeperComponent implements OnInit {
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
-    window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
+    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
 
 
@@ -130,9 +130,9 @@ export class MinesweeperComponent implements OnInit {
           this.board = new Board(width, height, bombCount, this.seed);
           this.board.generateBoard();
           
-          this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
-          this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-          this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+          //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
+          //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+          //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
           //this.displayTimer();
 
           this.startDate = new Date();
@@ -152,9 +152,9 @@ export class MinesweeperComponent implements OnInit {
       this.board = new Board(width, height, bombCount, this.seed);
       this.board.generateBoard();
  
-      this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
-      this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-      this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+      //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
+      //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
+      //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
       
       this.startDate = new Date();
       this.displayTimer();
@@ -496,6 +496,7 @@ export class MinesweeperComponent implements OnInit {
   }
 
   /* EVENT LISTENERS */
+  @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
@@ -523,6 +524,7 @@ export class MinesweeperComponent implements OnInit {
     }
   }
 
+  @HostListener('document:mouseup', ['$event'])
   mouseReleased(mouseEvent) { 
     if(!this.solved) {
       if(mouseEvent.button == 2) {
@@ -576,6 +578,7 @@ export class MinesweeperComponent implements OnInit {
     }
   }
 
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
@@ -592,6 +595,7 @@ export class MinesweeperComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     if(keyEvent.keyCode == 32) {
       this.newGame();
