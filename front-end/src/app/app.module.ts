@@ -22,6 +22,7 @@ import { TileGameComponent } from './games/tile-game/tile-game.component';
 import { TemplateComponent } from './games/template/template.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { EmailSuccessComponent } from './email-success/email-success.component';
+import { TodoComponent } from './todo/todo.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
@@ -34,7 +35,8 @@ const appRoutes: Routes = [
     { path: 'Minesweeper', component: MinesweeperComponent},
     { path: 'Tile Game', component: TileGameComponent},
     { path: 'EmailVerify', component: VerifyEmailComponent},
-    { path: 'EmailSuccess', component: EmailSuccessComponent}
+    { path: 'EmailSuccess', component: EmailSuccessComponent},
+    { path: 'todo', component: TodoComponent}
 ];
 
 @NgModule({
@@ -54,7 +56,8 @@ const appRoutes: Routes = [
     TileGameComponent,
     TemplateComponent,
     VerifyEmailComponent,
-    EmailSuccessComponent
+    EmailSuccessComponent,
+    TodoComponent
   ],
   imports: [
     BrowserModule,
