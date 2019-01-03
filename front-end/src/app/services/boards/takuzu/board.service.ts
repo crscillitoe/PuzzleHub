@@ -124,25 +124,6 @@ export class Board
       }
     }
 
-    for (var i = 0; i < (this.removePerc * (this.size * this.size)); i++) {
-      var row = Math.trunc(this.random() * this.size);
-      var col = Math.trunc(this.random() * this.size);
-
-      if (board[row][col] == -1) {
-        i--;
-        continue;
-      }
-
-      var oldVal = board[row][col];
-      board[row][col] = -1;
-      if (!Board.canSolve(board)) {
-        board[row][col] = oldVal;
-        i--;
-        continue;
-      }
-    }
-
-
     this.originalPuzzle = board;
     this.carve();
   }
@@ -152,7 +133,6 @@ export class Board
   carve()
   {
     var carvedBoard = JSON.parse(JSON.stringify(this.originalPuzzle));
-    var failedCarve = false;
 
     var indexes = [];
 
