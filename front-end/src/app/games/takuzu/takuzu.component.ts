@@ -54,7 +54,7 @@ export class TakuzuComponent implements OnInit {
     private loader: LoaderService) { 
     this.colors = colorService.getColorScheme();
     this.oColor = this.colors.FOREGROUND;
-    this.cColor = this.colors.COLOR_2_ALT;
+    this.cColor = "#66CCFF";
   }
 
   ngOnInit() {
@@ -68,25 +68,25 @@ export class TakuzuComponent implements OnInit {
 
     // Easy
     if(this.difficulty == 1) {
-      size = 4;
-      removePerc = 0.5;
+      size = 6;
+      removePerc = 0.6;
     } 
     
     // Medium
     else if (this.difficulty == 2) {
-      size = 6;    
-      removePerc = 0.5;
+      size = 8;    
+      removePerc = 0.6;
     } 
     
     // Hard
     else if (this.difficulty == 3) {
-      size = 8;    
-      removePerc = 0.3;
+      size = 10;    
+      removePerc = 0.7;
     } 
     
     // Extreme
     else if (this.difficulty == 4) {
-      size = 10;
+      size = 12;
       removePerc = 0.7;
     }
 

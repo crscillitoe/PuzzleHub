@@ -136,27 +136,34 @@ export class Board {
     return str.substr(0,index) + chr + str.substr(index+1);
   }
 
+  static lineStringHasError(str)
+  {
+    var numZeroes = (str.split("0").length - 1);
+    var numOnes = (str.split("1").length - 1);
+    return (str.includes("000") ||
+            str.includes("111") ||
+            numZeroes > str.length / 2 ||
+            numOnes > str.length / 2);
+  }
+
   static getPermutations(n) 
   {
     if (n < 2) { return []; }
-    
+
     var i = 0;
-    if (n > 2) { i = Math.pow(2, n - 3); } // start with 001..
     var b = i.toString(2);
-    
+
     var result = [];
     while (b.length <= n) {
 
       // prepend zeroes
-      if (n - b.length == 2){
-        b = "00" + b;
-      } else if (n - b.length == 1) {
-        b = "0" + b;
+      if (b.length < n)
+      { 
+        b = (new Array((n - b.length) + 1).join("0")) + b;
       }
-      if (!b.includes("111") && !b.includes("000")) {
-        result.push(b);
-      }
-
+      
+      result.push(b);
+      
       b = (++i).toString(2);
     }
     return result;
@@ -175,6 +182,21 @@ export class Board {
         board[i][j + ii] = writeChar;
       }
     }
+  }
+
+  static fillBlanks(mainStr, fillStr) {
+    var result = "";
+    var fillIdx = 0;
+    for (var i = 0; i < mainStr.length; i++) {
+      if (mainStr.charAt(i) == "-") {
+        result += fillStr.charAt(fillIdx);
+        fillIdx++;
+      }
+      else {
+        result += mainStr.charAt(i);
+      }
+    }
+    return result;
   }
 
   static wrapTwos(board) {
@@ -334,42 +356,41 @@ export class Board {
         }
       }
 
-      if (row.includes("--")) {
-        matches = row.match(/((.)\2*)/g);
-        idx = 0;
-        for (var k = 0; k < matches.length; k++) {
-          if (matches[k].includes("--")) {
-            
-            var possibilities = Board.getPermutations(matches[k].length);
-            var validPossibilities = [];
-            
-            // try all possibilities and record ones that make a valid board
-            for (var l = 0; l < possibilities.length; l++) {
-              Board.writeStringToLocation(testBoard, i, idx, possibilities[l], true);
-              if (!Board.hasErrorArg(testBoard)) {
-                validPossibilities.push(possibilities[l]);
-              }
-              Board.writeStringToLocation(testBoard, i, idx, matches[k], true);
-            }
+      if (row.includes("-")) {
 
-            if (validPossibilities.length != 0)
-            {  
-              // find any values that are shared between all valid possibilities
-              var boardAdditions = validPossibilities[0];
-              for (var m = 1; m < validPossibilities.length; m++) {
-                for (var n = 0; n < validPossibilities[m].length; n++) {
-                  if (boardAdditions.charAt(n) != "-" && validPossibilities[m].charAt(n) != boardAdditions.charAt(n)) {
-                    boardAdditions = Board.setCharAt(boardAdditions, n, "-");
-                  }
-                }
-              }
-              if (boardAdditions.includes("0") || boardAdditions.includes("1")) { 
-                didSomething = true;
-                Board.writeStringToLocation(board, i, idx, boardAdditions, true);
-              }
-            }  
+        var numEmpty = (row.split("-").length - 1);
+        
+        var possibilities = Board.getPermutations(numEmpty);
+        var validPossibilities = [];
+
+        var testString = "";
+
+        // try all possibilities and record ones that make a valid board
+        for (var k = 0; k < possibilities.length; k++) {
+          testString = Board.fillBlanks(row, possibilities[k]);
+          if (Board.lineStringHasError(testString)) { continue; }
+          Board.writeStringToLocation(testBoard, i, 0, testString, true);
+          if (!Board.hasErrorArg(testBoard)) {
+            validPossibilities.push(testString);
           }
-          idx += matches[k].length
+          Board.writeStringToLocation(testBoard, i, 0, row, true);
+        }
+        
+        if (validPossibilities.length != 0)
+        {  
+          // find any values that are shared between all valid possibilities
+          var boardAdditions = validPossibilities[0];
+          for (var m = 1; m < validPossibilities.length; m++) {
+            for (var n = 0; n < validPossibilities[m].length; n++) {
+              if (boardAdditions.charAt(n) != "-" && validPossibilities[m].charAt(n) != boardAdditions.charAt(n)) {
+                boardAdditions = Board.setCharAt(boardAdditions, n, "-");
+              }
+            }
+          }
+          if (boardAdditions != row) { 
+            didSomething = true;
+            Board.writeStringToLocation(board, i, 0, boardAdditions, true);
+          }
         }
       }
     }
@@ -390,42 +411,41 @@ export class Board {
         }
       }
 
-      if (col.includes("--")) {
-        matches = col.match(/((.)\2*)/g);
-        idx = 0;
-        for (var k = 0; k < matches.length; k++) {
-          if (matches[k].includes("--")) {
-            
-            var possibilities = Board.getPermutations(matches[k].length);
-            var validPossibilities = [];
-            
-            // try all possibilities and record ones that make a valid board
-            for (var l = 0; l < possibilities.length; l++) {
-              Board.writeStringToLocation(testBoard, idx, i, possibilities[l], false);
-              if (!Board.hasErrorArg(testBoard)) {
-                validPossibilities.push(possibilities[l]);
-              }
-              Board.writeStringToLocation(testBoard, idx, i, matches[k], false);
-            }
+      if (col.includes("-")) {
 
-            if (validPossibilities.length != 0)
-            {  
-              // find any values that are shared between all valid possibilities
-              var boardAdditions = validPossibilities[0];
-              for (var m = 1; m < validPossibilities.length; m++) {
-                for (var n = 0; n < validPossibilities[m].length; n++) {
-                  if (boardAdditions.charAt(n) != "-" && validPossibilities[m].charAt(n) != boardAdditions.charAt(n)) {
-                    boardAdditions = Board.setCharAt(boardAdditions, n, "-");
-                  }
-                }
-              }
-              if (boardAdditions.includes("0") || boardAdditions.includes("1")) { 
-                didSomething = true;
-                Board.writeStringToLocation(board, idx, i, boardAdditions, false);
-              }
-            }  
+        var numEmpty = (col.split("-").length - 1);
+        
+        var possibilities = Board.getPermutations(numEmpty);
+        var validPossibilities = [];
+
+        var testString = "";
+
+        // try all possibilities and record ones that make a valid board
+        for (var k = 0; k < possibilities.length; k++) {
+          testString = Board.fillBlanks(col, possibilities[k]);
+          if (Board.lineStringHasError(testString)) { continue; }
+          Board.writeStringToLocation(testBoard, 0, i, testString, false);
+          if (!Board.hasErrorArg(testBoard)) {
+            validPossibilities.push(testString);
           }
-          idx += matches[k].length
+          Board.writeStringToLocation(testBoard, 0, i, col, false);
+        }
+        
+        if (validPossibilities.length != 0)
+        {  
+          // find any values that are shared between all valid possibilities
+          var boardAdditions = validPossibilities[0];
+          for (var m = 1; m < validPossibilities.length; m++) {
+            for (var n = 0; n < validPossibilities[m].length; n++) {
+              if (boardAdditions.charAt(n) != "-" && validPossibilities[m].charAt(n) != boardAdditions.charAt(n)) {
+                boardAdditions = Board.setCharAt(boardAdditions, n, "-");
+              }
+            }
+          }
+          if (boardAdditions != col) { 
+            didSomething = true;
+            Board.writeStringToLocation(board, 0, i, boardAdditions, false);
+          }
         }
       }
     }
@@ -449,14 +469,6 @@ export class Board {
 
       if (!didSomething) {
         didSomething = (didSomething || Board.eliminateImpossibilities(board));
-
-          // get possible solutions
-          // eliminate impossible ones using hasError
-          // find commonalities between possible solutions
-      }
-
-      if (!didSomething) {
-        // do the crazy stuff
       }
 
       return didSomething;
@@ -491,8 +503,9 @@ export class Board {
       var didSomething = true;
 
       didSomething = Board.useTechniques(thisBoard);
-
+      
       if (!didSomething || thisBoard[i][j] == val) {
+        if (thisBoard[i][j] == val) { console.log("optimized"); }
         break;
       }
     }
@@ -605,7 +618,7 @@ export class Board {
       }
     }
 
-    for (var i = 0; i < 10 /*2*(this.removePerc * (this.size * this.size))*/; i++) {
+    for (var i = 0; i < (this.removePerc * (this.size * this.size)); i++) {
       var row = Math.trunc(this.random() * this.size);
       var col = Math.trunc(this.random() * this.size);
     
@@ -618,17 +631,66 @@ export class Board {
       board[row][col] = -1;
       if (!Board.canSolve(board)) {
         board[row][col] = oldVal;
-        //i--;
-        //continue;
+        i--;
+        continue;
       }
     }
 
 
     this.originalPuzzle = board;
-    this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
+    this.carve();
   }
 
   /* ------------------------------------------------------ */
+
+  carve() {
+
+      console.log("starting carve...")
+      //    while (true) {
+
+      var carvedBoard = JSON.parse(JSON.stringify(this.originalPuzzle));
+      var failedCarve = false;
+
+      var indexes = [];
+
+      for (var i = 0; i < this.size; i++) {
+        for (var j = 0; j < this.size; j++) {
+          indexes.push([i, j]);    
+        }
+      }
+
+      console.log(this.removePerc * (this.size * this.size));
+      for (var i = 0; i < (this.removePerc * (this.size * this.size)); i++) {
+
+        if (indexes.length == 0) { break; }
+
+        var idx = Math.trunc(this.random() * indexes.length);
+        var row = (indexes[idx])[0];
+        var col = (indexes[idx])[1];
+        indexes.splice(idx, 1);
+
+        if (carvedBoard[row][col] == -1) {
+          i--;
+          continue;
+        }
+
+        var oldVal = carvedBoard[row][col];
+        carvedBoard[row][col] = -1;
+        if (!Board.canSolve(carvedBoard)) {
+          carvedBoard[row][col] = oldVal;
+          i--;
+        }
+      }
+
+    //console.log(failedCarve);
+    // if (!failedCarve) {
+      this.originalPuzzle = JSON.parse(JSON.stringify(carvedBoard));
+      this.takuzuPuzzle = JSON.parse(JSON.stringify(carvedBoard));
+        //  break;
+    // }
+    //}
+
+  }
 
   random() {
       var x = Math.sin(++this.seed) * 10000;
@@ -666,12 +728,6 @@ export class Board {
     }
   }
   
-  static transpose(board) {
-    var returnBoard = JSON.parse(JSON.stringify(board));
-
-
-  }
-
   static isSolvedArg(board) {
     var rows = []
     var cols = []
