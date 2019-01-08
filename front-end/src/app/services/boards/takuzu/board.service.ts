@@ -319,6 +319,92 @@ export class Board
     return false;
   }
 
+  public isInvalidTile(x, y): boolean {
+    var boardVal = this.takuzuPuzzle[y][x];
+
+    if(boardVal == -1) {
+      return false;
+    }
+
+    var numFound = 0;
+    var inARow = 0;
+
+    // Check row
+    for(var i = 0 ; i < this.size ; i++) {
+      if(this.takuzuPuzzle[y][i] == boardVal) {
+        numFound++;
+        inARow++;
+      } else {
+        inARow = 0;
+      }
+
+      if(inARow == 3 && x >= i - 2 && x <= i) {
+        return true;
+      }
+    }
+
+    if(numFound > this.size/2) {
+      return true;
+    }
+
+    numFound = 0;
+    inARow = 0;
+
+    // Check column
+    for(var i = 0 ; i < this.size ; i++) {
+      if(this.takuzuPuzzle[i][x] == boardVal) {
+        numFound++;
+        inARow++;
+      } else {
+        inARow = 0;
+      }
+
+      if(inARow == 3 && y >= i - 2 && y <= i) {
+        return true;
+      }
+    }
+
+    if(numFound > this.size/2) {
+      return true;
+    }
+
+    var rows = [];
+    var cols = [];
+    for(var i = 0 ; i < this.size ; i++) {
+      var row = "";
+      var col = "";
+      for (var j = 0 ; j < this.size ; j++) {
+        row += this.takuzuPuzzle[i][j];
+        col += this.takuzuPuzzle[j][i];
+      }
+
+      rows.push(row);
+      cols.push(col);
+    }
+
+    if(!(rows[y].split("-1").length > 1)) { 
+      for(var i = 0 ; i < this.size ; i++) {
+        if(i != y) {
+          if(rows[i] == rows[y]) {
+            return true;
+          }
+        }
+      }
+    }
+
+    if(!(cols[x].split("-1").length > 1)) { 
+      for(var i = 0 ; i < this.size ; i++) {
+        if(i != x) {
+          if(cols[i] == cols[x]) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
   /* ------------------------------------------------------ */
 
   static isSolvedArg(board)

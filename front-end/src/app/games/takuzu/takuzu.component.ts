@@ -293,6 +293,7 @@ export class TakuzuComponent implements OnInit {
         var boardValue = this.board.takuzuPuzzle[j][i];
         var original = this.board.isOriginal(i, j);  
           
+        var invalidTile = this.board.isInvalidTile(i, j);
         var entryString = "" + boardValue;
         this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
         this.context.textAlign = "center";
@@ -302,9 +303,16 @@ export class TakuzuComponent implements OnInit {
         if (boardValue == 1) {
           if (original) {
             this.context.fillStyle = this.oColor;
+            if(invalidTile) {
+              this.context.fillStyle = this.colors.COLOR_7;
+            }
           } else {
             this.context.fillStyle = this.cColor; 
+            if(invalidTile) {
+              this.context.fillStyle = this.colors.COLOR_7_ALT;
+            }
           }
+
         
           this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + spacing,
                                        (this.gridOffsetY + (j * this.gridBoxSize)) + spacing,
@@ -322,8 +330,14 @@ export class TakuzuComponent implements OnInit {
         } else if (boardValue == 0) {  
           if (original) {
             this.context.fillStyle = this.oColor;
+            if(invalidTile) {
+              this.context.fillStyle = this.colors.COLOR_7;
+            }
           } else {
             this.context.fillStyle = this.cColor; 
+            if(invalidTile) {
+              this.context.fillStyle = this.colors.COLOR_7_ALT;
+            }
           }
             
           this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + spacing,
@@ -345,9 +359,16 @@ export class TakuzuComponent implements OnInit {
             
           if (original) {
             this.context.fillStyle = this.oColor;
+            if(invalidTile) {
+              this.context.fillStyle = this.colors.COLOR_7;
+            }
           } else {
             this.context.fillStyle = this.cColor; 
+            if(invalidTile) {
+              this.context.fillStyle = this.colors.COLOR_7_ALT;
+            }
           }
+
           this.context.fillText(entryString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
                                              (this.gridOffsetY) + ( (j+1) * this.gridBoxSize ) - (this.gridBoxSize/4));
         }
