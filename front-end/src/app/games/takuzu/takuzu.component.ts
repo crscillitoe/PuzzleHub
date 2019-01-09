@@ -24,6 +24,8 @@ export class TakuzuComponent implements OnInit {
   oColor: any;
   cColor: any;
 
+  displayGrid: boolean;
+
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
 
@@ -62,6 +64,9 @@ export class TakuzuComponent implements OnInit {
     this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
+
+    var displayGrid = localStorage.getItem('takuzuGrid') == "true";
+    this.displayGrid = displayGrid;
 
     var size;
     var removePerc;
@@ -221,7 +226,11 @@ export class TakuzuComponent implements OnInit {
     this.context.beginPath();
     this.drawBackground();
     this.drawSelectedBox();
-    this.drawGrid();
+    if(this.displayGrid) {
+      this.drawGrid();
+    } else {
+      this.drawBorder();
+    }
     this.drawValues();
   }
 
@@ -262,6 +271,44 @@ export class TakuzuComponent implements OnInit {
       this.context.stroke();
     }
 
+  }
+
+  toggleGrid() {
+    this.displayGrid = !this.displayGrid;
+    localStorage.setItem('takuzuGrid', '' + this.displayGrid);
+    this.draw();
+  }
+
+  drawBorder() {
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = this.colors.COLOR_1;
+      this.context.moveTo(this.gridOffsetX + (0 * this.gridBoxSize), this.gridOffsetY);
+
+      this.context.lineTo(this.gridOffsetX + (0 * this.gridBoxSize), this.gridOffsetY + (this.board.size * this.gridBoxSize));
+      this.context.stroke();
+
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = this.colors.COLOR_1;
+      this.context.moveTo(this.gridOffsetX + (this.board.size * this.gridBoxSize), this.gridOffsetY);
+
+      this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize), this.gridOffsetY + (this.board.size * this.gridBoxSize));
+      this.context.stroke();
+
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = this.colors.FOREGROUND;
+      this.context.moveTo(this.gridOffsetX, 
+                          this.gridOffsetY + (0 * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize),
+                          this.gridOffsetY + (0 * this.gridBoxSize));
+      this.context.stroke();
+
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = this.colors.FOREGROUND;
+      this.context.moveTo(this.gridOffsetX, 
+                          this.gridOffsetY + (this.board.size * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize),
+                          this.gridOffsetY + (this.board.size * this.gridBoxSize));
+      this.context.stroke();
   }
 
 

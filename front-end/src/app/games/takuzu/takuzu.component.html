@@ -17,6 +17,14 @@
   </div>
 
   <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>OPTIONS</b></a>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" id="displaygrid" class="custom-control-input" [(ngModel)]="displayGrid" (click)="toggleGrid()">
+      <label class="descriptionText custom-control-label" for="displaygrid">Display Grid</label>
+    </div>
+  </div>
+
+  <div class="descriptionBlock">
     <a class="descriptionHeader"><b>RULES</b></a>
     <a class="descriptionText">
       The objective is to fill a grid with 1s and 0s, where there is an equal number of 1s and 0s in each row and column 
