@@ -36,7 +36,7 @@ const appRoutes: Routes = [
     { path: 'Tile Game', component: TileGameComponent},
     { path: 'EmailVerify', component: VerifyEmailComponent},
     { path: 'EmailSuccess', component: EmailSuccessComponent},
-    { path: 'todo', component: TodoComponent}
+    { path: 'patchNotes', component: TodoComponent}
 ];
 
 @NgModule({
