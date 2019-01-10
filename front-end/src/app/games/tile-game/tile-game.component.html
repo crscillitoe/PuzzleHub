@@ -1,7 +1,15 @@
 <div id="leftControlPanel">
   <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>HIGH SCORE</b></a>
-    <a class="monospace time">{{personalBest}}</a>
+    <a class="descriptionHeader"><b>HIGH SCORES</b></a>
+
+    <a class="descriptionText">Monthly</a>
+    <a class="monospace time">{{personalBestMonthly}}</a>
+
+    <a class="descriptionText">Weekly</a>
+    <a class="monospace time">{{personalBestWeekly}}</a>
+
+    <a class="descriptionText">Daily</a>
+    <a class="monospace time">{{personalBestDaily}}</a>
   </div>
 
   <div class="descriptionBlock">
@@ -16,14 +24,6 @@
     </a>
   </div>
 
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>RULES</b></a>
-    <a class="descriptionText">
-      Order the numbers in sequential order from left to right,
-      top to bottom.
-    </a>
-  </div>
-  
   <div class="buttons">
     <a (click)="newGame()" class="center new-game">
       <a class="buttonHeader"><b>NEW GAME</b></a>

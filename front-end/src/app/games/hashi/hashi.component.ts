@@ -61,7 +61,9 @@ export class HashiComponent implements OnInit {
   previousTime: string;
   difficulty: string;
 
-  personalBest: string;
+  personalBestDaily: string;
+  personalBestWeekly: string;
+  personalBestMonthly: string;
 
   hoveredNode: any;
 

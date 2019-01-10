@@ -35,7 +35,9 @@ export class MinesweeperComponent implements OnInit {
 
   selectedX: number;
   selectedY: number;
-  personalBest: string;
+  personalBestDaily: string;
+  personalBestWeekly: string;
+  personalBestMonthly: string;
 
   mb1Pressed: boolean = false;
   mb2Pressed: boolean = false;
@@ -119,7 +121,9 @@ export class MinesweeperComponent implements OnInit {
       }
       this.tunnel.getPersonalBest(m)
         .subscribe( (data) => {
-          this.personalBest = data['time'];
+          this.personalBestDaily = data['daily'];
+          this.personalBestWeekly = data['weekly'];
+          this.personalBestMonthly = data['monthly'];
         });
 
       this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
@@ -456,9 +460,18 @@ export class MinesweeperComponent implements OnInit {
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.MINESWEEPER, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          if(data['NewRecord']) {
-            this.personalBest = data['TimeElapsed'];
+          if(data['Daily']) {
+            this.personalBestDaily = data['TimeElapsed'];
           }
+
+          if(data['Weekly']) {
+            this.personalBestWeekly = data['TimeElapsed'];
+          }
+
+          if(data['Monthly']) {
+            this.personalBestMonthly = data['TimeElapsed'];
+          }
+
           var display = document.getElementById("timer");
           display.textContent = data['TimeElapsed'];
         });

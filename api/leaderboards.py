@@ -13,6 +13,8 @@ xstr = lambda s: s or ""
 # Required POST parameters:
 #   GameID: int
 #   Difficulty: int
+#                     D   W   M
+#   Leaderboard: int (0 - 1 - 2)
 # Returns on success:
 #   List (length 10) <
 #       Username: string
@@ -31,20 +33,46 @@ def get_leaderboards():
     try:
         difficulty = request.json["Difficulty"]
     except:
-        abort(500, "difficulty not found")
+        abort(500, "Difficulty not found")
+
+    try:
+        leaderboard = request.json["Leaderboard"]
+    except:
+        abort(500, "Leaderboard not found")
 
     db = get_db()
 
     cursor = db.cursor()
-    sql_query = '''
-        SELECT Username, TimeElapsed, Role
-        FROM leaderboards AS L
-        INNER JOIN users AS U ON
-        U.UserID = L.UserID
-        WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
-        ORDER BY TimeElapsed
-        LIMIT 10
-    '''
+    if leaderboard == 0:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role
+            FROM dailyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT 25
+        '''
+    elif leaderboard == 1:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role
+            FROM weeklyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT 25
+        '''
+    elif leaderboard == 2:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role
+            FROM monthlyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT 25
+        '''
 
     query_model = {
         "game_id": game_id,
@@ -106,9 +134,23 @@ def get_personal_best():
     db = get_db()
 
     cursor = db.cursor()
-    sql_query = '''
+    sql_query_1 = '''
         SELECT TimeElapsed 
-        FROM leaderboards AS L
+        FROM dailyLeaderboards
+        WHERE GameID = %(game_id)s AND 
+              Difficulty = %(difficulty)s AND
+              UserID = %(user_id)s
+    '''
+    sql_query_2 = '''
+        SELECT TimeElapsed 
+        FROM weeklyLeaderboards
+        WHERE GameID = %(game_id)s AND 
+              Difficulty = %(difficulty)s AND
+              UserID = %(user_id)s
+    '''
+    sql_query_3 = '''
+        SELECT TimeElapsed 
+        FROM monthlyLeaderboards
         WHERE GameID = %(game_id)s AND 
               Difficulty = %(difficulty)s AND
               UserID = %(user_id)s
@@ -120,15 +162,46 @@ def get_personal_best():
         "user_id": user_id
     }
 
-    cursor.execute(sql_query, query_model)
-    data = cursor.fetchall()
+    cursor.execute(sql_query_1, query_model)
+    data_1 = cursor.fetchall()
+    cursor.close()
 
-    if len(data) == 0:
-        return jsonify({"time":'N/A'})
-    else:
-        if len( str((data[0])[0]).split(':')[2] ) != 2:
-            return jsonify({"time":str((data[0])[0])[:-3]})
+    cursor = db.cursor()
+    cursor.execute(sql_query_2, query_model)
+    data_2 = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute(sql_query_3, query_model)
+    data_3 = cursor.fetchall()
+    cursor.close()
+
+    daily_time = "N/A"
+    weekly_time = "N/A"
+    monthly_time = "N/A"
+
+    if len(data_1) != 0:
+        if len( str((data_1[0])[0]).split(':')[2] ) != 2:
+            daily_time = str((data_1[0])[0])[:-3]
         else:
-            return jsonify({"time":str((data[0])[0]) + '.000'})
+            daily_time = str((data_1[0])[0]) + '.000'
 
+    if len(data_2) != 0:
+        if len( str((data_2[0])[0]).split(':')[2] ) != 2:
+            weekly_time = str((data_2[0])[0])[:-3]
+        else:
+            weekly_time = str((data_2[0])[0]) + '.000'
 
+    if len(data_3) != 0:
+        if len( str((data_3[0])[0]).split(':')[2] ) != 2:
+            monthly_time = str((data_3[0])[0])[:-3]
+        else:
+            monthly_time = str((data_3[0])[0]) + '.000'
+
+    model = {
+        "daily":daily_time,
+        "weekly":weekly_time,
+        "monthly":monthly_time
+    }
+
+    return jsonify(model)

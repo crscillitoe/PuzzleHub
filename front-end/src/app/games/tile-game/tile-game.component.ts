@@ -22,7 +22,9 @@ export class TileGameComponent implements OnInit {
 
   solved: boolean = false;
 
-  personalBest: string;
+  personalBestDaily: string;
+  personalBestWeekly: string;
+  personalBestMonthly: string;
 
   gridBoxSize: number;
   colors: any;
@@ -106,7 +108,9 @@ export class TileGameComponent implements OnInit {
       }
       this.tunnel.getPersonalBest(m)
         .subscribe( (data) => {
-          this.personalBest = data['time'];
+          this.personalBestDaily = data['daily'];
+          this.personalBestWeekly = data['weekly'];
+          this.personalBestMonthly = data['monthly'];
         });
 
       this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
@@ -347,9 +351,18 @@ export class TileGameComponent implements OnInit {
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          if(data['NewRecord']) {
-            this.personalBest = data['TimeElapsed'];
+          if(data['Daily']) {
+            this.personalBestDaily = data['TimeElapsed'];
           }
+
+          if(data['Weekly']) {
+            this.personalBestWeekly = data['TimeElapsed'];
+          }
+
+          if(data['Monthly']) {
+            this.personalBestMonthly = data['TimeElapsed'];
+          }
+
           var display = document.getElementById("timer");
           display.textContent = data['TimeElapsed'];
         });

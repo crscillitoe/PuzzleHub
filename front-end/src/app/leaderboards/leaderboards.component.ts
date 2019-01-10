@@ -47,6 +47,9 @@ export class LeaderboardsComponent implements OnInit {
     'Extreme'
   ]
 
+  leaderboard: number = 0;
+  leaderboardName: string = "Daily";
+
   gameID: number;
   username: string = "";
 
@@ -68,6 +71,18 @@ export class LeaderboardsComponent implements OnInit {
     this.loadScores();
   }
 
+  changeLeaderboard(num) {
+    this.leaderboard = num;
+    if(num == 0) {
+      this.leaderboardName = 'Daily';
+    } else if(num == 1) {
+      this.leaderboardName = 'Weekly';
+    } else if(num == 2) {
+      this.leaderboardName = 'Monthly';
+    }
+    this.loadScores();
+  }
+
   loadScores() {
     this.loader.startLoadingAnimation();
     this.leaderboards = {};
@@ -75,7 +90,8 @@ export class LeaderboardsComponent implements OnInit {
     for(var i = 1 ; i <= 4 ; i++) {
       let m = {
         "GameID":this.gameID,
-        "Difficulty":i
+        "Difficulty":i,
+        "Leaderboard":this.leaderboard
       }
 
       this.tunnel.getLeaderboards(m)

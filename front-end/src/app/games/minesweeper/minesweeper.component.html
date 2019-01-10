@@ -1,20 +1,20 @@
 <div id="leftControlPanel">
   <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>HIGH SCORE</b></a>
-    <a class="monospace time">{{personalBest}}</a>
+    <a class="descriptionHeader"><b>HIGH SCORES</b></a>
+
+    <a class="descriptionText">Monthly</a>
+    <a class="monospace time">{{personalBestMonthly}}</a>
+
+    <a class="descriptionText">Weekly</a>
+    <a class="monospace time">{{personalBestWeekly}}</a>
+
+    <a class="descriptionText">Daily</a>
+    <a class="monospace time">{{personalBestDaily}}</a>
   </div>
 
   <div class="descriptionBlock">
     <a class="descriptionHeader"><b>TIMER</b></a>
     <a id="timer" class="monospace time">0:00:00.000</a>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>RULES</b></a>
-    <a class="descriptionText">
-      The objective of the game is to clear a rectangular board 
-      containing hidden mines without detonating any of them.
-    </a>
   </div>
   
   <div class="buttons">

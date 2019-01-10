@@ -153,59 +153,73 @@ def stop_timer():
 
     seed = (data[0])[0]
     time_elapsed = (data[0])[1]
+    better_daily = False
+    better_weekly = False
+    better_monthly = False
 
     # Check if a leaderboard entry exists
-    cursor = db.cursor()
-    sql_query = '''
-        SELECT TimeElapsed FROM leaderboards WHERE
-            UserID=%(user_id)s AND 
-            GameID=%(game_id)s AND 
-            Difficulty=%(difficulty)s;
-    '''
-
-    cursor.execute(sql_query, query_model)
-    data = cursor.fetchall()
-    cursor.close()
-
-    new_record = False
-
-    if len(data) == 0:
-        # Insert new leaderboard entry for this user
-        new_record = True
-        sql_query = '''
-            INSERT INTO leaderboards (UserID, GameID, Difficulty, Seed, TimeElapsed, BoardSolution)
-            VALUES (%(user_id)s, %(game_id)s, %(difficulty)s, %(seed)s, %(time_elapsed)s, %(board_solution)s);
-        '''
-    else:
-        previous_time_elapsed = (data[0])[0]
-        if time_elapsed < previous_time_elapsed:
-            new_record = True
-            sql_query = '''
-                UPDATE leaderboards
-                SET Seed = %(seed)s,
-                    TimeElapsed = %(time_elapsed)s,
-                    BoardSolution = %(board_solution)s
-                WHERE
-                    UserID=%(user_id)s AND 
-                    GameID=%(game_id)s AND 
-                    Difficulty=%(difficulty)s;
-            '''
-
-    if new_record:
+    for leaderboard in ['dailyLeaderboards', 'weeklyLeaderboards', 'monthlyLeaderboards']:
         cursor = db.cursor()
-        query_model = {
-            "user_id":user_id,
-            "game_id":game_id,
-            "difficulty":difficulty,
-            "seed":seed,
-            "time_elapsed":time_elapsed,
-            "board_solution":board_solution
-        }
+        sql_query = '''
+            SELECT TimeElapsed
+            FROM ''' + leaderboard + '''
+            WHERE
+                UserID=%(user_id)s AND 
+                GameID=%(game_id)s AND 
+                Difficulty=%(difficulty)s;
+        '''
         cursor.execute(sql_query, query_model)
-        db.commit()
+        data = cursor.fetchall()
         cursor.close()
 
-    return jsonify({"TimeElapsed":str(time_elapsed)[:-3],"NewRecord":new_record})
+        new_record = False
+
+        if len(data) == 0:
+            # Insert new leaderboard entry for this user
+            new_record = True
+            sql_query = '''
+                INSERT INTO ''' + leaderboard + ''' (UserID, GameID, Difficulty, Seed, TimeElapsed, BoardSolution)
+                VALUES (%(user_id)s, %(game_id)s, %(difficulty)s, %(seed)s, %(time_elapsed)s, %(board_solution)s);
+            '''
+        else:
+            previous_time_elapsed = (data[0])[0]
+            print(previous_time_elapsed)
+            if time_elapsed < previous_time_elapsed:
+                new_record = True
+                sql_query = '''
+                    UPDATE ''' + leaderboard + '''
+                    SET Seed = %(seed)s,
+                        TimeElapsed = %(time_elapsed)s,
+                        BoardSolution = %(board_solution)s
+                    WHERE
+                        UserID=%(user_id)s AND 
+                        GameID=%(game_id)s AND 
+                        Difficulty=%(difficulty)s;
+                '''
+
+        if new_record:
+            cursor = db.cursor()
+            
+            if leaderboard == 'dailyLeaderboards':
+                better_daily = True
+            elif leaderboard == 'weeklyLeaderboards':
+                better_weekly = True
+            elif leaderboard == 'monthlyLeaderboards':
+                better_monthly = True
+
+            query_model = {
+                "user_id":user_id,
+                "game_id":game_id,
+                "difficulty":difficulty,
+                "seed":seed,
+                "time_elapsed":time_elapsed,
+                "board_solution":board_solution
+            }
+            cursor.execute(sql_query, query_model)
+            db.commit()
+            cursor.close()
+
+    return jsonify({"TimeElapsed":str(time_elapsed)[:-3], "Daily":better_daily, "Weekly":better_weekly, "Monthly":better_monthly})
 
 # ------------------------------------------------------------ #
 def timer_sanity_checks(db, form_values):

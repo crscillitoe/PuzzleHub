@@ -36,7 +36,9 @@ export class TakuzuComponent implements OnInit {
   selectedX: number = -1;
   selectedY: number = -1;
 
-  personalBest: string;
+  personalBestDaily: string;
+  personalBestWeekly: string;
+  personalBestMonthly: string;
 
   difficulty: number;
   seed: number;
@@ -65,8 +67,12 @@ export class TakuzuComponent implements OnInit {
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
 
-    var displayGrid = localStorage.getItem('takuzuGrid') == "true";
-    this.displayGrid = displayGrid;
+    var displayGridStr = localStorage.getItem('takuzuGrid');
+    if(displayGridStr == null) {
+      this.displayGrid = true;
+    } else {
+      this.displayGrid = displayGridStr == 'true';
+    }
 
     var size;
     var removePerc;
@@ -112,7 +118,9 @@ export class TakuzuComponent implements OnInit {
       }
       this.tunnel.getPersonalBest(m)
         .subscribe( (data) => {
-          this.personalBest = data['time'];
+          this.personalBestDaily = data['daily'];
+          this.personalBestWeekly = data['weekly'];
+          this.personalBestMonthly = data['monthly'];
         });
       this.timer.startTimer(GameID.TAKUZU, this.difficulty)
         .subscribe( (data) => {
@@ -428,9 +436,18 @@ export class TakuzuComponent implements OnInit {
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.TAKUZU, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          if(data['NewRecord']) {
-            this.personalBest = data['TimeElapsed'];
+          if(data['Daily']) {
+            this.personalBestDaily = data['TimeElapsed'];
           }
+
+          if(data['Weekly']) {
+            this.personalBestWeekly = data['TimeElapsed'];
+          }
+
+          if(data['Monthly']) {
+            this.personalBestMonthly = data['TimeElapsed'];
+          }
+
           var display = document.getElementById("timer");
           display.textContent = data['TimeElapsed'];
         });

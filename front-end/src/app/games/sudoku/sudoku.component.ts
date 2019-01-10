@@ -39,7 +39,9 @@ export class SudokuComponent implements OnInit {
   takingNotes: boolean = false;
   notes: any = {};
   solved: boolean = false;
-  personalBest: string;
+  personalBestDaily: string;
+  personalBestWeekly: string;
+  personalBestMonthly: string;
 
   startDate: any;
   t: any;
@@ -103,7 +105,9 @@ export class SudokuComponent implements OnInit {
       }
       this.tunnel.getPersonalBest(m)
         .subscribe( (data) => {
-          this.personalBest = data['time'];
+          this.personalBestDaily = data['daily'];
+          this.personalBestWeekly = data['weekly'];
+          this.personalBestMonthly = data['monthly'];
         });
 
       this.timer.startTimer(GameID.SUDOKU, this.difficulty)
@@ -376,8 +380,16 @@ export class SudokuComponent implements OnInit {
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(GameID.SUDOKU, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          if(data['NewRecord']) {
-            this.personalBest = data['TimeElapsed'];
+          if(data['Daily']) {
+            this.personalBestDaily = data['TimeElapsed'];
+          }
+
+          if(data['Weekly']) {
+            this.personalBestWeekly = data['TimeElapsed'];
+          }
+
+          if(data['Monthly']) {
+            this.personalBestMonthly = data['TimeElapsed'];
           }
           var display = document.getElementById("timer");
           display.textContent = data['TimeElapsed'];

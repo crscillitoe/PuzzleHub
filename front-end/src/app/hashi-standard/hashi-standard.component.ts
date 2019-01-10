@@ -919,9 +919,18 @@ export class HashiStandardComponent implements OnInit {
         that.timer.stopTimer(GameID.HASHI, that.diff, that.board.toString())
           .subscribe( (data) => {
             console.log(data);
-              if(data['NewRecord']) {
-                that.personalBest = data['TimeElapsed'];
+              if(data['Daily']) {
+                that.personalBestDaily = data['TimeElapsed'];
               }
+
+              if(data['Weekly']) {
+                that.personalBestWeekly = data['TimeElapsed'];
+              }
+
+              if(data['Monthly']) {
+                that.personalBestMonthly = data['TimeElapsed'];
+              }
+
               var display = document.getElementById("timer");
               display.textContent = data['TimeElapsed'];
             });
@@ -1457,7 +1466,9 @@ export class HashiStandardComponent implements OnInit {
           }
           that.tunnel.getPersonalBest(m)
             .subscribe( (data) => {
-              that.personalBest = data['time'];
+              that.personalBestDaily = data['daily'];
+              that.personalBestWeekly = data['weekly'];
+              that.personalBestMonthly = data['monthly'];
             });
           that.timer.startTimer(GameID.HASHI, that.diff)
             .subscribe( (data) => {

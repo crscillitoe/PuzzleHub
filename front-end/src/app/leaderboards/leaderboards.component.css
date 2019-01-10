@@ -1,5 +1,5 @@
 .gridContainer {
-    height:100%;
+    height:calc(100% - 2rem);
     display:flex;
 }
 .mytooltip {
@@ -69,6 +69,24 @@
   visibility: visible;
 }
 
+.leaderboardButtons {
+  background: #2c2c2c;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 2rem;
+  display: flex;
+}
+
+.leaderbutton {
+  flex: 1;
+  width: 5.5rem;
+  height: 40px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 #page {
   background: #2C2C2C;
   position: absolute;
@@ -125,15 +143,15 @@
     min-width: 420px;
     margin: auto;
 
-    max-height:calc(100vh - 7rem);
-    min-height:calc(100vh - 7rem);
+    max-height:calc(100vh - 9rem);
+    min-height:calc(100vh - 9rem);
 }
 
 .columnContainer {
     display:flex;
     flex-wrap: wrap;
     min-height: 800px;
-    height: 100%;
+    height: 90%;
     width: 100%;
     margin: auto;
 }
