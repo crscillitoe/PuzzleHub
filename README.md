@@ -1,3 +1,5 @@
-#PuzzleHub
+# PuzzleHub
 
-- Should probably write some readme here
+https://puzzle-hub.com/
+
+This is the source code for the competitive puzzle game website, puzzle-hub.
