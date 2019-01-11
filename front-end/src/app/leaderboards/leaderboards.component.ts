@@ -4,6 +4,7 @@ import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameID } from '../enums/game-id.enum';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from '../services/loading-service/loader.service';
+import { SettingsService } from '../services/persistence/settings.service';
 
 @Component({
   selector: 'app-leaderboards',
@@ -61,18 +62,30 @@ export class LeaderboardsComponent implements OnInit {
   ) { 
   }
 
+  getGameName(id) {
+    for(let game of this.games) {
+      if(game['GameID'] == id) {
+        return game['Name'];
+      }
+    }
+
+    return '';
+  }
+
   ngOnInit() {
     this.username = this.user.user;
     this.user.username
       .subscribe( (data) => {
         this.username = data;
       });
-    this.gameID = 5;
+    this.gameID = SettingsService.getDataNum('selectedGameID');
+    this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
     this.loadScores();
   }
 
   changeLeaderboard(num) {
     this.leaderboard = num;
+    SettingsService.storeData('selectedLeaderboard', num);
     if(num == 0) {
       this.leaderboardName = 'Daily';
     } else if(num == 1) {
@@ -107,6 +120,7 @@ export class LeaderboardsComponent implements OnInit {
 
   setGame(id) {
     this.gameID = id;
+    SettingsService.storeData('selectedGameID', id);
     this.loadScores();
   }
 

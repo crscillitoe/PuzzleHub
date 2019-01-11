@@ -2,14 +2,14 @@
   <div class="descriptionBlock">
     <a class="descriptionHeader"><b>HIGH SCORES</b></a>
 
-    <a class="descriptionText">Monthly</a>
-    <a class="monospace time">{{personalBestMonthly}}</a>
+    <a class="descriptionText topPad">Monthly</a>
+    <a class="monospace timeSave">{{personalBestMonthly}}</a>
 
-    <a class="descriptionText">Weekly</a>
-    <a class="monospace time">{{personalBestWeekly}}</a>
+    <a class="descriptionText topPad">Weekly</a>
+    <a class="monospace timeSave">{{personalBestWeekly}}</a>
 
-    <a class="descriptionText">Daily</a>
-    <a class="monospace time">{{personalBestDaily}}</a>
+    <a class="descriptionText topPad">Daily</a>
+    <a class="monospace timeSave">{{personalBestDaily}}</a>
   </div>
 
   <div class="descriptionBlock">
@@ -22,6 +22,14 @@
     <a class="descriptionText">
       Arrow Keys or WASD
     </a>
+  </div>
+
+  <div class="descriptionBlock">
+    <a class="descriptionHeader"><b>OPTIONS</b></a>
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" id="displaygrid" class="custom-control-input" [(ngModel)]="showAnimations" (click)="toggleAnimations()">
+      <label class="descriptionText custom-control-label" for="displaygrid">Show Animations</label>
+    </div>
   </div>
 
   <div class="buttons">

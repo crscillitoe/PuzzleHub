@@ -36,6 +36,11 @@ html {
 
 * {
   font-family: 'Open Sans', sans-serif;
+  cursor: default;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .monospace {
@@ -75,6 +80,16 @@ hr {
   left: 22px;
   text-align:center;
   color: white;
+}
+
+.topPad {
+  padding-top: 10px;
+}
+
+.timeSave {
+  display: inline-block;
+  width: 100%;
+  font-size: 15pt;
 }
 
 .time {

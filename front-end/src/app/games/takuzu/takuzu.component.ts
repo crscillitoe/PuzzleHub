@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/takuzu/board.service';
 import { ColorService } from '../../services/colors/color.service';
+import { SettingsService } from '../../services/persistence/settings.service';
 
 @Component({
   selector: 'app-takuzu',
@@ -67,12 +68,8 @@ export class TakuzuComponent implements OnInit {
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
 
-    var displayGridStr = localStorage.getItem('takuzuGrid');
-    if(displayGridStr == null) {
-      this.displayGrid = true;
-    } else {
-      this.displayGrid = displayGridStr == 'true';
-    }
+
+    this.displayGrid = SettingsService.getDataBool('takuzuGrid');
 
     var size;
     var removePerc;
@@ -283,7 +280,7 @@ export class TakuzuComponent implements OnInit {
 
   toggleGrid() {
     this.displayGrid = !this.displayGrid;
-    localStorage.setItem('takuzuGrid', '' + this.displayGrid);
+    SettingsService.storeData('takuzuGrid', this.displayGrid);
     this.draw();
   }
 

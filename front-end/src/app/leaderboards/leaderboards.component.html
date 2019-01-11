@@ -2,15 +2,19 @@
   <ng-container *ngFor="let game of games">
     <a (click)="setGame(game.GameID)" 
       [ngClass]="gameID == game.GameID ? 'navActive' : 'navInactive'" 
-                        class="navItem nav-item nav-link"><img src="{{game.Image}}"></a>
+                        class="navItem nav-item nav-link"><img class="clickable" src="{{game.Image}}"></a>
   </ng-container>
 </div>
 
 <div id="page">
+  <div class="title textContainer">
+    <h2 class="gameName">{{getGameName(gameID)}}</h2>
+  </div>
+
   <div class="leaderboardButtons">
-    <button class="leaderbutton btn btn-success" (click)="changeLeaderboard(0)">Daily</button>
-    <button class="leaderbutton btn btn-info" (click)="changeLeaderboard(1)">Weekly</button>
-    <button class="leaderbutton btn btn-danger" (click)="changeLeaderboard(2)">Monthly</button>
+    <button [ngClass]="leaderboard == 0 ? 'selectedButton' : 'leaderbutton'" (click)="changeLeaderboard(0)">Daily</button>
+    <button [ngClass]="leaderboard == 1 ? 'selectedButton' : 'leaderbutton'" (click)="changeLeaderboard(1)">Weekly</button>
+    <button [ngClass]="leaderboard == 2 ? 'selectedButton' : 'leaderbutton'" (click)="changeLeaderboard(2)">Monthly</button>
   </div>
 
   <div class="gridContainer">
@@ -19,13 +23,13 @@
           <div class="flexElement">
             <div [ngClass]="i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'"
               class="leaderboardEntry">
-              <h3 style="padding-top:10px"><b>{{leaderboardName.toUpperCase()}} {{diff.toUpperCase()}}</b></h3>
+              <h3 style="padding-top:10px"><b>{{diff}}</b></h3>
               <table>
                 <thead>
                   <tr>
                     <td style="width:20px"></td>
-                    <td style="width:180px" class="name"><b>NAME</b></td>
-                    <td style="width:209px" class="time"><b>TIME</b></td>
+                    <td style="width:180px" class="nameTitle"><b>Name</b></td>
+                    <td style="width:209px" class="time"><b>Time</b></td>
                   </tr>
                 </thead>
                 <tbody class="scrollable">

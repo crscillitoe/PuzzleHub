@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/tile-game/board.service';
 import { ColorService } from '../../services/colors/color.service';
+import { SettingsService } from '../../services/persistence/settings.service';
 
 @Component({
   selector: 'app-tile-game',
@@ -44,6 +45,8 @@ export class TileGameComponent implements OnInit {
   startDate: any;
   t: any;
 
+  showAnimations: boolean;
+
   animationDelta: number = 10;
   animationSpeed: number = 10;
 
@@ -60,11 +63,21 @@ export class TileGameComponent implements OnInit {
     this.colors = colorService.getColorScheme();
   }
 
+  toggleAnimations() {
+    this.showAnimations = !this.showAnimations;
+    this.animatingX = -1;
+    this.animatingY = -1;
+    SettingsService.storeData('tileAnimations', this.showAnimations);
+    this.draw();
+  }
+
   ngOnInit() {
     // Read difficulty from URL param
     this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
+
+    this.showAnimations = SettingsService.getDataBool('tileAnimations');
 
     var width;
     var height;
@@ -242,6 +255,9 @@ export class TileGameComponent implements OnInit {
   drawGrid() {
     for(var i = 0 ; i <= this.board.width ; i++) {
       this.context.lineWidth = 1;
+      this.showAnimations = !this.showAnimations;
+      SettingsService.storeData('tileAnimations', this.showAnimations);
+      this.draw();
       this.context.strokeStyle = this.colors.COLOR_1;
       this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
       this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + (this.board.height * this.gridBoxSize));
@@ -327,7 +343,7 @@ export class TileGameComponent implements OnInit {
 
         var spacing = this.gridBoxSize/40;
 
-        if(i != this.animatingX || j != this.animatingY) {
+        if((i != this.animatingX || j != this.animatingY) || !this.showAnimations) {
           if(boardValue != 0) {
             this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
                                   (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
@@ -563,18 +579,20 @@ export class TileGameComponent implements OnInit {
 
     this.draw();
 
-    var spacing = this.gridBoxSize/40;
-    let y1 = this.board.emptyY + 1;
-    let x1 = this.board.emptyX;
-    let y2 = this.board.emptyY;
-    let x2 = this.board.emptyX;
-    this.animateTileUp(
-      this.animatingX, this.animatingY,
-      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-    );
+    if(this.showAnimations) {
+      var spacing = this.gridBoxSize/40;
+      let y1 = this.board.emptyY + 1;
+      let x1 = this.board.emptyX;
+      let y2 = this.board.emptyY;
+      let x2 = this.board.emptyX;
+      this.animateTileUp(
+        this.animatingX, this.animatingY,
+        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+      );
+    }
   }
 
   moveDown() {
@@ -587,18 +605,20 @@ export class TileGameComponent implements OnInit {
 
     this.draw();
 
-    var spacing = this.gridBoxSize/40;
-    let y1 = this.board.emptyY - 1;
-    let x1 = this.board.emptyX;
-    let y2 = this.board.emptyY;
-    let x2 = this.board.emptyX;
-    this.animateTileDown(
-      this.animatingX, this.animatingY,
-      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-    );
+    if(this.showAnimations) {
+      var spacing = this.gridBoxSize/40;
+      let y1 = this.board.emptyY - 1;
+      let x1 = this.board.emptyX;
+      let y2 = this.board.emptyY;
+      let x2 = this.board.emptyX;
+      this.animateTileDown(
+        this.animatingX, this.animatingY,
+        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+      );
+    }
   }
 
   moveLeft() {
@@ -611,18 +631,20 @@ export class TileGameComponent implements OnInit {
 
     this.draw();
 
-    var spacing = this.gridBoxSize/40;
-    let y1 = this.board.emptyY;
-    let x1 = this.board.emptyX + 1;
-    let y2 = this.board.emptyY;
-    let x2 = this.board.emptyX;
-    this.animateTileLeft(
-      this.animatingX, this.animatingY,
-      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-    );
+    if(this.showAnimations) {
+      var spacing = this.gridBoxSize/40;
+      let y1 = this.board.emptyY;
+      let x1 = this.board.emptyX + 1;
+      let y2 = this.board.emptyY;
+      let x2 = this.board.emptyX;
+      this.animateTileLeft(
+        this.animatingX, this.animatingY,
+        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+      );
+    }
   }
 
   moveRight() {
@@ -635,18 +657,20 @@ export class TileGameComponent implements OnInit {
 
     this.draw();
 
-    var spacing = this.gridBoxSize/40;
-    let y1 = this.board.emptyY;
-    let x1 = this.board.emptyX - 1;
-    let y2 = this.board.emptyY;
-    let x2 = this.board.emptyX;
-    this.animateTileRight(
-      this.animatingX, this.animatingY,
-      (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-      (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-    );
+    if(this.showAnimations) {
+      var spacing = this.gridBoxSize/40;
+      let y1 = this.board.emptyY;
+      let x1 = this.board.emptyX - 1;
+      let y2 = this.board.emptyY;
+      let x2 = this.board.emptyX;
+      this.animateTileRight(
+        this.animatingX, this.animatingY,
+        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+      );
+    }
   }
 
   moveTile(x, y) {

@@ -1,6 +1,6 @@
 .gridContainer {
-    height:calc(100% - 2rem);
-    display:flex;
+  height:calc(100% - 2rem);
+  display:flex;
 }
 .mytooltip {
   position: relative;
@@ -16,11 +16,33 @@
   opacity: 1;
 }
 
+.name:hover {
+  color: #FFD79D;
+}
+
 .name {
+  cursor: pointer;
   color: white;
   font-size: 13pt;
   text-align: left;
   padding-left: 15px;
+}
+
+.nameTitle {
+  color: white;
+  font-size: 13pt;
+  text-align: left;
+  padding-left: 15px;
+}
+
+.gameName {
+  color: white;
+  text-align: left;
+  display: inline-block;
+}
+
+.textContainer {
+  text-align: center;
 }
 
 .pos {
@@ -69,22 +91,53 @@
   visibility: visible;
 }
 
-.leaderboardButtons {
+.title {
   background: #2c2c2c;
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
-  height: 2rem;
-  display: flex;
+  height: 2.5rem;
+}
+
+.leaderboardButtons {
+  background: #2c2c2c;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 30%;
+  height: 2.5rem;
+}
+
+.leaderbutton:hover {
+  background: #7c7c7c;
 }
 
 .leaderbutton {
-  flex: 1;
   width: 5.5rem;
-  height: 40px;
+  height: 2rem;
   padding-left: 0px;
   padding-right: 0px;
+  margin-right: 20px;
+  margin-top: 0.5rem;
+  background: #3a3a3a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selectedButton {
+  width: 5.5rem;
+  height: 2rem;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-right: 20px;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  background: #7c7c7c;
+  color: white;
+  border: none;
 }
 
 #page {
@@ -125,7 +178,7 @@
     margin: auto;
     border-radius: 25px;
     
-    margin-top: 2rem;
+    margin-top: 3rem;
     max-width:409px;
     min-width: 409px;
     max-height:calc(100vh - 11rem);
@@ -151,7 +204,6 @@
     display:flex;
     flex-wrap: wrap;
     min-height: 800px;
-    height: 90%;
     width: 100%;
     margin: auto;
 }
