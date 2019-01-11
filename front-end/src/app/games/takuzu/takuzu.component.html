@@ -1,43 +1,14 @@
 <div id="leftControlPanel">
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>HIGH SCORES</b></a>
-
-    <a class="descriptionText topPad">Monthly</a>
-    <a class="monospace timeSave">{{personalBestMonthly}}</a>
-
-    <a class="descriptionText topPad">Weekly</a>
-    <a class="monospace timeSave">{{personalBestWeekly}}</a>
-
-    <a class="descriptionText topPad">Daily</a>
-    <a class="monospace timeSave">{{personalBestDaily}}</a>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>TIMER</b></a>
-    <a id="timer" class="monospace time">0:00:00.000</a>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>CONTROLS</b></a>
-    <a class="descriptionText">
-      Left/Right click
-    </a>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>OPTIONS</b></a>
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" id="displaygrid" class="custom-control-input" [(ngModel)]="displayGrid" (click)="toggleGrid()">
-      <label class="descriptionText custom-control-label" for="displaygrid">Display Grid</label>
-    </div>
-  </div>
-  
-  <div class="buttons">
-    <a (click)="newGame()" class="center new-game">
-      <a class="buttonHeader"><b>NEW GAME</b></a>
-      <a class="buttonFooter">spacebar</a>
-    </a>
-  </div>
+  <app-options
+      [personalBestMonthly]="personalBestMonthly"
+      [personalBestWeekly]="personalBestWeekly"
+      [personalBestDaily]="personalBestDaily"
+      [controls]="controls"
+      [rules]="rules"
+      [options]="options"
+      (optionSelected)="handleOption($event)"
+    >
+  </app-options>
 </div>
 
 <canvas id="myCanvas" (window:resize)="fixSizes()" (contextmenu)="false"></canvas>

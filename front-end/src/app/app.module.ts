@@ -23,6 +23,7 @@ import { TemplateComponent } from './games/template/template.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { EmailSuccessComponent } from './email-success/email-success.component';
 import { TodoComponent } from './todo/todo.component';
+import { OptionsComponent } from './options/options.component';
 
 const appRoutes: Routes = [
     { path: '', component: MainMenuComponent},
@@ -57,7 +58,8 @@ const appRoutes: Routes = [
     TemplateComponent,
     VerifyEmailComponent,
     EmailSuccessComponent,
-    TodoComponent
+    TodoComponent,
+    OptionsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,118 @@
+<div class="descriptionBlock">
+  <a class="descriptionHeader clickable"
+    (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
+    <ng-container *ngIf="highscoresMinimized">
+      [+]
+    </ng-container>
+    <ng-container *ngIf="!highscoresMinimized">
+      [-]
+    </ng-container>
+    <b class="clickable">
+      HIGH SCORES
+    </b>
+  </a>
+
+  <ng-container *ngIf="!highscoresMinimized">
+    <a class="descriptionText topPad">Monthly</a>
+    <a class="monospace timeSave">{{personalBestMonthly}}</a>
+
+    <a class="descriptionText topPad">Weekly</a>
+    <a class="monospace timeSave">{{personalBestWeekly}}</a>
+
+    <a class="descriptionText topPad">Daily</a>
+    <a class="monospace timeSave">{{personalBestDaily}}</a>
+  </ng-container>
+</div>
+
+<div class="descriptionBlock">
+  <a class="descriptionHeader clickable"
+    (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
+    <ng-container *ngIf="timerMinimized">
+      [+]
+    </ng-container>
+    <ng-container *ngIf="!timerMinimized">
+      [-]
+    </ng-container>
+    <b>
+      TIMER
+    </b>
+  </a>
+
+  <a id="timer" 
+     [ngClass]="timerMinimized ? 'hidden' : 'none'"
+    class="monospace time">0:00:00.000</a>
+</div>
+
+<div class="descriptionBlock" *ngIf="controls != undefined">
+  <a class="descriptionHeader clickable"
+    (click)="controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)">
+    <ng-container *ngIf="controlsMinimized">
+      [+]
+    </ng-container>
+    <ng-container *ngIf="!controlsMinimized">
+      [-]
+    </ng-container>
+    <b class="clickable">
+      CONTROLS
+    </b>
+  </a>
+
+  <ng-container *ngIf="!controlsMinimized">
+    <a class="descriptionText">
+      {{controls}}
+    </a>
+  </ng-container>
+</div>
+
+<div class="descriptionBlock" *ngIf="rules != undefined">
+  <a class="descriptionHeader clickable"
+    (click)="rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)">
+    <ng-container *ngIf="rulesMinimized">
+      [+]
+    </ng-container>
+    <ng-container *ngIf="!rulesMinimized">
+      [-]
+    </ng-container>
+    <b class="clickable">
+      RULES
+    </b>
+  </a>
+  <ng-container *ngIf="!rulesMinimized">
+    <a class="descriptionText">
+      {{rules}}
+    </a>
+  </ng-container>
+</div>
+
+<div class="descriptionBlock" *ngIf="options != undefined">
+  <a class="descriptionHeader clickable"
+    (click)="optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)">
+    <ng-container *ngIf="optionsMinimized">
+      [+]
+    </ng-container>
+    <ng-container *ngIf="!optionsMinimized">
+      [-]
+    </ng-container>
+    <b class="clickable">
+      OPTIONS
+    </b>
+  </a>
+
+  <ng-container *ngIf="!optionsMinimized">
+    <ng-container *ngFor="let option of options; let i=index">
+      <ng-container *ngIf="option.type == 'checkbox'">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" id="{{option.bindTo}}" class="custom-control-input" [(ngModel)]="optionVals[i]" (click)="callback(option.callback)">
+          <label class="descriptionText custom-control-label" for="{{option.bindTo}}">{{option.name}}</label>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+
+<div class="buttons">
+  <a (click)="callback('this.newGame()')" class="center new-game clickable">
+    <a class="buttonHeader clickable"><b class="clickable">NEW GAME</b></a>
+    <a class="buttonFooter clickable">spacebar</a>
+  </a>
+</div>

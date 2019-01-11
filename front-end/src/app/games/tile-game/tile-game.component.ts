@@ -17,6 +17,19 @@ import { SettingsService } from '../../services/persistence/settings.service';
 })
 export class TileGameComponent implements OnInit {
 
+  controls: string = "Arrow Keys or WASD";
+  options = [
+    {
+      'type':'checkbox',
+      'bindTo':'showAnimations',
+      'name':'Show Animations',
+      'callback':'this.toggleAnimations()',
+      'storedName':'tileAnimations'
+    }
+  ];
+
+  rules: string = "Order the numbers in sequential order from left to right, top to bottom";
+
   // Used for drawing to the screen
   canvas: any;
   context: any;
@@ -64,6 +77,7 @@ export class TileGameComponent implements OnInit {
   }
 
   toggleAnimations() {
+    console.log('called');
     this.showAnimations = !this.showAnimations;
     this.animatingX = -1;
     this.animatingY = -1;
@@ -774,6 +788,11 @@ export class TileGameComponent implements OnInit {
       }
     }
   }
+
+  handleOption(callback) {
+    eval(callback);
+  }
+
   keyReleased(keyEvent) {
     //console.log({'keyReleased':keyEvent.keyCode});
   }

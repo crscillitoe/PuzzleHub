@@ -9,7 +9,12 @@ export class SettingsService {
     "takuzuGrid":true,
     "tileAnimations":true,
     "selectedGameID":5,
-    "selectedLeaderboard":0
+    "selectedLeaderboard":0,
+    "rulesMinimized":true,
+    "optionsMinimized":false,
+    "controlsMinimized":true,
+    "highscoresMinimized":false,
+    "timerMinimized":false
   };
 
   constructor() { }

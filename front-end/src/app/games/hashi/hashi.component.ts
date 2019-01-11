@@ -16,6 +16,9 @@ import { GameID } from '../../enums/game-id.enum';
 })
 export class HashiComponent implements OnInit {
 
+  controls: string = "Click and drag from an island to build a bridge.";
+  rules: string = "The goal is to connect all of the islands into a single connected group by drawing a series of bridges between the islands. The number of bridges coming off of an island must match the number written on that island.";
+
   diff: any;
   timePaused: any;
   startPause: any;
@@ -541,5 +544,9 @@ export class HashiComponent implements OnInit {
     return HashiStandardComponent.clearBoard(that);
   }
   contextMenu() {return false;}
+
+  handleOption(callback) {
+    eval(callback);
+  }
 
 }

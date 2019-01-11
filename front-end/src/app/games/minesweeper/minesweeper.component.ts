@@ -16,6 +16,7 @@ import { ColorService } from '../../services/colors/color.service';
 })
 export class MinesweeperComponent implements OnInit {
   // Used for drawing to the screen
+  rules: string = "The objective of the game is to clear a rectangular board containing hidden mines without detonating any of them.";
   canvas: any;
   context: any;
 
@@ -606,6 +607,10 @@ export class MinesweeperComponent implements OnInit {
         this.draw();
       } 
     }
+  }
+
+  handleOption(callback) {
+    eval(callback);
   }
 
   @HostListener('document:keydown', ['$event'])

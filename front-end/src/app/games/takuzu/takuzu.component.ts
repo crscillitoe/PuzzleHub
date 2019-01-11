@@ -17,6 +17,19 @@ import { SettingsService } from '../../services/persistence/settings.service';
 })
 export class TakuzuComponent implements OnInit {
 
+  controls: string = "Left/Right click";
+  options = [
+    {
+      'type':'checkbox',
+      'bindTo':'toggleGrid',
+      'name':'Display Grid',
+      'callback':'this.toggleGrid()',
+      'storedName':'takuzuGrid'
+    }
+  ];
+
+  rules: string = "The objective is to fill a grid with 1s and 0s, where there is an equal number of 1s and 0s in each row and column and no more than two of either number adjacent to each other. Additionally, there can be no identical rows or columns."
+
   // Used for drawing to the screen
   canvas: any;
   context: any;
@@ -530,5 +543,9 @@ export class TakuzuComponent implements OnInit {
   }
   keyReleased(keyEvent) {
     console.log({'keyReleased':keyEvent.keyCode});
+  }
+
+  handleOption(callback) {
+    eval(callback);
   }
 }

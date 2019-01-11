@@ -1,35 +1,14 @@
 <div id="leftControlPanel">
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>HIGH SCORES</b></a>
-
-    <a class="descriptionText topPad">Monthly</a>
-    <a class="monospace timeSave">{{personalBestMonthly}}</a>
-
-    <a class="descriptionText topPad">Weekly</a>
-    <a class="monospace timeSave">{{personalBestWeekly}}</a>
-
-    <a class="descriptionText topPad">Daily</a>
-    <a class="monospace timeSave">{{personalBestDaily}}</a>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>TIMER</b></a>
-    <a id="timer" class="monospace time">0:00:00.000</a>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader"><b>CONTROLS</b></a>
-    <a class="descriptionText">
-      Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box
-    </a>
-  </div>
-  
-  <div class="buttons">
-    <a (click)="newGame()" class="center new-game">
-      <a class="buttonHeader"><b>NEW GAME</b></a>
-      <a class="buttonFooter">spacebar</a>
-    </a>
-  </div>
+  <app-options
+      [personalBestMonthly]="personalBestMonthly"
+      [personalBestWeekly]="personalBestWeekly"
+      [personalBestDaily]="personalBestDaily"
+      [controls]="controls"
+      [rules]="rules"
+      [options]="options"
+      (optionSelected)="handleOption($event)"
+    >
+  </app-options>
 
   <div class="controls">
     <a (click)="takingNotes = !takingNotes" 

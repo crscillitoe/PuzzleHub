@@ -16,6 +16,9 @@ import { ColorService } from '../../services/colors/color.service';
 })
 export class SudokuComponent implements OnInit {
 
+  controls: string = "Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box";
+  rules: string = "Each of the nine blocks must contain the numbers 1-9 in its' squares. Each number can only appear once in a row, column, or box."
+
   // Used for drawing to the screen
   canvas: any;
   context: any;
@@ -481,5 +484,9 @@ export class SudokuComponent implements OnInit {
   }
   keyReleased(keyEvent) {
     console.log({'keyReleased':keyEvent.keyCode});
+  }
+
+  handleOption(callback) {
+    eval(callback);
   }
 }
