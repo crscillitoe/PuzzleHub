@@ -3,14 +3,11 @@
   <div class="navbar-expand mr-auto">
     <div class="navbar-nav">
       <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">Leaderboards</a>
-      <a routerLink="/patchNotes" routerLinkActive="active" class="nav-item nav-link clickable">Patch Notes</a>
+      <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
     </div>
   </div>
   <div class="navbar-expand ml-auto navbar-nav">
     <div class="navbar-nav">
-      <div style="color:rgba(255, 255, 255, 0.5)">
-        <a style="margin-right:50px;" class="nav-item">Send bug reports/feature requests to christian.scillitoe@gmail.com</a>
-      </div>
       <ng-container *ngIf="username==''">
         <a routerLink="/login" routerLinkActive="active" class="nav-item nav-link clickable">
           <i style="margin-right:5px" class="fa fa-lock clickable"></i> Sign In

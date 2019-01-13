@@ -24,20 +24,22 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { EmailSuccessComponent } from './email-success/email-success.component';
 import { TodoComponent } from './todo/todo.component';
 import { OptionsComponent } from './options/options.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const appRoutes: Routes = [
-    { path: '', component: MainMenuComponent},
-    { path: 'games', component: CustomGamesComponent},
-    { path: 'login', component: LoginComponent},
-    { path: 'leaderboards', component: LeaderboardsComponent},
-    { path: 'Hashi', component: HashiComponent},
-    { path: 'Sudoku', component: SudokuComponent},
-    { path: 'Takuzu', component: TakuzuComponent},
-    { path: 'Minesweeper', component: MinesweeperComponent},
-    { path: 'Tile Game', component: TileGameComponent},
-    { path: 'EmailVerify', component: VerifyEmailComponent},
-    { path: 'EmailSuccess', component: EmailSuccessComponent},
-    { path: 'patchNotes', component: TodoComponent}
+  { path: '', component: MainMenuComponent},
+  { path: 'games', component: CustomGamesComponent},
+  { path: 'login', component: LoginComponent},
+  { path: 'leaderboards', component: LeaderboardsComponent},
+  { path: 'Hashi', component: HashiComponent},
+  { path: 'Sudoku', component: SudokuComponent},
+  { path: 'Takuzu', component: TakuzuComponent},
+  { path: 'Minesweeper', component: MinesweeperComponent},
+  { path: 'Tile Game', component: TileGameComponent},
+  { path: 'EmailVerify', component: VerifyEmailComponent},
+  { path: 'EmailSuccess', component: EmailSuccessComponent},
+  { path: 'patchNotes', component: TodoComponent},
+  { path: 'profile', component: ProfileComponent}
 ];
 
 @NgModule({
@@ -59,7 +61,8 @@ const appRoutes: Routes = [
     VerifyEmailComponent,
     EmailSuccessComponent,
     TodoComponent,
-    OptionsComponent
+    OptionsComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

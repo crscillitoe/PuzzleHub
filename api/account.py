@@ -360,6 +360,59 @@ def get_username():
     return jsonify({'username':(data[0])[0]})
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getMedals
+# Required POST parameters:
+#   Username: string
+# Returns on success:
+#   List <
+#       GameID: int
+#       Type: int (0 - daily, 1 - weekly, 2 - monthly)
+#       TotalMedals: int
+#   >
+@app.route('/api/getMedals', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_medals():
+    try:
+        username = request.json['Username']
+    except:
+        abort(500, 'Username not found')
+
+    db = get_db()
+    cursor = db.cursor()
+
+    sql_query = ''' 
+        SELECT UserID FROM users WHERE Username=%(username)s;
+    '''
+    query_model = {
+        "username":username
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        abort(500, 'Username does not exist')
+
+    cursor.close()
+
+    cursor = db.cursor()
+    user_id = (data[0])[0]
+
+    sql_query = '''
+        SELECT Type, BronzeMedals, SilverMedals, GoldMedals FROM userMedals WHERE UserID=%(user_id)s;
+    '''
+    query_model = {
+        "user_id":user_id
+    }
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    cursor.close()
+
+    return jsonify(data)
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /changePassword
 # Required POST parameters:
 #   OldPassword: string
