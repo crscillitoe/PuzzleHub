@@ -96,8 +96,11 @@ def register_user():
         abort(400, "ERROR: malformed post request")
    
     # check that the username meets our guidelines 
-    if len(username) > 16:
-        return jsonify({"success":False,"message":"Username length must be less than 16 characters."})
+    if len(username) > 12:
+        return jsonify({"success":False,"message":"Username length must be no more than 12 characters."})
+
+    if !username.isalnum():
+        return jsonify({"success":False,"message":"Username must be alpha numeric."})
 
 
     repeat_char = re.compile(r'(.)\1\1\1\1\1')
@@ -121,9 +124,6 @@ def register_user():
     # test that the email is valid 
     if check_valid_email(email_address) is False:
         return jsonify({"success":False,"message":"Email is invalid."})
-
-    if check_blacklisted_email(email_address) is False:
-        return jsonify({"success":False,"message":"This email is from a blacklisted domain."})
 
     # hash the password
     password_hash = argon2.using(time_cost=160, memory_cost=10240, parallelism=8).hash(password)
@@ -183,6 +183,13 @@ def register_user():
         "validation_id":str(validation_id)
     }
 
+    cursor.execute(sql_query, validation_entry)
+    db.commit()
+
+    sql_query = '''
+        INSERT INTO userMedals(UserID, Type, BronzeMedals, SilverMedals, GoldMedals)
+        VALUES (%(user_id)s, 0, 0, 0, 0), (%(user_id)s, 1, 0, 0, 0), (%(user_id)s, 2, 0, 0, 0)
+    '''
     cursor.execute(sql_query, validation_entry)
     db.commit()
  

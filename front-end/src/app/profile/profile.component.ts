@@ -17,7 +17,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
-      console.log(this.username);
     });
   }
 }

@@ -45,30 +45,39 @@ def get_leaderboards():
     cursor = db.cursor()
     if leaderboard == 0:
         sql_query = '''
-            SELECT Username, TimeElapsed, Role
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
             FROM dailyLeaderboards AS L
             INNER JOIN users AS U ON
             U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 0
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
             LIMIT 25
         '''
     elif leaderboard == 1:
         sql_query = '''
-            SELECT Username, TimeElapsed, Role
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
             FROM weeklyLeaderboards AS L
             INNER JOIN users AS U ON
             U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 1
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
             LIMIT 25
         '''
     elif leaderboard == 2:
         sql_query = '''
-            SELECT Username, TimeElapsed, Role
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
             FROM monthlyLeaderboards AS L
             INNER JOIN users AS U ON
             U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 2
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
             LIMIT 25
@@ -89,14 +98,20 @@ def get_leaderboards():
             model = {
                 "username":d[0],
                 "time":str(d[1])[:-3],
-                "role":str(d[2])
+                "role":str(d[2]),
+                "bronzeMedals":d[3],
+                "silverMedals":d[4],
+                "goldMedals":d[5]
             }
             to_return.append(model)
         else :
             model = {
                 "username":d[0],
                 "time":str(d[1]) + '.000',
-                "role":str(d[2])
+                "role":str(d[2]),
+                "bronzeMedals":d[3],
+                "silverMedals":d[4],
+                "goldMedals":d[5]
             }
             to_return.append(model)
 

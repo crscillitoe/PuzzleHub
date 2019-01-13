@@ -3,7 +3,9 @@
   <div class="navbar-expand mr-auto">
     <div class="navbar-nav">
       <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">Leaderboards</a>
-      <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
+      <ng-container *ngIf="username != ''">
+        <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
+      </ng-container>
     </div>
   </div>
   <div class="navbar-expand ml-auto navbar-nav">

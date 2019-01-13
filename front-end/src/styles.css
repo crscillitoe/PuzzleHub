@@ -47,6 +47,10 @@ html {
   cursor: pointer;
 }
 
+.editable {
+  cursor: text;
+}
+
 .monospace {
   font-family: 'Roboto Mono', monospace;
 }

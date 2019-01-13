@@ -150,6 +150,7 @@
   
   #booked-profile-page .booked-tabs li.active a {
     color: #fff;
+    background: #242424;
   }
   
   #booked-profile-page .booked-tabs li.active a:hover {
@@ -158,6 +159,7 @@
   
   #booked-profile-page .booked-tabs li a.active {
     color: #fff;
+    background: #242424;
   }
   
   #booked-profile-page .booked-tabs li a.active:hover {

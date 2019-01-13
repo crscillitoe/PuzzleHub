@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user/user.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameID } from '../enums/game-id.enum';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
@@ -57,6 +58,7 @@ export class LeaderboardsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private loader: LoaderService,
+    private router: Router,
     private tunnel: TunnelService,
     private user: UserService
   ) { 
@@ -80,6 +82,13 @@ export class LeaderboardsComponent implements OnInit {
       });
     this.gameID = SettingsService.getDataNum('selectedGameID');
     this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
+    if(this.leaderboard == 0) {
+      this.leaderboardName = 'Daily';
+    } else if(this.leaderboard == 1) {
+      this.leaderboardName = 'Weekly';
+    } else if(this.leaderboard == 2) {
+      this.leaderboardName = 'Monthly';
+    }
     this.loadScores();
   }
 
@@ -109,6 +118,7 @@ export class LeaderboardsComponent implements OnInit {
 
       this.tunnel.getLeaderboards(m)
         .subscribe( (data) => {
+          console.log(data);
           var that = this;
           setTimeout(function() {
             that.loader.stopLoadingAnimation()
@@ -118,10 +128,22 @@ export class LeaderboardsComponent implements OnInit {
     }
   }
 
+  hasMedals(user) {
+    return user.bronzeMedals > 0 || user.silverMedals > 0 || user.goldMedals > 0
+  }
+
   setGame(id) {
     this.gameID = id;
     SettingsService.storeData('selectedGameID', id);
     this.loadScores();
+  }
+
+  viewProfile(name) {
+    let m = {
+      user: name
+    }
+
+    this.router.navigate(['profile'], {queryParams: m});
   }
 
   getEnum(name) {
