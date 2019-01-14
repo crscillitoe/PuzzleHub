@@ -44,8 +44,8 @@
                       </td>
 
                       <td class="medals">
-                        <ng-container *ngIf="hasMedals(entry)">
-                          <div class="medalRow">
+                        <div class="medalRow">
+                          <ng-container *ngIf="hasMedals(entry)">
                             <div class="mytooltip">
                               <img class="goldMedals medal" src="/assets/images/medals/gold.svg">
                               <div class="tooltiptext">
@@ -55,9 +55,11 @@
                             <a class="monospace medalText">
                               {{entry.goldMedals}}
                             </a>
-                          </div>
+                          </ng-container>
+                        </div>
 
-                          <div class="medalRow">
+                        <div class="medalRow">
+                          <ng-container *ngIf="hasMedals(entry)">
                             <div class="mytooltip">
                               <img class="goldMedals medal" src="/assets/images/medals/silver.svg">
                               <div class="tooltiptext">
@@ -67,9 +69,11 @@
                             <a class="monospace medalText">
                               {{entry.silverMedals}}
                             </a>
-                          </div>
+                          </ng-container>
+                        </div>
 
-                          <div class="medalRow">
+                        <div class="medalRow">
+                          <ng-container *ngIf="hasMedals(entry)">
                             <div class="mytooltip">
                               <img class="goldMedals medal" src="/assets/images/medals/bronze.svg">
                               <div class="tooltiptext">
@@ -79,8 +83,8 @@
                             <a class="monospace medalText">
                               {{entry.bronzeMedals}}
                             </a>
-                          </div>
-                        </ng-container>
+                          </ng-container>
+                        </div>
                       </td>
 
                       <td class="timeText monospace">
