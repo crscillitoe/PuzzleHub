@@ -59,12 +59,11 @@ html {
 
 #leftControlPanel {
   background-color: #2C2C2C;
-  height: calc(100vh - 7rem);
+  height: calc(100vh - 3.5rem);
   width: 200px;
   position: absolute;
   left: 20px;
   top: 3.5rem;
-  height: calc(100vh - 7rem);
 }
 
 .descriptionBlock {
