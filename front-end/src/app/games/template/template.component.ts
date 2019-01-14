@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
+import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -17,20 +18,49 @@ import { Board } from '../../services/boards/tile-game/board.service';
 })
 export class TemplateComponent implements OnInit {
 
+  // TODO - enter game ID here
+  gameID: number = GameID.TILE_GAME;
+
+  // TODO - enter control scheme here
+  controls: string = "Description of game controls goes here";
+
+  // TODO - enter game rules here
+  rules: string = "Rules of the game goes here";
+
   // Used for drawing to the screen
   canvas: any;
   context: any;
+
+  // Used to display previous best times
+  personalBestDaily: string;
+  personalBestWeekly: string;
+  personalBestMonthly: string;
 
   colors: any;
   
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
 
+  // Most games utilize a grid
+  gridOffsetX: number = 100;
+  gridOffsetY: number = 100;
+
+  gridBoxSize: number;
+
   difficulty: number;
   seed: number;
 
+  solved: boolean = false;
+
+  board: any;
+
+  // Used by the timer
+  startDate: any;
+  t: any;
+
   constructor(
     private route: ActivatedRoute, 
+    private tunnel: TunnelService,
     private colorService: ColorService,
     private router: Router,
     private userService: UserService,
@@ -65,29 +95,42 @@ export class TemplateComponent implements OnInit {
       console.log('Extreme difficulty');
     }
 
-    // Uncomment these to add event listeners
-    //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-    //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
-
-    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
-    //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
-
-
     // Start timer if we are logged in
     if(this.userService.isLoggedIn()) {
-      // TODO - change GAMEID
-      this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
+      // Get personal high scores
+      let m = {
+        GameID: this.gameID,
+        Difficulty: this.difficulty
+      }
+      this.tunnel.getPersonalBest(m)
         .subscribe( (data) => {
-          // Generate board with given seed
+          this.personalBestDaily = data['daily'];
+          this.personalBestWeekly = data['weekly'];
+          this.personalBestMonthly = data['monthly'];
+        });
+
+      this.timer.startTimer(this.gameID, this.difficulty)
+        .subscribe( (data) => {
           this.seed = data['seed'];
 
+          // TODO - generate board with seed
+
+
+          this.startDate = new Date();
+          this.displayTimer();
+
+          this.fixSizes();
           this.draw();
         });
     } else {
-      // Generate board with random seed
       this.seed = Math.floor(Math.random() * (2000000000));
 
+      // TODO - generate board with seed
+
+      this.startDate = new Date();
+      this.displayTimer();
+
+      this.fixSizes();
       this.draw();
     }
   }
@@ -103,37 +146,152 @@ export class TemplateComponent implements OnInit {
   }
 
   done() {
+    this.solved = true;
     if(this.userService.isLoggedIn()) {
-      // TODO - change GAMEID
-      this.timer.stopTimer(GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
+      this.timer.stopTimer(this.gameID, this.difficulty, 'TODO - Board Solution String')
+        .subscribe( (data) => {});
+    } else {
+      // Do nothing - we're not logged in
+    }
+  }
+
+  add(that) {
+    var display = document.getElementById("timer");
+    var now = +new Date();
+
+    var diff = ((now - that.startDate));
+
+    var hours   = Math.trunc(diff / (60 * 60 * 1000));
+    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    var seconds = Math.trunc(diff / (1000)) % 60;
+    var millis  = diff % 1000;
+
+    try {
+      display.textContent = 
+        hours + ":" + 
+        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
+        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
+        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+
+      that.displayTimer();
+    } catch {
+      // Do nothing - page probably re-routed
+    }
+  }
+
+  displayTimer() {
+    if(!this.solved) {
+      var _this = this;
+      this.t = setTimeout(function() {_this.add(_this)}, 50);
+    }
+  }
+
+  fixSizes() {
+    this.context.beginPath();
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.canvas.width = window.innerWidth - this.canvasOffsetX;
+    this.canvas.height = window.innerHeight - (this.canvasOffsetY * 2);
+    this.context.translate(0.5, 0.5);
+
+    this.gridOffsetX = this.canvas.width / 20;
+    this.gridOffsetY = this.canvas.height / 20;
+
+    var boardLength = Math.max(this.board.width, this.board.height);
+    var size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
+                        this.canvas.offsetHeight - (this.gridOffsetY * 2));
+
+    let w = this.canvas.offsetWidth;
+    let h = this.canvas.offsetHeight;
+    if(w > h) {
+      this.gridOffsetX = Math.round( ( w - h) / 2 ) + this.gridOffsetX;
+    } else {
+      this.gridOffsetY = Math.round( (h - w) / 2 ) + this.gridOffsetY;
+    }
+
+    this.gridBoxSize = Math.round((size / boardLength));
+    this.draw();
+  }
+
+  newGame() {
+    this.loader.startLoadingAnimation();
+    if(this.userService.isLoggedIn()) {
+      this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
         .subscribe( (data) => {
-          console.log(data);
+          this.seed = data['seed'];
+
+          // TODO - generate board with seed
+
+          if(this.solved) {
+            this.solved = false;
+
+            this.startDate = new Date();
+            this.displayTimer();
+          } else {
+            this.startDate = new Date();
+          }
+
+          this.fixSizes();
+
+          this.loader.stopLoadingAnimation();
+          this.draw();
         });
     } else {
-      console.log('done - not logged in');
+      // Generate board with random seed
+      this.seed = Math.floor(Math.random() * (2000000000));
+
+      // TODO - generate board with seed
+
+      if(this.solved) {
+        this.solved = false;
+
+        this.startDate = new Date();
+        this.displayTimer();
+      } else {
+        this.startDate = new Date();
+      }
+
+      this.fixSizes();
+
+      this.loader.stopLoadingAnimation();
+      this.draw();
     }
   }
 
   /* EVENT LISTENERS */
+
+  // UNCOMMENT HostListener to track given event
+  //@HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mousePressedX':x, 'mousePressedY':y});
   }
+
+  // UNCOMMENT HostListener to track given event
+  //@HostListener('document:mouseup', ['$event'])
   mouseReleased(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
   }
+
+  // UNCOMMENT HostListener to track given event
+  //@HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mouseMoveX':x, 'mouseMoveY':y});
   }
 
+  // UNCOMMENT HostListener to track given event
+  //@HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     console.log({'keyPressed':keyEvent.keyCode});
   }
+
+  // UNCOMMENT HostListener to track given event
+  //@HostListener('document:keyup', ['$event'])
   keyReleased(keyEvent) {
     console.log({'keyReleased':keyEvent.keyCode});
   }

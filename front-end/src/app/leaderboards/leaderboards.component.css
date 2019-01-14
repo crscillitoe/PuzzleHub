@@ -110,7 +110,6 @@
 
   /* Position the tooltip text - see examples below! */
   position: absolute;
-  width: 120px;
   top: 0px;
   right: calc(100% + 10px); 
   z-index: 1;
