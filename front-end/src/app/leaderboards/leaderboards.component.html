@@ -27,23 +27,23 @@
               <table>
                 <thead>
                   <tr>
-                    <td style="width:20px"></td>
-                    <td style="width:210px" class="nameTitle"><b>Name</b></td>
-                    <td style="width:50px" class="medals"></td>
-                    <td style="width:129px" class="time"><b>Time</b></td>
+                    <td class="firstcol"></td>
+                    <td class="secondcol nameTitle"><b>Name</b></td>
+                    <td class="thirdcol medals"></td>
+                    <td class="fourthcol time"><b>Time</b></td>
                   </tr>
                 </thead>
                 <tbody class="scrollable">
                   <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
                     <tr [ngClass]="username == entry.username ? 'you' : k % 2 == 0 ? 'even' : 'odd'">
-                      <td class="pos">
+                      <td class="pos firstcol">
                         {{k + 1}}
                       </td>
-                      <td class="name" (click)="viewProfile(entry.username)">
+                      <td class="name secondcol" (click)="viewProfile(entry.username)">
                         {{entry.username}}
                       </td>
 
-                      <td class="medals">
+                      <td class="medals thirdcol">
                         <div class="medalRow">
                           <ng-container *ngIf="hasMedals(entry)">
                             <div class="mytooltip">
@@ -87,7 +87,7 @@
                         </div>
                       </td>
 
-                      <td class="timeText monospace">
+                      <td class="timeText monospace fourthcol">
                         {{entry.time}}
                       </td>
                     </tr>

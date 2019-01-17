@@ -70,7 +70,7 @@
   color: white;
   font-size: 13pt;
   text-align: right;
-  padding-right: 7px;
+  padding-right: 15px;
 }
 
 .timeText {
@@ -215,8 +215,28 @@
     text-align: center;
 }
 
-.scrollable {
-  overflow-y: auto;
+thead, tbody { display: block; }
+
+tbody {
+  height: calc(100vh - 9rem - 135px);       /* Just for the demo          */
+  overflow-y: auto;    /* Trigger vertical scroll    */
+  overflow-x: hidden;  /* Hide the horizontal scroll */
+}
+
+.firstcol {
+  width:20px;
+}
+
+.secondcol {
+  width: 210px;
+}
+
+.thirdcol {
+  width: 50px;
+}
+
+.fourthcol {
+  width: 129px;
 }
 
 .flexElement {
