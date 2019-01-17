@@ -17,6 +17,11 @@
     <button [ngClass]="leaderboard == 2 ? 'selectedButton' : 'leaderbutton'" (click)="changeLeaderboard(2)">Monthly</button>
   </div>
 
+  <div class="countdown">
+    <h2 class="timerTitle monospace">RESET IN:</h2>
+    <h2 id="leaderboardstimer" class="timer monospace">000:00:00</h2>
+  </div>
+
   <div class="gridContainer">
       <div class="columnContainer">
         <ng-container *ngFor="let diff of difficulties;let i=index">

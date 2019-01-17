@@ -16,6 +16,7 @@ import { GameDataService } from '../services/games/game-data.service';
 export class LeaderboardsComponent implements OnInit {
   games: any = GameDataService.games;
 
+  resetDate: any;
   leaderboards: any;
 
   difficulties: any = [
@@ -58,6 +59,9 @@ export class LeaderboardsComponent implements OnInit {
       });
     this.gameID = SettingsService.getDataNum('selectedGameID');
     this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
+
+    this.countDownTimer();
+
     if(this.leaderboard == 0) {
       this.leaderboardName = 'Daily';
     } else if(this.leaderboard == 1) {
@@ -66,6 +70,53 @@ export class LeaderboardsComponent implements OnInit {
       this.leaderboardName = 'Monthly';
     }
     this.loadScores();
+  }
+
+  decrementTimer(that) {
+    var display = document.getElementById("leaderboardstimer");
+    var now = +new Date();
+
+    var diff = ((that.resetDate - now));
+    var hours   = Math.trunc(diff / (60 * 60 * 1000));
+    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    var seconds = Math.trunc(diff / (1000)) % 60;
+
+    try {
+      display.textContent = 
+        hours + ":" + 
+        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
+        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00")
+
+      that.countDownTimer();
+    } catch {
+      // Do nothing - page probably re-routed
+    }
+  }
+
+  countDownTimer() {
+    this.resetDate = new Date();
+    if(this.leaderboard == 0) {
+      this.resetDate.setUTCHours(29, 0, 0, 0);
+    } else if(this.leaderboard == 1) {
+      this.resetDate.setDate(
+        this.resetDate.getDate() + (12 - this.resetDate.getDay()) % 7
+      );
+
+      this.resetDate.setUTCHours(29, 0, 0, 0);
+    } else if(this.leaderboard == 2) {
+      this.resetDate.setMonth(
+        this.resetDate.getMonth() + 1
+      );
+
+      this.resetDate.setUTCHours(29, 0, 0, 0);
+    }
+
+    var _this = this;
+    setTimeout(function() {
+      _this.decrementTimer(_this);
+    },
+      50
+    );
   }
 
   changeLeaderboard(num) {
