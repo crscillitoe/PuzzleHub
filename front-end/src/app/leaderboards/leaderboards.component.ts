@@ -108,6 +108,8 @@ export class LeaderboardsComponent implements OnInit {
         this.resetDate.getMonth() + 1
       );
 
+      this.resetDate.setDate(0);
+
       this.resetDate.setUTCHours(29, 0, 0, 0);
     }
 
