@@ -5,9 +5,10 @@
 .imagecontainer {
   position: absolute;
   top:0px;
-  left:0px;
+  left:calc(50% - 90px);
   height:3.5rem;
-  width: 100vw;
+  width: 179px;
+  z-index:0;
 }
 
 .image {
@@ -21,4 +22,8 @@
   margin-right: auto;
   width:179px;
   height: 50px;
+}
+
+* {
+  z-index:99;
 }
