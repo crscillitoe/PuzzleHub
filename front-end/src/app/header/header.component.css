@@ -1,3 +1,24 @@
 .navbar-brand {
   padding-top: 0rem !important;
 }
+
+.imagecontainer {
+  position: absolute;
+  top:0px;
+  left:0px;
+  height:3.5rem;
+  width: 100vw;
+}
+
+.image {
+  margin-top:5px;
+  height: 50px;
+}
+
+.imageholder {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width:179px;
+  height: 50px;
+}
