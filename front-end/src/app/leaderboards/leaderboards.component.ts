@@ -97,21 +97,21 @@ export class LeaderboardsComponent implements OnInit {
     this.resetDate = new Date();
     if(this.leaderboard == 0) {
       this.resetDate.setDate(this.resetDate.getDate() + 1);
-      this.resetDate.setUTCHours(5 - 24, 0, 0, 0);
+      this.resetDate.setUTCHours(5, 0, 0, 0);
     } else if(this.leaderboard == 1) {
       this.resetDate.setDate(
         this.resetDate.getDate() + (12 - this.resetDate.getDay()) % 7
       );
 
       this.resetDate.setDate(this.resetDate.getDate() + 1);
-      this.resetDate.setUTCHours(5 - 24, 0, 0, 0);
+      this.resetDate.setUTCHours(5, 0, 0, 0);
     } else if(this.leaderboard == 2) {
       this.resetDate.setMonth(
         this.resetDate.getMonth() + 1
       );
 
       this.resetDate.setDate(1);
-      this.resetDate.setUTCHours(5 - 24, 0, 0, 0);
+      this.resetDate.setUTCHours(5, 0, 0, 0);
     }
 
     var _this = this;
