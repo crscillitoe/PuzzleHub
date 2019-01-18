@@ -99,7 +99,7 @@ export class LeaderboardsComponent implements OnInit {
       this.resetDate.setDate(this.resetDate.getDate() + 1);
       this.resetDate.setUTCHours(5, 0, 0, 0);
 
-      var date = new Date();
+      var date = +new Date();
       var diff = (date - this.resetDate);
       if(diff > 0) {
         this.resetDate.setDate(this.resetDate.getDate() - 1);
@@ -113,7 +113,7 @@ export class LeaderboardsComponent implements OnInit {
       this.resetDate.setDate(this.resetDate.getDate() + 1);
       this.resetDate.setUTCHours(5, 0, 0, 0);
 
-      var date = new Date();
+      var date = +new Date();
       var diff = (date - this.resetDate);
       if(diff > 0) {
         this.resetDate.setDate(this.resetDate.getDate() - 1);
@@ -127,7 +127,7 @@ export class LeaderboardsComponent implements OnInit {
       this.resetDate.setDate(1);
       this.resetDate.setUTCHours(5, 0, 0, 0);
 
-      var date = new Date();
+      var date = +new Date();
       var diff = (date - this.resetDate);
       if(diff > 0) {
         this.resetDate.setDate(this.resetDate.getDate() - 1);
