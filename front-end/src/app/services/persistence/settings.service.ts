@@ -14,7 +14,8 @@ export class SettingsService {
     "optionsMinimized":false,
     "controlsMinimized":true,
     "highscoresMinimized":false,
-    "timerMinimized":false
+    "timerMinimized":false,
+    "DFJKTileGame":false
   };
 
   constructor() { }

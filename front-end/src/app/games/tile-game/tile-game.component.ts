@@ -25,10 +25,25 @@ export class TileGameComponent implements OnInit {
       'name':'Show Animations',
       'callback':'this.toggleAnimations()',
       'storedName':'tileAnimations'
+    },
+    {
+      'type':'checkbox',
+      'bindTo':'DFJKHotkeys',
+      'name':'DFJK Hotkeys',
+      'callback':'this.toggleDFJK()',
+      'storedName':'DFJKTileGame'
     }
   ];
 
+  upKey:    number = 83;
+  downKey:  number = 87;
+  leftKey:  number = 68;
+  rightKey: number = 65;
+
+
   rules: string = "Order the numbers in sequential order from left to right, top to bottom";
+
+  DFJKHotkeys: boolean;
 
   // Used for drawing to the screen
   canvas: any;
@@ -77,7 +92,6 @@ export class TileGameComponent implements OnInit {
   }
 
   toggleAnimations() {
-    console.log('called');
     this.showAnimations = !this.showAnimations;
     this.animatingX = -1;
     this.animatingY = -1;
@@ -92,6 +106,8 @@ export class TileGameComponent implements OnInit {
     this.context = this.canvas.getContext('2d');
 
     this.showAnimations = SettingsService.getDataBool('tileAnimations');
+    this.DFJKHotkeys = SettingsService.getDataBool('DFJKTileGame');
+    this.configureHotkeys();
 
     var width;
     var height;
@@ -172,6 +188,26 @@ export class TileGameComponent implements OnInit {
 
       this.fixSizes();
       this.draw();
+    }
+  }
+
+  toggleDFJK() {
+    this.DFJKHotkeys = !this.DFJKHotkeys;
+    SettingsService.storeData('DFJKTileGame', this.DFJKHotkeys);
+    this.configureHotkeys();
+  }
+
+  configureHotkeys() {
+    if(!this.DFJKHotkeys) {
+      this.upKey    = 83;
+      this.downKey  = 87;
+      this.leftKey  = 68;
+      this.rightKey = 65;
+    } else {
+      this.upKey    = 70;
+      this.downKey  = 74;
+      this.leftKey  = 75;
+      this.rightKey = 68;
     }
   }
 
@@ -744,7 +780,7 @@ export class TileGameComponent implements OnInit {
       switch(code) {
         // UP
         case(40):
-        case(83):
+        case(this.upKey):
             if(directions.includes(0)) {
               this.moveUp();
               if(this.board.isSolved()) {
@@ -755,7 +791,7 @@ export class TileGameComponent implements OnInit {
 
         // DOWN
         case(38):
-        case(87):
+        case(this.downKey):
             if(directions.includes(1)) {
               this.moveDown();
               if(this.board.isSolved()) {
@@ -766,7 +802,7 @@ export class TileGameComponent implements OnInit {
 
         // LEFT
         case(39):
-        case(68):
+        case(this.leftKey):
             if(directions.includes(2)) {
               this.moveLeft();
               if(this.board.isSolved()) {
@@ -777,7 +813,7 @@ export class TileGameComponent implements OnInit {
 
         // RIGHT
         case(37):
-        case(65):
+        case(this.rightKey):
             if(directions.includes(3)) {
               this.moveRight();
               if(this.board.isSolved()) {
