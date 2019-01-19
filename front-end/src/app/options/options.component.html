@@ -124,9 +124,19 @@
     </b>
   </a>
   <ng-container *ngIf="!hotkeysMinimized">
-    <a class="descriptionText">
-      {{rules}}
-    </a>
+    <ng-container *ngFor="let hotkey of hotkeys; let i=index">
+      <div class="descriptionText">
+        {{hotkey.name}} - 
+        <button (click)="editHotkey(i)">
+          <ng-container *ngIf="editIndex != i">
+            {{convertCodeToStr(hotkeyVals[i])}} ({{hotkeyVals[i]}})
+          </ng-container>
+          <ng-container *ngIf="editIndex == i">
+            Press...
+          </ng-container>
+        </button>
+      </div>
+    </ng-container>
   </ng-container>
 </div>
 

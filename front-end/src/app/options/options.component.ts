@@ -1,4 +1,4 @@
-import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
+import { HostListener, Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
 
 @Component({
@@ -27,7 +27,11 @@ export class OptionsComponent implements OnInit {
   timerMinimized: boolean;
   hotkeysMinimized: boolean;
 
+  editingHotkey: boolean;
+  editIndex: number;
+
   optionVals: any = [];
+  hotkeyVals: any = [];
 
   constructor() { }
 
@@ -40,6 +44,14 @@ export class OptionsComponent implements OnInit {
       }
     }
 
+    if(this.hotkeys != undefined) {
+      for(let hotkey of this.hotkeys) {
+        this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
+      }
+    }
+
+    this.editingHotkey = false;
+    this.editIndex = -1;
     this.highscoresMinimized = SettingsService.getDataBool('highscoresMinimized');
     this.rulesMinimized = SettingsService.getDataBool('rulesMinimized');
     this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
@@ -54,5 +66,26 @@ export class OptionsComponent implements OnInit {
 
   callback(func) {
     this.optionSelected.emit(func);
+  }
+
+  editHotkey(index) {
+    this.editIndex = index;
+    this.editingHotkey = true;
+  }
+
+  convertCodeToStr(code) {
+    return String.fromCharCode(code);
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  keyPressed(keyEvent) {
+    if(this.editingHotkey) {
+      SettingsService.storeData( (this.hotkeys[this.editIndex])['bindTo'], keyEvent.keyCode );
+      this.hotkeyVals[this.editIndex] = keyEvent.keyCode;
+      this.callback( (this.hotkeys[this.editIndex])['callback'] );
+
+      this.editingHotkey = false;
+      this.editIndex = -1;
+    }
   }
 }

@@ -25,27 +25,38 @@ export class TileGameComponent implements OnInit {
       'name':'Show Animations',
       'callback':'this.toggleAnimations()',
       'storedName':'tileAnimations'
-    },
-    {
-      'type':'checkbox',
-      'bindTo':'DFJKHotkeys',
-      'name':'DFJK Hotkeys',
-      'callback':'this.toggleDFJK()',
-      'storedName':'DFJKTileGame'
     }
   ];
 
-  hotkeys = [];
+  hotkeys = [
+    {
+      'name':'UP',
+      'bindTo':'TileGameDOWN',
+      'callback':'this.configureHotkeys()'
+    },
+    {
+      'name':'DOWN',
+      'bindTo':'TileGameUP',
+      'callback':'this.configureHotkeys()'
+    },
+    {
+      'name':'LEFT',
+      'bindTo':'TileGameRIGHT',
+      'callback':'this.configureHotkeys()'
+    },
+    {
+      'name':'RIGHT',
+      'bindTo':'TileGameLEFT',
+      'callback':'this.configureHotkeys()'
+    }
+  ];
 
   upKey:    number = 83;
   downKey:  number = 87;
   leftKey:  number = 68;
   rightKey: number = 65;
 
-
   rules: string = "Order the numbers in sequential order from left to right, top to bottom";
-
-  DFJKHotkeys: boolean;
 
   // Used for drawing to the screen
   canvas: any;
@@ -108,7 +119,6 @@ export class TileGameComponent implements OnInit {
     this.context = this.canvas.getContext('2d');
 
     this.showAnimations = SettingsService.getDataBool('tileAnimations');
-    this.DFJKHotkeys = SettingsService.getDataBool('DFJKTileGame');
     this.configureHotkeys();
 
     var width;
@@ -193,24 +203,11 @@ export class TileGameComponent implements OnInit {
     }
   }
 
-  toggleDFJK() {
-    this.DFJKHotkeys = !this.DFJKHotkeys;
-    SettingsService.storeData('DFJKTileGame', this.DFJKHotkeys);
-    this.configureHotkeys();
-  }
-
   configureHotkeys() {
-    if(!this.DFJKHotkeys) {
-      this.upKey    = 83;
-      this.downKey  = 87;
-      this.leftKey  = 68;
-      this.rightKey = 65;
-    } else {
-      this.upKey    = 70;
-      this.downKey  = 74;
-      this.leftKey  = 75;
-      this.rightKey = 68;
-    }
+    this.upKey    = SettingsService.getDataNum('TileGameUP');
+    this.downKey  = SettingsService.getDataNum('TileGameDOWN');
+    this.leftKey  = SettingsService.getDataNum('TileGameLEFT');
+    this.rightKey = SettingsService.getDataNum('TileGameRIGHT');
   }
 
   add(that) {
