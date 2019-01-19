@@ -35,6 +35,8 @@ export class TileGameComponent implements OnInit {
     }
   ];
 
+  hotkeys = [];
+
   upKey:    number = 83;
   downKey:  number = 87;
   leftKey:  number = 68;

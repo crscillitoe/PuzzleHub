@@ -110,6 +110,26 @@
   </ng-container>
 </div>
 
+<div class="descriptionBlock" *ngIf="hotkeys != undefined">
+  <a class="descriptionHeader clickable"
+    (click)="hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)">
+    <ng-container *ngIf="hotkeysMinimized">
+      [+]
+    </ng-container>
+    <ng-container *ngIf="!hotkeysMinimized">
+      [-]
+    </ng-container>
+    <b class="clickable">
+      HOTKEYS
+    </b>
+  </a>
+  <ng-container *ngIf="!hotkeysMinimized">
+    <a class="descriptionText">
+      {{rules}}
+    </a>
+  </ng-container>
+</div>
+
 <div class="buttons">
   <a (click)="callback('this.newGame()')" class="center new-game clickable">
     <a class="buttonHeader clickable"><b class="clickable">NEW GAME</b></a>

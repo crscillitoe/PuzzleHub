@@ -16,6 +16,7 @@ export class OptionsComponent implements OnInit {
   @Input() rules: string;
 
   @Input() options: any;
+  @Input() hotkeys: any;
 
   @Output() optionSelected = new EventEmitter();
 
@@ -24,6 +25,7 @@ export class OptionsComponent implements OnInit {
   optionsMinimized: boolean;
   controlsMinimized: boolean;
   timerMinimized: boolean;
+  hotkeysMinimized: boolean;
 
   optionVals: any = [];
 
@@ -43,6 +45,7 @@ export class OptionsComponent implements OnInit {
     this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
     this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
     this.timerMinimized = SettingsService.getDataBool('timerMinimized');
+    this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
   }
 
   minimize(name, val) {

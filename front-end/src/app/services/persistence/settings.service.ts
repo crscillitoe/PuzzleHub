@@ -15,6 +15,7 @@ export class SettingsService {
     "controlsMinimized":true,
     "highscoresMinimized":false,
     "timerMinimized":false,
+    "hotkeysMinimized":true,
     "DFJKTileGame":false
   };
 
