@@ -22,6 +22,8 @@ export class Board {
     this.emptyX = this.width - 1;
     this.emptyY = this.height - 1;
     var rows = [];
+
+    // First generate the board in its solved state
     for(var i = 0 ; i < this.height ; i++) {
       var column = [];
       for(var j = 0 ; j < this.width; j++) {
@@ -34,12 +36,61 @@ export class Board {
     this.tilePuzzle = rows;
     this.tilePuzzle[this.height - 1][this.width - 1] = 0;
 
-    var numTiles = (this.width * this.height) - 1;
-    while( this.numTilesInCorrectPosition() > Math.round(numTiles/4) ) {
-      for(var _ = 0 ; _ < this.NUM_SWITCHES ; _++) {
-        this.switchTiles();
+    // Algorithm credit - ben1996123
+    var swapCounter = 0;
+    for(var i = 0 ; i < this.width; i++) {
+      for(var j = 0 ; j < this.height; j++) {
+        if(i == this.width - 1 && j == this.height - 1) {
+          continue;
+        }
+        var swap = this.getRandomTile(i, j); // Returns tile greater than or equal to this index
+                                             // Excludes the tile that contains 0
+
+        var initial = this.tilePuzzle[j][i];
+        var newVal  = this.tilePuzzle[swap['y']][swap['x']];
+
+        if(newVal != initial) {
+          this.tilePuzzle[j][i] = newVal;
+          this.tilePuzzle[swap.y][swap.x] = initial;
+          swapCounter++;
+        }
       }
     }
+
+    // Avoid parity, if we've swapped an odd number of times, swap once more
+    if(swapCounter % 2 == 1) {
+      var initial = this.tilePuzzle[this.height - 1][this.width - 2];
+      var newVal  = this.tilePuzzle[this.height - 1][this.width - 3];
+
+      this.tilePuzzle[this.height - 1][this.width - 2] = newVal;
+      this.tilePuzzle[this.height - 1][this.width - 3] = initial;
+    }
+
+    var up = Math.floor(this.random() * (this.height));
+    var left = Math.floor(this.random() * (this.width));
+
+    for(var x = 0 ; x < up ; x++) {
+      this.moveUp();
+    }
+
+    for(var x = 0 ; x < left ; x++) {
+      this.moveLeft();
+    }
+  }
+
+  getRandomTile(x, y) {
+    var randY = y + Math.floor(this.random() * (this.height - y));
+    var randX = x + Math.floor(this.random() * (this.width  - x));
+    if(randY == this.height - 1 && randX == this.width - 1) {
+      randX = this.width - 2;
+    }
+
+    let m = {
+      x: randX,
+      y: randY
+    }
+
+    return m;
   }
 
   numTilesInCorrectPosition() {
