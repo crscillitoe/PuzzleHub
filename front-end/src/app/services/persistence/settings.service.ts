@@ -16,7 +16,7 @@ export class SettingsService {
     "highscoresMinimized":false,
     "timerMinimized":false,
     "hotkeysMinimized":true,
-    "DFJKTileGame":false,
+    "HoverTileGame":false,
     "TileGameUP":83,
     "TileGameDOWN":87,
     "TileGameLEFT":68,

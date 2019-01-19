@@ -25,6 +25,13 @@ export class TileGameComponent implements OnInit {
       'name':'Show Animations',
       'callback':'this.toggleAnimations()',
       'storedName':'tileAnimations'
+    },
+    {
+      'type':'checkbox',
+      'bindTo':'mouseHover',
+      'name':'Mouse Hover',
+      'callback':'this.toggleMouseHover()',
+      'storedName':'HoverTileGame'
     }
   ];
 
@@ -87,6 +94,7 @@ export class TileGameComponent implements OnInit {
   t: any;
 
   showAnimations: boolean;
+  mouseHover: boolean;
 
   animationDelta: number = 10;
   animationSpeed: number = 10;
@@ -104,6 +112,11 @@ export class TileGameComponent implements OnInit {
     this.colors = colorService.getColorScheme();
   }
 
+  toggleMouseHover() {
+    this.mouseHover= !this.mouseHover;
+    SettingsService.storeData('HoverTileGame', this.mouseHover);
+  }
+
   toggleAnimations() {
     this.showAnimations = !this.showAnimations;
     this.animatingX = -1;
@@ -119,6 +132,8 @@ export class TileGameComponent implements OnInit {
     this.context = this.canvas.getContext('2d');
 
     this.showAnimations = SettingsService.getDataBool('tileAnimations');
+    this.mouseHover = SettingsService.getDataBool('HoverTileGame');
+
     this.configureHotkeys();
 
     var width;
@@ -760,10 +775,28 @@ export class TileGameComponent implements OnInit {
     let y = mouseEvent.clientY - this.canvasOffsetY;
     console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
   }
+
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseMoveX':x, 'mouseMoveY':y});
+    if(this.mouseHover) {
+      let x = mouseEvent.clientX - this.canvasOffsetX;
+      let y = mouseEvent.clientY - this.canvasOffsetY;
+
+      if(!this.solved) {
+        x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+        y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+        if(x > -1 
+        && x <  this.board.width
+        && y > -1
+        && y < this.board.height) {
+          this.moveTile(x, y);
+          if(this.board.isSolved()) {
+            this.done();
+          }
+        }
+      }
+    }
   }
 
   @HostListener('document:keydown', ['$event'])
