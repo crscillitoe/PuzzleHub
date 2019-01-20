@@ -141,26 +141,26 @@ export class TileGameComponent implements OnInit {
 
     // Easy
     if(this.difficulty == 1) {
-      width = 3;
-      height = 3;
-    } 
-    
-    // Medium
-    else if (this.difficulty == 2) {
       width = 4;
       height = 4;
     } 
     
-    // Hard
-    else if (this.difficulty == 3) {
+    // Medium
+    else if (this.difficulty == 2) {
       width = 5;
       height = 5;
     } 
     
+    // Hard
+    else if (this.difficulty == 3) {
+      width = 7;
+      height = 7;
+    } 
+    
     // Extreme
     else if (this.difficulty == 4) {
-      width = 6;
-      height= 6;
+      width = 10;
+      height= 10;
     }
 
     // Uncomment these to add event listeners
