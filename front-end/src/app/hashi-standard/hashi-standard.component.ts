@@ -1558,6 +1558,8 @@ export class HashiStandardComponent implements OnInit {
 
     public static newBoard(that) {
         that.loader.startLoadingAnimation();
+        that.hoveredNode = null;
+        that.coloredNode = null;
         var numNodes = that.numNodes;
 
         if(that.userService.isLoggedIn()) {
