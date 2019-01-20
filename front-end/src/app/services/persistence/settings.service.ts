@@ -20,7 +20,8 @@ export class SettingsService {
     "TileGameUP":83,
     "TileGameDOWN":87,
     "TileGameLEFT":68,
-    "TileGameRIGHT":65
+    "TileGameRIGHT":65,
+    "StaticTileSize":false
   };
 
   constructor() { }

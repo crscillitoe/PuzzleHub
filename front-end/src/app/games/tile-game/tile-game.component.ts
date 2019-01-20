@@ -32,6 +32,13 @@ export class TileGameComponent implements OnInit {
       'name':'Mouse Hover',
       'callback':'this.toggleMouseHover()',
       'storedName':'HoverTileGame'
+    },
+    {
+      'type':'checkbox',
+      'bindTo':'staticTileSize',
+      'name':'Fixed Tile Size',
+      'callback':'this.toggleStaticSizes()',
+      'storedName':'StaticTileSize'
     }
   ];
 
@@ -60,6 +67,13 @@ export class TileGameComponent implements OnInit {
 
   initialDelay: number = 200;
   continuedDelay: number = 16;
+
+  upTimeout: any;
+  downTimeout: any;
+  leftTimeout: any;
+  rightTimeout: any;
+
+  staticTileSize: boolean;
 
   shift: boolean;
 
@@ -155,6 +169,7 @@ export class TileGameComponent implements OnInit {
 
     this.showAnimations = SettingsService.getDataBool('tileAnimations');
     this.mouseHover = SettingsService.getDataBool('HoverTileGame');
+    this.staticTileSize = SettingsService.getDataBool('StaticTileSize');
 
     this.configureHotkeys();
 
@@ -496,10 +511,20 @@ export class TileGameComponent implements OnInit {
       this.gridOffsetY = Math.round( (h - w) / 2 ) + this.gridOffsetY;
     }
 
-    this.gridBoxSize = Math.round((size / boardLength));
+    if(!this.staticTileSize) {
+      this.gridBoxSize = Math.round((size / boardLength));
+    } else {
+      this.gridBoxSize = 75;
+    }
     this.animationDelta = this.gridBoxSize/5;
 
     this.draw();
+  }
+
+  toggleStaticSizes() {
+    this.staticTileSize = !this.staticTileSize;
+    SettingsService.storeData('StaticTileSize', this.staticTileSize);
+    this.fixSizes();
   }
 
   animateTileUp(animx, animy, y, x, destY, destX) {
@@ -689,6 +714,8 @@ export class TileGameComponent implements OnInit {
 
       if(this.up && repeat && !this.solved) {
         var that = this;
+
+        this.upTimeout = 
         setTimeout( 
           function() {
             that.moveUp(true, false)
@@ -704,12 +731,14 @@ export class TileGameComponent implements OnInit {
 
     if(this.shift && !this.yAxis) {
       this.xAxis = true;
+      this.upTimeout = 
       setTimeout( 
         function() {
           that.moveUp(true, false)
         }, 
         this.continuedDelay );
     } else {
+      this.upTimeout = 
       setTimeout( 
         function() {
           that.moveUp(true, false)
@@ -723,12 +752,14 @@ export class TileGameComponent implements OnInit {
 
     if(this.shift && !this.yAxis) {
       this.xAxis = true;
+      this.downTimeout = 
       setTimeout( 
         function() {
           that.moveDown(true, false)
         }, 
         this.continuedDelay );
     } else {
+      this.downTimeout = 
       setTimeout( 
         function() {
           that.moveDown(true, false)
@@ -742,12 +773,14 @@ export class TileGameComponent implements OnInit {
 
     if(this.shift && !this.xAxis) {
       this.yAxis = true;
+      this.rightTimeout = 
       setTimeout( 
         function() {
           that.moveRight(true, false)
         }, 
         this.continuedDelay );
     } else {
+      this.rightTimeout = 
       setTimeout( 
         function() {
           that.moveRight(true, false)
@@ -761,12 +794,14 @@ export class TileGameComponent implements OnInit {
 
     if(this.shift && !this.xAxis) {
       this.yAxis = true;
+      this.leftTimeout = 
       setTimeout( 
         function() {
           that.moveLeft(true, false)
         }, 
         this.continuedDelay );
     } else {
+      this.leftTimeout = 
       setTimeout( 
         function() {
           that.moveLeft(true, false)
@@ -809,6 +844,7 @@ export class TileGameComponent implements OnInit {
 
       if(this.down && repeat && !this.solved) {
         var that = this;
+        this.downTimeout = 
         setTimeout( 
           function() {
             that.moveDown(true, false)
@@ -852,6 +888,7 @@ export class TileGameComponent implements OnInit {
 
       if(this.left && repeat && !this.solved) {
         var that = this;
+        this.leftTimeout = 
         setTimeout( 
           function() {
             that.moveLeft(true, false);
@@ -895,6 +932,7 @@ export class TileGameComponent implements OnInit {
 
       if(this.right && repeat && !this.solved) {
         var that = this;
+        this.rightTimeout = 
         setTimeout( 
           function() {
             that.moveRight(true, false);
@@ -905,20 +943,22 @@ export class TileGameComponent implements OnInit {
   }
 
   moveTile(x, y) {
-    if(x - 1 >= this.board.emptyX && y == this.board.emptyY) {
-      for(var i = 0 ; i < (x - this.board.emptyX) ; i++) {
+    var emptyX = this.board.emptyX;
+    var emptyY = this.board.emptyY;
+    if(x - 1 >= emptyX && y == emptyY) {
+      for(var i = emptyX ; i < x ; i++) {
         this.moveRight(false, true);
       }
-    } else if(x + 1 <= this.board.emptyX && y == this.board.emptyY) {
-      for(var i = 0 ; i < (this.board.emptyX - x) ; i++) {
+    } else if(x + 1 <= emptyX && y == emptyY) {
+      for(var j = x ; j < emptyX ; j++) {
         this.moveLeft(false, true);
       }
-    } else if(x == this.board.emptyX && y + 1 <= this.board.emptyY) {
-      for(var i = 0 ; i < (this.board.emptyY - y) ; i++) {
+    } else if(x == emptyX && y + 1 <= emptyY) {
+      for(var k = y ; k < emptyY ; k++) {
         this.moveUp(false, true);
       }
-    } else if(x == this.board.emptyX && y - 1 >= this.board.emptyY) {
-      for(var i = 0 ; i < (y - this.board.emptyY) ; i++) {
+    } else if(x == emptyX && y - 1 >= emptyY) {
+      for(var l = emptyY ; l < y ; l++) {
         this.moveDown(false, true);
       }
     }
@@ -988,6 +1028,10 @@ export class TileGameComponent implements OnInit {
         case(40):
         case(this.upKey):
             this.up = true;
+            this.down = false;
+            this.left = false;
+            this.right = false;
+            clearTimeout(this.upTimeout);
             this.moveUpFirst();
           break;
 
@@ -995,6 +1039,10 @@ export class TileGameComponent implements OnInit {
         case(38):
         case(this.downKey):
             this.down = true;
+            this.up = false;
+            this.left = false;
+            this.right = false;
+            clearTimeout(this.downTimeout);
             this.moveDownFirst();
           break;
 
@@ -1002,6 +1050,10 @@ export class TileGameComponent implements OnInit {
         case(39):
         case(this.leftKey):
             this.left = true;
+            this.up = false;
+            this.down = false;
+            this.right = false;
+            clearTimeout(this.leftTimeout);
             this.moveLeftFirst();
           break;
 
@@ -1009,6 +1061,10 @@ export class TileGameComponent implements OnInit {
         case(37):
         case(this.rightKey):
             this.right = true;
+            this.up = false;
+            this.down = false;
+            this.left = false;
+            clearTimeout(this.rightTimeout);
             this.moveRightFirst();
           break;
 
