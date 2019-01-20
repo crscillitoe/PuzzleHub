@@ -58,6 +58,15 @@ export class TileGameComponent implements OnInit {
     }
   ];
 
+  initialDelay: number = 200;
+  continuedDelay: number = 16;
+
+  shift: boolean;
+
+  xAxis: boolean;
+  yAxis: boolean;
+
+  shiftKey: number = 16;
   upKey:    number = 83;
   downKey:  number = 87;
   leftKey:  number = 68;
@@ -99,6 +108,11 @@ export class TileGameComponent implements OnInit {
   animationDelta: number = 10;
   animationSpeed: number = 10;
 
+  up: boolean;
+  down: boolean;
+  left: boolean;
+  right: boolean;
+
   board: Board;
 
   constructor(
@@ -130,6 +144,14 @@ export class TileGameComponent implements OnInit {
     this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
+
+    this.shift = false;
+    this.xAxis = false;
+    this.yAxis = false;
+    this.up = false;
+    this.down = false;
+    this.left = false;
+    this.right = false;
 
     this.showAnimations = SettingsService.getDataBool('tileAnimations');
     this.mouseHover = SettingsService.getDataBool('HoverTileGame');
@@ -633,119 +655,264 @@ export class TileGameComponent implements OnInit {
     this.context.fillText(tileString, textX, textY);
   }
 
-  moveUp() {
-    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX];
-    this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX] = 0;
-    this.board.emptyY--;
+  moveUp(repeat) {
+    var directions = this.board.getValidDirections();
 
-    this.animatingX = this.board.emptyX;
-    this.animatingY = this.board.emptyY + 1;
+    if(directions.includes(0) && this.up) {
+      this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX];
+      this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX] = 0;
+      this.board.emptyY--;
 
-    this.draw();
+      this.animatingX = this.board.emptyX;
+      this.animatingY = this.board.emptyY + 1;
 
-    if(this.showAnimations) {
-      var spacing = this.gridBoxSize/40;
-      let y1 = this.board.emptyY + 1;
-      let x1 = this.board.emptyX;
-      let y2 = this.board.emptyY;
-      let x2 = this.board.emptyX;
-      this.animateTileUp(
-        this.animatingX, this.animatingY,
-        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-      );
+      this.draw();
+
+      if(this.showAnimations) {
+        var spacing = this.gridBoxSize/40;
+        let y1 = this.board.emptyY + 1;
+        let x1 = this.board.emptyX;
+        let y2 = this.board.emptyY;
+        let x2 = this.board.emptyX;
+        this.animateTileUp(
+          this.animatingX, this.animatingY,
+          (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+        );
+      }
+
+      if(this.board.isSolved()) {
+        this.done();
+      }
+
+      if(this.up && repeat && !this.solved) {
+        var that = this;
+        setTimeout( 
+          function() {
+            that.moveUp(true)
+          }, 
+          this.continuedDelay );
+      }
     }
   }
 
-  moveDown() {
-    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX];
-    this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX] = 0;
-    this.board.emptyY++;
+  moveUpFirst() {
+    this.moveUp(false);
+    var that = this;
 
-    this.animatingX = this.board.emptyX;
-    this.animatingY = this.board.emptyY - 1;
+    if(this.shift && !this.yAxis) {
+      this.xAxis = true;
+      setTimeout( 
+        function() {
+          that.moveUp(true)
+        }, 
+        this.continuedDelay );
+    } else {
+      setTimeout( 
+        function() {
+          that.moveUp(true)
+        }, 
+        this.initialDelay );
+    }
+  }
+  moveDownFirst() {
+    this.moveDown(false);
+    var that = this;
 
-    this.draw();
+    if(this.shift && !this.yAxis) {
+      this.xAxis = true;
+      setTimeout( 
+        function() {
+          that.moveDown(true)
+        }, 
+        this.continuedDelay );
+    } else {
+      setTimeout( 
+        function() {
+          that.moveDown(true)
+        }, 
+        this.initialDelay );
+    }
+  }
+  moveRightFirst() {
+    this.moveRight(false);
+    var that = this;
 
-    if(this.showAnimations) {
-      var spacing = this.gridBoxSize/40;
-      let y1 = this.board.emptyY - 1;
-      let x1 = this.board.emptyX;
-      let y2 = this.board.emptyY;
-      let x2 = this.board.emptyX;
-      this.animateTileDown(
-        this.animatingX, this.animatingY,
-        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-      );
+    if(this.shift && !this.xAxis) {
+      this.yAxis = true;
+      setTimeout( 
+        function() {
+          that.moveRight(true)
+        }, 
+        this.continuedDelay );
+    } else {
+      setTimeout( 
+        function() {
+          that.moveRight(true)
+        }, 
+        this.initialDelay );
+    }
+  }
+  moveLeftFirst() {
+    this.moveLeft(false);
+    var that = this;
+
+    if(this.shift && !this.xAxis) {
+      this.yAxis = true;
+      setTimeout( 
+        function() {
+          that.moveLeft(true)
+        }, 
+        this.continuedDelay );
+    } else {
+      setTimeout( 
+        function() {
+          that.moveLeft(true)
+        }, 
+        this.initialDelay );
     }
   }
 
-  moveLeft() {
-    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1];
-    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1] = 0;
-    this.board.emptyX--;
+  moveDown(repeat) {
+    var directions = this.board.getValidDirections();
 
-    this.animatingX = this.board.emptyX + 1;
-    this.animatingY = this.board.emptyY;
+    if(directions.includes(1) && this.down) {
+      this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX];
+      this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX] = 0;
+      this.board.emptyY++;
 
-    this.draw();
+      this.animatingX = this.board.emptyX;
+      this.animatingY = this.board.emptyY - 1;
 
-    if(this.showAnimations) {
-      var spacing = this.gridBoxSize/40;
-      let y1 = this.board.emptyY;
-      let x1 = this.board.emptyX + 1;
-      let y2 = this.board.emptyY;
-      let x2 = this.board.emptyX;
-      this.animateTileLeft(
-        this.animatingX, this.animatingY,
-        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-      );
+      this.draw();
+
+      if(this.showAnimations) {
+        var spacing = this.gridBoxSize/40;
+        let y1 = this.board.emptyY - 1;
+        let x1 = this.board.emptyX;
+        let y2 = this.board.emptyY;
+        let x2 = this.board.emptyX;
+        this.animateTileDown(
+          this.animatingX, this.animatingY,
+          (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+        );
+      }
+
+      if(this.board.isSolved()) {
+        this.done();
+      }
+
+      if(this.down && repeat && !this.solved) {
+        var that = this;
+        setTimeout( 
+          function() {
+            that.moveDown(true)
+          }, 
+          this.continuedDelay );
+      }
     }
   }
 
-  moveRight() {
-    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1];
-    this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1] = 0;
-    this.board.emptyX++;
+  moveLeft(repeat) {
+    var directions = this.board.getValidDirections();
 
-    this.animatingX = this.board.emptyX - 1;
-    this.animatingY = this.board.emptyY;
+    if(directions.includes(2) && this.left) {
+      this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1];
+      this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1] = 0;
+      this.board.emptyX--;
 
-    this.draw();
+      this.animatingX = this.board.emptyX + 1;
+      this.animatingY = this.board.emptyY;
 
-    if(this.showAnimations) {
-      var spacing = this.gridBoxSize/40;
-      let y1 = this.board.emptyY;
-      let x1 = this.board.emptyX - 1;
-      let y2 = this.board.emptyY;
-      let x2 = this.board.emptyX;
-      this.animateTileRight(
-        this.animatingX, this.animatingY,
-        (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
-        (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
-      );
+      this.draw();
+
+      if(this.showAnimations) {
+        var spacing = this.gridBoxSize/40;
+        let y1 = this.board.emptyY;
+        let x1 = this.board.emptyX + 1;
+        let y2 = this.board.emptyY;
+        let x2 = this.board.emptyX;
+        this.animateTileLeft(
+          this.animatingX, this.animatingY,
+          (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+        );
+      }
+
+      if(this.board.isSolved()) {
+        this.done();
+      }
+
+      if(this.left && repeat && !this.solved) {
+        var that = this;
+        setTimeout( 
+          function() {
+            that.moveLeft(true)
+          }, 
+          this.continuedDelay );
+      }
+    }
+  }
+
+  moveRight(repeat) {
+    var directions = this.board.getValidDirections();
+
+    if(directions.includes(3) && this.right) {
+      this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1];
+      this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1] = 0;
+      this.board.emptyX++;
+
+      this.animatingX = this.board.emptyX - 1;
+      this.animatingY = this.board.emptyY;
+
+      this.draw();
+
+      if(this.showAnimations) {
+        var spacing = this.gridBoxSize/40;
+        let y1 = this.board.emptyY;
+        let x1 = this.board.emptyX - 1;
+        let y2 = this.board.emptyY;
+        let x2 = this.board.emptyX;
+        this.animateTileRight(
+          this.animatingX, this.animatingY,
+          (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x2 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetY + (y1 * this.gridBoxSize)) + spacing,
+          (this.gridOffsetX + (x1 * this.gridBoxSize)) + spacing
+        );
+      }
+
+      if(this.board.isSolved()) {
+        this.done();
+      }
+
+      if(this.right && repeat && !this.solved) {
+        var that = this;
+        setTimeout( 
+          function() {
+            that.moveRight(true)
+          }, 
+          this.continuedDelay );
+      }
     }
   }
 
   moveTile(x, y) {
     if(x - 1 == this.board.emptyX && y == this.board.emptyY) {
-      this.moveRight();
+      this.moveRight(false);
     } else if(x + 1 == this.board.emptyX && y == this.board.emptyY) {
-      this.moveLeft();
+      this.moveLeft(false);
     } else if(x == this.board.emptyX && y + 1 == this.board.emptyY) {
-      this.moveUp();
+      this.moveUp(false);
     } else if(x == this.board.emptyX && y - 1 == this.board.emptyY) {
-      this.moveDown();
+      this.moveDown(false);
     }
   }
 
@@ -808,50 +975,37 @@ export class TileGameComponent implements OnInit {
     }
 
     if(!this.solved) {
-      var directions = this.board.getValidDirections();
       switch(code) {
         // UP
         case(40):
         case(this.upKey):
-            if(directions.includes(0)) {
-              this.moveUp();
-              if(this.board.isSolved()) {
-                this.done();
-              }
-            }
+            this.up = true;
+            this.moveUpFirst();
           break;
 
         // DOWN
         case(38):
         case(this.downKey):
-            if(directions.includes(1)) {
-              this.moveDown();
-              if(this.board.isSolved()) {
-                this.done();
-              }
-            }
+            this.down = true;
+            this.moveDownFirst();
           break;
 
         // LEFT
         case(39):
         case(this.leftKey):
-            if(directions.includes(2)) {
-              this.moveLeft();
-              if(this.board.isSolved()) {
-                this.done();
-              }
-            }
+            this.left = true;
+            this.moveLeftFirst();
           break;
 
         // RIGHT
         case(37):
         case(this.rightKey):
-            if(directions.includes(3)) {
-              this.moveRight();
-              if(this.board.isSolved()) {
-                this.done();
-              }
-            }
+            this.right = true;
+            this.moveRightFirst();
+          break;
+
+        case(this.shiftKey):
+            this.shift = true;
           break;
       }
     }
@@ -861,7 +1015,39 @@ export class TileGameComponent implements OnInit {
     eval(callback);
   }
 
+  @HostListener('document:keyup', ['$event'])
   keyReleased(keyEvent) {
-    //console.log({'keyReleased':keyEvent.keyCode});
+    let code = keyEvent.keyCode;
+    switch(code) {
+      // UP
+      case(40):
+      case(this.upKey):
+          this.up = false;
+        break;
+
+      // DOWN
+      case(38):
+      case(this.downKey):
+          this.down = false;
+        break;
+
+      // LEFT
+      case(39):
+      case(this.leftKey):
+          this.left = false;
+        break;
+
+      // RIGHT
+      case(37):
+      case(this.rightKey):
+          this.right = false;
+        break;
+
+      case(this.shiftKey):
+          this.shift = false;
+          this.xAxis = false;
+          this.yAxis = false;
+        break;
+    }
   }
 }
