@@ -655,10 +655,10 @@ export class TileGameComponent implements OnInit {
     this.context.fillText(tileString, textX, textY);
   }
 
-  moveUp(repeat) {
+  moveUp(repeat, click) {
     var directions = this.board.getValidDirections();
 
-    if(directions.includes(0) && this.up) {
+    if(directions.includes(0) && (this.up || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX];
       this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX] = 0;
       this.board.emptyY--;
@@ -691,7 +691,7 @@ export class TileGameComponent implements OnInit {
         var that = this;
         setTimeout( 
           function() {
-            that.moveUp(true)
+            that.moveUp(true, false)
           }, 
           this.continuedDelay );
       }
@@ -699,86 +699,86 @@ export class TileGameComponent implements OnInit {
   }
 
   moveUpFirst() {
-    this.moveUp(false);
+    this.moveUp(false, false);
     var that = this;
 
     if(this.shift && !this.yAxis) {
       this.xAxis = true;
       setTimeout( 
         function() {
-          that.moveUp(true)
+          that.moveUp(true, false)
         }, 
         this.continuedDelay );
     } else {
       setTimeout( 
         function() {
-          that.moveUp(true)
+          that.moveUp(true, false)
         }, 
         this.initialDelay );
     }
   }
   moveDownFirst() {
-    this.moveDown(false);
+    this.moveDown(false, false);
     var that = this;
 
     if(this.shift && !this.yAxis) {
       this.xAxis = true;
       setTimeout( 
         function() {
-          that.moveDown(true)
+          that.moveDown(true, false)
         }, 
         this.continuedDelay );
     } else {
       setTimeout( 
         function() {
-          that.moveDown(true)
+          that.moveDown(true, false)
         }, 
         this.initialDelay );
     }
   }
   moveRightFirst() {
-    this.moveRight(false);
+    this.moveRight(false, false);
     var that = this;
 
     if(this.shift && !this.xAxis) {
       this.yAxis = true;
       setTimeout( 
         function() {
-          that.moveRight(true)
+          that.moveRight(true, false)
         }, 
         this.continuedDelay );
     } else {
       setTimeout( 
         function() {
-          that.moveRight(true)
+          that.moveRight(true, false)
         }, 
         this.initialDelay );
     }
   }
   moveLeftFirst() {
-    this.moveLeft(false);
+    this.moveLeft(false, false);
     var that = this;
 
     if(this.shift && !this.xAxis) {
       this.yAxis = true;
       setTimeout( 
         function() {
-          that.moveLeft(true)
+          that.moveLeft(true, false)
         }, 
         this.continuedDelay );
     } else {
       setTimeout( 
         function() {
-          that.moveLeft(true)
+          that.moveLeft(true, false)
         }, 
         this.initialDelay );
     }
   }
 
-  moveDown(repeat) {
+  moveDown(repeat, click) {
     var directions = this.board.getValidDirections();
 
-    if(directions.includes(1) && this.down) {
+    if(directions.includes(1) && (this.down || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX];
       this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX] = 0;
       this.board.emptyY++;
@@ -811,17 +811,17 @@ export class TileGameComponent implements OnInit {
         var that = this;
         setTimeout( 
           function() {
-            that.moveDown(true)
+            that.moveDown(true, false)
           }, 
           this.continuedDelay );
       }
     }
   }
 
-  moveLeft(repeat) {
+  moveLeft(repeat, click) {
     var directions = this.board.getValidDirections();
 
-    if(directions.includes(2) && this.left) {
+    if(directions.includes(2) && (this.left || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1];
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1] = 0;
       this.board.emptyX--;
@@ -854,17 +854,17 @@ export class TileGameComponent implements OnInit {
         var that = this;
         setTimeout( 
           function() {
-            that.moveLeft(true)
+            that.moveLeft(true, false);
           }, 
           this.continuedDelay );
       }
     }
   }
 
-  moveRight(repeat) {
+  moveRight(repeat, click) {
     var directions = this.board.getValidDirections();
 
-    if(directions.includes(3) && this.right) {
+    if(directions.includes(3) && (this.right || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1];
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1] = 0;
       this.board.emptyX++;
@@ -897,7 +897,7 @@ export class TileGameComponent implements OnInit {
         var that = this;
         setTimeout( 
           function() {
-            that.moveRight(true)
+            that.moveRight(true, false);
           }, 
           this.continuedDelay );
       }
@@ -905,14 +905,22 @@ export class TileGameComponent implements OnInit {
   }
 
   moveTile(x, y) {
-    if(x - 1 == this.board.emptyX && y == this.board.emptyY) {
-      this.moveRight(false);
-    } else if(x + 1 == this.board.emptyX && y == this.board.emptyY) {
-      this.moveLeft(false);
-    } else if(x == this.board.emptyX && y + 1 == this.board.emptyY) {
-      this.moveUp(false);
-    } else if(x == this.board.emptyX && y - 1 == this.board.emptyY) {
-      this.moveDown(false);
+    if(x - 1 >= this.board.emptyX && y == this.board.emptyY) {
+      for(var i = 0 ; i < (x - this.board.emptyX) ; i++) {
+        this.moveRight(false, true);
+      }
+    } else if(x + 1 <= this.board.emptyX && y == this.board.emptyY) {
+      for(var i = 0 ; i < (this.board.emptyX - x) ; i++) {
+        this.moveLeft(false, true);
+      }
+    } else if(x == this.board.emptyX && y + 1 <= this.board.emptyY) {
+      for(var i = 0 ; i < (this.board.emptyY - y) ; i++) {
+        this.moveUp(false, true);
+      }
+    } else if(x == this.board.emptyX && y - 1 >= this.board.emptyY) {
+      for(var i = 0 ; i < (y - this.board.emptyY) ; i++) {
+        this.moveDown(false, true);
+      }
     }
   }
 
