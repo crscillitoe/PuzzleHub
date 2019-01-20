@@ -444,7 +444,7 @@ export class TakuzuComponent implements OnInit {
   done() {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(GameID.TAKUZU, this.difficulty, 'TODO - Board Solution String')
+      this.timer.stopTimer(this.seed, GameID.TAKUZU, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           if(data['Daily']) {
             this.personalBestDaily = data['TimeElapsed'];

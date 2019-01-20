@@ -29,7 +29,7 @@ export class MinesweeperComponent implements OnInit {
   gridBoxSize: number = 20; //needs to be dynamically adjusted by fixed sizes
   
   gridOffsetX: number = 100;
-  gridOffsetY: number = 100;
+  gridOffsetY: number = 56;
 
   firstPress: boolean = true;
   isPressed: boolean = false;
@@ -78,30 +78,30 @@ export class MinesweeperComponent implements OnInit {
 
     // Easy
     if(this.difficulty == 1) {
+      width = 6;
+      height = 6;
+      bombCount = 8; //ratio of 8
+    } 
+    
+    // Medium
+    else if (this.difficulty == 2) {
       width = 8;
       height = 8;
       bombCount = 10; //ratio of 8
     } 
     
-    // Medium
-    else if (this.difficulty == 2) {
+    // Hard
+    else if (this.difficulty == 3) {
       width = 16;
       height = 13;
       bombCount = 40;
     } 
     
-    // Hard
-    else if (this.difficulty == 3) {
-      width = 30;
-      height = 16;
-      bombCount = 99; //ratio of 4.8
-    } 
-    
     // Extreme
     else if (this.difficulty == 4) {
-      width = 45;
-      height = 30;
-      bombCount = 280;
+      width = 30;
+      height = 16;
+      bombCount = 99;
     }
 
     // Uncomment these to add event listeners
@@ -459,7 +459,7 @@ export class MinesweeperComponent implements OnInit {
   done() {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(GameID.MINESWEEPER, this.difficulty, 'TODO - Board Solution String')
+      this.timer.stopTimer(this.seed, GameID.MINESWEEPER, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           if(data['Daily']) {
             this.personalBestDaily = data['TimeElapsed'];
@@ -492,16 +492,21 @@ export class MinesweeperComponent implements OnInit {
     this.gridOffsetX = this.canvas.width / 20;
     this.gridOffsetY = this.canvas.height / 20;
 
-    var boardLength = Math.max(this.board.width, this.board.height);
-    var size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
-                        this.canvas.offsetHeight - (this.gridOffsetY * 2));
+    var boardLength = 16;
+    if(this.difficulty != 4) {
+      boardLength = Math.max(this.board.width, this.board.height);
+    }
+    var size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX), 
+                        this.canvas.offsetHeight - (this.gridOffsetY));
 
     let w = this.canvas.offsetWidth;
     let h = this.canvas.offsetHeight;
-    if(w > h) {
-      this.gridOffsetX = Math.round( (w - h) / 2 ) + this.gridOffsetX;
-    } else {
-      this.gridOffsetY = Math.round( (h - w) / 2 ) + this.gridOffsetY;
+    if(this.difficulty != 4) {
+      if(w > h) {
+        this.gridOffsetX = Math.round( (w - h) / 2 ) + this.gridOffsetX;
+      } else {
+        this.gridOffsetY = Math.round( (h - w) / 2 ) + this.gridOffsetY;
+      }
     }
 
     this.gridBoxSize = Math.round((size / boardLength));

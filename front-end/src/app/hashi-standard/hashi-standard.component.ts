@@ -916,7 +916,7 @@ export class HashiStandardComponent implements OnInit {
       that.solved = true;
 
       if(that.userService.isLoggedIn()) {
-        that.timer.stopTimer(GameID.HASHI, that.diff, that.board.toString())
+        that.timer.stopTimer(that.seed, GameID.HASHI, that.diff, that.board.toString())
           .subscribe( (data) => {
             console.log(data);
               if(data['Daily']) {

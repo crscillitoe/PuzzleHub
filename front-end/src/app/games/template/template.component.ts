@@ -148,7 +148,7 @@ export class TemplateComponent implements OnInit {
   done() {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(this.gameID, this.difficulty, 'TODO - Board Solution String')
+      this.timer.stopTimer(this.seed, this.gameID, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {});
     } else {
       // Do nothing - we're not logged in

@@ -381,7 +381,7 @@ export class SudokuComponent implements OnInit {
   done() {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(GameID.SUDOKU, this.difficulty, 'TODO - Board Solution String')
+      this.timer.stopTimer(this.seed, GameID.SUDOKU, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           if(data['Daily']) {
             this.personalBestDaily = data['TimeElapsed'];

@@ -429,7 +429,7 @@ export class TileGameComponent implements OnInit {
   done() {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
+      this.timer.stopTimer(this.seed, GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           if(data['Daily']) {
             this.personalBestDaily = data['TimeElapsed'];

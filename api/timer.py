@@ -93,6 +93,7 @@ def start_timer():
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /stopTimer
 # Required POST parameters:
+#   Seed: int
 #   GameID: int
 #   Difficulty: int
 #   BoardSolution: string
@@ -126,6 +127,11 @@ def stop_timer():
     except:
         abort(500, 'BoardSolution not found')
 
+    try:
+        user_seed = request.json["Seed"]
+    except:
+        abort(500, 'Seed not found')
+
     db = get_db()
 
     if (timer_sanity_checks(db, request.json) != 0):
@@ -152,6 +158,10 @@ def stop_timer():
     cursor.close()
 
     seed = (data[0])[0]
+
+    if user_seed != seed:
+        abort(500, 'seed error')
+
     time_elapsed = (data[0])[1]
     better_daily = False
     better_weekly = False
