@@ -102,8 +102,25 @@
     <ng-container *ngFor="let option of options; let i=index">
       <ng-container *ngIf="option.type == 'checkbox'">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" id="{{option.bindTo}}" class="custom-control-input" [(ngModel)]="optionVals[i]" (click)="callback(option.callback)">
-          <label class="descriptionText custom-control-label" for="{{option.bindTo}}">{{option.name}}</label>
+          <input type="checkbox" id="{{option.bindTo}}" class="custom-control-input clickable" 
+            [(ngModel)]="optionVals[i]" 
+            (click)="callback(option.callback)">
+          <label class="clickable descriptionText custom-control-label" for="{{option.bindTo}}">{{option.name}}</label>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="option.type == 'dropdown'">
+        <div class="custom-control custom-dropdown">
+          <label style="margin-bottom:0" class="descriptionText" for="{{option.bindTo}}">
+            {{option.name}}
+          </label>
+          <select id="{{option.bindTo}}"
+            [(ngModel)]="optionVals[i]" 
+            (ngModelChange)="updateAndCallback(option.callback, option.storedName, $event)">
+            <ng-container *ngFor="let o of option.options">
+              <option>{{o}}</option>
+            </ng-container>
+          </select>
         </div>
       </ng-container>
     </ng-container>

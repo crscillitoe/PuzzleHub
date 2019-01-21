@@ -38,7 +38,20 @@ export class TileGameComponent implements OnInit {
       'bindTo':'staticTileSize',
       'name':'Fixed Tile Size',
       'callback':'this.toggleStaticSizes()',
-      'storedName':'StaticTileSize'
+      'storedName':'StaticTileSize',
+    },
+    {
+      'type':'dropdown',
+      'bindTo':'colorScheme',
+      'name':'Color Scheme',
+      'callback':'this.updateColorScheme()',
+      'storedName':'TileGameColorScheme',
+      'options': [
+        'Fringe',
+        'Rows',
+        'Rows & Cols',
+        'Quadrants'
+      ]
     }
   ];
 
@@ -85,6 +98,8 @@ export class TileGameComponent implements OnInit {
   downKey:  number = 87;
   leftKey:  number = 68;
   rightKey: number = 65;
+
+  colorScheme: string;
 
   rules: string = "Order the numbers in sequential order from left to right, top to bottom";
 
@@ -170,6 +185,7 @@ export class TileGameComponent implements OnInit {
     this.showAnimations = SettingsService.getDataBool('tileAnimations');
     this.mouseHover = SettingsService.getDataBool('HoverTileGame');
     this.staticTileSize = SettingsService.getDataBool('StaticTileSize');
+    this.colorScheme = SettingsService.getDataStr('TileGameColorScheme');
 
     this.configureHotkeys();
 
@@ -407,38 +423,58 @@ export class TileGameComponent implements OnInit {
         this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
         this.context.textAlign = "center";
 
-        if(boardValue <= this.board.width ||
-           (boardValue % this.board.width) == 1) {
-          this.context.fillStyle = this.colors.COLOR_6_ALT;
-        } else if(boardValue <= (this.board.width * 2) ||
-                  (boardValue % this.board.width) == 2) {
-          this.context.fillStyle = this.colors.COLOR_4_ALT;
-        } else if(boardValue <= (this.board.width * 3) ||
-                  (boardValue % this.board.width) == 3) {
-          this.context.fillStyle = this.colors.COLOR_3_ALT;
-        } else if(boardValue <= (this.board.width * 4) ||
-                  (boardValue % this.board.width) == 4) {
-          this.context.fillStyle = this.colors.COLOR_5_ALT;
-        } else if(boardValue <= (this.board.width * 5) ||
-                  (boardValue % this.board.width) == 5) {
-          this.context.fillStyle = this.colors.COLOR_2;
-        } else if(boardValue <= (this.board.width * 6) ||
-                  (boardValue % this.board.width) == 6) {
-          this.context.fillStyle = this.colors.COLOR_1;
-        } else if(boardValue <= (this.board.width * 7) ||
-                  (boardValue % this.board.width) == 7) {
-          this.context.fillStyle = this.colors.COLOR_4;
-        } else if(boardValue <= (this.board.width * 8) ||
-                  (boardValue % this.board.width) == 8) {
-          this.context.fillStyle = this.colors.COLOR_2_ALT;
-        } else if(boardValue <= (this.board.width * 9) ||
-                  (boardValue % this.board.width) == 9) {
-          this.context.fillStyle = this.colors.COLOR_4;
-        } else if(boardValue <= (this.board.width * 10) ||
-                  (boardValue % this.board.width) == 10) {
-          this.context.fillStyle = this.colors.COLOR_1_ALT;
-        } else {
-          this.context.fillStyle = this.colors.COLOR_1_ALT;
+        var drawColors = [
+          this.colors.COLOR_6_ALT, // RED
+          this.colors.COLOR_4,     // ORANGE
+          this.colors.COLOR_4_ALT, // YELLOW
+          this.colors.COLOR_1_ALT, // LIGHT GREEN
+          this.colors.COLOR_1,     // GREEN
+          this.colors.COLOR_3_ALT, // LIGHT BLUE
+          this.colors.COLOR_2_ALT, // BLUE
+          this.colors.COLOR_3,     // DARK BLUE
+          this.colors.COLOR_5,     // PURPLE
+          this.colors.COLOR_5_ALT  // PINK
+        ]
+
+        if(this.colorScheme == 'Fringe') {
+          for(var u = this.board.width ; u > 0 ; u--) {
+            if(boardValue <= (this.board.width * (u)) ||
+              (boardValue % this.board.width) == (u % 10)) {
+              this.context.fillStyle = drawColors[(u - 1) % 10];
+            }
+          }
+        } else if(this.colorScheme == 'Rows') {
+          for(var h = this.board.width ; h >= 0 ; h--) {
+            if(Math.floor((boardValue - 1) / this.board.width) % 10 == h % 10) {
+              this.context.fillStyle = drawColors[h % 10];
+              break;
+            }
+          }
+        } else if(this.colorScheme == 'Rows & Cols') {
+          for(var h = this.board.width ; h >= 0 ; h--) {
+            if((Math.floor((boardValue - 1) / this.board.width) % 10 == h % 10)
+              && Math.floor((boardValue - 1) / this.board.width) < this.board.width - 2){
+              this.context.fillStyle = drawColors[h % 10];
+              break;
+            } else if(((boardValue - 1) % this.board.width) == h &&
+              Math.floor((boardValue - 1) / this.board.width) >= this.board.width - 2) {
+              this.context.fillStyle = drawColors[h % 10];
+              break;
+            }
+          }
+        } else if(this.colorScheme == 'Quadrants') {
+          var x = ((boardValue - 1) % this.board.height);
+          var y = Math.floor((boardValue - 1) / this.board.width);
+
+          if(x < this.board.height/2 && y < this.board.width/2) {
+            this.context.fillStyle = drawColors[0];
+          } else if(x >= this.board.height/2 && y < this.board.width/2) {
+            this.context.fillStyle = drawColors[1];
+          } else if(x < this.board.height/2 && y >= this.board.width/2) {
+            this.context.fillStyle = drawColors[2];
+          } else if(x >= this.board.height/2 && y >= this.board.width/2) {
+            this.context.fillStyle = drawColors[3];
+          }
         }
 
 
@@ -461,6 +497,11 @@ export class TileGameComponent implements OnInit {
         }
       }
     }
+  }
+
+  updateColorScheme() {
+    this.colorScheme = SettingsService.getDataStr('TileGameColorScheme');
+    this.draw();
   }
 
   done() {

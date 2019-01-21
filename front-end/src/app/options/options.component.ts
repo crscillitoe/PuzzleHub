@@ -40,6 +40,8 @@ export class OptionsComponent implements OnInit {
       for(let option of this.options) {
         if(option['type'] == 'checkbox') {
           this.optionVals.push(SettingsService.getDataBool(option['storedName']));
+        } else if(option['type'] == 'dropdown') {
+          this.optionVals.push(SettingsService.getDataStr(option['storedName']));
         }
       }
     }
@@ -62,6 +64,11 @@ export class OptionsComponent implements OnInit {
 
   minimize(name, val) {
     SettingsService.storeData(name, val);
+  }
+
+  updateAndCallback(func, name, newVal) {
+    SettingsService.storeData(name, newVal);
+    this.callback(func);
   }
 
   callback(func) {

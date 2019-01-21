@@ -11,7 +11,7 @@ export class SettingsService {
     "selectedGameID":5,
     "selectedLeaderboard":0,
     "rulesMinimized":true,
-    "optionsMinimized":false,
+    "optionsMinimized":true,
     "controlsMinimized":true,
     "highscoresMinimized":false,
     "timerMinimized":false,
@@ -21,7 +21,8 @@ export class SettingsService {
     "TileGameDOWN":87,
     "TileGameLEFT":68,
     "TileGameRIGHT":65,
-    "StaticTileSize":false
+    "StaticTileSize":false,
+    "TileGameColorScheme":'Fringe'
   };
 
   constructor() { }
