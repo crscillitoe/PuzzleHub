@@ -38,8 +38,8 @@ export class Board {
 
     // Algorithm credit - ben1996123
     var swapCounter = 0;
-    for(var i = 0 ; i < this.width; i++) {
-      for(var j = 0 ; j < this.height; j++) {
+    for(var j = 0 ; j < this.height; j++) {
+      for(var i = 0 ; i < this.width; i++) {
         if(i == this.width - 1 && j == this.height - 1) {
           continue;
         }
@@ -78,12 +78,16 @@ export class Board {
     }
   }
 
+  convertXYToVal(x, y) {
+    return (y * this.width) + (x + 1);
+  }
+
   getRandomTile(x, y) {
-    var randY = y + Math.floor(this.random() * (this.height - y));
-    var randX = x + Math.floor(this.random() * (this.width  - x));
-    if(randY == this.height - 1 && randX == this.width - 1) {
-      randX = this.width - 2;
-    }
+    var val = this.convertXYToVal(x, y);
+    var randVal = Math.floor(this.random() * ((this.width * this.height) - val)) + val;
+
+    var randY = Math.floor((randVal - 1) / this.width);
+    var randX = (randVal - 1) % this.width;
 
     let m = {
       x: randX,
