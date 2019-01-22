@@ -216,6 +216,14 @@ export class TileGameComponent implements OnInit {
       height= 10;
     }
 
+    // Custom board size
+    else if(this.difficulty == 5) {
+      width = Number(this.route.snapshot.paramMap.get('width'));
+      height = Number(this.route.snapshot.paramMap.get('height'));
+      console.log(width);
+      console.log(height);
+    }
+
     // Uncomment these to add event listeners
     //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
@@ -224,7 +232,7 @@ export class TileGameComponent implements OnInit {
 
 
     // Start timer if we are logged in
-    if(this.userService.isLoggedIn()) {
+    if(this.userService.isLoggedIn() && this.difficulty != 5) {
       let m = {
         GameID: GameID.TILE_GAME,
         Difficulty: this.difficulty
@@ -420,7 +428,11 @@ export class TileGameComponent implements OnInit {
         var tileString = "" + boardValue;
         if(tileString == '0') tileString = '';
 
-        this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
+        if(this.board.width * this.board.height <= 100) {
+          this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
+        } else {
+          this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 2) + 'px Poppins';
+        }
         this.context.textAlign = "center";
 
         var drawColors = [
@@ -504,7 +516,7 @@ export class TileGameComponent implements OnInit {
                                   true, 
                                   false);
 
-            if(this.colorScheme == 'Quadrants' && this.difficulty == 4) {
+            if(this.colorScheme == 'Quadrants' && (this.board.width * this.board.height) >= 100) {
               this.context.fillStyle = innerColor;
               this.roundRect(this.context, 
                                     ((this.gridOffsetX + (i * this.gridBoxSize )) + spacing) + (0.1 * this.gridBoxSize), 
@@ -774,7 +786,7 @@ export class TileGameComponent implements OnInit {
                           true, 
                           false);
 
-    if(this.colorScheme == 'Quadrants' && this.difficulty == 4) {
+    if(this.colorScheme == 'Quadrants' && (this.board.width * this.board.height) >= 100) {
       this.context.fillStyle = innerColor;
       this.roundRect(this.context, 
                             x + (0.1 * this.gridBoxSize), 
