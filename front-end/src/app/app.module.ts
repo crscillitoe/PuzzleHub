@@ -25,6 +25,7 @@ import { EmailSuccessComponent } from './email-success/email-success.component';
 import { TodoComponent } from './todo/todo.component';
 import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
+import { KakuroComponent } from './games/kakuro/kakuro.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
   { path: 'EmailVerify', component: VerifyEmailComponent},
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
-  { path: 'profile', component: ProfileComponent}
+  { path: 'profile', component: ProfileComponent},
+  { path: 'Kakuro', component: KakuroComponent}
 ];
 
 @NgModule({
@@ -62,7 +64,8 @@ const appRoutes: Routes = [
     EmailSuccessComponent,
     TodoComponent,
     OptionsComponent,
-    ProfileComponent
+    ProfileComponent,
+    KakuroComponent
   ],
   imports: [
     BrowserModule,
