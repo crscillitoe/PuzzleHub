@@ -99,7 +99,7 @@ def register_user():
     if len(username) > 12:
         return jsonify({"success":False,"message":"Username length must be no more than 12 characters."})
 
-    if !username.isalnum():
+    if not username.isalnum():
         return jsonify({"success":False,"message":"Username must be alpha numeric."})
 
 

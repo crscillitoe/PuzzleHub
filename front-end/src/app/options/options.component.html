@@ -158,8 +158,11 @@
 </div>
 
 <div class="buttons">
-  <a (click)="callback('this.newGame()')" class="center new-game clickable">
+  <a id="newGameButton"
+    (click)="callback('this.newGame()')" class="center new-game clickable">
     <a class="buttonHeader clickable"><b class="clickable">NEW GAME</b></a>
     <a class="buttonFooter clickable">spacebar</a>
   </a>
 </div>
+
+<button id="focusMe" style="background-color:#2c2c2c;border:none"></button>

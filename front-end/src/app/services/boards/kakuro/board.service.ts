@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 
-export class KakuroService
+export class Board
 {
 
   seed: number;
@@ -22,9 +22,9 @@ export class KakuroService
   generateBoard()
   {
     // TODO: REMOVE
-    seed = 6;
+    this.seed = 6;
   
-    kakuroPuzzle = [
+    this.kakuroPuzzle = [
       [0, 0, 0, 0, 0],
       [0, 0, -1, -1, 0],
       [0, -1, -1, -1, -1],
@@ -39,9 +39,9 @@ export class KakuroService
   getClues(x, y) 
   {
     var clues = [];
-    for (var i = 0; i < kakuroClues.length; i++) {
-      if (kakuroClues[i].x == x && kakuroClues[i].y == y) {
-        clues.push(kakuroClues[i]);
+    for (var i = 0; i < this.kakuroClues.length; i++) {
+      if (this.kakuroClues[i].x == x && this.kakuroClues[i].y == y) {
+        clues.push(this.kakuroClues[i]);
       }
     }
 

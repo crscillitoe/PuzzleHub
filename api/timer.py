@@ -193,7 +193,6 @@ def stop_timer():
             '''
         else:
             previous_time_elapsed = (data[0])[0]
-            print(previous_time_elapsed)
             if time_elapsed < previous_time_elapsed:
                 new_record = True
                 sql_query = '''
@@ -228,6 +227,24 @@ def stop_timer():
             cursor.execute(sql_query, query_model)
             db.commit()
             cursor.close()
+
+    cursor = db.cursor()
+    sql_query = '''
+        INSERT INTO matchHistory
+        (UserID, GameID, Difficulty, Seed, TimeElapsed, Date)
+        VALUES
+        (%(user_id)s, %(game_id)s, %(difficulty)s, %(seed)s, %(time_elapsed)s, NOW(3))
+    '''
+    query_model = {
+        "user_id":user_id,
+        "game_id":game_id,
+        "difficulty":difficulty,
+        "seed":seed,
+        "time_elapsed":time_elapsed,
+    }
+    cursor.execute(sql_query, query_model)
+    db.commit()
+    cursor.close()
 
     return jsonify({"TimeElapsed":str(time_elapsed)[:-3], "Daily":better_daily, "Weekly":better_weekly, "Monthly":better_monthly})
 

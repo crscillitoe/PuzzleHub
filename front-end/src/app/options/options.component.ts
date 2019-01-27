@@ -72,6 +72,7 @@ export class OptionsComponent implements OnInit {
   }
 
   callback(func) {
+    document.getElementById('focusMe').focus();
     this.optionSelected.emit(func);
   }
 

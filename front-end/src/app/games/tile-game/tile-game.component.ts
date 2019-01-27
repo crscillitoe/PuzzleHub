@@ -298,13 +298,15 @@ export class TileGameComponent implements OnInit {
     var millis  = diff % 1000;
 
     try {
-      display.textContent = 
-        hours + ":" + 
-        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
-        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
-        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+      if(!that.solved) {
+        display.textContent = 
+          hours + ":" + 
+          (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
+          (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
+          (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
 
-      that.displayTimer();
+        that.displayTimer();
+      }
     } catch {
       // Do nothing - page probably re-routed
     }
