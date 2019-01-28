@@ -9,6 +9,10 @@ export class TunnelService {
 
   constructor(private http: HttpClient) { }
 
+  getProfileData(model) {
+    return this.http.post(this.ipAddress + '/getProfileData', model);
+  }
+
   getUsername() {
     return this.http.get(this.ipAddress + '/getUsername');
   }

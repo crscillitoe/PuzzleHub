@@ -9,6 +9,121 @@ from api.auth import get_user_id
 xstr = lambda s: s or ""
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getProfileData
+# Required POST parameters:
+#   Username: string
+# Returns on success:
+#   DailyGoldMedals: int
+#   DailySilverMedals: int
+#   DailyBronzeMedals: int
+#   WeeklyGoldMedals: int
+#   WeeklySilverMedals: int
+#   WeeklyBronzeMedals: int
+#   MonthlyGoldMedals: int
+#   MonthlySilverMedals: int
+#   MonthlyBronzeMedals: int
+#   MatchHistory: List(length 10) <
+#       GameID: int
+#       Difficulty: int
+#       TimeCompleted: time-string
+#       Time: time-string
+#       Seed: int
+#   >
+# Returns on failure:
+#   No return, throw error on failure.
+@app.route('/api/getProfileData', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_profile_data():
+    try:
+        username = request.json["Username"]
+    except:
+        abort(500, "Username not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = '''
+        SELECT MH.GameID, MH.Difficulty, MH.Date AS TimeCompleted, MH.TimeElapsed AS Time, MH.Seed
+        FROM users AS U
+            INNER JOIN matchHistory AS MH
+            ON U.UserID = MH.UserID
+        WHERE U.Username = %(username)s
+        LIMIT 10
+    '''
+    query_model = {
+        "username":username
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    match_history = []
+    for d in data:
+        if len( str(d[3]).split(':')[2] ) != 2:
+            model = {
+                "GameID":d[0],
+                "Difficulty":d[1],
+                "TimeCompleted":str(d[2]),
+                "TimeElapsed": str(d[3])[:-3],
+                "Seed":d[4]
+            }
+            match_history.append(model)
+        else :
+            model = {
+                "GameID":d[0],
+                "Difficulty":d[1],
+                "TimeCompleted":str(d[2]),
+                "TimeElapsed": str(d[3]) + '.000',
+                "Seed":d[4]
+            }
+            match_history.append(model)
+
+    cursor.close()
+
+    cursor = db.cursor()
+    sql_query = '''
+    SELECT M1.BronzeMedals AS DailyBronzeMedals,
+           M2.BronzeMedals AS WeeklyBronzeMedals,
+           M3.BronzeMedals AS MonthlyBronzeMedals,
+           M1.SilverMedals AS DailySilverMedals,
+           M2.SilverMedals AS WeeklySilverMedals,
+           M3.SilverMedals AS MonthlySilverMedals,
+           M1.GoldMedals   AS DailyGoldMedals,
+           M2.GoldMedals   AS WeeklyGoldMedals,
+           M3.GoldMedals   AS MonthlyGoldMedals
+        FROM users AS U
+        INNER JOIN userMedals AS M1
+            ON M1.UserID = U.UserID AND
+                M1.Type = 0
+        INNER JOIN userMedals AS M2
+            ON M2.UserID = U.UserID AND
+                M2.Type = 1
+        INNER JOIN userMedals AS M3
+            ON M3.UserID = U.UserID AND
+                M3.Type = 2
+        WHERE U.Username = %(username)s
+    '''
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+    d = data[0]
+
+    to_return = {
+        "DailyGoldMedals":d[6],
+        "DailySilverMedals":d[3],
+        "DailyBronzeMedals":d[0],
+        "WeeklyGoldMedals":d[7],
+        "WeeklySilverMedals":d[4],
+        "WeeklyBronzeMedals":d[1],
+        "MonthlyGoldMedals":d[8],
+        "MonthlySilverMedals":d[5],
+        "MonthlyBronzeMedals":d[2],
+        "MatchHistory":match_history
+    }
+
+    return jsonify(to_return)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getLeaderboards
 # Required POST parameters:
 #   GameID: int

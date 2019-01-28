@@ -1,3 +1,27 @@
+<ng-container *ngIf="profileData != undefined">
 <p>
-  The profiles are coming soon! This would be: {{username}}'s profile
+  {{username}}'s profile: (layout design coming soonTM) <br>
+  Daily Gold: {{profileData.DailyGoldMedals}} <br>
+  Daily Silver: {{profileData.DailySilverMedals}} <br>
+  Daily Bronze: {{profileData.DailyBronzeMedals}} <br>
+
+  Weekly Gold: {{profileData.WeeklyGoldMedals}} <br>
+  Weekly Silver: {{profileData.WeeklySilverMedals}} <br>
+  Weekly Bronze: {{profileData.WeeklyBronzeMedals}} <br>
+
+  Monthly Gold: {{profileData.MonthlyGoldMedals}} <br>
+  Monthly Silver: {{profileData.MonthlySilverMedals}} <br>
+  Monthly Bronze: {{profileData.MonthlyBronzeMedals}}
+
 </p>
+
+<div id="matchHistory">
+  <ng-container *ngFor="let game of profileData.MatchHistory">
+    Game ID: {{game.GameID}}<br>
+    Difficulty: {{game.Difficulty}}<br>
+    Seed: {{game.Seed}}<br>
+    Time: {{game.TimeElapsed}}<br>
+    Date: {{game.TimeCompleted}}<hr>
+  </ng-container>
+</div>
+<ng-container>

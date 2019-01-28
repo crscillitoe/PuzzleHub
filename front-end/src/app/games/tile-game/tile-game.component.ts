@@ -545,8 +545,7 @@ export class TileGameComponent implements OnInit {
   }
 
   done() {
-    this.solved = true;
-    if(this.userService.isLoggedIn()) {
+    if(this.userService.isLoggedIn() && !this.solved) {
       this.timer.stopTimer(this.seed, GameID.TILE_GAME, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           if(data['Daily']) {
@@ -567,6 +566,7 @@ export class TileGameComponent implements OnInit {
     } else {
       console.log('done - not logged in');
     }
+    this.solved = true;
   }
 
   fixSizes() {

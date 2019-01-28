@@ -1,12 +1,23 @@
+#matchHistory {
+  background: #2C2C2C;
+  color: white;
+  position: absolute;
+  width:30%;
+  height:80%;
+  top:10%;
+  left:10%;
+  text-align: left;
+  overflow-y:scroll;
+}
 
 p {
   background: #2C2C2C;
   color: white;
   font-size: 24px;
   position: absolute;
-  width:80%;
-  height:50px;
+  width:50%;
+  height:500px;
   top:30%;
-  left:20%;
+  left:50%;
   text-align: left;
 }
