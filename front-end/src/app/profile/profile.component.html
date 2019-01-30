@@ -17,8 +17,8 @@
 
 <div id="matchHistory">
   <ng-container *ngFor="let game of profileData.MatchHistory">
-    Game ID: {{game.GameID}}<br>
-    Difficulty: {{game.Difficulty}}<br>
+    Game Type: {{getGameName(game.GameID)}}<br>
+    Difficulty: {{getDifficulty(game.Difficulty)}}<br>
     Seed: {{game.Seed}}<br>
     Time: {{game.TimeElapsed}}<br>
     Date: {{game.TimeCompleted}}<hr>

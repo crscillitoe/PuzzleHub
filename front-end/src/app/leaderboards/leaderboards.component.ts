@@ -120,19 +120,13 @@ export class LeaderboardsComponent implements OnInit {
         this.resetDate.setUTCHours(5, 0, 0, 0);
       }
     } else if(this.leaderboard == 2) {
+      var newMonth = this.resetDate.getMonth() + 1;
+      this.resetDate.setDate(1);
       this.resetDate.setMonth(
-        this.resetDate.getMonth() + 1
+        newMonth
       );
 
-      this.resetDate.setDate(1);
       this.resetDate.setUTCHours(5, 0, 0, 0);
-
-      var date = +new Date();
-      var diff = (date - this.resetDate);
-      if(diff > 0) {
-        this.resetDate.setDate(this.resetDate.getDate() - 1);
-        this.resetDate.setUTCHours(5, 0, 0, 0);
-      }
     }
 
     var _this = this;
