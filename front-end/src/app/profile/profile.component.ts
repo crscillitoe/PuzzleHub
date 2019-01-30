@@ -35,6 +35,10 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  convertDate(dateStr) {
+    return new Date(dateStr + 'Z');
+  }
+
   getGameName(id) {
     for(var i = 0 ; i < this.games.length ; i++) {
       if((this.games[i])['GameID'] == id) {

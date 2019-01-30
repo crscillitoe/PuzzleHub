@@ -21,7 +21,7 @@
     Difficulty: {{getDifficulty(game.Difficulty)}}<br>
     Seed: {{game.Seed}}<br>
     Time: {{game.TimeElapsed}}<br>
-    Date: {{game.TimeCompleted}}<hr>
+    Date: {{convertDate(game.TimeCompleted) | date: 'MM/dd/yyyy hh:mm'}}<hr>
   </ng-container>
 </div>
 <ng-container>

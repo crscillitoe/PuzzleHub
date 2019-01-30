@@ -48,6 +48,7 @@ def get_profile_data():
             INNER JOIN matchHistory AS MH
             ON U.UserID = MH.UserID
         WHERE U.Username = %(username)s
+        ORDER BY MH.Date DESC
         LIMIT 10
     '''
     query_model = {
