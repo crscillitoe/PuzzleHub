@@ -47,6 +47,14 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  getGameImage(id) {
+    for(var i = 0 ; i < this.games.length ; i++) {
+      if((this.games[i])['GameID'] == id) {
+        return (this.games[i])['Image'];
+      }
+    }
+  }
+
   getDifficulty(num) {
     switch(num) {
       case 1:

@@ -106,19 +106,13 @@ export class LeaderboardsComponent implements OnInit {
         this.resetDate.setUTCHours(5, 0, 0, 0);
       }
     } else if(this.leaderboard == 1) {
-      this.resetDate.setDate(
-        this.resetDate.getDate() + (12 - this.resetDate.getDay()) % 7
-      );
 
-      this.resetDate.setDate(this.resetDate.getDate() + 1);
+      var friday = this.resetDate.getDate() + (13 - this.resetDate.getDay()) % 7;
+
+
       this.resetDate.setUTCHours(5, 0, 0, 0);
+      this.resetDate.setDate(friday);
 
-      var date = +new Date();
-      var diff = (date - this.resetDate);
-      if(diff > 0) {
-        this.resetDate.setDate(this.resetDate.getDate() - 1);
-        this.resetDate.setUTCHours(5, 0, 0, 0);
-      }
     } else if(this.leaderboard == 2) {
       var newMonth = this.resetDate.getMonth() + 1;
       this.resetDate.setDate(1);
@@ -126,7 +120,9 @@ export class LeaderboardsComponent implements OnInit {
         newMonth
       );
 
+
       this.resetDate.setUTCHours(5, 0, 0, 0);
+      this.resetDate.setDate(1);
     }
 
     var _this = this;

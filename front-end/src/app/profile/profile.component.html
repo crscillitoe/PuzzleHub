@@ -1,27 +1,49 @@
 <ng-container *ngIf="profileData != undefined">
-<p>
-  {{username}}'s profile: (layout design coming soonTM) <br>
-  Daily Gold: {{profileData.DailyGoldMedals}} <br>
-  Daily Silver: {{profileData.DailySilverMedals}} <br>
-  Daily Bronze: {{profileData.DailyBronzeMedals}} <br>
+  <p>
+    {{username}}'s profile: (layout design coming soonTM) <br>
+    Daily Gold: {{profileData.DailyGoldMedals}} <br>
+    Daily Silver: {{profileData.DailySilverMedals}} <br>
+    Daily Bronze: {{profileData.DailyBronzeMedals}} <br>
+  
+    Weekly Gold: {{profileData.WeeklyGoldMedals}} <br>
+    Weekly Silver: {{profileData.WeeklySilverMedals}} <br>
+    Weekly Bronze: {{profileData.WeeklyBronzeMedals}} <br>
+  
+    Monthly Gold: {{profileData.MonthlyGoldMedals}} <br>
+    Monthly Silver: {{profileData.MonthlySilverMedals}} <br>
+    Monthly Bronze: {{profileData.MonthlyBronzeMedals}}
+  
+  </p>
+  
+  <div id="matchHistory">
+    <a class="smallentry odd">
+      <a class="smalldata">
+        Match History
+      </a>
+    </a>
+    <a class="scrollable">
+      <ng-container *ngFor="let game of profileData.MatchHistory;let i=index">
+        <a class="entry" [ngClass]="i % 2 == 0 ? 'even' : 'odd'">
+          <a class="image">
+            <img src="{{getGameImage(game.GameID)}}">
+          </a>
+          <a class="data">
+            <a class="title row">
+              <a [ngClass]="game.Difficulty == 1 ? 'easy' : game.Difficulty == 2 ? 'medium' : game.Difficulty == 3 ? 'hard' : 'extreme'">
+                {{getDifficulty(game.Difficulty)}}  
+              </a>
 
-  Weekly Gold: {{profileData.WeeklyGoldMedals}} <br>
-  Weekly Silver: {{profileData.WeeklySilverMedals}} <br>
-  Weekly Bronze: {{profileData.WeeklyBronzeMedals}} <br>
-
-  Monthly Gold: {{profileData.MonthlyGoldMedals}} <br>
-  Monthly Silver: {{profileData.MonthlySilverMedals}} <br>
-  Monthly Bronze: {{profileData.MonthlyBronzeMedals}}
-
-</p>
-
-<div id="matchHistory">
-  <ng-container *ngFor="let game of profileData.MatchHistory">
-    Game Type: {{getGameName(game.GameID)}}<br>
-    Difficulty: {{getDifficulty(game.Difficulty)}}<br>
-    Seed: {{game.Seed}}<br>
-    Time: {{game.TimeElapsed}}<br>
-    Date: {{convertDate(game.TimeCompleted) | date: 'MM/dd/yyyy hh:mm a'}}<hr>
-  </ng-container>
-</div>
+              {{getGameName(game.GameID)}}
+            </a>
+            <a class="monospace row">
+              {{game.TimeElapsed}}
+            </a>
+            <a class="row">
+              {{convertDate(game.TimeCompleted) | date: 'MM/dd/yyyy hh:mm a'}}
+            </a>
+          </a>
+        </a>
+      </ng-container>
+    </a>
+  </div>
 <ng-container>

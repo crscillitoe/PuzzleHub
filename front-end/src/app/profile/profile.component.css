@@ -2,12 +2,11 @@
   background: #2C2C2C;
   color: white;
   position: absolute;
-  width:30%;
-  height:80%;
-  top:10%;
-  left:10%;
+  width:400px;
+  height:calc(100% - 3.5rem);
+  top:3.5rem;
+  right: 0px;
   text-align: left;
-  overflow-y:scroll;
 }
 
 p {
@@ -16,8 +15,97 @@ p {
   font-size: 24px;
   position: absolute;
   width:50%;
-  height:500px;
-  top:30%;
-  left:50%;
+  height:300px;
+  top:5rem;
+  left:10%;
   text-align: left;
+}
+
+.image {
+  float: right;
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+  margin-top: 18px;
+}
+
+.data {
+  position: relative;
+  display: inline-block;
+  height: 50%;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.smalldata {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-top: 3px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.scrollable {
+  background: #2C2C2C;
+  color: white;
+  position: absolute;
+  width:400px;
+  height:calc(100% - 40px);
+  top:40px;
+  right: 0px;
+  text-align: left;
+  overflow-y: scroll;
+}
+
+.even {
+  background: #333333;
+}
+
+.odd {
+  background: #202020;
+}
+
+.entry {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  height: 140px;
+}
+
+.smallentry {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 40px;
+  margin-bottom: -5px;
+}
+
+.row {
+  margin-left: 1px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.easy, .medium, .hard, .extreme {
+  margin-right: 5px;
+}
+
+.easy {
+  color: #28a745 !important;
+}
+
+.medium {
+  color: #17a2b8 !important;
+}
+
+.hard {
+  color: #007bff !important;
+}
+
+.extreme {
+  color: #dc3545 !important;
 }
