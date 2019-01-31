@@ -246,7 +246,13 @@ def stop_timer():
     db.commit()
     cursor.close()
 
-    return jsonify({"TimeElapsed":str(time_elapsed)[:-3], "Daily":better_daily, "Weekly":better_weekly, "Monthly":better_monthly})
+    time_str = ''
+    if len ( str(time_elapsed).split(':')[2] ) != 2:
+        time_str = str(time_elapsed)[:-3]
+    else :
+        time_str = str(time_elapsed) + '.000'
+
+    return jsonify({"TimeElapsed":time_str, "Daily":better_daily, "Weekly":better_weekly, "Monthly":better_monthly})
 
 # ------------------------------------------------------------ #
 def timer_sanity_checks(db, form_values):
