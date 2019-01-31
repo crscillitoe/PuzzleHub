@@ -1,3 +1,28 @@
+#medals {
+  background: #2C2C2C;
+  color: white;
+  position: absolute;
+  width:calc(100% - 400px);
+  height: calc(100% - 3.5rem - 80px);
+  top:calc(3.5rem + 80px);
+  left: 0px;
+  text-align: center;
+  font-size: 62px;
+  display: flex;
+}
+
+#username {
+  background: #202020;
+  color: white;
+  position: absolute;
+  width:calc(100% - 400px);
+  height: 80px;
+  top:3.5rem;
+  left: 0px;
+  text-align: center;
+  font-size: 50px;
+}
+
 #matchHistory {
   background: #2C2C2C;
   color: white;
@@ -58,6 +83,14 @@ p {
   overflow-y: scroll;
 }
 
+.load {
+  background: #007baa;
+}
+
+.load:hover {
+  background: #006aaa;
+}
+
 .even {
   background: #333333;
 }
@@ -108,4 +141,52 @@ p {
 
 .extreme {
   color: #dc3545 !important;
+}
+
+.col {
+  display: inline-block;
+}
+
+.medalContainer {
+  height: 100%;
+  width:50%;
+  position: relative;
+  left: 25%;
+}
+
+.medalImage {
+  width: 15vh;
+  height: 15vh;
+  float:left;
+}
+
+.medalNumber {
+  float: right;
+  font-size: 28px;
+}
+
+.medals {
+  flex-direction: column;
+  display: flex;
+  position: relative;
+  top: 50px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 100px);
+}
+
+.col1 {
+  background: #2c2c2c;
+}
+
+.col2 {
+  background: #4b4b4b;
+}
+
+.col3 {
+  background: #303030;
+}
+
+.colTitle {
+  font-size: 30px;
 }

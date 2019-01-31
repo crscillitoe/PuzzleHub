@@ -1,4 +1,8 @@
 <ng-container *ngIf="profileData != undefined">
+  <div id="username">
+    {{username}}
+  </div>
+  <!--
   <p>
     {{username}}'s profile: (layout design coming soonTM) <br>
     Daily Gold: {{profileData.DailyGoldMedals}} <br>
@@ -12,8 +16,86 @@
     Monthly Gold: {{profileData.MonthlyGoldMedals}} <br>
     Monthly Silver: {{profileData.MonthlySilverMedals}} <br>
     Monthly Bronze: {{profileData.MonthlyBronzeMedals}}
-  
   </p>
+  -->
+
+  <div id="medals">
+    <div class="col col1">
+      <div class="colTitle">
+        Daily Medals
+      </div>
+      <div class="medals">
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/gold.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.DailyGoldMedals}}
+          </div>
+        </div>
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/silver.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.DailySilverMedals}}
+          </div>
+        </div>
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/bronze.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.DailyBronzeMedals}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col col2">
+      <div class="colTitle">
+        Weekly Medals
+      </div>
+      <div class="medals">
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/gold.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.WeeklyGoldMedals}}
+          </div>
+        </div>
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/silver.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.WeeklySilverMedals}}
+          </div>
+        </div>
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/bronze.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.WeeklyBronzeMedals}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col col3">
+      <div class="colTitle">
+        Monthly Medals
+      </div>
+      <div class="medals">
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/gold.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.MonthlyGoldMedals}}
+          </div>
+        </div>
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/silver.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.MonthlySilverMedals}}
+          </div>
+        </div>
+        <div class="medalContainer">
+          <img class="medalImage" src="/assets/images/medals/bronze.svg">
+          <div class="medalNumber monospace">
+            x{{profileData.MonthlyBronzeMedals}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   
   <div id="matchHistory">
     <a class="smallentry odd">
@@ -44,6 +126,12 @@
           </a>
         </a>
       </ng-container>
+      <a (click)="loadMore()"
+        class="smallentry load clickable">
+        <a class="smalldata clickable">
+          Load More
+        </a>
+      </a>
     </a>
   </div>
 <ng-container>

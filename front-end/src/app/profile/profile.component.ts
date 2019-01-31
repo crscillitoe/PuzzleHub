@@ -30,7 +30,6 @@ export class ProfileComponent implements OnInit {
       this.tunnel.getProfileData(m)
         .subscribe( (data) => {
           this.profileData = data;
-          console.log(this.profileData);
         });
     });
   }
@@ -45,6 +44,18 @@ export class ProfileComponent implements OnInit {
         return (this.games[i])['Name'];
       }
     }
+  }
+
+  loadMore() {
+    let m = {
+      "Username":this.username,
+      "Offset":this.profileData.MatchHistory.length
+    }
+
+    this.tunnel.getMoreMatchHistory(m)
+      .subscribe( (data) => {
+        this.profileData.MatchHistory = this.profileData.MatchHistory.concat(data);
+      });
   }
 
   getGameImage(id) {

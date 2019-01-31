@@ -8,6 +8,80 @@ from api.auth import get_user_id
 
 xstr = lambda s: s or ""
 
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getMoreMatchHistory
+# Required POST parameters:
+#   Username: string
+#   Offset: int
+# Returns on success:
+#   MatchHistory: List(length 10) <
+#       GameID: int
+#       Difficulty: int
+#       TimeCompleted: time-string
+#       Time: time-string
+#       Seed: int
+#   >
+# Returns on failure:
+#   No return, throw error on failure.
+@app.route('/api/getMoreMatchHistory', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_more_match_history():
+    try:
+        username = request.json["Username"]
+    except:
+        abort(500, "Username not found")
+
+    try:
+        offset = request.json["Offset"]
+    except:
+        abort(500, "Offset not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = '''
+        SELECT MH.GameID, MH.Difficulty, MH.Date AS TimeCompleted, MH.TimeElapsed AS Time, MH.Seed
+        FROM users AS U
+            INNER JOIN matchHistory AS MH
+            ON U.UserID = MH.UserID
+        WHERE U.Username = %(username)s
+        ORDER BY MH.Date DESC
+        LIMIT 10
+        OFFSET %(offset)s
+    '''
+    query_model = {
+        "username":username,
+        "offset":offset
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    match_history = []
+    for d in data:
+        if len( str(d[3]).split(':')[2] ) != 2:
+            model = {
+                "GameID":d[0],
+                "Difficulty":d[1],
+                "TimeCompleted":str(d[2]),
+                "TimeElapsed": str(d[3])[:-3],
+                "Seed":d[4]
+            }
+            match_history.append(model)
+        else :
+            model = {
+                "GameID":d[0],
+                "Difficulty":d[1],
+                "TimeCompleted":str(d[2]),
+                "TimeElapsed": str(d[3]) + '.000',
+                "Seed":d[4]
+            }
+            match_history.append(model)
+
+    cursor.close()
+    return jsonify(match_history)
+
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getProfileData
 # Required POST parameters:
