@@ -109,7 +109,7 @@ export class LeaderboardsComponent implements OnInit {
 
       var friday = this.resetDate.getDate() + (13 - this.resetDate.getDay()) % 7;
 
-
+      this.resetDate.setHours(0, 0, 0, 0);
       this.resetDate.setUTCHours(5, 0, 0, 0);
       this.resetDate.setDate(friday);
 
