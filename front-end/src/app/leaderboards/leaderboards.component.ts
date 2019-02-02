@@ -108,6 +108,9 @@ export class LeaderboardsComponent implements OnInit {
     } else if(this.leaderboard == 1) {
 
       var friday = this.resetDate.getDate() + (13 - this.resetDate.getDay()) % 7;
+      if(this.resetDate.getDay() == 6) {
+        friday = friday + 7;
+      }
 
       this.resetDate.setHours(0, 0, 0, 0);
       this.resetDate.setUTCHours(5, 0, 0, 0);
