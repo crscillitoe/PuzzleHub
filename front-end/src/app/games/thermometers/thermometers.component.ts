@@ -144,21 +144,40 @@ export class ThermometersComponent implements OnInit {
     this.drawBackground();
     this.drawGrid();
     this.drawThermometers();
+    this.drawLegends();
   }
 
   drawGrid() {
     this.context.strokeStyle = this.colors.FOREGROUND;
     this.context.lineWidth = 1;
-    for(var i = 0; i <= this.board.width; i++) {
+    for(var i = 0; i <= this.board.width - 1; i++) {
       this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
-      this.context.lineTo(this.gridOffsetX + (i* this.gridBoxSize), this.gridOffsetY + (this.board.height * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + (i* this.gridBoxSize), this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize));
       this.context.stroke();
     }
 
-    for(var j = 0; j <= this.board.height; j++) {
+    for(var j = 0; j <= this.board.height - 1; j++) {
       this.context.moveTo(this.gridOffsetX, this.gridOffsetY + (j * this.gridBoxSize));
-      this.context.lineTo(this.gridOffsetX + (this.board.width * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + ((this.board.width - 1) * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
       this.context.stroke();
+    }
+  }
+
+  drawLegends() {
+    this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
+    this.context.textAlign = "center";
+    this.context.fillStyle = '#e8d9be';
+
+    for(var i = 0 ; i < this.board.width - 1; i++) {
+      this.context.fillText('' + this.board.bottomLegends[i],
+                            this.gridOffsetX + (i * this.gridBoxSize) + (this.gridBoxSize/2),
+                            this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize) + (this.gridBoxSize/1.3));
+    }
+
+    for(var j = 0 ; j < this.board.height - 1; j++) {
+      this.context.fillText('' + this.board.sideLegends[j],
+                            this.gridOffsetX + ((this.board.width - 1) * this.gridBoxSize) + (this.gridBoxSize/2),
+        this.gridOffsetY + (j * this.gridBoxSize) + (this.gridBoxSize/1.3));
     }
   }
 
@@ -211,6 +230,63 @@ export class ThermometersComponent implements OnInit {
     if(length <= 2) {
       return;
     }
+
+    var i;
+    var width;
+    var height;
+    var drawX;
+    var drawY;
+
+    if(dir == 0) {
+      width = this.gridBoxSize / 2.8;
+      height = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - width) + width/5;
+
+      drawX = (this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2) - width/2;
+      drawY = (this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize/2) + width;
+    } else if(dir == 1) {
+      width = this.gridBoxSize / 2.8;
+      height = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - width) + width/5;
+
+      drawX = (this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2) - width/2;
+      drawY = (this.gridOffsetY + ((y - length + 1) * this.gridBoxSize)) - width/5;
+    } else if(dir == 2) {
+      height = this.gridBoxSize / 2.8;
+      width = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - height) + height/5;
+
+      drawX = (this.gridOffsetX + ((x - length + 1) * this.gridBoxSize)) - height/5;
+      drawY = (this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize/2) - height/2;
+    } else if(dir == 3) {
+      // RIGHT
+      height = this.gridBoxSize / 2.8;
+      width = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - height) + height/5;
+
+      drawX = (this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2) + height;
+      drawY = (this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize/2) - height/2;
+    }
+
+    if(dir == 0 || dir == 1) {
+      this.context.moveTo(drawX, drawY);
+      this.context.lineTo(drawX, drawY + height);
+      this.context.stroke();
+
+      this.context.moveTo(drawX + width, drawY);
+      this.context.lineTo(drawX + width, drawY + height);
+      this.context.stroke();
+    } else {
+      this.context.moveTo(drawX, drawY);
+      this.context.lineTo(drawX + width, drawY);
+      this.context.stroke();
+
+      this.context.moveTo(drawX, drawY + height);
+      this.context.lineTo(drawX + width, drawY + height);
+      this.context.stroke();
+    }
+
+    this.context.strokeStyle = this.colors.color_1;
+    this.context.fillStyle = this.colors.BACKGROUND;
+    this.context.lineWidth = 3;
+    this.context.fillRect(drawX, drawY, width, height);
+    this.context.stroke();
   }
 
   done() {
