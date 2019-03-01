@@ -49,6 +49,9 @@ export class ThermometersComponent implements OnInit {
 
   board: any;
 
+  selectedX: number = -1;
+  selectedY: number = -1;
+
   // Used by the timer
   startDate: any;
   t: any;
@@ -143,8 +146,19 @@ export class ThermometersComponent implements OnInit {
     this.context.beginPath();
     this.drawBackground();
     this.drawGrid();
+    this.drawSelectedBox();
     this.drawThermometers();
     this.drawLegends();
+  }
+
+  drawSelectedBox() {
+    if(this.selectedX <= this.board.width - 2 && this.selectedX >= 0 &&
+       this.selectedY <= this.board.height - 2 && this.selectedY >= 0) {
+      this.context.fillStyle = "#3D3D3D";
+      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize),
+                            this.gridOffsetY + (this.selectedY * this.gridBoxSize),
+                              this.gridBoxSize, this.gridBoxSize);
+    }
   }
 
   drawGrid() {
@@ -190,11 +204,13 @@ export class ThermometersComponent implements OnInit {
     for(let thermometer of this.board.thermometers) {
       this.drawThermometerHead(thermometer.x, thermometer.y, thermometer.direction);
       this.drawThermometerBody(thermometer.x, thermometer.y, thermometer.direction, thermometer.length);
+      this.drawThermometerTail(thermometer.x, thermometer.y, thermometer.direction, thermometer.length);
     }
   }
 
   drawThermometerHead(x, y, dir) {
     this.context.strokeStyle = this.colors.color_1;
+    this.context.fillStyle = this.colors.BACKGROUND;
     this.context.lineWidth = 3;
     this.context.beginPath();
     var drawX = this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2;
@@ -220,17 +236,51 @@ export class ThermometersComponent implements OnInit {
 
     this.context.arc(drawX, drawY, radius, startPoint + thermometerOpenAmount
                                          , startPoint - thermometerOpenAmount);
+    this.context.fill();
     this.context.stroke();
   }
 
-  drawThermometerTail(x, y, dir) {
+  drawThermometerTail(x, y, dir, length) {
+    this.context.strokeStyle = this.colors.color_1;
+    this.context.fillStyle = this.colors.BACKGROUND;
+    this.context.lineWidth = 3;
+    this.context.beginPath();
+
+    var newX = x;
+    var newY = y;
+    if(dir == 0) {
+      newY = y + length - 1;
+    } else if(dir == 1) {
+      newY = y - length + 1;
+    } else if(dir == 2) {
+      newX = x - length + 1;
+    } else if(dir == 3) {
+      newX = x + length - 1;
+    }
+
+    var drawX = this.gridOffsetX + (newX * this.gridBoxSize) - this.gridBoxSize/2;
+    var drawY = this.gridOffsetY + (newY * this.gridBoxSize) - this.gridBoxSize/2;
+
+    var radius = this.gridBoxSize/5.8;
+    var thermometerOpenAmount = 0.5 * Math.PI;
+    var startPoint;
+    if(dir == 0) {
+      startPoint = 1.5 * Math.PI;
+    } else if(dir == 1) {
+      startPoint = 0.5 * Math.PI;
+    } else if(dir == 2) {
+      startPoint = 0 * Math.PI;
+    } else if(dir == 3) {
+      startPoint = 1 * Math.PI;
+    }
+
+    this.context.arc(drawX, drawY, radius, startPoint + thermometerOpenAmount
+                                         , startPoint - thermometerOpenAmount);
+    this.context.fill();
+    this.context.stroke();
   }
 
   drawThermometerBody(x, y, dir, length) {
-    if(length <= 2) {
-      return;
-    }
-
     var i;
     var width;
     var height;
@@ -238,27 +288,27 @@ export class ThermometersComponent implements OnInit {
     var drawY;
 
     if(dir == 0) {
-      width = this.gridBoxSize / 2.8;
-      height = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - width) + width/5;
+      width = this.gridBoxSize / 2.9;
+      height = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - width) + (width * 1.5);
 
       drawX = (this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2) - width/2;
       drawY = (this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize/2) + width;
     } else if(dir == 1) {
-      width = this.gridBoxSize / 2.8;
-      height = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - width) + width/5;
+      width = this.gridBoxSize / 2.9;
+      height = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - width) + (width * 1.5);
 
       drawX = (this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2) - width/2;
-      drawY = (this.gridOffsetY + ((y - length + 1) * this.gridBoxSize)) - width/5;
+      drawY = (this.gridOffsetY + ((y - length + 1) * this.gridBoxSize)) - (width * 1.5);
     } else if(dir == 2) {
-      height = this.gridBoxSize / 2.8;
-      width = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - height) + height/5;
+      height = this.gridBoxSize / 2.9;
+      width = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - height) + (height * 1.5);
 
-      drawX = (this.gridOffsetX + ((x - length + 1) * this.gridBoxSize)) - height/5;
+      drawX = (this.gridOffsetX + ((x - length + 1) * this.gridBoxSize)) - (height * 1.5);
       drawY = (this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize/2) - height/2;
     } else if(dir == 3) {
       // RIGHT
-      height = this.gridBoxSize / 2.8;
-      width = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - height) + height/5;
+      height = this.gridBoxSize / 2.9;
+      width = (this.gridBoxSize * (length - 2)) + ((this.gridBoxSize/2) - height) + (height * 1.5);
 
       drawX = (this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2) + height;
       drawY = (this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize/2) - height/2;
@@ -423,11 +473,19 @@ export class ThermometersComponent implements OnInit {
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mousemove', ['$event'])
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseMoveX':x, 'mouseMoveY':y});
+
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      this.selectedX = x;
+      this.selectedY = y;
+      this.draw();
+    }
   }
 
   // UNCOMMENT HostListener to track given event
