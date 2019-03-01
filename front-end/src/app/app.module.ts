@@ -26,6 +26,7 @@ import { TodoComponent } from './todo/todo.component';
 import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
 import { KakuroComponent } from './games/kakuro/kakuro.component';
+import { ThermometersComponent } from './games/thermometers/thermometers.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -41,7 +42,8 @@ const appRoutes: Routes = [
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
   { path: 'profile', component: ProfileComponent},
-  { path: 'Kakuro', component: KakuroComponent}
+  { path: 'Kakuro', component: KakuroComponent},
+  { path: 'Thermometers', component: ThermometersComponent}
 ];
 
 @NgModule({
@@ -65,7 +67,8 @@ const appRoutes: Routes = [
     TodoComponent,
     OptionsComponent,
     ProfileComponent,
-    KakuroComponent
+    KakuroComponent,
+    ThermometersComponent
   ],
   imports: [
     BrowserModule,

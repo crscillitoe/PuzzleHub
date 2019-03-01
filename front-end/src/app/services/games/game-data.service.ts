@@ -30,7 +30,13 @@ export class GameDataService {
     {'GameID': GameID.SUDOKU, 
       'Name': 'Sudoku', 
       'Image': 'assets/images/game-splashes/sudoku.svg',
-      'Description': 'A classic puzzle game where you must fill out the board with numbers 1-9.'}
+      'Description': 'A classic puzzle game where you must fill out the board with numbers 1-9.'},
+    {
+      'GameID': GameID.THERMOMETERS,
+      'Name': 'Thermometers',
+      'Image': 'assets/images/game-splashes/sudoku.svg',
+      'Description': 'A New York Times classic where you must fill up thermometers to a certain amount.'
+    }
   ]
 
   constructor() { }
