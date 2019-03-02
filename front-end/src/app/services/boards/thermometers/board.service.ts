@@ -21,43 +21,165 @@ export class Board {
     this.bottomLegends = [];
     this.sideLegends = [];
 
+    var realWidth = this.width - 1;
+    var realHeight = this.height - 1;
+
     // 0 - Down
     // 1 - Up
     // 2 - Left
     // 3 - Right
+    //
+    var numSkips = 0;
+    
+    //while(!this.isFull()) {
+    while(numSkips < 200 && !this.isFull()) {
+      var tile = this.getRandomEmptyTile();
+      var dir = Math.floor(this.random() * 4);
+      var added = false;
 
-    this.thermometers.push(new Thermometer(1, 1, 2, 3));
-    this.thermometers.push(new Thermometer(1, 2, 2, 0));
-    this.thermometers.push(new Thermometer(2, 2, 2, 0));
-    this.thermometers.push(new Thermometer(3, 3, 3, 1));
-    this.thermometers.push(new Thermometer(6, 1, 3, 2));
-    this.thermometers.push(new Thermometer(5, 2, 2, 2));
-    this.thermometers.push(new Thermometer(6, 2, 3, 0));
-    this.thermometers.push(new Thermometer(4, 3, 2, 3));
+      if(dir == 0) {
+        if(tile.y <= realHeight - 1) {
+          var length = Math.floor(this.random() * ((realHeight - 1) - tile.y)) + 2;
+          var filledAmount = Math.floor(this.random() * (length + 1));
 
-    this.thermometers.push(new Thermometer(3, 4, 3, 2));
-    this.thermometers.push(new Thermometer(2, 5, 2, 3));
-    this.thermometers.push(new Thermometer(1, 5, 2, 0));
+          var add = true;
+          for(var h = 0 ; h < length ; h++) {
+            if(this.getThermometerAt(tile.x, tile.y + h) != null) {
+              add = false;
+              break;
+            }
+          }
 
-    this.thermometers.push(new Thermometer(3, 6, 2, 2));
+          if(add) {
+            added = true;
+            this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
+          }
+        }
+      } else if(dir == 1) {
+        if(tile.y >= 2) {
+          var length = Math.floor(this.random() * (tile.y - 2)) + 2;
+          var filledAmount = Math.floor(this.random() * (length + 1));
 
-    this.thermometers.push(new Thermometer(4, 6, 3, 1));
-    this.thermometers.push(new Thermometer(5, 6, 3, 1));
-    this.thermometers.push(new Thermometer(6, 5, 2, 0));
+          var add = true;
+          for(var h = 0 ; h < length ; h++) {
+            if(this.getThermometerAt(tile.x, tile.y - h) != null) {
+              add = false;
+              break;
+            }
+          }
 
-    this.bottomLegends.push(5);
-    this.bottomLegends.push(2);
-    this.bottomLegends.push(3);
-    this.bottomLegends.push(3);
-    this.bottomLegends.push(3);
-    this.bottomLegends.push(3);
+          if(add) {
+            added = true;
+            this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
+          }
+        }
+      } else if(dir == 2) {
+        if(tile.x >= 2) {
+          var length = Math.floor(this.random() * (tile.x - 2)) + 2;
+          var filledAmount = Math.floor(this.random() * (length + 1));
 
-    this.sideLegends.push(3);
-    this.sideLegends.push(2);
-    this.sideLegends.push(4);
-    this.sideLegends.push(4);
-    this.sideLegends.push(3);
-    this.sideLegends.push(3);
+          var add = true;
+          for(var h = 0 ; h < length ; h++) {
+            if(this.getThermometerAt(tile.x - h, tile.y) != null) {
+              add = false;
+              break;
+            }
+          }
+
+          if(add) {
+            added = true;
+            this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
+          }
+        }
+      } else if(dir == 3) {
+        if(tile.x <= realWidth - 1) {
+          var length = Math.floor(this.random() * ((realWidth - 1) - tile.x)) + 2;
+          var filledAmount = Math.floor(this.random() * (length + 1));
+
+          var add = true;
+          for(var h = 0 ; h < length ; h++) {
+            if(this.getThermometerAt(tile.x + h, tile.y) != null) {
+              add = false;
+              break;
+            }
+          }
+
+          if(add) {
+            added = true;
+            this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
+          }
+        }
+      }
+
+      if(!added) {
+        numSkips++;
+      }
+    }
+    //}
+
+    // Set legends
+    for(var i = 0 ; i < this.width - 1 ; i++) {
+      var count = 0;
+      for(var j = 0 ; j < this.height - 1 ; j++) {
+        if(this.isFilled(i + 1, j + 1)) {
+          count++;
+        }
+      }
+
+      this.bottomLegends.push(count);
+    }
+
+    for(var j = 0 ; j < this.height - 1 ; j++) {
+      var count = 0;
+      for(var i = 0 ; i < this.width - 1 ; i++) {
+        if(this.isFilled(i + 1, j + 1)) {
+          count++;
+        }
+      }
+
+      this.sideLegends.push(count);
+    }
+
+    if(this.bottomLegends.reduce(this.add) < (this.width * 1.5) || 
+       this.sideLegends.reduce(this.add)   < (this.height * 1.5)) {
+      this.generateBoard();
+    }
+
+    // Empty thermometers
+    for(var k = 0 ; k < this.thermometers.length ; k++) {
+      this.thermometers[k].filledAmount = 0;
+    }
+  }
+
+  getRandomEmptyTile() {
+    var x = Math.floor(this.random() * (this.width  - 1)) + 1;
+    var y = Math.floor(this.random() * (this.height - 1)) + 1;
+
+    while(this.getThermometerAt(x, y) != null) {
+      x = Math.floor(this.random() * (this.width  - 1)) + 1;
+      y = Math.floor(this.random() * (this.height - 1)) + 1;
+    }
+
+    return {
+      x: x,
+      y: y
+    }
+  }
+
+  add(a, b) {
+    return a + b;
+  }
+
+  isFull() {
+    for(var i = 0 ; i < this.width - 1 ; i++) {
+      for(var j = 0 ; j < this.height - 1 ; j++) {
+        if(this.getThermometerAt(i + 1, j + 1) == null) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   isSolved() {
@@ -91,7 +213,12 @@ export class Board {
   }
 
   isFilled(x, y) {
-    return this.getThermometerAt(x, y).isFilledTo(x, y);
+    var thermometer = this.getThermometerAt(x, y);
+    if(thermometer != null) {
+      return thermometer.isFilledTo(x, y);
+    }
+
+    return false;
   }
 
   getThermometerAt(x, y) {
@@ -100,10 +227,50 @@ export class Board {
         return this.thermometers[i];
       }
     }
+
+    return null;
   }
 
   click(x, y) {
-    this.getThermometerAt(x, y).fillTo(x, y);
+    var thermometer = this.getThermometerAt(x, y);
+    if(thermometer != null) {
+      thermometer.fillTo(x, y);
+    }
+  }
+
+  random() {
+      var x = Math.sin(++this.seed) * 10000;
+      return x - Math.floor(x);
+  }
+
+  bottomLegendValid(i) {
+    var count = 0;
+    for(var j = 0 ; j < this.height - 1 ; j++) {
+      if(this.isFilled(i + 1, j + 1)) {
+        count++;
+      }
+    }
+
+    if(count != this.bottomLegends[i]) {
+      return false;
+    }
+
+    return true;
+  }
+
+  sideLegendValid(j) {
+    var count = 0;
+    for(var i = 0 ; i < this.width - 1 ; i++) {
+      if(this.isFilled(i + 1, j + 1)) {
+        count++;
+      }
+    }
+
+    if(count != this.sideLegends[j]) {
+      return false;
+    }
+
+    return true;
   }
 }
 
@@ -116,12 +283,12 @@ export class Thermometer {
 
   filledAmount: number;
 
-  constructor(x, y, length, direction) {
+  constructor(x, y, length, direction, filledAmount) {
     this.x = x;
     this.y = y;
     this.length = length;
     this.direction = direction;
-    this.filledAmount = 0;
+    this.filledAmount = filledAmount;
   }
 
   livesIn(paramX, paramY) {

@@ -84,20 +84,20 @@ export class ThermometersComponent implements OnInit {
     
     // Medium
     else if (this.difficulty == 2) {
-      width = 5;
-      height = 5;
-    } 
-    
-    // Hard
-    else if (this.difficulty == 3) {
       width = 6;
       height = 6;
     } 
     
+    // Hard
+    else if (this.difficulty == 3) {
+      width = 9;
+      height = 9;
+    } 
+    
     // Extreme
     else if (this.difficulty == 4) {
-      width = 7;
-      height = 7;
+      width = 13;
+      height = 13;
     }
 
     // Start timer if we are logged in
@@ -146,7 +146,9 @@ export class ThermometersComponent implements OnInit {
     this.context.beginPath();
     this.drawBackground();
     this.drawGrid();
-    this.drawSelectedBox();
+    if(!this.solved) {
+      this.drawSelectedBox();
+    }
     this.drawThermometers();
     this.drawLegends();
   }
@@ -155,9 +157,9 @@ export class ThermometersComponent implements OnInit {
     if(this.selectedX <= this.board.width - 2 && this.selectedX >= 0 &&
        this.selectedY <= this.board.height - 2 && this.selectedY >= 0) {
       this.context.fillStyle = "#3D3D3D";
-      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize),
-                            this.gridOffsetY + (this.selectedY * this.gridBoxSize),
-                              this.gridBoxSize, this.gridBoxSize);
+      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize) + 2,
+                            this.gridOffsetY + (this.selectedY * this.gridBoxSize) + 2,
+                              this.gridBoxSize - 4, this.gridBoxSize - 4);
     }
   }
 
@@ -180,15 +182,24 @@ export class ThermometersComponent implements OnInit {
   drawLegends() {
     this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
     this.context.textAlign = "center";
-    this.context.fillStyle = '#e8d9be';
 
     for(var i = 0 ; i < this.board.width - 1; i++) {
+      if(this.board.bottomLegendValid(i)) {
+        this.context.fillStyle = this.colors.COLOR_1;
+      } else {
+        this.context.fillStyle = '#e8d9be';
+      }
       this.context.fillText('' + this.board.bottomLegends[i],
                             this.gridOffsetX + (i * this.gridBoxSize) + (this.gridBoxSize/2),
                             this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize) + (this.gridBoxSize/1.3));
     }
 
     for(var j = 0 ; j < this.board.height - 1; j++) {
+      if(this.board.sideLegendValid(j)) {
+        this.context.fillStyle = this.colors.COLOR_1;
+      } else {
+        this.context.fillStyle = '#e8d9be';
+      }
       this.context.fillText('' + this.board.sideLegends[j],
                             this.gridOffsetX + ((this.board.width - 1) * this.gridBoxSize) + (this.gridBoxSize/2),
         this.gridOffsetY + (j * this.gridBoxSize) + (this.gridBoxSize/1.3));
@@ -213,7 +224,11 @@ export class ThermometersComponent implements OnInit {
     if(fillAmount == 0) {
       this.context.fillStyle = this.colors.BACKGROUND;
     } else {
-      this.context.fillStyle = this.colors.COLOR_3;
+      if(!this.solved) {
+        this.context.fillStyle = this.colors.COLOR_3;
+      } else {
+        this.context.fillStyle = this.colors.COLOR_1;
+      }
     }
     this.context.lineWidth = 3;
     this.context.beginPath();
@@ -249,7 +264,11 @@ export class ThermometersComponent implements OnInit {
     if(fillAmount < length) {
       this.context.fillStyle = this.colors.BACKGROUND;
     } else {
-      this.context.fillStyle = this.colors.COLOR_3;
+      if(!this.solved) {
+        this.context.fillStyle = this.colors.COLOR_3;
+      } else {
+        this.context.fillStyle = this.colors.COLOR_1;
+      }
     }
     this.context.lineWidth = 3;
     this.context.beginPath();
@@ -346,7 +365,11 @@ export class ThermometersComponent implements OnInit {
     this.context.fillRect(drawX, drawY, width, height);
     this.context.stroke();
 
-    this.context.fillStyle = this.colors.COLOR_3;
+    if(!this.solved) {
+      this.context.fillStyle = this.colors.COLOR_3;
+    } else {
+      this.context.fillStyle = this.colors.COLOR_1;
+    }
     if(fillAmount > 1) {
       if(dir == 0) {
         this.context.fillRect(drawX + 1, drawY - 1, width - 2, 2 + height * (fillAmount / length));
@@ -509,11 +532,10 @@ export class ThermometersComponent implements OnInit {
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
       this.board.click(x + 1, y + 1);
-      this.draw();
-
       if(this.board.isSolved()) {
         this.done();
       }
+      this.draw();
     }
   }
 
@@ -544,7 +566,6 @@ export class ThermometersComponent implements OnInit {
   // UNCOMMENT HostListener to track given event
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    console.log({'keyPressed':keyEvent.keyCode});
     let code = keyEvent.keyCode;
     if(code == 32) {
       this.newGame();
