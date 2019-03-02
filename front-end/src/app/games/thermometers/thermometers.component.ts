@@ -366,7 +366,22 @@ export class ThermometersComponent implements OnInit {
     this.solved = true;
     if(this.userService.isLoggedIn()) {
       this.timer.stopTimer(this.seed, this.gameID, this.difficulty, 'TODO - Board Solution String')
-        .subscribe( (data) => {});
+        .subscribe( (data) => {
+          if(data['Daily']) {
+            this.personalBestDaily = data['TimeElapsed'];
+          }
+
+          if(data['Weekly']) {
+            this.personalBestWeekly = data['TimeElapsed'];
+          }
+
+          if(data['Monthly']) {
+            this.personalBestMonthly = data['TimeElapsed'];
+          }
+
+          var display = document.getElementById("timer");
+          display.textContent = data['TimeElapsed'];
+        });
     } else {
       // Do nothing - we're not logged in
     }
@@ -430,12 +445,17 @@ export class ThermometersComponent implements OnInit {
     this.draw();
   }
 
+  handleOption(callback) {
+    eval(callback);
+  }
+
   newGame() {
     this.loader.startLoadingAnimation();
     if(this.userService.isLoggedIn()) {
-      this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
+      this.timer.startTimer(GameID.THERMOMETERS, this.difficulty)
         .subscribe( (data) => {
           this.seed = data['seed'];
+          console.log(this.seed);
 
           this.board.seed = this.seed;
           this.board.generateBoard();
@@ -490,6 +510,10 @@ export class ThermometersComponent implements OnInit {
 
       this.board.click(x + 1, y + 1);
       this.draw();
+
+      if(this.board.isSolved()) {
+        this.done();
+      }
     }
   }
 
@@ -518,9 +542,14 @@ export class ThermometersComponent implements OnInit {
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:keydown', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     console.log({'keyPressed':keyEvent.keyCode});
+    let code = keyEvent.keyCode;
+    if(code == 32) {
+      this.newGame();
+      return;
+    }
   }
 
   // UNCOMMENT HostListener to track given event

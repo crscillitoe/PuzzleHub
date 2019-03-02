@@ -61,14 +61,49 @@ export class Board {
   }
 
   isSolved() {
+    for(var i = 0 ; i < this.width - 1 ; i++) {
+      var count = 0;
+      for(var j = 0 ; j < this.height - 1 ; j++) {
+        if(this.isFilled(i + 1, j + 1)) {
+          count++;
+        }
+      }
+
+      if(count != this.bottomLegends[i]) {
+        return false;
+      }
+    }
+
+    for(var j = 0 ; j < this.height - 1 ; j++) {
+      var count = 0;
+      for(var i = 0 ; i < this.width - 1 ; i++) {
+        if(this.isFilled(i + 1, j + 1)) {
+          count++;
+        }
+      }
+
+      if(count != this.sideLegends[j]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  isFilled(x, y) {
+    return this.getThermometerAt(x, y).isFilledTo(x, y);
+  }
+
+  getThermometerAt(x, y) {
+    for(var i = 0 ; i < this.thermometers.length ; i++) {
+      if(this.thermometers[i].livesIn(x, y)) {
+        return this.thermometers[i];
+      }
+    }
   }
 
   click(x, y) {
-    for(var i = 0 ; i < this.thermometers.length ; i++) {
-      if(this.thermometers[i].livesIn(x, y)) {
-        this.thermometers[i].fillTo(x, y);
-      }
-    }
+    this.getThermometerAt(x, y).fillTo(x, y);
   }
 }
 
@@ -121,5 +156,11 @@ export class Thermometer {
     } else {
       this.filledAmount = diff + 1;
     }
+  }
+
+  isFilledTo(paramX, paramY) {
+    var diff = Math.abs(this.x - paramX) + Math.abs(this.y - paramY);
+
+    return this.filledAmount >= diff + 1;
   }
 }
