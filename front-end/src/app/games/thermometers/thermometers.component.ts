@@ -370,17 +370,34 @@ export class ThermometersComponent implements OnInit {
     } else {
       this.context.fillStyle = this.colors.COLOR_1;
     }
+
     if(fillAmount > 1) {
       if(dir == 0) {
-        this.context.fillRect(drawX + 1, drawY - 1, width - 2, 2 + height * (fillAmount / length));
+        if(fillAmount < length) {
+          this.context.fillRect(drawX + 1, drawY - 1, width - 2, 2 + this.gridBoxSize * (fillAmount - 1));
+        } else {
+          this.context.fillRect(drawX + 1, drawY - 1, width - 2, 2 + height * (fillAmount / length));
+        }
       } else if(dir == 3) {
-        this.context.fillRect(drawX - 1, drawY + 1, 2 + width * (fillAmount / length), height - 2);
+        if(fillAmount < length) {
+          this.context.fillRect(drawX - 1, drawY + 1, 2 + this.gridBoxSize * (fillAmount - 1), height - 2);
+        } else {
+          this.context.fillRect(drawX - 1, drawY + 1, 2 + width * (fillAmount / length), height - 2);
+        }
       } else if(dir == 1) {
         var rectHeight = height * (fillAmount / length);
-        this.context.fillRect(drawX + 1, (drawY + ((length - 1) * this.gridBoxSize) - width) - rectHeight + 1, width - 2, 2 + rectHeight);
+        if(fillAmount < length) {
+          this.context.fillRect(drawX + 1, (drawY + ((length - 1) * this.gridBoxSize) - width) - (this.gridBoxSize * (fillAmount - 1)) + 1, width - 2, 2 + this.gridBoxSize * (fillAmount - 1));
+        } else {
+          this.context.fillRect(drawX + 1, (drawY + ((length - 1) * this.gridBoxSize) - width) - rectHeight + 1, width - 2, 2 + rectHeight);
+        }
       } else if(dir == 2) {
         var rectWidth = width * (fillAmount / length);
-        this.context.fillRect((drawX + ((length - 1) * this.gridBoxSize) - height) - rectWidth + 1, drawY + 1, 2 + rectWidth, height - 2);
+        if(fillAmount < length) {
+          this.context.fillRect((drawX + ((length - 1) * this.gridBoxSize) - height) - (this.gridBoxSize * (fillAmount - 1)) + 1, drawY + 1, 2 + this.gridBoxSize * (fillAmount - 1), height - 2);
+        } else {
+          this.context.fillRect((drawX + ((length - 1) * this.gridBoxSize) - height) - rectWidth + 1, drawY + 1, 2 + rectWidth, height - 2);
+        }
       }
     }
   }
