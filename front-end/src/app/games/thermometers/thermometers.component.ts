@@ -202,15 +202,19 @@ export class ThermometersComponent implements OnInit {
 
   drawThermometers() {
     for(let thermometer of this.board.thermometers) {
-      this.drawThermometerHead(thermometer.x, thermometer.y, thermometer.direction);
-      this.drawThermometerBody(thermometer.x, thermometer.y, thermometer.direction, thermometer.length);
-      this.drawThermometerTail(thermometer.x, thermometer.y, thermometer.direction, thermometer.length);
+      this.drawThermometerHead(thermometer.x, thermometer.y, thermometer.direction, thermometer.filledAmount);
+      this.drawThermometerBody(thermometer.x, thermometer.y, thermometer.direction, thermometer.length, thermometer.filledAmount);
+      this.drawThermometerTail(thermometer.x, thermometer.y, thermometer.direction, thermometer.length, thermometer.filledAmount);
     }
   }
 
-  drawThermometerHead(x, y, dir) {
+  drawThermometerHead(x, y, dir, fillAmount) {
     this.context.strokeStyle = this.colors.color_1;
-    this.context.fillStyle = this.colors.BACKGROUND;
+    if(fillAmount == 0) {
+      this.context.fillStyle = this.colors.BACKGROUND;
+    } else {
+      this.context.fillStyle = this.colors.COLOR_3;
+    }
     this.context.lineWidth = 3;
     this.context.beginPath();
     var drawX = this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize/2;
@@ -240,9 +244,13 @@ export class ThermometersComponent implements OnInit {
     this.context.stroke();
   }
 
-  drawThermometerTail(x, y, dir, length) {
+  drawThermometerTail(x, y, dir, length, fillAmount) {
     this.context.strokeStyle = this.colors.color_1;
-    this.context.fillStyle = this.colors.BACKGROUND;
+    if(fillAmount < length) {
+      this.context.fillStyle = this.colors.BACKGROUND;
+    } else {
+      this.context.fillStyle = this.colors.COLOR_3;
+    }
     this.context.lineWidth = 3;
     this.context.beginPath();
 
@@ -280,7 +288,7 @@ export class ThermometersComponent implements OnInit {
     this.context.stroke();
   }
 
-  drawThermometerBody(x, y, dir, length) {
+  drawThermometerBody(x, y, dir, length, fillAmount) {
     var i;
     var width;
     var height;
@@ -337,6 +345,21 @@ export class ThermometersComponent implements OnInit {
     this.context.lineWidth = 3;
     this.context.fillRect(drawX, drawY, width, height);
     this.context.stroke();
+
+    this.context.fillStyle = this.colors.COLOR_3;
+    if(fillAmount > 1) {
+      if(dir == 0) {
+        this.context.fillRect(drawX + 1, drawY - 1, width - 2, 2 + height * (fillAmount / length));
+      } else if(dir == 3) {
+        this.context.fillRect(drawX - 1, drawY + 1, 2 + width * (fillAmount / length), height - 2);
+      } else if(dir == 1) {
+        var rectHeight = height * (fillAmount / length);
+        this.context.fillRect(drawX + 1, (drawY + ((length - 1) * this.gridBoxSize) - width) - rectHeight + 1, width - 2, 2 + rectHeight);
+      } else if(dir == 2) {
+        var rectWidth = width * (fillAmount / length);
+        this.context.fillRect((drawX + ((length - 1) * this.gridBoxSize) - height) - rectWidth + 1, drawY + 1, 2 + rectWidth, height - 2);
+      }
+    }
   }
 
   done() {
@@ -457,11 +480,17 @@ export class ThermometersComponent implements OnInit {
   /* EVENT LISTENERS */
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mousedown', ['$event'])
+  @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mousePressedX':x, 'mousePressedY':y});
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      this.board.click(x + 1, y + 1);
+      this.draw();
+    }
   }
 
   // UNCOMMENT HostListener to track given event

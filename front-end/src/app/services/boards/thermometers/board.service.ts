@@ -62,6 +62,14 @@ export class Board {
 
   isSolved() {
   }
+
+  click(x, y) {
+    for(var i = 0 ; i < this.thermometers.length ; i++) {
+      if(this.thermometers[i].livesIn(x, y)) {
+        this.thermometers[i].fillTo(x, y);
+      }
+    }
+  }
 }
 
 export class Thermometer {
@@ -79,5 +87,39 @@ export class Thermometer {
     this.length = length;
     this.direction = direction;
     this.filledAmount = 0;
+  }
+
+  livesIn(paramX, paramY) {
+    if(this.direction == 0) {
+      //DOWN
+      return (paramX == this.x) && 
+             (paramY >= this.y) && 
+             (paramY < this.y + this.length);
+    } else if(this.direction == 1) {
+      //UP
+      return (paramX == this.x) && 
+             (paramY <= this.y) && 
+             (paramY > this.y - this.length);
+    } else if(this.direction == 2) {
+      //LEFT
+      return (paramY == this.y) && 
+             (paramX <= this.x) && 
+             (paramX > this.x - this.length);
+    } else if(this.direction == 3) {
+      //RIGHT
+      return (paramY == this.y) && 
+             (paramX >= this.x) && 
+             (paramX < this.x + this.length);
+    }
+  }
+
+  fillTo(paramX, paramY) {
+    var diff = Math.abs(this.x - paramX) + Math.abs(this.y - paramY);
+
+    if(this.filledAmount >= diff + 1) {
+      this.filledAmount = diff;
+    } else {
+      this.filledAmount = diff + 1;
+    }
   }
 }
