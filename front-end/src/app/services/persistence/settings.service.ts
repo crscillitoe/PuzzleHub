@@ -7,6 +7,7 @@ export class SettingsService {
 
   static defaults: any = {
     "takuzuGrid":true,
+    "takuzuInvert":false,
     "tileAnimations":true,
     "selectedGameID":5,
     "selectedLeaderboard":0,

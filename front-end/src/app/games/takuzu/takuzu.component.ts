@@ -25,6 +25,13 @@ export class TakuzuComponent implements OnInit {
       'name':'Display Grid',
       'callback':'this.toggleGrid()',
       'storedName':'takuzuGrid'
+    },
+    {
+      'type':'checkbox',
+      'bindTo':'invertControls',
+      'name':'Invert Controls',
+      'callback':'this.invertControls()',
+      'storedName':'takuzuInvert'
     }
   ];
 
@@ -39,6 +46,7 @@ export class TakuzuComponent implements OnInit {
   cColor: any;
 
   displayGrid: boolean;
+  invertedControls: boolean;
 
   canvasOffsetX: number = 225;
   canvasOffsetY: number = 56;
@@ -83,6 +91,7 @@ export class TakuzuComponent implements OnInit {
 
 
     this.displayGrid = SettingsService.getDataBool('takuzuGrid');
+    this.invertedControls = SettingsService.getDataBool('takuzuInvert');
 
     var size;
     var removePerc;
@@ -299,6 +308,11 @@ export class TakuzuComponent implements OnInit {
     this.draw();
   }
 
+  invertControls() {
+    this.invertedControls = !this.invertedControls;
+    SettingsService.storeData('takuzuInvert', this.invertedControls);
+  }
+
   drawBorder() {
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.COLOR_1;
@@ -505,11 +519,20 @@ export class TakuzuComponent implements OnInit {
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
 
-      if (mouseEvent.button == 2) {
-        this.board.rotateValue(x, y, false);
+      if(this.invertedControls) {
+        if (mouseEvent.button == 2) {
+          this.board.rotateValue(x, y, false);
+        } else {
+          this.board.rotateValue(x, y, true);
+        }
       } else {
-        this.board.rotateValue(x, y, true);
+        if (mouseEvent.button == 2) {
+          this.board.rotateValue(x, y, true);
+        } else {
+          this.board.rotateValue(x, y, false);
+        }
       }
+
       this.draw();
       
       if (this.board.isSolved()) {
