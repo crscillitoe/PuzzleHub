@@ -251,11 +251,13 @@ export class Board {
       }
     }
 
-    if(count != this.bottomLegends[i]) {
-      return false;
+    if(count < this.bottomLegends[i]) {
+      return 0;
+    } else if(count > this.bottomLegends[i]) {
+      return -1;
     }
 
-    return true;
+    return 1;
   }
 
   sideLegendValid(j) {
@@ -266,11 +268,13 @@ export class Board {
       }
     }
 
-    if(count != this.sideLegends[j]) {
-      return false;
+    if(count < this.sideLegends[j]) {
+      return 0;
+    } else if(count > this.sideLegends[j]) {
+      return -1;
     }
 
-    return true;
+    return 1;
   }
 }
 

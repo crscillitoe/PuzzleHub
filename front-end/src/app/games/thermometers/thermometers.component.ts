@@ -184,10 +184,14 @@ export class ThermometersComponent implements OnInit {
     this.context.textAlign = "center";
 
     for(var i = 0 ; i < this.board.width - 1; i++) {
-      if(this.board.bottomLegendValid(i)) {
+      var valid = this.board.bottomLegendValid(i);
+
+      if(valid == 1) {
         this.context.fillStyle = this.colors.COLOR_1;
-      } else {
+      } else if(valid == 0) {
         this.context.fillStyle = '#e8d9be';
+      } else {
+        this.context.fillStyle = this.colors.COLOR_8;
       }
       this.context.fillText('' + this.board.bottomLegends[i],
                             this.gridOffsetX + (i * this.gridBoxSize) + (this.gridBoxSize/2),
@@ -195,11 +199,16 @@ export class ThermometersComponent implements OnInit {
     }
 
     for(var j = 0 ; j < this.board.height - 1; j++) {
-      if(this.board.sideLegendValid(j)) {
+      var validSide = this.board.sideLegendValid(j);
+
+      if(validSide == 1) {
         this.context.fillStyle = this.colors.COLOR_1;
-      } else {
+      } else if(validSide == 0) {
         this.context.fillStyle = '#e8d9be';
+      } else {
+        this.context.fillStyle = this.colors.COLOR_8;
       }
+
       this.context.fillText('' + this.board.sideLegends[j],
                             this.gridOffsetX + ((this.board.width - 1) * this.gridBoxSize) + (this.gridBoxSize/2),
         this.gridOffsetY + (j * this.gridBoxSize) + (this.gridBoxSize/1.3));
