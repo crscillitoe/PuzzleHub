@@ -111,12 +111,16 @@
           </a>
           <a class="data">
             <a class="title row">
-              <a [ngClass]="game.Difficulty == 1 ? 'easy' : game.Difficulty == 2 ? 'medium' : game.Difficulty == 3 ? 'hard' : 'extreme'">
-                {{getDifficulty(game.Difficulty)}}  
-              </a>
+                <a [ngClass]="game.Difficulty == 1 ? 'easy' : game.Difficulty == 2 ? 'medium' : game.Difficulty == 3 ? 'hard' : 'extreme'">
+                  {{getDifficulty(game.Difficulty)}}  
+                </a>
 
+            </a>
+
+            <a class="row gamename">
               {{getGameName(game.GameID)}}
             </a>
+
             <a class="monospace row">
               {{game.TimeElapsed}}
             </a>

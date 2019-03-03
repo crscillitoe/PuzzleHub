@@ -120,7 +120,12 @@ p {
 
 .title {
   font-size: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  line-height: 1;
+}
+
+.gamename {
+  font-size: 24px;
 }
 
 .easy, .medium, .hard, .extreme {
