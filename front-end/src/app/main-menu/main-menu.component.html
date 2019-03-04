@@ -13,8 +13,19 @@
                 <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  >extreme</button>
               </ng-container>
               <ng-container *ngIf="!isLoggedIn()">
-                <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
-                <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  [disabled]="true">extreme</button>
+                <div class="mytooltip">
+                  <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
+                  <div class="tooltiptext">
+                    Log in to play harder difficulties
+                  </div>
+                </div>
+
+                <div class="mytooltip">
+                  <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  [disabled]="true">extreme</button>
+                  <div class="tooltiptext">
+                    Log in to play harder difficulties
+                  </div>
+                </div>
               </ng-container>
             </div>
 
