@@ -20,7 +20,7 @@ export class ThermometersComponent implements OnInit {
 
   controls: string = "Click anywhere on the thermometer to insert fluid.";
 
-  rules: string = "Rules of the game goes here";
+  rules: string = "The numbers in the rows/columns indicate the amount of fluid that must be present in that given row/column.";
 
   // Used for drawing to the screen
   canvas: any;

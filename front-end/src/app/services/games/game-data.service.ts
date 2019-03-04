@@ -34,7 +34,7 @@ export class GameDataService {
     {
       'GameID': GameID.THERMOMETERS,
       'Name': 'Thermometers',
-      'Image': 'assets/images/game-splashes/sudoku.svg',
+      'Image': 'assets/images/game-splashes/thermometers.svg',
       'Description': 'A New York Times classic where you must fill up thermometers to a certain amount.'
     }
   ]
