@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { GameID } from '../../enums/game-id.enum';
 import { ColorService } from '../../services/colors/color.service';
 import { Board } from '../../services/boards/thermometers/board.service';
+import { GameStarterService } from '../../services/generators/game-starter.service';
 
 @Component({
   selector: 'app-thermometers',
@@ -100,46 +101,10 @@ export class ThermometersComponent implements OnInit {
       height = 13;
     }
 
-    // Start timer if we are logged in
-    if(this.userService.isLoggedIn()) {
-      // Get personal high scores
-      let m = {
-        GameID: this.gameID,
-        Difficulty: this.difficulty
-      }
-      this.tunnel.getPersonalBest(m)
-        .subscribe( (data) => {
-          this.personalBestDaily = data['daily'];
-          this.personalBestWeekly = data['weekly'];
-          this.personalBestMonthly = data['monthly'];
-        });
+    this.board = new Board(width, height, 0);
 
-      this.timer.startTimer(this.gameID, this.difficulty)
-        .subscribe( (data) => {
-          this.seed = data['seed'];
-
-          this.board = new Board(width, height, this.seed);
-          this.board.generateBoard();
-
-
-          this.startDate = new Date();
-          this.displayTimer();
-
-          this.fixSizes();
-          this.draw();
-        });
-    } else {
-      this.seed = Math.floor(Math.random() * (2000000000));
-
-      this.board = new Board(width, height, this.seed);
-      this.board.generateBoard();
-
-      this.startDate = new Date();
-      this.displayTimer();
-
-      this.fixSizes();
-      this.draw();
-    }
+    var that = this;
+    GameStarterService.startGame(that);
   }
 
   draw() {

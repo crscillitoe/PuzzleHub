@@ -8,6 +8,7 @@ import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
 import { GameID } from '../../enums/game-id.enum';
+import { GameStarterService } from '../../services/generators/game-starter.service';
 
 @Component({
   selector: 'app-hashi',
@@ -93,6 +94,8 @@ export class HashiComponent implements OnInit {
   playing: boolean;
 
   startDate: any;
+
+  gameID: number = GameID.HASHI;
 
   constructor(private route: ActivatedRoute, 
     private router: Router,

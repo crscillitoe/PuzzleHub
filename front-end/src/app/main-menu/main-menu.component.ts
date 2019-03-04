@@ -25,6 +25,10 @@ export class MainMenuComponent implements OnInit {
   ) { 
   }
 
+  isLoggedIn() {
+    return this.user.isLoggedIn();
+  }
+
   playGame(route, diff) {
     let m = {
       diff: diff

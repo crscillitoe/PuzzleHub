@@ -142,7 +142,6 @@ export class Board
         }
       }
 
-      console.log(this.removePerc * (this.size * this.size));
       for (var i = 0; i < (this.removePerc * (this.size * this.size)); i++) {
 
         if (indexes.length == 0) { break; }
@@ -505,7 +504,6 @@ export class Board
       didSomething = Board.useTechniques(thisBoard);
 
       if (!didSomething || thisBoard[i][j] == val) {
-        if (thisBoard[i][j] == val) { console.log("optimized"); }
         break;
       }
     }

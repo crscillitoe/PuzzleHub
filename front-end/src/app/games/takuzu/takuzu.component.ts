@@ -9,6 +9,7 @@ import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/takuzu/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { SettingsService } from '../../services/persistence/settings.service';
+import { GameStarterService } from '../../services/generators/game-starter.service';
 
 @Component({
   selector: 'app-takuzu',
@@ -70,6 +71,8 @@ export class TakuzuComponent implements OnInit {
   board: Board;
   solved: boolean = false;
 
+  gameID: number = GameID.TAKUZU;
+
   constructor(
     private route: ActivatedRoute, 
     private colorService: ColorService,
@@ -120,54 +123,10 @@ export class TakuzuComponent implements OnInit {
       removePerc = 0.7;
     }
 
-    // Uncomment these to add event listeners
-    //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-    //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+    this.board = new Board(size, 0, removePerc);
 
-    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
-    //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
-
-
-    // Start timer if we are logged in
-    if(this.userService.isLoggedIn()) {
-      let m = {
-        GameID: GameID.TAKUZU,
-        Difficulty: this.difficulty
-      }
-      this.tunnel.getPersonalBest(m)
-        .subscribe( (data) => {
-          this.personalBestDaily = data['daily'];
-          this.personalBestWeekly = data['weekly'];
-          this.personalBestMonthly = data['monthly'];
-        });
-      this.timer.startTimer(GameID.TAKUZU, this.difficulty)
-        .subscribe( (data) => {
-          // Generate board with given seed
-          this.seed = data['seed'];
-
-          this.board = new Board(size, this.seed, removePerc);
-          this.board.generateBoard();
-
-          this.startDate = new Date();
-          this.displayTimer();
-
-          this.fixSizes();
-          this.draw();
-        });
-    } else {
-      // Generate board with random seed
-      this.seed = Math.floor(Math.random() * (2000000000));
-      
-      this.board = new Board(size, this.seed, removePerc);
-      this.board.generateBoard();
-
-      this.startDate = new Date();
-      this.displayTimer();
-
-      this.fixSizes();
-      this.draw();
-    }
+    var that = this;
+    GameStarterService.startGame(that);
   }
 
   add(that) {

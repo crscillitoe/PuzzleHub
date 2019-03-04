@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/minesweeper/board.service';
 import { ColorService } from '../../services/colors/color.service';
+import { GameStarterService } from '../../services/generators/game-starter.service';
 
 @Component({
   selector: 'app-minesweeper',
@@ -47,6 +48,8 @@ export class MinesweeperComponent implements OnInit {
   startDate: any;
   t: any;
   solved: boolean = false;
+
+  gameID: number = GameID.MINESWEEPER;
   
   difficulty: number;
   seed: number;
@@ -104,74 +107,10 @@ export class MinesweeperComponent implements OnInit {
       bombCount = 99;
     }
 
-    // Uncomment these to add event listeners
-    //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-    //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+    this.board = new Board(width, height, bombCount, 0);
 
-    //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
-    //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
-
-
-    this.loader.startLoadingAnimation();
-    // Start timer if we are logged in
-    if(this.userService.isLoggedIn()) {
-      let m = {
-        GameID: GameID.MINESWEEPER,
-        Difficulty: this.difficulty
-      }
-      this.tunnel.getPersonalBest(m)
-        .subscribe( (data) => {
-          this.personalBestDaily = data['daily'];
-          this.personalBestWeekly = data['weekly'];
-          this.personalBestMonthly = data['monthly'];
-        });
-
-      this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
-        .subscribe( (data) => {
-          // Generate board with given seed
-          this.seed = data['seed'];
-
-          this.board = new Board(width, height, bombCount, this.seed);
-          this.board.generateBoard();
-          
-          //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
-          //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-          //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
-          //this.displayTimer();
-
-          this.startDate = new Date();
-          this.displayTimer();
-
-          this.loader.stopLoadingAnimation();
-          this.fixSizes();
-          var img = document.getElementById("flag");
-          img.onload = () => {
-            this.draw();
-          }
-        });
-    } else {
-      // Generate board with random seed
-      this.seed = Math.floor(Math.random() * (2000000000));
-      
-      this.board = new Board(width, height, bombCount, this.seed);
-      this.board.generateBoard();
- 
-      //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false); 
-      //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-      //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
-      
-      this.startDate = new Date();
-      this.displayTimer();
-
-      this.loader.stopLoadingAnimation();
-
-      this.fixSizes();
-      var img = document.getElementById("flag");
-      img.onload = () => {
-        this.draw();
-      }
-    }
+    var that = this;
+    GameStarterService.startGame(that);
   }
 
   newGame() {

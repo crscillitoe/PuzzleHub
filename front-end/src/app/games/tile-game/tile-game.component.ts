@@ -9,6 +9,7 @@ import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/tile-game/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { SettingsService } from '../../services/persistence/settings.service';
+import { GameStarterService } from '../../services/generators/game-starter.service';
 
 @Component({
   selector: 'app-tile-game',
@@ -142,6 +143,8 @@ export class TileGameComponent implements OnInit {
   left: boolean;
   right: boolean;
 
+  gameID: number = GameID.TILE_GAME;
+
   board: Board;
 
   constructor(
@@ -229,54 +232,10 @@ export class TileGameComponent implements OnInit {
     //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
     //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
+    this.board = new Board(width, height, 0); 
 
-
-    // Start timer if we are logged in
-    if(this.userService.isLoggedIn() && this.difficulty != 5) {
-      let m = {
-        GameID: GameID.TILE_GAME,
-        Difficulty: this.difficulty
-      }
-      this.tunnel.getPersonalBest(m)
-        .subscribe( (data) => {
-          this.personalBestDaily = data['daily'];
-          this.personalBestWeekly = data['weekly'];
-          this.personalBestMonthly = data['monthly'];
-        });
-
-      this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
-        .subscribe( (data) => {
-          // Generate board with given seed
-          this.seed = data['seed'];
-
-          this.board = new Board(width, height, this.seed); 
-          this.board.generateBoard();
-
-          //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-          //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
-
-          this.startDate = new Date();
-          this.displayTimer();
-
-          this.fixSizes();
-          this.draw();
-        });
-    } else {
-      // Generate board with random seed
-      this.seed = Math.floor(Math.random() * (2000000000));
-
-      this.board = new Board(width, height, this.seed); 
-      this.board.generateBoard();
-
-      //this.canvas.addEventListener('mousedown', (e) => this.mousePressed(e),  false);
-      //window.addEventListener('keydown', (e) => this.keyPressed(e),  false);
-
-      this.startDate = new Date();
-      this.displayTimer();
-
-      this.fixSizes();
-      this.draw();
-    }
+    var that = this;
+    GameStarterService.startGame(that);
   }
 
   configureHotkeys() {
