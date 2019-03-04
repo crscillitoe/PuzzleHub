@@ -57,8 +57,6 @@ export class Board {
         mineYPos = Math.floor(this.random()* this.height);
       } while (!this.checkValidMine(mineXPos, mineYPos, firstX, firstY));    
 
-      //console.log(mineXPos, mineYPos);
-
       for(var i = -1; i <= 1; i++){
         for(var j = -1; j <= 1; j++){
           if(i == 0 && j == 0){
@@ -78,7 +76,6 @@ export class Board {
     }
 
     if((Math.abs(x - firstX) <= 1) && (Math.abs(y - firstY)) <= 1){
-      console.log("Returning");
       return false;
     }
 

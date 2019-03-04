@@ -283,53 +283,8 @@ export class SudokuComponent implements OnInit {
   }
 
   newGame() {
-    if(this.userService.isLoggedIn()) {
-      this.timer.startTimer(GameID.SUDOKU, this.difficulty)
-        .subscribe( (data) => {
-          // Generate board with given seed
-          this.seed = data['seed'];
-
-          this.board = new Board(this.numCarved);
-
-          this.board.generateBoard();
-          this.notes = {};
-
-          this.fixSizes();
-          this.loader.stopLoadingAnimation();
-
-          if(this.solved) {
-            this.solved = false;
-
-            this.startDate = new Date();
-            this.displayTimer();
-          } else {
-            this.startDate = new Date();
-          }
-
-          this.draw();
-        });
-    } else {
-      // Generate board with random seed
-      this.seed = Math.floor(Math.random() * (2000000000));
-
-      this.board = new Board(this.numCarved);
-      this.board.generateBoard();
-      this.notes = {};
-
-      this.fixSizes();
-      this.loader.stopLoadingAnimation();
-
-      if(this.solved) {
-        this.solved = false;
-
-        this.startDate = new Date();
-        this.displayTimer();
-      } else {
-        this.startDate = new Date();
-      }
-
-      this.draw();
-    }
+    var that = this;
+    GameStarterService.newGame(that);
   }
 
   done() {

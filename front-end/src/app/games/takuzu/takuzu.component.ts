@@ -156,51 +156,8 @@ export class TakuzuComponent implements OnInit {
   }
 
   newGame() {
-    this.loader.startLoadingAnimation();
-    if(this.userService.isLoggedIn()) {
-      this.timer.startTimer(GameID.TAKUZU, this.difficulty)
-        .subscribe( (data) => {
-          // Generate board with given seed
-          this.seed = data['seed'];
-
-          this.board.seed = this.seed;
-          this.board.generateBoard();
-
-          if(this.solved) {
-            this.solved = false;
-
-            this.startDate = new Date();
-            this.displayTimer();
-          } else {
-            this.startDate = new Date();
-          }
-
-          this.fixSizes();
-
-          this.loader.stopLoadingAnimation();
-          this.draw();
-        });
-    } else {
-      // Generate board with random seed
-      this.seed = Math.floor(Math.random() * (2000000000));
-
-      this.board.seed = this.seed;
-      this.board.generateBoard();
-
-      if(this.solved) {
-        this.solved = false;
-
-        this.startDate = new Date();
-        this.displayTimer();
-      } else {
-        this.startDate = new Date();
-      }
-
-      this.fixSizes();
-
-      this.loader.stopLoadingAnimation();
-      this.draw();
-    }
+    var that = this;
+    GameStarterService.newGame(that);
   }
 
   displayTimer() {
