@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 export class UserService {
   public username: any = new Subject();
   private loggedIn: boolean = false;
+  private static xp: number = 0;
   public user: string;
 
   constructor() { }
@@ -22,8 +23,24 @@ export class UserService {
     this.username.next(name);
   }
 
+  static setXp(xp) {
+    this.xp = xp;
+  }
+
+  static addXp(xp) {
+    this.xp += xp;
+  }
+
   isLoggedIn() {
     return this.getCookie('PuzzleHubToken') != "";
+  }
+
+  static calculateLevel() {
+    return Math.floor(this.xp / 1000) + 1;
+  }
+
+  static xpToNextLevel() {
+    return '' + (this.xp % 1000) + '/' + 1000;
   }
 
   getCookie(cookieName) {

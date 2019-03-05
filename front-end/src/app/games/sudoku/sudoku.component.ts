@@ -288,27 +288,8 @@ export class SudokuComponent implements OnInit {
   }
 
   done() {
-    this.solved = true;
-    if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(this.seed, GameID.SUDOKU, this.difficulty, 'TODO - Board Solution String')
-        .subscribe( (data) => {
-          if(data['Daily']) {
-            this.personalBestDaily = data['TimeElapsed'];
-          }
-
-          if(data['Weekly']) {
-            this.personalBestWeekly = data['TimeElapsed'];
-          }
-
-          if(data['Monthly']) {
-            this.personalBestMonthly = data['TimeElapsed'];
-          }
-          var display = document.getElementById("timer");
-          display.textContent = data['TimeElapsed'];
-        });
-    } else {
-      console.log('done - not logged in');
-    }
+    var that = this;
+    GameStarterService.done(that);
   }
 
   /* EVENT LISTENERS */

@@ -1,3 +1,4 @@
+import math
 from api import app
 from flask import jsonify
 from flask import abort
@@ -100,6 +101,7 @@ def start_timer():
 # Returns on success:
 #   TimeElapsed: TimeString (HH:MM:SS.mmm)
 #   NewRecord: Bool - Indicates if the current time is better than the previous
+#   XPGain: Number - amount of xp gained
 # Returns on failure:
 #   -1
 @app.route('/api/stopTimer', methods=['POST'])
@@ -246,13 +248,63 @@ def stop_timer():
     db.commit()
     cursor.close()
 
+    seconds_elapsed = math.ceil(time_elapsed.total_seconds())
+    xp_gain = calculate_xp_gain(difficulty, seconds_elapsed)
+
+    cursor = db.cursor()
+    sql_query = '''
+        UPDATE accountData
+        SET XP = XP + %(xp_gain)s
+        WHERE UserID = %(user_id)s
+    '''
+    query_model = {
+        "user_id":user_id,
+        "xp_gain":xp_gain
+    }
+    cursor.execute(sql_query, query_model)
+    db.commit()
+    cursor.close()
+
     time_str = ''
     if len ( str(time_elapsed).split(':')[2] ) != 2:
         time_str = str(time_elapsed)[:-3]
     else :
         time_str = str(time_elapsed) + '.000'
 
-    return jsonify({"TimeElapsed":time_str, "Daily":better_daily, "Weekly":better_weekly, "Monthly":better_monthly})
+    return jsonify({"TimeElapsed":time_str, "Daily":better_daily, "Weekly":better_weekly, "Monthly":better_monthly, "XPGain":xp_gain})
+
+
+def calculate_xp_gain(diff, time_elapsed_seconds):
+    if time_elapsed_seconds > 120:
+        time_multiplier = 120
+    elif time_elapsed_seconds == 0:
+        time_multiplier = 1
+    else:
+        time_multiplier = time_elapsed_seconds
+
+    if time_elapsed_seconds > 600:
+        time_elapsed_seconds_real = 600
+    else:
+        time_elapsed_seconds_real = time_elapsed_seconds
+
+
+    if diff == 1:
+        diff_multiplier = 1.0
+    elif diff == 2:
+        diff_multiplier = 1.2
+    elif diff == 3:
+        diff_multiplier = 1.4
+    elif diff == 4:
+        diff_multiplier = 2.0
+
+    time_multiplier = math.log(time_multiplier, 1.05)
+    xp_gain = 50 + math.ceil(1.2 * time_multiplier) * 1
+    if time_elapsed_seconds > 120:
+        xp_gain = xp_gain + math.ceil((time_elapsed_seconds_real - 120)/2)
+
+    xp_gain = math.ceil(xp_gain * diff_multiplier)
+
+    return xp_gain
 
 # ------------------------------------------------------------ #
 def timer_sanity_checks(db, form_values):

@@ -27,6 +27,11 @@ export class HeaderComponent implements OnInit {
       .subscribe( (data) => {
         user.setUserName(data['username']);
       });
+
+    tunnelService.getLevel()
+      .subscribe( (data) => {
+        UserService.setXp(data['xp']);
+      });
   }
 
   getEnum(name) {
@@ -36,6 +41,14 @@ export class HeaderComponent implements OnInit {
   signOut() {
     this.user.setUserName("");
     document.cookie = "PuzzleHubToken=; Max-Age=0";
+  }
+
+  getLevel() {
+    return UserService.calculateLevel();
+  }
+
+  xpToNextLevel() {
+    return UserService.xpToNextLevel();
   }
 
   ngOnInit() {

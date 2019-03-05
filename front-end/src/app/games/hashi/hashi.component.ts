@@ -20,7 +20,9 @@ export class HashiComponent implements OnInit {
   controls: string = "Click and drag from an island to build a bridge.";
   rules: string = "The goal is to connect all of the islands into a single connected group by drawing a series of bridges between the islands. The number of bridges coming off of an island must match the number written on that island.";
 
+
   diff: any;
+  difficulty: any;
   timePaused: any;
   startPause: any;
   version: string;

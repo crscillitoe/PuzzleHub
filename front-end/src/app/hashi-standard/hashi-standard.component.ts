@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Board, MyNode, Bridge } from '../services/boards/hashi/board.service';
 import { GameID } from '../enums/game-id.enum';
+import { GameStarterService } from '../services/generators/game-starter.service';
 
 @Component({
   selector: 'app-hashi-standard',
@@ -913,30 +914,7 @@ export class HashiStandardComponent implements OnInit {
           }
       }
 
-      that.solved = true;
-
-      if(that.userService.isLoggedIn()) {
-        that.timer.stopTimer(that.seed, GameID.HASHI, that.diff, that.board.toString())
-          .subscribe( (data) => {
-            console.log(data);
-              if(data['Daily']) {
-                that.personalBestDaily = data['TimeElapsed'];
-              }
-
-              if(data['Weekly']) {
-                that.personalBestWeekly = data['TimeElapsed'];
-              }
-
-              if(data['Monthly']) {
-                that.personalBestMonthly = data['TimeElapsed'];
-              }
-
-              var display = document.getElementById("timer");
-              display.textContent = data['TimeElapsed'];
-            });
-      } else {
-        console.log('done - not logged in');
-      }
+      GameStarterService.done(that);
     }
 
     public static toggleCoords(that) {
@@ -1429,6 +1407,7 @@ export class HashiStandardComponent implements OnInit {
       that.loader.startLoadingAnimation();
         var diff = Number(that.route.snapshot.paramMap.get('diff'));
         that.diff = diff;
+        that.difficulty = diff;
         var numNodes;
 
         if(diff == 1) {

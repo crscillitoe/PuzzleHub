@@ -192,6 +192,13 @@ def register_user():
     '''
     cursor.execute(sql_query, validation_entry)
     db.commit()
+
+    sql_query = '''
+        INSERT INTO accountData(UserID, XP, PuzzlerIcon)
+        VALUES (%(user_id)s, 0, 0)
+    '''
+    cursor.execute(sql_query, validation_entry)
+    db.commit()
  
     validation_url = "https://puzzle-hub.com/EmailVerify;code="+str(validation_id)
 
@@ -365,6 +372,37 @@ def get_username():
     data = cursor.fetchall()
 
     return jsonify({'username':(data[0])[0]})
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getLevel
+# Returns on success:
+#   username: string
+# Returns on failure:
+#   N / A
+@app.route('/api/getLevel', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_level():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            return jsonify({'xp':0})
+    except:
+        return jsonify({'xp':0})
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        SELECT XP FROM accountData WHERE UserID=%(user_id)s;
+    '''
+    query_model = {
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    return jsonify({'xp':int((data[0])[0])})
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getMedals

@@ -377,28 +377,8 @@ export class ThermometersComponent implements OnInit {
   }
 
   done() {
-    this.solved = true;
-    if(this.userService.isLoggedIn()) {
-      this.timer.stopTimer(this.seed, this.gameID, this.difficulty, 'TODO - Board Solution String')
-        .subscribe( (data) => {
-          if(data['Daily']) {
-            this.personalBestDaily = data['TimeElapsed'];
-          }
-
-          if(data['Weekly']) {
-            this.personalBestWeekly = data['TimeElapsed'];
-          }
-
-          if(data['Monthly']) {
-            this.personalBestMonthly = data['TimeElapsed'];
-          }
-
-          var display = document.getElementById("timer");
-          display.textContent = data['TimeElapsed'];
-        });
-    } else {
-      // Do nothing - we're not logged in
-    }
+    var that = this;
+    GameStarterService.done(that);
   }
 
   add(that) {
