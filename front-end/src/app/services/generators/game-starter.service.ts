@@ -8,6 +8,7 @@ export class GameStarterService {
 
   static startGame(that) {
     that.loader.startLoadingAnimation();
+    that.solved = true;
 
     if(that.userService.isLoggedIn()) {
       let m = {
