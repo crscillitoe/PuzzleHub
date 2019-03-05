@@ -65,7 +65,6 @@ export class HashiComponent implements OnInit {
 
   previousTotalMillis: number;
   previousTime: string;
-  difficulty: string;
 
   personalBestDaily: string;
   personalBestWeekly: string;
