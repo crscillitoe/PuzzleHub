@@ -29,6 +29,10 @@ export class MainMenuComponent implements OnInit {
     return this.user.isLoggedIn();
   }
 
+  getLevel() {
+    return UserService.calculateLevel();
+  }
+
   playGame(route, diff) {
     let m = {
       diff: diff

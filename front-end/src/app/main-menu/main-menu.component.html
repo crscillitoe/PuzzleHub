@@ -9,8 +9,29 @@
               <button (click)="playGame(game.Name, 1)" class="puzzle-button btn btn-success" >easy</button>
               <button (click)="playGame(game.Name, 2)" class="puzzle-button btn btn-info"    >medium</button>
               <ng-container *ngIf="isLoggedIn()">
-                <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" >hard</button>
-                <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  >extreme</button>
+                <ng-container *ngIf="getLevel() >= 5">
+                  <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" >hard</button>
+                </ng-container>
+                <ng-container *ngIf="getLevel() < 5">
+                  <div class="mytooltip">
+                    <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
+                    <div class="tooltiptext">
+                      Reach level 5 to play hard difficulty
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="getLevel() >= 10">
+                  <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  >extreme</button>
+                </ng-container>
+                <ng-container *ngIf="getLevel() < 10">
+                  <div class="mytooltip">
+                    <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger" [disabled]="true">extreme</button>
+                    <div class="tooltiptext">
+                      Reach level 10 to play extreme difficulty
+                    </div>
+                  </div>
+                </ng-container>
               </ng-container>
               <ng-container *ngIf="!isLoggedIn()">
                 <div class="mytooltip">
@@ -27,6 +48,8 @@
                   </div>
                 </div>
               </ng-container>
+
+
             </div>
 
             <h4 style="padding-top:30px;margin-bottom:0px;padding-left:11px">{{game.Name}}</h4>

@@ -10,6 +10,8 @@ export class UserService {
   private static xp: number = 0;
   public user: string;
 
+  public static xpPerLevel: number = 2000;
+
   constructor() { }
 
   setUserName(name) {
@@ -36,15 +38,15 @@ export class UserService {
   }
 
   static calculateLevel() {
-    return Math.floor(this.xp / 1000) + 1;
+    return Math.floor(this.xp / this.xpPerLevel) + 1;
   }
 
   static nextLevelThreshold() {
-    return 1000;
+    return this.xpPerLevel;
   }
 
   static xpToNextLevel() {
-    return this.xp % 1000;
+    return this.xp % this.xpPerLevel;
   }
 
   getCookie(cookieName) {

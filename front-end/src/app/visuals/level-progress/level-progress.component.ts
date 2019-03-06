@@ -1,4 +1,5 @@
 import { Input, Component, OnInit } from '@angular/core';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-level-progress',
@@ -26,7 +27,7 @@ export class LevelProgressComponent implements OnInit {
     var levelup = false;
     if(xpGain < 0) {
       levelup = true;
-      xpGain = xpGain + 1000;
+      xpGain = xpGain + UserService.xpPerLevel;
     }
 
     if('' + xpGain != 'NaN' && !this.first) {

@@ -287,15 +287,14 @@ def calculate_xp_gain(diff, time_elapsed_seconds):
     else:
         time_elapsed_seconds_real = time_elapsed_seconds
 
-
     if diff == 1:
-        diff_multiplier = 1.0
+        diff_multiplier = 0.81
     elif diff == 2:
-        diff_multiplier = 1.2
+        diff_multiplier = 2.72
     elif diff == 3:
-        diff_multiplier = 1.4
+        diff_multiplier = 3.3
     elif diff == 4:
-        diff_multiplier = 2.0
+        diff_multiplier = 5.6
 
     time_multiplier = math.log(time_multiplier, 1.05)
     xp_gain = 50 + math.ceil(1.2 * time_multiplier) * 1
