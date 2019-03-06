@@ -51,6 +51,10 @@ export class HeaderComponent implements OnInit {
     return UserService.xpToNextLevel();
   }
 
+  nextLevelThreshold() {
+    return UserService.nextLevelThreshold();
+  }
+
   ngOnInit() {
   }
 

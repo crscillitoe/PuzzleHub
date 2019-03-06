@@ -39,8 +39,12 @@ export class UserService {
     return Math.floor(this.xp / 1000) + 1;
   }
 
+  static nextLevelThreshold() {
+    return 1000;
+  }
+
   static xpToNextLevel() {
-    return '' + (this.xp % 1000) + '/' + 1000;
+    return this.xp % 1000;
   }
 
   getCookie(cookieName) {

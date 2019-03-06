@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserService } from './services/user/user.service';
 import { Router, Event as RouterEvent,
     NavigationStart,
     NavigationEnd,
@@ -22,7 +23,8 @@ export class AppComponent {
     private loader: LoaderService,
     private router: Router,
     private ngZone: NgZone,
-    private renderer: Renderer
+    private renderer: Renderer,
+    private user: UserService
   ) {
     loader.loading
      .subscribe( (data) => {
@@ -52,6 +54,10 @@ export class AppComponent {
       });*/
   }
 
+  isLoggedIn() {
+    return this.user.isLoggedIn();
+  }
+
     navigationInterceptor(event) {
       if (event instanceof NavigationStart) {
         this.loader.startLoadingAnimation();
@@ -68,5 +74,16 @@ export class AppComponent {
       }*/
     }
 
+  getLevel() {
+    return UserService.calculateLevel();
+  }
+
+  xpToNextLevel() {
+    return UserService.xpToNextLevel();
+  }
+
+  nextLevelThreshold() {
+    return UserService.nextLevelThreshold();
+  }
 
 }

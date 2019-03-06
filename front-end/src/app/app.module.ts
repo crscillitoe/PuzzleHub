@@ -27,6 +27,7 @@ import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
 import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
+import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -68,7 +69,8 @@ const appRoutes: Routes = [
     OptionsComponent,
     ProfileComponent,
     KakuroComponent,
-    ThermometersComponent
+    ThermometersComponent,
+    LevelProgressComponent
   ],
   imports: [
     BrowserModule,
