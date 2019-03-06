@@ -29,6 +29,8 @@ import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
 import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
   { path: 'games', component: CustomGamesComponent},
@@ -75,6 +77,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
+    DragDropModule,
     HttpClientModule,
     RouterModule.forRoot(
         appRoutes,

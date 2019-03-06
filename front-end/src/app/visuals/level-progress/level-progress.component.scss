@@ -9,11 +9,24 @@ $percentage-color: #FFFFFF;
 $percentage-font-size: 35px;
 $percentage-text-width: 57px;
 
+* {
+  overflow: hidden;
+}
+
+.levelBox {
+  position: absolute;
+  bottom:30px;
+  right:30px;
+  width: 120px;
+  height: 180px;
+  z-index: 10000;
+}
+
 .xpGain {
   color: #AAD46D;
   position: absolute;
-  bottom:160px;
-  right:30px;
+  top:20px;
+  right:0px;
   width: 120px;
   text-align: center;
   z-index: 9998;
@@ -30,8 +43,8 @@ $percentage-text-width: 57px;
 
 .description {
   position: absolute;
-  bottom:30px;
-  right:30px;
+  bottom:0px;
+  right:0px;
   z-index: 9998;
   width: $circle-size;
   height: $circle-size;
@@ -56,8 +69,8 @@ $percentage-text-width: 57px;
 	width: $circle-size;
 	height: $circle-size;
   position: absolute;
-  bottom:30px;
-  right:30px;
+  bottom:0px;
+  right:0px;
   z-index: 9999;
 
 	background-color: $circle-background;
