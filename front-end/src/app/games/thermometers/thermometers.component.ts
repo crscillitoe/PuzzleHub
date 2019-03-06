@@ -79,14 +79,14 @@ export class ThermometersComponent implements OnInit {
 
     // Easy
     if(this.difficulty == 1) {
-      width = 4;
-      height = 4;
+      width = 5;
+      height = 5;
     } 
     
     // Medium
     else if (this.difficulty == 2) {
-      width = 6;
-      height = 6;
+      width = 7;
+      height = 7;
     } 
     
     // Hard
