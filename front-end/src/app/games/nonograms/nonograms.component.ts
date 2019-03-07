@@ -110,15 +110,16 @@ export class NonogramsComponent implements OnInit {
   draw() {
     this.context.beginPath();
     this.drawBackground();
-    this.drawGrid();
     if(!this.solved) {
       this.drawSelectedBox();
     }
     this.drawLegends();
     this.drawBoard();
+    this.drawGrid();
   }
 
   drawBoard() {
+    var tileSize = 1;
     for(var i = 0 ; i < this.board.width ; i++) {
       for(var j = 0 ; j < this.board.height ; j++) {
         if(this.board.boardVals[i][j] == 1) {
@@ -129,28 +130,29 @@ export class NonogramsComponent implements OnInit {
           }
           var x = this.gridOffsetX + (this.gridBoxSize * (i + (this.board.maxWidth - this.board.width)));
           var y = this.gridOffsetY + (this.gridBoxSize * (j + (this.board.maxHeight - this.board.height)));
-          this.context.fillRect(x + 1, y + 1, 
-            this.gridBoxSize - 2, 
-            this.gridBoxSize - 2);
+          this.context.fillRect(x + tileSize, y + tileSize, 
+            this.gridBoxSize - (2 * tileSize), 
+            this.gridBoxSize - (2 * tileSize));
         } else if(this.board.markedVals[i][j] == 1) {
           this.context.fillStyle = this.colors.COLOR_8;
           var x = this.gridOffsetX + (this.gridBoxSize * (i + (this.board.maxWidth - this.board.width)));
           var y = this.gridOffsetY + (this.gridBoxSize * (j + (this.board.maxHeight - this.board.height)));
-          this.context.fillRect(x + 1, y + 1, 
-            this.gridBoxSize - 2, 
-            this.gridBoxSize - 2);
+          this.context.fillRect(x + tileSize, y + tileSize, 
+            this.gridBoxSize - (2 * tileSize), 
+            this.gridBoxSize - (2 * tileSize));
         }
       }
     }
   }
 
   drawSelectedBox() {
+    var tileSize = 1;
     if(this.selectedX <= this.board.maxWidth - 1 && this.selectedX >= this.board.maxWidth - this.board.width &&
        this.selectedY <= this.board.maxHeight - 1 && this.selectedY >= this.board.maxHeight - this.board.height) {
       this.context.fillStyle = "#3D3D3D";
-      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize) + 2,
-                            this.gridOffsetY + (this.selectedY * this.gridBoxSize) + 2,
-                              this.gridBoxSize - 4, this.gridBoxSize - 4);
+      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize) + tileSize,
+                            this.gridOffsetY + (this.selectedY * this.gridBoxSize) + tileSize,
+                              this.gridBoxSize - (2 * tileSize), this.gridBoxSize - (2 * tileSize));
     }
   }
 
@@ -160,21 +162,35 @@ export class NonogramsComponent implements OnInit {
   }
 
   drawGrid() {
-    this.context.strokeStyle = this.colors.FOREGROUND;
+    this.context.strokeStyle = '#d8c9ae';
+    this.context.fillStyle= '#d8c9ae';
     this.context.lineWidth = 1;
 
+    var bigSize = 3;
+
     for(var i = this.board.maxWidth - this.board.width; i < this.board.maxWidth + 1; i++) {
-      this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
-      this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + ((this.board.maxHeight) * this.gridBoxSize));
-      this.context.stroke();
+      if(((i - this.board.getLegendLength()) % 5) == 0) {
+        this.context.fillRect( (this.gridOffsetX + (i * this.gridBoxSize)) - bigSize, this.gridOffsetY,
+                               2 * bigSize, ((this.board.maxHeight) * this.gridBoxSize)) + bigSize;
+      } else {
+        this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
+        this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + ((this.board.maxHeight) * this.gridBoxSize));
+        this.context.stroke();
+      }
     }
 
     for(var j = this.board.maxHeight - this.board.height; j < this.board.maxHeight + 1; j++) {
-      this.context.moveTo(this.gridOffsetX, this.gridOffsetY + (j * this.gridBoxSize));
-      this.context.lineTo(this.gridOffsetX + ((this.board.maxWidth) * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
-      this.context.stroke();
+      if((j - this.board.getLegendLength()) % 5 == 0) {
+        this.context.fillRect( this.gridOffsetX, (this.gridOffsetY + (j * this.gridBoxSize)) - bigSize,
+                               ((this.board.maxWidth) * this.gridBoxSize) + bigSize, 2 * bigSize);
+      } else {
+        this.context.moveTo(this.gridOffsetX, this.gridOffsetY + (j * this.gridBoxSize));
+        this.context.lineTo(this.gridOffsetX + ((this.board.maxWidth) * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
+        this.context.stroke();
+      }
     }
 
+    this.context.lineWidth = 1;
     this.context.moveTo(this.gridOffsetX, this.gridOffsetY);
     this.context.lineTo(this.gridOffsetX + ((this.board.maxWidth) * this.gridBoxSize), this.gridOffsetY);
     this.context.stroke();
@@ -187,10 +203,17 @@ export class NonogramsComponent implements OnInit {
   drawLegends() {
     this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
     this.context.textAlign = "center";
-    this.context.fillStyle = '#e8d9be';
 
     for(var i = 0 ; i < this.board.rowLabels.length ; i++) {
       for(var labI = 0 ; labI < this.board.rowLabels[i].length ; labI++) {
+        var valid = this.board.isRowLabelValid(i, labI);
+        if(valid == 0) {
+          this.context.fillStyle = '#e8d9be';
+        } else if(valid == -1) {
+          this.context.fillStyle = this.colors.COLOR_8;
+        } else if(valid == 1) {
+          this.context.fillStyle = this.colors.COLOR_1;
+        }
         var toDraw = '' + this.board.rowLabels[i][labI];
 
         var index = labI + ((this.board.maxWidth - this.board.width) - this.board.rowLabels[i].length);
@@ -202,6 +225,14 @@ export class NonogramsComponent implements OnInit {
 
     for(var j = 0 ; j < this.board.colLabels.length ; j++) {
       for(var labJ = 0 ; labJ < this.board.colLabels[j].length ; labJ++) {
+        var valid = this.board.isColLabelValid(j, labJ);
+        if(valid == 0) {
+          this.context.fillStyle = '#e8d9be';
+        } else if(valid == -1) {
+          this.context.fillStyle = this.colors.COLOR_8;
+        } else if(valid == 1) {
+          this.context.fillStyle = this.colors.COLOR_1;
+        }
         var toDraw = '' + this.board.colLabels[j][labJ];
 
         var index = labJ + ((this.board.maxHeight - this.board.height) - this.board.colLabels[j].length);

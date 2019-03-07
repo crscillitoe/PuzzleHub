@@ -19,6 +19,10 @@ export class Board {
     this.seed = seed;
   }
 
+  getLegendLength() {
+    return this.maxWidth - this.width;
+  }
+
   markTile(x, y) {
     if(this.boardVals[x][y] == 0) {
       this.boardVals[x][y] = 1;
@@ -121,6 +125,86 @@ export class Board {
     }
 
     return true;
+  }
+
+  isColLabelValid(col, index) {
+    var count = 0;
+    var colLabel = [];
+    for(var i = 0 ; i < this.width ; i++) {
+      if(this.boardVals[i][col] == 0 && count > 0) {
+        colLabel.push(count);
+        count = 0;
+      } else {
+        count += this.boardVals[i][col];
+      }
+    }
+
+    if(count > 0) {
+      colLabel.push(count);
+      count = 0;
+    }
+
+    if(colLabel.length == 0) {
+      return 0;
+    }
+
+    if(colLabel.reduce(this.add) > this.colLabels[col].reduce(this.add)) {
+      return -1;
+    }
+
+    if(colLabel.length >= index + 1) {
+      if(colLabel[index] == this.colLabels[col][index]) {
+        return 1;
+      } else if(colLabel[index] > this.colLabels[col][index]) {
+        return -1;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  isRowLabelValid(row, index) {
+    var count = 0;
+    var rowLabel = [];
+    for(var j = 0 ; j < this.height ; j++) {
+      if(this.boardVals[row][j] == 0 && count > 0) {
+        rowLabel.push(count);
+        count = 0;
+      } else {
+        count += this.boardVals[row][j];
+      }
+    }
+
+    if(count > 0) {
+      rowLabel.push(count);
+      count = 0;
+    }
+
+    if(rowLabel.length == 0) {
+      return 0;
+    }
+
+    if(rowLabel.reduce(this.add) > this.rowLabels[row].reduce(this.add)) {
+      return -1;
+    }
+
+    if(rowLabel.length >= index + 1) {
+      if(rowLabel[index] == this.rowLabels[row][index]) {
+        return 1;
+      } else if(rowLabel[index] > this.rowLabels[row][index]) {
+        return -1;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  add(a, b) {
+    return a + b;
   }
 
   generateBoard() {
