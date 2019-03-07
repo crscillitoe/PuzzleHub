@@ -144,25 +144,17 @@ export class Board {
       count = 0;
     }
 
-    if(colLabel.length == 0) {
+    if(colLabel.length != this.colLabels[col].length) {
       return 0;
     }
 
-    if(colLabel.reduce(this.add) > this.colLabels[col].reduce(this.add)) {
-      return -1;
-    }
-
-    if(colLabel.length >= index + 1) {
-      if(colLabel[index] == this.colLabels[col][index]) {
-        return 1;
-      } else if(colLabel[index] > this.colLabels[col][index]) {
-        return -1;
-      } else {
+    for(var i = 0 ; i < colLabel.length ; i++) {
+      if(colLabel[i] != this.colLabels[col][i]) {
         return 0;
       }
-    } else {
-      return 0;
     }
+
+    return 1;
   }
 
   isRowLabelValid(row, index) {
@@ -182,25 +174,17 @@ export class Board {
       count = 0;
     }
 
-    if(rowLabel.length == 0) {
+    if(rowLabel.length != this.rowLabels[row].length) {
       return 0;
     }
 
-    if(rowLabel.reduce(this.add) > this.rowLabels[row].reduce(this.add)) {
-      return -1;
-    }
-
-    if(rowLabel.length >= index + 1) {
-      if(rowLabel[index] == this.rowLabels[row][index]) {
-        return 1;
-      } else if(rowLabel[index] > this.rowLabels[row][index]) {
-        return -1;
-      } else {
+    for(var i = 0 ; i < rowLabel.length ; i++) {
+      if(rowLabel[i] != this.rowLabels[row][i]) {
         return 0;
       }
-    } else {
-      return 0;
     }
+
+    return 1;
   }
 
   add(a, b) {
@@ -289,8 +273,26 @@ export class Board {
     } else {
       this.maxWidth = this.maxHeight;
     }
+
     this.rowLabels = rowLabels;
     this.colLabels = colLabels;
+
+    var regenerate = false;
+    for(var i = 0 ; i < this.colLabels.length ; i++) {
+      if(this.colLabels[i].length == 0) {
+        regenerate = true;
+      }
+    }
+
+    for(var i = 0 ; i < this.rowLabels.length ; i++) {
+      if(this.rowLabels[i].length == 0) {
+        regenerate = true;
+      }
+    }
+
+    if(regenerate) {
+      this.generateBoard();
+    }
   }
 
   random() {
