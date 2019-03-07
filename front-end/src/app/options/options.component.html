@@ -158,6 +158,9 @@
 </div>
 
 <div class="buttons">
+  <a *ngIf="gameID != undefined" id="copyGameLink" (click)="copyGameLink()" class="center new-game clickable" style="margin-bottom:10px">
+    <a id="shareButtonText" class="buttonHeader clickable"><b class="clickable">SHARE GAME</b></a>
+  </a>
   <a id="newGameButton"
     (click)="callback('this.newGame()')" class="center new-game clickable">
     <a class="buttonHeader clickable"><b class="clickable">NEW GAME</b></a>

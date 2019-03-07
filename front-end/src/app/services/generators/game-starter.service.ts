@@ -6,10 +6,13 @@ import { UserService }  from '../user/user.service';
   providedIn: 'root'
 })
 export class GameStarterService {
+  static customSeed: number;
 
   static startGame(that) {
     that.loader.startLoadingAnimation();
     that.solved = true;
+
+    this.customSeed = Number(that.route.snapshot.paramMap.get('seed'));
 
     if(that.userService.isLoggedIn()) {
       let m = {
@@ -23,17 +26,26 @@ export class GameStarterService {
           that.personalBestMonthly = data['monthly'];
         });
 
-      that.timer.startTimer(that.gameID, that.difficulty)
-        .subscribe( (data) => {
-          this.loadGame(that, data['seed']);
-        });
+      if(this.customSeed == 0) {
+        that.timer.startTimer(that.gameID, that.difficulty)
+          .subscribe( (data) => {
+            this.loadGame(that, data['seed']);
+          });
+      } else {
+        this.loadGame(that, this.customSeed);
+      }
     } else {
-      this.loadGame(that, Math.floor(Math.random() * (2000000000)));
+      if(this.customSeed == 0) {
+        this.loadGame(that, Math.floor(Math.random() * (2000000000)));
+      } else {
+        this.loadGame(that, this.customSeed);
+      }
     }
   }
 
   static done(that) {
-    if(that.userService.isLoggedIn() && !that.solved) {
+    console.log(this.customSeed);
+    if(that.userService.isLoggedIn() && !that.solved && this.customSeed == 0) {
       that.timer.stopTimer(that.seed, that.gameID, that.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           UserService.addXp(data['XPGain']);
@@ -95,6 +107,7 @@ export class GameStarterService {
 
   static newGame(that) {
     that.loader.startLoadingAnimation();
+    this.customSeed = 0;
 
     if(that.userService.isLoggedIn()) {
       that.timer.startTimer(that.gameID, that.difficulty)
