@@ -71,6 +71,10 @@ export class Board {
       rowLabels.push(rowLabel);
     }
 
+    if(rowLabels.length != this.rowLabels.length) {
+      return false;
+    }
+
     for(var x = 0 ; x < this.rowLabels.length ; x++) {
       for(var y = 0 ; y < this.rowLabels[x].length ; y++) {
         if(this.rowLabels[x][y] != rowLabels[x][y]) {
@@ -102,6 +106,10 @@ export class Board {
         this.maxWidth = this.width + colLabel.length;
       }
       colLabels.push(colLabel);
+    }
+
+    if(colLabels.length != this.colLabels.length) {
+      return false;
     }
 
     for(var x = 0 ; x < this.colLabels.length ; x++) {
