@@ -20,6 +20,9 @@ export class NonogramsComponent implements OnInit {
 
   gameID: number = GameID.NONOGRAMS;
 
+  selectedX: number = -1;
+  selectedY: number = -1;
+
   controls: string = "Left click on a tile to mark it.";
   rules: string = "Google it you goof.";
 
@@ -107,11 +110,99 @@ export class NonogramsComponent implements OnInit {
   draw() {
     this.context.beginPath();
     this.drawBackground();
+    this.drawGrid();
+    if(!this.solved) {
+      this.drawSelectedBox();
+    }
+    this.drawLegends();
+    this.drawBoard();
+  }
+
+  drawBoard() {
+    if(this.solved) {
+      this.context.fillStyle = this.colors.COLOR_1;
+    } else {
+      this.context.fillStyle = this.colors.COLOR_3;
+    }
+    for(var i = 0 ; i < this.board.width ; i++) {
+      for(var j = 0 ; j < this.board.height ; j++) {
+        if(this.board.boardVals[i][j] == 1) {
+          var x = this.gridOffsetX + (this.gridBoxSize * (i + (this.board.maxWidth - this.board.width)));
+          var y = this.gridOffsetY + (this.gridBoxSize * (j + (this.board.maxHeight - this.board.height)));
+          this.context.fillRect(x + 1, y + 1, 
+            this.gridBoxSize - 2, 
+            this.gridBoxSize - 2);
+        }
+      }
+    }
+  }
+
+  drawSelectedBox() {
+    if(this.selectedX <= this.board.maxWidth - 1 && this.selectedX >= this.board.maxWidth - this.board.width &&
+       this.selectedY <= this.board.maxHeight - 1 && this.selectedY >= this.board.maxHeight - this.board.height) {
+      this.context.fillStyle = "#3D3D3D";
+      this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize) + 2,
+                            this.gridOffsetY + (this.selectedY * this.gridBoxSize) + 2,
+                              this.gridBoxSize - 4, this.gridBoxSize - 4);
+    }
   }
 
   drawBackground() {
     this.context.fillStyle = this.colors.BACKGROUND; // Background color
     this.context.fillRect(0, 0, this.canvas.offsetWidth * 2, this.canvas.offsetHeight * 2);
+  }
+
+  drawGrid() {
+    this.context.strokeStyle = this.colors.FOREGROUND;
+    this.context.lineWidth = 1;
+
+    for(var i = this.board.maxWidth - this.board.width; i < this.board.maxWidth + 1; i++) {
+      this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
+      this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + ((this.board.maxHeight) * this.gridBoxSize));
+      this.context.stroke();
+    }
+
+    for(var j = this.board.maxHeight - this.board.height; j < this.board.maxHeight + 1; j++) {
+      this.context.moveTo(this.gridOffsetX, this.gridOffsetY + (j * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + ((this.board.maxWidth) * this.gridBoxSize), this.gridOffsetY + (j * this.gridBoxSize));
+      this.context.stroke();
+    }
+
+    this.context.moveTo(this.gridOffsetX, this.gridOffsetY);
+    this.context.lineTo(this.gridOffsetX + ((this.board.maxWidth) * this.gridBoxSize), this.gridOffsetY);
+    this.context.stroke();
+
+    this.context.moveTo(this.gridOffsetX, this.gridOffsetY);
+    this.context.lineTo(this.gridOffsetX, this.gridOffsetY + ((this.board.maxHeight) * this.gridBoxSize));
+    this.context.stroke();
+  }
+
+  drawLegends() {
+    this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
+    this.context.textAlign = "center";
+    this.context.fillStyle = '#e8d9be';
+
+    for(var i = 0 ; i < this.board.rowLabels.length ; i++) {
+      for(var labI = 0 ; labI < this.board.rowLabels[i].length ; labI++) {
+        var toDraw = '' + this.board.rowLabels[i][labI];
+
+        var index = labI + ((this.board.maxWidth - this.board.width) - this.board.rowLabels[i].length);
+        this.context.fillText(toDraw,
+                              this.gridOffsetX + ((i + (this.board.maxWidth - this.board.width)) * this.gridBoxSize) + (this.gridBoxSize/2),
+                              this.gridOffsetY + (index * this.gridBoxSize) + (this.gridBoxSize/1.3));
+      }
+    }
+
+    for(var j = 0 ; j < this.board.colLabels.length ; j++) {
+      for(var labJ = 0 ; labJ < this.board.colLabels[j].length ; labJ++) {
+        var toDraw = '' + this.board.colLabels[j][labJ];
+
+        var index = labJ + ((this.board.maxHeight - this.board.height) - this.board.colLabels[j].length);
+        this.context.fillText(toDraw,
+                              this.gridOffsetX + (index * this.gridBoxSize) + (this.gridBoxSize/2),
+                              this.gridOffsetY + ((j + (this.board.maxHeight - this.board.height)) * this.gridBoxSize) + (this.gridBoxSize/1.3));
+      }
+    }
   }
 
   done() {
@@ -161,7 +252,7 @@ export class NonogramsComponent implements OnInit {
     this.gridOffsetX = this.canvas.width / 20;
     this.gridOffsetY = this.canvas.height / 20;
 
-    var boardLength = Math.max(this.board.width, this.board.height);
+    var boardLength = Math.max(this.board.maxWidth, this.board.maxHeight);
     var size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
                         this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
@@ -189,11 +280,21 @@ export class NonogramsComponent implements OnInit {
   /* EVENT LISTENERS */
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mousedown', ['$event'])
+  @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) { 
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mousePressedX':x, 'mousePressedY':y});
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      var diff = this.board.maxWidth - this.board.width;
+      this.board.click(x - diff, y - diff);
+      if(this.board.isSolved()) {
+        this.done();
+      }
+      this.draw();
+    }
   }
 
   // UNCOMMENT HostListener to track given event
@@ -205,11 +306,19 @@ export class NonogramsComponent implements OnInit {
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mousemove', ['$event'])
+  @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseMoveX':x, 'mouseMoveY':y});
+
+    if(!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      this.selectedX = x;
+      this.selectedY = y;
+      this.draw();
+    }
   }
 
   // UNCOMMENT HostListener to track given event
