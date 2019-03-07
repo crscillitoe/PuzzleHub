@@ -5,5 +5,6 @@ export enum GameID {
   TAKUZU = 4,
   TILE_GAME = 5,
   KAKURO = 6,
-  THERMOMETERS = 7
+  THERMOMETERS = 7,
+  NONOGRAMS = 8
 }

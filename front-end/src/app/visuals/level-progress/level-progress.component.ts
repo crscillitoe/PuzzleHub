@@ -48,7 +48,6 @@ export class LevelProgressComponent implements OnInit {
   }
 
   getProgress() {
-    console.log(Math.floor((this.currVal / this.maxVal) * 100));
     return Math.floor((this.currVal / this.maxVal) * 100);
   }
 

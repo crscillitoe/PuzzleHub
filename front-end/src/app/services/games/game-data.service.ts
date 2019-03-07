@@ -36,6 +36,12 @@ export class GameDataService {
       'Name': 'Thermometers',
       'Image': 'assets/images/game-splashes/thermometers.svg',
       'Description': 'A New York Times classic where you must fill up thermometers to a certain amount.'
+    },
+    {
+      'GameID': GameID.NONOGRAMS,
+      'Name': 'Nonograms',
+      'Image': 'assets/images/game-splashes/thermometers.svg',
+      'Description': 'Nonograms are picture logic puzzles in which cells in a grid must be colored according to numbers at the side of the grid to reveal a hidden picture.'
     }
   ]
 

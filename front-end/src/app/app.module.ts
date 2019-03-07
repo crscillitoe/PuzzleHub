@@ -30,6 +30,7 @@ import { ThermometersComponent } from './games/thermometers/thermometers.compone
 import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NonogramsComponent } from './games/nonograms/nonograms.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -46,7 +47,8 @@ const appRoutes: Routes = [
   { path: 'patchNotes', component: TodoComponent},
   { path: 'profile', component: ProfileComponent},
   { path: 'Kakuro', component: KakuroComponent},
-  { path: 'Thermometers', component: ThermometersComponent}
+  { path: 'Thermometers', component: ThermometersComponent},
+  { path: 'Nonograms', component: NonogramsComponent}
 ];
 
 @NgModule({
@@ -72,7 +74,8 @@ const appRoutes: Routes = [
     ProfileComponent,
     KakuroComponent,
     ThermometersComponent,
-    LevelProgressComponent
+    LevelProgressComponent,
+    NonogramsComponent
   ],
   imports: [
     BrowserModule,
