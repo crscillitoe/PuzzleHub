@@ -119,14 +119,21 @@ export class NonogramsComponent implements OnInit {
   }
 
   drawBoard() {
-    if(this.solved) {
-      this.context.fillStyle = this.colors.COLOR_1;
-    } else {
-      this.context.fillStyle = this.colors.COLOR_3;
-    }
     for(var i = 0 ; i < this.board.width ; i++) {
       for(var j = 0 ; j < this.board.height ; j++) {
         if(this.board.boardVals[i][j] == 1) {
+          if(this.solved) {
+            this.context.fillStyle = this.colors.COLOR_1;
+          } else {
+            this.context.fillStyle = this.colors.COLOR_3;
+          }
+          var x = this.gridOffsetX + (this.gridBoxSize * (i + (this.board.maxWidth - this.board.width)));
+          var y = this.gridOffsetY + (this.gridBoxSize * (j + (this.board.maxHeight - this.board.height)));
+          this.context.fillRect(x + 1, y + 1, 
+            this.gridBoxSize - 2, 
+            this.gridBoxSize - 2);
+        } else if(this.board.markedVals[i][j] == 1) {
+          this.context.fillStyle = this.colors.COLOR_8;
           var x = this.gridOffsetX + (this.gridBoxSize * (i + (this.board.maxWidth - this.board.width)));
           var y = this.gridOffsetY + (this.gridBoxSize * (j + (this.board.maxHeight - this.board.height)));
           this.context.fillRect(x + 1, y + 1, 
@@ -289,7 +296,12 @@ export class NonogramsComponent implements OnInit {
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
       var diff = this.board.maxWidth - this.board.width;
-      this.board.click(x - diff, y - diff);
+
+      if(mouseEvent.button == 0) {
+        this.board.click(x - diff, y - diff);
+      } else if(mouseEvent.button == 2) {
+        this.board.mark(x - diff, y - diff);
+      }
       if(this.board.isSolved()) {
         this.done();
       }

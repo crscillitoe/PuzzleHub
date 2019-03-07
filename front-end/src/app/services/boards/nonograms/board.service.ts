@@ -8,6 +8,7 @@ export class Board {
   colLabels: any = [];
 
   boardVals: any = [];
+  markedVals: any = [];
 
   maxWidth: number = 0;
   maxHeight: number = 0;
@@ -23,6 +24,22 @@ export class Board {
       this.boardVals[x][y] = 1;
     } else {
       this.boardVals[x][y] = 0;
+      this.markedVals[x][y] = 0;
+    }
+  }
+
+  markRed(x, y) {
+    if(this.markedVals[x][y] == 0) {
+      this.markedVals[x][y] = 1;
+    } else {
+      this.boardVals[x][y] = 0;
+      this.markedVals[x][y] = 0;
+    }
+  }
+
+  mark(x, y) {
+    if(x < this.width && x >= 0 && y < this.height && y >= 0) {
+      this.markRed(x, y);
     }
   }
 
@@ -33,7 +50,6 @@ export class Board {
   }
 
   isSolved() {
-
     var rowLabels = [];
     for(var i = 0 ; i < this.width ; i++) {
       var count = 0;
@@ -101,12 +117,16 @@ export class Board {
 
   generateBoard() {
     this.boardVals = [];
+    this.markedVals = [];
     for(var i = 0 ; i < this.width ; i++) {
       var toAdd = [];
+      var toAdd2 = [];
       for(var j = 0 ; j < this.height ; j++) {
         toAdd.push(0);
+        toAdd2.push(0);
       }
 
+      this.markedVals.push(toAdd2);
       this.boardVals.push(toAdd);
     }
 
