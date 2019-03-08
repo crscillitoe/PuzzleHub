@@ -22,6 +22,17 @@ export class LevelProgressComponent implements OnInit {
   ngOnInit() {
   }
 
+  isVisible() {
+    var canvas = document.getElementById('myCanvas');
+    if(canvas != null) {
+      var bar = document.getElementById('levelProgressBar');
+      try {
+        bar.setAttribute('data-progress', '' + this.getProgress());
+      } catch {}
+    }
+    return canvas != null;
+  }
+
   ngOnChanges(changes) {
     var xpGain = changes.currVal.currentValue - changes.currVal.previousValue;
     var levelup = false;
@@ -44,7 +55,10 @@ export class LevelProgressComponent implements OnInit {
     }
 
     var bar = document.getElementById('levelProgressBar');
-    bar.setAttribute('data-progress', '' + this.getProgress());
+    try {
+      bar.setAttribute('data-progress', '' + this.getProgress());
+    } catch {
+    }
   }
 
   getProgress() {

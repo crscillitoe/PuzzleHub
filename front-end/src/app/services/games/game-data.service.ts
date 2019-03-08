@@ -40,7 +40,7 @@ export class GameDataService {
     {
       'GameID': GameID.NONOGRAMS,
       'Name': 'Nonograms',
-      'Image': 'assets/images/game-splashes/thermometers.svg',
+      'Image': 'assets/images/game-splashes/nonograms.svg',
       'Description': 'Nonograms are picture logic puzzles in which cells in a grid must be colored according to numbers at the side of the grid to reveal a hidden picture.'
     }
   ]
