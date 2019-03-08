@@ -54,73 +54,15 @@ export class Board {
   }
 
   isSolved() {
-    var rowLabels = [];
-    for(var i = 0 ; i < this.width ; i++) {
-      var count = 0;
-      var rowLabel = [];
-      for(var j = 0 ; j < this.height ; j++) {
-        if(this.boardVals[i][j] == 0 && count > 0) {
-          rowLabel.push(count);
-          count = 0;
-        } else {
-          count += this.boardVals[i][j];
-        }
-      }
-
-      if(count > 0) {
-        rowLabel.push(count);
-        count = 0;
-      }
-
-      rowLabels.push(rowLabel);
-    }
-
-    if(rowLabels.length != this.rowLabels.length) {
-      return false;
-    }
-
-    for(var x = 0 ; x < this.rowLabels.length ; x++) {
-      for(var y = 0 ; y < this.rowLabels[x].length ; y++) {
-        if(this.rowLabels[x][y] != rowLabels[x][y]) {
-          return false;
-        }
+    for(var i = 0 ; i < this.colLabels.length ; i++) {
+      if(this.isColLabelValid(i, 0) != 1) {
+        return false;
       }
     }
 
-
-    var colLabels = [];
-    for(var j = 0 ; j < this.height ; j++) {
-      var count = 0;
-      var colLabel = [];
-      for(var i = 0 ; i < this.width ; i++) {
-        if(this.boardVals[i][j] == 0 && count > 0) {
-          colLabel.push(count);
-          count = 0;
-        } else {
-          count += this.boardVals[i][j];
-        }
-      }
-
-      if(count > 0) {
-        colLabel.push(count);
-        count = 0;
-      }
-
-      if(this.width + colLabel.length > this.maxWidth) {
-        this.maxWidth = this.width + colLabel.length;
-      }
-      colLabels.push(colLabel);
-    }
-
-    if(colLabels.length != this.colLabels.length) {
-      return false;
-    }
-
-    for(var x = 0 ; x < this.colLabels.length ; x++) {
-      for(var y = 0 ; y < this.colLabels[x].length ; y++) {
-        if(this.colLabels[x][y] != colLabels[x][y]) {
-          return false;
-        }
+    for(var j = 0 ; j < this.rowLabels.length ; j++) {
+      if(this.isRowLabelValid(j, 0) != 1) {
+        return false;
       }
     }
 
