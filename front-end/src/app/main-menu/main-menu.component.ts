@@ -6,6 +6,10 @@ import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { GameID } from '../enums/game-id.enum';
 import { GameDataService } from '../services/games/game-data.service';
+import { Difficulty } from '../interfaces/difficulty';
+import { Game } from '../classes/game'
+import { GameList } from '../classes/game-list'
+import { GameListAllService } from '../services/games/game-list-all.service'
 
 @Component({
   selector: 'app-main-menu',
@@ -14,7 +18,7 @@ import { GameDataService } from '../services/games/game-data.service';
 })
 export class MainMenuComponent implements OnInit {
 
-  games: any = GameDataService.games;
+  games: any = GameListAllService.games;
 
   constructor(
     private timerService: TimerService,

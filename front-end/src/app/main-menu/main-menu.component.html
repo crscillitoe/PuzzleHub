@@ -3,30 +3,59 @@
     <ng-container *ngFor="let game of games">
       <div class="flex-element puzzle-card">
         <div class="card text-white bg-dark mb-3">
-          <img class="svg-image card-img-top" src={{game.Image}}>
+          <img class="svg-image card-img-top" src={{game.image}}>
           <div class="card-body">
             <div class="flex-container">
-              <button (click)="playGame(game.Name, 1)" class="puzzle-button btn btn-success" >easy</button>
-              <button (click)="playGame(game.Name, 2)" class="puzzle-button btn btn-info"    >medium</button>
+ 	      <ng-container *ngFor="let diff of game.diffs">
+		<ng-container *ngIf="isLoggedIn()">
+                  <ng-container *ngIf="getLevel() >= diff.min_level">
+                    <button (click)="playGame(game.name, diff.diff)" class="puzzle-button btn" [ngClass]="{'btn-success': diff.color=='green', 'btn-info': diff.color=='cyan', 'btn-primary': diff.color=='blue', 'btn-danger': diff.color=='red'}">{{diff.name}}</button>
+		  </ng-container>
+                  <ng-container *ngIf="getlevel() < diff.min_level">
+                    <div class="mytooltip">
+                      <button (click)="playGame(game.name, diff.diff)" class="puzzle-button btn" [ngClass]="{'btn-success': diff.color=='green', 'btn-info': diff.color=='cyan', 'btn-primary': diff.color=='blue', 'btn-danger': diff.color=='red'}" [disabled]="true">{{diff.name}}</button>
+                      <div class="tooltiptext">
+                        reach level {{diff.min_level}} to play {{diff.name}} difficulty
+                      </div>
+                    </div>
+                  </ng-container>
+		</ng-container>
+                <ng-container *ngIf="!isLoggedIn()">
+                  <ng-container *ngIf="!diff.requires_login">
+                    <button (click)="playGame(game.name, diff.diff)" class="puzzle-button btn" [ngClass]="{'btn-success': diff.color=='green', 'btn-info': diff.color=='cyan', 'btn-primary': diff.color=='blue', 'btn-danger': diff.color=='red'}">{{diff.name}}</button>
+		  </ng-container>
+                  <ng-container *ngIf="diff.requires_login">
+                    <div class="mytooltip">
+                      <button (click)="playGame(game.name, diff.diff)" class="puzzle-button btn" [ngClass]="{'btn-success': diff.color=='green', 'btn-info': diff.color=='cyan', 'btn-primary': diff.color=='blue', 'btn-danger': diff.color=='red'}" [disabled]="true">{{diff.name}}</button>
+                      <div class="tooltiptext">
+                        Log in to play harder difficulties
+                      </div>
+                    </div>
+		  </ng-container>
+		</ng-container>
+	      </ng-container>
+
+              <button (click)="playGame(game.name, 1)" class="puzzle-button btn btn-success" >easy</button>
+              <button (click)="playGame(game.name, 2)" class="puzzle-button btn btn-info"    >medium</button>
               <ng-container *ngIf="isLoggedIn()">
                 <ng-container *ngIf="getLevel() >= 5">
-                  <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" >hard</button>
+                  <button (click)="playGame(game.name, 3)" class="puzzle-button btn btn-primary" >hard</button>
                 </ng-container>
-                <ng-container *ngIf="getLevel() < 5">
+                <ng-container *ngIf="getlevel() < 5">
                   <div class="mytooltip">
-                    <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
+                    <button (click)="playgame(game.name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
                     <div class="tooltiptext">
-                      Reach level 5 to play hard difficulty
+                      reach level 5 to play hard difficulty
                     </div>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="getLevel() >= 10">
-                  <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  >extreme</button>
+                  <button (click)="playGame(game.name, 4)" class="puzzle-button btn btn-danger"  >extreme</button>
                 </ng-container>
                 <ng-container *ngIf="getLevel() < 10">
                   <div class="mytooltip">
-                    <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger" [disabled]="true">extreme</button>
+                    <button (click)="playGame(game.name, 4)" class="puzzle-button btn btn-danger" [disabled]="true">extreme</button>
                     <div class="tooltiptext">
                       Reach level 10 to play extreme difficulty
                     </div>
@@ -35,14 +64,14 @@
               </ng-container>
               <ng-container *ngIf="!isLoggedIn()">
                 <div class="mytooltip">
-                  <button (click)="playGame(game.Name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
+                  <button (click)="playGame(game.name, 3)" class="puzzle-button btn btn-primary" [disabled]="true">hard</button>
                   <div class="tooltiptext">
                     Log in to play harder difficulties
                   </div>
                 </div>
 
                 <div class="mytooltip">
-                  <button (click)="playGame(game.Name, 4)" class="puzzle-button btn btn-danger"  [disabled]="true">extreme</button>
+                  <button (click)="playGame(game.name, 4)" class="puzzle-button btn btn-danger"  [disabled]="true">extreme</button>
                   <div class="tooltiptext">
                     Log in to play harder difficulties
                   </div>
@@ -50,10 +79,10 @@
               </ng-container>
 
 
-            </div>
+	    </div>
 
-            <h4 style="padding-top:30px;margin-bottom:0px;padding-left:11px">{{game.Name}}</h4>
-            <p style="padding-left:11px; padding-right:30px;">{{game.Description}}</p>
+            <h4 style="padding-top:30px;margin-bottom:0px;padding-left:11px">{{game.name}}</h4>
+            <p style="padding-left:11px; padding-right:30px;">{{game.desc}}</p>
           </div>
         </div>
       </div>
