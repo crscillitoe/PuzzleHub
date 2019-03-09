@@ -10,7 +10,7 @@ import { Difficulty } from '../interfaces/difficulty';
  */ 
 
 export abstract class GameList {
-  abstract games: Game[];
+  public static games: Game[];
 
   constructor() { }
 }
