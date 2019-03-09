@@ -30,6 +30,7 @@ export class MainMenuComponent implements OnInit {
   }
 
   isLoggedIn() {
+    console.log(this.games);
     return this.user.isLoggedIn();
   }
 
