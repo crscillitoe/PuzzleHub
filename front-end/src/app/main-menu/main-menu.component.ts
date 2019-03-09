@@ -4,11 +4,6 @@ import { TunnelService } from '../services/tunnel/tunnel.service'
 import { LoaderService } from '../services/loading-service/loader.service'
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
-import { GameID } from '../enums/game-id.enum';
-import { GameDataService } from '../services/games/game-data.service';
-import { Difficulty } from '../interfaces/difficulty';
-import { Game } from '../classes/game'
-import { GameList } from '../classes/game-list'
 import { GameListAllService } from '../services/games/game-list-all.service'
 
 @Component({

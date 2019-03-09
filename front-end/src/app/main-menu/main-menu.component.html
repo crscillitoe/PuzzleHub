@@ -6,29 +6,29 @@
           <img class="svg-image card-img-top" src={{game.image}}>
           <div class="card-body">
             <div class="flex-container">
- 	            <ng-container *ngFor="let diff of game.diffs">
+              <ng-container *ngFor="let diff of game.diffs">
                 <div class="mytooltip">
                   <button (click)="playGame(game.name, diff.diff)" 
-                          class="puzzle-button btn" 
-                          [disabled]="(isLoggedIn() && getLevel() < diff.min_level) ||
-                                      (!isLoggedIn() && diff.requires_login)"
-                          [ngClass]="{'btn-success': diff.color=='green', 
-                                      'btn-info': diff.color=='cyan', 
-                                      'btn-primary': diff.color=='blue', 
-                                      'btn-danger': diff.color=='red'}">
+                     class="puzzle-button btn" 
+                     [disabled]="(isLoggedIn() && getLevel() < diff.minLevel) ||
+                     (!isLoggedIn() && diff.requiresLogin)"
+                     [ngClass]="{'btn-success': diff.color=='green', 
+                     'btn-info': diff.color=='cyan', 
+                     'btn-primary': diff.color=='blue', 
+                     'btn-danger': diff.color=='red'}">
                     {{diff.name}}
                   </button>
-                  <div class="tooltiptext" *ngIf="isLoggedIn() && getLevel() < diff.min_level">
-                    Reach level {{diff.min_level}} to play {{diff.name}} difficulty
+                  <div class="tooltiptext" *ngIf="isLoggedIn() && getLevel() < diff.minLevel">
+                    Reach level {{diff.minLevel}} to play {{diff.name}} difficulty
                   </div>
-                  <div class="tooltiptext" *ngIf="!isLoggedIn() && diff.requires_login">
+                  <div class="tooltiptext" *ngIf="!isLoggedIn() && diff.requiresLogin">
                     Log in to play harder difficulties
                   </div>
                 </div>
               </ng-container>
+            </div>
             <h4 style="padding-top:30px;margin-bottom:0px;padding-left:11px">{{game.name}}</h4>
             <p style="padding-left:11px; padding-right:30px;">{{game.desc}}</p>
-            </div>
           </div>
         </div>
       </div>

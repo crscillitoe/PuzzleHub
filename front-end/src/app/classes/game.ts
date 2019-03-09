@@ -1,10 +1,10 @@
 import { Difficulty } from '../interfaces/difficulty';
 
 export class Game {
-  private readonly _image_path = 'assets/images/game-splashes/';
   private _id: number;
   private _name: string;
-  private _image: string;
+  private _imagePath = 'assets/images/game-splashes/';
+  private _imageBase: string;
   private _desc: string;
   private _diffs: Difficulty[];
 
@@ -17,7 +17,11 @@ export class Game {
   }
 
   get image(): string {
-    return this._image;
+    return this._imagePath.concat(this._imageBase);
+  }
+
+  set imagePath(imagePath: string) {
+    this._imagePath = imagePath;
   }
 
   get desc(): string {
@@ -33,38 +37,38 @@ export class Game {
       diff: 1,
       name: 'easy',
       color: 'green',
-      requires_login: false,
-      min_level: 0
+      requiresLogin: false,
+      minLevel: 0
     },
     {
       diff: 2,
       name: 'medium',
       color: 'cyan',
-      requires_login: false,
-      min_level: 0
+      requiresLogin: false,
+      minLevel: 0
 
     },
     {
       diff: 3,
       name: 'hard',
       color: 'blue',
-      requires_login: true,
-      min_level: 5
+      requiresLogin: true,
+      minLevel: 5
 
     },
     {
       diff: 4,
       name: 'extreme',
       color: 'red',
-      requires_login: true,
-      min_level: 10
+      requiresLogin: true,
+      minLevel: 10
     }
   ];
 
   constructor(id: number, name: string, image: string, desc: string, diffs?: Difficulty[]) {
     this._id = id;
     this._name = name;
-    this._image = this._image_path.concat(image);
+    this._imageBase = image;
     this._desc = desc;
     this._diffs = diffs || Game._default_diffs;
   }

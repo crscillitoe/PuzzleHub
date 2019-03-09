@@ -1,8 +1,8 @@
 <div id="navController" class="">
   <ng-container *ngFor="let game of games">
-    <a (click)="setGame(game.GameID)" 
-      [ngClass]="gameID == game.GameID ? 'navActive' : 'navInactive'" 
-                        class="navItem nav-item nav-link"><img class="clickable" src="{{game.Image}}"></a>
+    <a (click)="setGame(game.id)" 
+      [ngClass]="gameID == game.id ? 'navActive' : 'navInactive'" 
+      class="navItem nav-item nav-link"><img class="clickable" src="{{game.image}}"></a>
   </ng-container>
 </div>
 
@@ -23,85 +23,85 @@
   </div>
 
   <div class="gridContainer">
-      <div class="columnContainer">
-        <ng-container *ngFor="let diff of difficulties;let i=index">
-          <div class="flexElement">
-            <div [ngClass]="i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'"
-              class="leaderboardEntry">
-              <h3 style="padding-top:10px"><b>{{diff}}</b></h3>
-              <table>
-                <thead>
-                  <tr>
-                    <td class="firstcol"></td>
-                    <td class="secondcol nameTitle"><b>Name</b></td>
-                    <td class="thirdcol medals"></td>
-                    <td class="fourthcol time"><b>Time</b></td>
+    <div class="columnContainer">
+      <ng-container *ngFor="let diff of getGameDiffs(gameID);let i=index">
+        <div class="flexElement">
+          <div [ngClass]="i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'"
+             class="leaderboardEntry">
+            <h3 style="padding-top:10px"><b>{{diff.name}}</b></h3>
+            <table>
+              <thead>
+                <tr>
+                  <td class="firstcol"></td>
+                  <td class="secondcol nameTitle"><b>Name</b></td>
+                  <td class="thirdcol medals"></td>
+                  <td class="fourthcol time"><b>Time</b></td>
+                </tr>
+              </thead>
+              <tbody class="scrollable">
+                <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
+                  <tr [ngClass]="username == entry.username ? 'you' : k % 2 == 0 ? 'even' : 'odd'">
+                    <td class="pos firstcol">
+                      {{k + 1}}
+                    </td>
+                    <td class="name secondcol" (click)="viewProfile(entry.username)">
+                      {{entry.username}}
+                    </td>
+
+                    <td class="medals thirdcol">
+                      <div class="medalRow">
+                        <ng-container *ngIf="hasMedals(entry)">
+                          <div class="mytooltip">
+                            <img class="goldMedals medal" src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
+                            <div class="tooltiptext">
+                              {{leaderboardName}} Gold Medal
+                            </div>
+                          </div>
+                          <a class="monospace medalText">
+                            {{entry.goldMedals}}
+                          </a>
+                        </ng-container>
+                      </div>
+
+                      <div class="medalRow">
+                        <ng-container *ngIf="hasMedals(entry)">
+                          <div class="mytooltip">
+                            <img class="goldMedals medal" src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
+                            <div class="tooltiptext">
+                              {{leaderboardName}} Silver Medal
+                            </div>
+                          </div>
+                          <a class="monospace medalText">
+                            {{entry.silverMedals}}
+                          </a>
+                        </ng-container>
+                      </div>
+
+                      <div class="medalRow">
+                        <ng-container *ngIf="hasMedals(entry)">
+                          <div class="mytooltip">
+                            <img class="goldMedals medal" src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
+                            <div class="tooltiptext">
+                              {{leaderboardName}} Bronze Medal
+                            </div>
+                          </div>
+                          <a class="monospace medalText">
+                            {{entry.bronzeMedals}}
+                          </a>
+                        </ng-container>
+                      </div>
+                    </td>
+
+                    <td class="timeText monospace fourthcol">
+                      {{entry.time}}
+                    </td>
                   </tr>
-                </thead>
-                <tbody class="scrollable">
-                  <ng-container *ngFor="let entry of leaderboards[i + 1];let k=index">
-                    <tr [ngClass]="username == entry.username ? 'you' : k % 2 == 0 ? 'even' : 'odd'">
-                      <td class="pos firstcol">
-                        {{k + 1}}
-                      </td>
-                      <td class="name secondcol" (click)="viewProfile(entry.username)">
-                        {{entry.username}}
-                      </td>
-
-                      <td class="medals thirdcol">
-                        <div class="medalRow">
-                          <ng-container *ngIf="hasMedals(entry)">
-                            <div class="mytooltip">
-                              <img class="goldMedals medal" src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
-                              <div class="tooltiptext">
-                                {{leaderboardName}} Gold Medal
-                              </div>
-                            </div>
-                            <a class="monospace medalText">
-                              {{entry.goldMedals}}
-                            </a>
-                          </ng-container>
-                        </div>
-
-                        <div class="medalRow">
-                          <ng-container *ngIf="hasMedals(entry)">
-                            <div class="mytooltip">
-                              <img class="goldMedals medal" src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
-                              <div class="tooltiptext">
-                                {{leaderboardName}} Silver Medal
-                              </div>
-                            </div>
-                            <a class="monospace medalText">
-                              {{entry.silverMedals}}
-                            </a>
-                          </ng-container>
-                        </div>
-
-                        <div class="medalRow">
-                          <ng-container *ngIf="hasMedals(entry)">
-                            <div class="mytooltip">
-                              <img class="goldMedals medal" src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
-                              <div class="tooltiptext">
-                                {{leaderboardName}} Bronze Medal
-                              </div>
-                            </div>
-                            <a class="monospace medalText">
-                              {{entry.bronzeMedals}}
-                            </a>
-                          </ng-container>
-                        </div>
-                      </td>
-
-                      <td class="timeText monospace fourthcol">
-                        {{entry.time}}
-                      </td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-              </table>
-            </div>
+                </ng-container>
+              </tbody>
+            </table>
           </div>
-        </ng-container>
-      </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>

@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
-import { GameDataService } from '../services/games/game-data.service';
+import { Game } from '../classes/game';
+import { GameListAllService } from '../services/games/game-list-all.service';
 
 @Component({
   selector: 'app-leaderboards',
@@ -14,17 +15,10 @@ import { GameDataService } from '../services/games/game-data.service';
   styleUrls: ['./leaderboards.component.css']
 })
 export class LeaderboardsComponent implements OnInit {
-  games: any = GameDataService.games;
+  games: Game[] = GameListAllService.games;
 
   resetDate: any;
   leaderboards: any;
-
-  difficulties: any = [
-    'Easy',
-    'Medium',
-    'Hard',
-    'Extreme'
-  ]
 
   leaderboard: number = 0;
   leaderboardName: string = "Daily";
@@ -43,8 +37,18 @@ export class LeaderboardsComponent implements OnInit {
 
   getGameName(id) {
     for(let game of this.games) {
-      if(game['GameID'] == id) {
-        return game['Name'];
+      if(game.id == id) {
+        return game.name;
+      }
+    }
+
+    return '';
+  }
+
+  getGameDiffs(id) {
+    for(let game of this.games) {
+      if (game.id == id) {
+        return game.diffs;
       }
     }
 
