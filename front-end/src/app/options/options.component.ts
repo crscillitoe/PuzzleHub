@@ -1,6 +1,10 @@
 import { HostListener, Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
-import { GameDataService } from '../services/games/game-data.service';
+import { UserService } from '../services/user/user.service';
+import { Router } from '@angular/router';
+import { Difficulty } from '../interfaces/difficulty';
+import { Game } from '../classes/game';
+import { GameListAllService } from '../services/games/game-list-all.service';
 
 @Component({
   selector: 'app-options',
@@ -25,6 +29,9 @@ export class OptionsComponent implements OnInit {
 
   @Output() optionSelected = new EventEmitter();
 
+  game: Game;
+  diffs: Difficulty[];
+
   highscoresMinimized: boolean;
   rulesMinimized: boolean;
   optionsMinimized: boolean;
@@ -38,21 +45,24 @@ export class OptionsComponent implements OnInit {
   optionVals: any = [];
   hotkeyVals: any = [];
 
-  constructor() { }
+  constructor(
+    private user: UserService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    if(this.options != undefined) {
-      for(let option of this.options) {
-        if(option['type'] == 'checkbox') {
+    if (this.options !== undefined) {
+      for (let option of this.options) {
+        if (option['type'] === 'checkbox') {
           this.optionVals.push(SettingsService.getDataBool(option['storedName']));
-        } else if(option['type'] == 'dropdown') {
+        } else if (option['type'] === 'dropdown') {
           this.optionVals.push(SettingsService.getDataStr(option['storedName']));
         }
       }
     }
 
-    if(this.hotkeys != undefined) {
-      for(let hotkey of this.hotkeys) {
+    if (this.hotkeys !== undefined) {
+      for (let hotkey of this.hotkeys) {
         this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
       }
     }
@@ -65,6 +75,11 @@ export class OptionsComponent implements OnInit {
     this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
     this.timerMinimized = SettingsService.getDataBool('timerMinimized');
     this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
+
+    console.log(this.gameID);
+    this.game = GameListAllService.getGameById(this.gameID);
+    console.log(this.game);
+    this.diffs = this.game.diffs;
   }
 
   minimize(name, val) {
@@ -77,7 +92,7 @@ export class OptionsComponent implements OnInit {
   }
 
   setCopyButtonText(text) {
-    var button = document.getElementById('shareButtonText');
+    const button = document.getElementById('shareButtonText');
     button.textContent = text;
   }
 
@@ -90,26 +105,16 @@ export class OptionsComponent implements OnInit {
   }
 
   generatePuzzleLink() {
-    var gameData = this.getGameData();
-
-    var link = "https://puzzle-hub.com/" +
-                gameData.Name + ";diff=" +
-                this.difficulty + ";seed=" +
+    const link = 'https://puzzle-hub.com/' +
+                this.game.name + ';diff=' +
+                this.difficulty + ';seed=' +
                 this.seed;
 
-    return link.replace(/ /g, "%20");
+    return link.replace(/ /g, '%20');
   }
 
-  getGameData() {
-    for(var i = 0 ; i < GameDataService.games.length ; i++) {
-      if(GameDataService.games[i].GameID == this.gameID) {
-        return GameDataService.games[i];
-      }
-    }
-  }
-
-  copyMessage(val: string){
-    let selBox = document.createElement('textarea');
+  copyMessage(val: string) {
+    const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
     selBox.style.top = '0';
@@ -138,7 +143,7 @@ export class OptionsComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    if(this.editingHotkey) {
+    if (this.editingHotkey) {
       SettingsService.storeData( (this.hotkeys[this.editIndex])['bindTo'], keyEvent.keyCode );
       this.hotkeyVals[this.editIndex] = keyEvent.keyCode;
       this.callback( (this.hotkeys[this.editIndex])['callback'] );
@@ -146,5 +151,22 @@ export class OptionsComponent implements OnInit {
       this.editingHotkey = false;
       this.editIndex = -1;
     }
+  }
+
+  isLoggedIn() {
+    return this.user.isLoggedIn();
+  }
+
+  getLevel() {
+    return UserService.calculateLevel();
+  }
+
+  playGame(route, diff) {
+    const m = {
+      diff: diff
+    };
+
+    this.router.navigate([route, m]);
+    this.optionSelected.emit('this.newGame(' + diff + ')');
   }
 }

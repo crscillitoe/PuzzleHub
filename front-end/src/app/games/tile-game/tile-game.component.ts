@@ -18,35 +18,35 @@ import { GameStarterService } from '../../services/generators/game-starter.servi
 })
 export class TileGameComponent implements OnInit {
 
-  controls: string = "Arrow Keys or WASD";
+  controls = 'Arrow Keys or WASD';
   options = [
     {
-      'type':'checkbox',
-      'bindTo':'showAnimations',
-      'name':'Show Animations',
-      'callback':'this.toggleAnimations()',
-      'storedName':'tileAnimations'
+      'type': 'checkbox',
+      'bindTo': 'showAnimations',
+      'name': 'Show Animations',
+      'callback': 'this.toggleAnimations()',
+      'storedName': 'tileAnimations'
     },
     {
-      'type':'checkbox',
-      'bindTo':'mouseHover',
-      'name':'Mouse Hover',
-      'callback':'this.toggleMouseHover()',
-      'storedName':'HoverTileGame'
+      'type': 'checkbox',
+      'bindTo': 'mouseHover',
+      'name': 'Mouse Hover',
+      'callback': 'this.toggleMouseHover()',
+      'storedName': 'HoverTileGame'
     },
     {
-      'type':'checkbox',
-      'bindTo':'staticTileSize',
-      'name':'Fixed Tile Size',
-      'callback':'this.toggleStaticSizes()',
-      'storedName':'StaticTileSize',
+      'type': 'checkbox',
+      'bindTo': 'staticTileSize',
+      'name': 'Fixed Tile Size',
+      'callback': 'this.toggleStaticSizes()',
+      'storedName': 'StaticTileSize',
     },
     {
-      'type':'dropdown',
-      'bindTo':'colorScheme',
-      'name':'Color Scheme',
-      'callback':'this.updateColorScheme()',
-      'storedName':'TileGameColorScheme',
+      'type': 'dropdown',
+      'bindTo': 'colorScheme',
+      'name': 'Color Scheme',
+      'callback': 'this.updateColorScheme()',
+      'storedName': 'TileGameColorScheme',
       'options': [
         'Fringe',
         'Rows',
@@ -58,29 +58,29 @@ export class TileGameComponent implements OnInit {
 
   hotkeys = [
     {
-      'name':'UP',
-      'bindTo':'TileGameDOWN',
-      'callback':'this.configureHotkeys()'
+      'name': 'UP',
+      'bindTo': 'TileGameDOWN',
+      'callback': 'this.configureHotkeys()'
     },
     {
-      'name':'DOWN',
-      'bindTo':'TileGameUP',
-      'callback':'this.configureHotkeys()'
+      'name': 'DOWN',
+      'bindTo': 'TileGameUP',
+      'callback': 'this.configureHotkeys()'
     },
     {
-      'name':'LEFT',
-      'bindTo':'TileGameRIGHT',
-      'callback':'this.configureHotkeys()'
+      'name': 'LEFT',
+      'bindTo': 'TileGameRIGHT',
+      'callback': 'this.configureHotkeys()'
     },
     {
-      'name':'RIGHT',
-      'bindTo':'TileGameLEFT',
-      'callback':'this.configureHotkeys()'
+      'name': 'RIGHT',
+      'bindTo': 'TileGameLEFT',
+      'callback': 'this.configureHotkeys()'
     }
   ];
 
-  initialDelay: number = 200;
-  continuedDelay: number = 16;
+  initialDelay = 200;
+  continuedDelay = 16;
 
   upTimeout: any;
   downTimeout: any;
@@ -94,21 +94,21 @@ export class TileGameComponent implements OnInit {
   xAxis: boolean;
   yAxis: boolean;
 
-  shiftKey: number = 16;
-  upKey:    number = 83;
-  downKey:  number = 87;
-  leftKey:  number = 68;
-  rightKey: number = 65;
+  shiftKey = 16;
+  upKey = 83;
+  downKey = 87;
+  leftKey = 68;
+  rightKey = 65;
 
   colorScheme: string;
 
-  rules: string = "Order the numbers in sequential order from left to right, top to bottom";
+  rules = 'Order the numbers in sequential order from left to right, top to bottom';
 
   // Used for drawing to the screen
   canvas: any;
   context: any;
 
-  solved: boolean = false;
+  solved = false;
 
   personalBestDaily: string;
   personalBestWeekly: string;
@@ -116,12 +116,12 @@ export class TileGameComponent implements OnInit {
 
   gridBoxSize: number;
   colors: any;
-  
-  canvasOffsetX: number = 225;
-  canvasOffsetY: number = 56;
 
-  gridOffsetX: number = 100;
-  gridOffsetY: number = 100;
+  canvasOffsetX = 225;
+  canvasOffsetY = 56;
+
+  gridOffsetX = 100;
+  gridOffsetY = 100;
 
   difficulty: number;
   seed: number;
@@ -135,47 +135,33 @@ export class TileGameComponent implements OnInit {
   showAnimations: boolean;
   mouseHover: boolean;
 
-  animationDelta: number = 10;
-  animationSpeed: number = 10;
+  animationDelta = 10;
+  animationSpeed = 10;
 
   up: boolean;
   down: boolean;
   left: boolean;
   right: boolean;
 
-  gameID: number = GameID.TILE_GAME;
+  gameID = GameID.TILE_GAME;
 
   board: Board;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private colorService: ColorService,
     private router: Router,
     private tunnel: TunnelService,
     private userService: UserService,
     private timer: TimerService,
-    private loader: LoaderService) { 
+    private loader: LoaderService
+  ) {
     this.colors = colorService.getColorScheme();
-  }
-
-  toggleMouseHover() {
-    this.mouseHover= !this.mouseHover;
-    SettingsService.storeData('HoverTileGame', this.mouseHover);
-  }
-
-  toggleAnimations() {
-    this.showAnimations = !this.showAnimations;
-    this.animatingX = -1;
-    this.animatingY = -1;
-    SettingsService.storeData('tileAnimations', this.showAnimations);
-    this.draw();
   }
 
   ngOnInit() {
     // Read difficulty from URL param
     this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
 
     this.shift = false;
     this.xAxis = false;
@@ -192,50 +178,81 @@ export class TileGameComponent implements OnInit {
 
     this.configureHotkeys();
 
-    var width;
-    var height;
+    this.setupBoard();
 
-    // Easy
-    if(this.difficulty == 1) {
-      width = 4;
-      height = 4;
-    } 
-    
-    // Medium
-    else if (this.difficulty == 2) {
-      width = 5;
-      height = 5;
-    } 
-    
-    // Hard
-    else if (this.difficulty == 3) {
-      width = 7;
-      height = 7;
-    } 
-    
-    // Extreme
-    else if (this.difficulty == 4) {
-      width = 10;
-      height= 10;
-    }
+    let that = this;
+    GameStarterService.startGame(that);
+  }
 
-    // Custom board size
-    else if(this.difficulty == 5) {
-      width = Number(this.route.snapshot.paramMap.get('width'));
-      height = Number(this.route.snapshot.paramMap.get('height'));
-      console.log(width);
-      console.log(height);
+  setupBoard() {
+    this.canvas = document.getElementById('myCanvas');
+    this.context = this.canvas.getContext('2d');
+
+    let width;
+    let height;
+
+    switch (this.difficulty) {
+      // Easy or default
+      case 1:
+      default: {
+        width = 4;
+        height = 4;
+        break;
+      }
+      // Medium
+      case 2: {
+        width = 5;
+        height = 5;
+        break;
+      }
+      // Hard
+      case 3: {
+        width = 7;
+        height = 7;
+        break;
+      }
+      // Extreme
+      case 4: {
+        width = 10;
+        height = 10;
+        break;
+      }
+      // Custom board size
+      case 5: {
+        width = Number(this.route.snapshot.paramMap.get('width'));
+        height = Number(this.route.snapshot.paramMap.get('height'));
+        console.log(width);
+        console.log(height);
+        break;
+      }
     }
 
     // Uncomment these to add event listeners
-    //this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
-    //this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
+    // this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
+    // this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
 
-    //window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
-    this.board = new Board(width, height, 0); 
+    // window.addEventListener('keyup',   (e) => this.keyReleased(e), false);
+    this.board = new Board(width, height, 0);
+  }
 
-    var that = this;
-    GameStarterService.startGame(that);
+  newGame(difficulty = this.difficulty) {
+    this.difficulty = difficulty;
+    this.setupBoard();
+    let that = this;
+    GameStarterService.newGame(that);
+  }
+
+  toggleMouseHover() {
+    this.mouseHover = !this.mouseHover;
+    SettingsService.storeData('HoverTileGame', this.mouseHover);
+  }
+
+  toggleAnimations() {
+    this.showAnimations = !this.showAnimations;
+    this.animatingX = -1;
+    this.animatingY = -1;
+    SettingsService.storeData('tileAnimations', this.showAnimations);
+    this.draw();
   }
 
   configureHotkeys() {
@@ -246,23 +263,23 @@ export class TileGameComponent implements OnInit {
   }
 
   add(that) {
-    var display = document.getElementById("timer");
-    var now = +new Date();
+    const display = document.getElementById('timer');
+    const now = +new Date();
 
-    var diff = ((now - that.startDate));
+    const diff = ((now - that.startDate));
 
-    var hours   = Math.trunc(diff / (60 * 60 * 1000));
-    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    var seconds = Math.trunc(diff / (1000)) % 60;
-    var millis  = diff % 1000;
+    const hours   = Math.trunc(diff / (60 * 60 * 1000));
+    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    const seconds = Math.trunc(diff / (1000)) % 60;
+    const millis  = diff % 1000;
 
     try {
-      if(!that.solved) {
-        display.textContent = 
-          hours + ":" + 
-          (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
-          (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+      if (!that.solved) {
+        display.textContent =
+          hours + ':' +
+          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
+          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
 
         that.displayTimer();
       }
@@ -272,21 +289,16 @@ export class TileGameComponent implements OnInit {
   }
 
   displayTimer() {
-    if(!this.solved) {
-      var _this = this;
-      this.t = setTimeout(function() {_this.add(_this)}, 50);
+    if (!this.solved) {
+      let _this = this;
+      this.t = setTimeout(function() { _this.add(_this); }, 50);
     }
-  }
-
-  newGame() {
-    var that = this;
-    GameStarterService.newGame(that);
   }
 
   draw() {
     this.context.beginPath();
     this.drawBackground();
-    //this.drawGrid();
+    // this.drawGrid();
     this.drawTiles();
   }
 
@@ -296,7 +308,7 @@ export class TileGameComponent implements OnInit {
   }
 
   drawGrid() {
-    for(var i = 0 ; i <= this.board.width ; i++) {
+    for (let i = 0 ; i <= this.board.width ; i++) {
       this.context.lineWidth = 1;
       this.showAnimations = !this.showAnimations;
       SettingsService.storeData('tileAnimations', this.showAnimations);
@@ -307,7 +319,7 @@ export class TileGameComponent implements OnInit {
       this.context.stroke();
     }
 
-    for(var j = 0 ; j <= this.board.height ; j++) {
+    for (let j = 0 ; j <= this.board.height ; j++) {
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.FOREGROUND;
       this.context.moveTo(this.gridOffsetX,                                         this.gridOffsetY + (j * this.gridBoxSize));
@@ -339,21 +351,21 @@ export class TileGameComponent implements OnInit {
   }
 
   drawTiles() {
-    for(var j = 0 ; j < this.board.height ; j++) {
-      for(var i = 0 ; i < this.board.width; i++) {
+    for (let j = 0 ; j < this.board.height ; j++) {
+      for (let i = 0 ; i < this.board.width; i++) {
 
-        var boardValue = this.board.tilePuzzle[j][i];
-        var tileString = "" + boardValue;
-        if(tileString == '0') tileString = '';
+        const boardValue = this.board.tilePuzzle[j][i];
+        let tileString = '' + boardValue;
+        if (tileString === '0') { tileString = ''; }
 
-        if(this.board.width * this.board.height <= 100) {
+        if (this.board.width * this.board.height <= 100) {
           this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
         } else {
           this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 2) + 'px Poppins';
         }
-        this.context.textAlign = "center";
+        this.context.textAlign = 'center';
 
-        var drawColors = [
+        const drawColors = [
           this.colors.COLOR_6_ALT, // RED
           this.colors.COLOR_4,     // ORANGE
           this.colors.COLOR_4_ALT, // YELLOW
@@ -364,68 +376,70 @@ export class TileGameComponent implements OnInit {
           this.colors.COLOR_3,     // DARK BLUE
           this.colors.COLOR_5,     // PURPLE
           this.colors.COLOR_5_ALT  // PINK
-        ]
+        ];
 
-        var innerColor = "#FFFFFF";
+        let innerColor = '#FFFFFF';
 
-        if(this.colorScheme == 'Fringe') {
-          for(var u = this.board.width ; u > 0 ; u--) {
-            if(boardValue <= (this.board.width * (u)) ||
-              (boardValue % this.board.width) == (u % 10)) {
+        if (this.colorScheme === 'Fringe') {
+          for (let u = this.board.width ; u > 0 ; u--) {
+            if (boardValue <= (this.board.width * (u)) ||
+              (boardValue % this.board.width) === (u % 10)) {
               this.context.fillStyle = drawColors[(u - 1) % 10];
             }
           }
-        } else if(this.colorScheme == 'Rows') {
-          for(var h = this.board.width ; h >= 0 ; h--) {
-            if(Math.floor((boardValue - 1) / this.board.width) % 10 == h % 10) {
+        } else if (this.colorScheme === 'Rows') {
+          for (let h = this.board.width ; h >= 0 ; h--) {
+            if (Math.floor((boardValue - 1) / this.board.width) % 10 === h % 10) {
               this.context.fillStyle = drawColors[h % 10];
               break;
             }
           }
-        } else if(this.colorScheme == 'Rows & Cols') {
-          for(var h = this.board.width ; h >= 0 ; h--) {
-            if((Math.floor((boardValue - 1) / this.board.width) % 10 == h % 10)
-              && Math.floor((boardValue - 1) / this.board.width) < this.board.width - 2){
+        } else if (this.colorScheme === 'Rows & Cols') {
+          for (let h = this.board.width ; h >= 0 ; h--) {
+            if (
+              (Math.floor((boardValue - 1) / this.board.width) % 10 === h % 10) &&
+               Math.floor((boardValue - 1) / this.board.width) < this.board.width - 2
+            ) {
               this.context.fillStyle = drawColors[h % 10];
               break;
-            } else if(((boardValue - 1) % this.board.width) == h &&
+            } else if (((boardValue - 1) % this.board.width) === h &&
               Math.floor((boardValue - 1) / this.board.width) >= this.board.width - 2) {
               this.context.fillStyle = drawColors[h % 10];
               break;
             }
           }
-        } else if(this.colorScheme == 'Quadrants') {
-          var xi = ((boardValue - 1) % this.board.height);
-          var yi = Math.floor((boardValue - 1) / this.board.width);
-          var innerBoardValue = -1;
+        } else if (this.colorScheme === 'Quadrants') {
+          const xi = ((boardValue - 1) % this.board.height);
+          const yi = Math.floor((boardValue - 1) / this.board.width);
+          let innerBoardValue = -1;
 
-          if(xi < this.board.height/2 && yi < this.board.width/2) {
+          if (xi < this.board.height / 2 && yi < this.board.width / 2) {
             this.context.fillStyle = drawColors[0];
             innerBoardValue = boardValue - (yi * (this.board.height / 2));
-          } else if(xi >= this.board.height/2 && yi < this.board.width/2) {
+          } else if (xi >= this.board.height / 2 && yi < this.board.width / 2) {
             this.context.fillStyle = drawColors[2];
-            innerBoardValue = boardValue - (yi * (this.board.height / 2)) - this.board.width/2;
-          } else if(xi < this.board.height/2 && yi >= this.board.width/2) {
+            innerBoardValue = boardValue - (yi * (this.board.height / 2)) - this.board.width / 2;
+          } else if (xi < this.board.height / 2 && yi >= this.board.width / 2) {
             this.context.fillStyle = drawColors[3];
             innerBoardValue = boardValue - ((yi + this.board.height / 2) * (this.board.height / 2));
-          } else if(xi >= this.board.height/2 && yi >= this.board.width/2) {
+          } else if (xi >= this.board.height / 2 && yi >= this.board.width / 2) {
             this.context.fillStyle = drawColors[9];
-            innerBoardValue = boardValue - ((yi + this.board.height / 2) * (this.board.height / 2)) - this.board.width/2;
+            innerBoardValue = boardValue - ((yi + this.board.height / 2) * (this.board.height / 2)) - this.board.width / 2;
           }
 
-          for(var u = (this.board.width / 2); u > 0 ; u--) {
-            if(innerBoardValue <= ((this.board.width / 2) * (u)) ||
-              (innerBoardValue % Math.floor(this.board.width / 2)) == (u % 10)) {
+          for (let u = (this.board.width / 2); u > 0 ; u--) {
+            if (innerBoardValue <= ((this.board.width / 2) * (u)) ||
+              (innerBoardValue % Math.floor(this.board.width / 2)) === (u % 10)) {
               innerColor = drawColors[(u - 1) % 10];
             }
           }
         }
 
 
-        var spacing = this.gridBoxSize/40;
+        const spacing = this.gridBoxSize / 40;
 
-        if((i != this.animatingX || j != this.animatingY) || !this.showAnimations) {
-          if(boardValue != 0) {
+        if ((i !== this.animatingX || j !== this.animatingY) || !this.showAnimations) {
+          if (boardValue !== 0) {
             this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
                                   (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
                                   this.gridBoxSize - (spacing * 2), 
@@ -434,7 +448,7 @@ export class TileGameComponent implements OnInit {
                                   true, 
                                   false);
 
-            if(this.colorScheme == 'Quadrants' && (this.board.width * this.board.height) >= 100) {
+            if (this.colorScheme === 'Quadrants' && (this.board.width * this.board.height) >= 100) {
               this.context.fillStyle = innerColor;
               this.roundRect(this.context, 
                                     ((this.gridOffsetX + (i * this.gridBoxSize )) + spacing) + (0.1 * this.gridBoxSize), 
@@ -461,7 +475,7 @@ export class TileGameComponent implements OnInit {
   }
 
   done() {
-    var that = this;
+    let that = this;
     GameStarterService.done(that);
   }
 
@@ -476,19 +490,19 @@ export class TileGameComponent implements OnInit {
     this.gridOffsetX = this.canvas.width / 20;
     this.gridOffsetY = this.canvas.height / 20;
 
-    var boardLength = Math.max(this.board.width, this.board.height);
-    var size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
+    let boardLength = Math.max(this.board.width, this.board.height);
+    let size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
                         this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
     let w = this.canvas.offsetWidth;
     let h = this.canvas.offsetHeight;
-    if(w > h) {
+    if (w > h) {
       this.gridOffsetX = Math.round( ( w - h) / 2 ) + this.gridOffsetX;
     } else {
       this.gridOffsetY = Math.round( (h - w) / 2 ) + this.gridOffsetY;
     }
 
-    if(!this.staticTileSize) {
+    if (!this.staticTileSize) {
       this.gridBoxSize = Math.round((size / boardLength));
     } else {
       this.gridBoxSize = 75;
@@ -505,21 +519,21 @@ export class TileGameComponent implements OnInit {
   }
 
   animateTileUp(animx, animy, y, x, destY, destX) {
-    if(this.animatingX != animx || this.animatingY != animy) {
+    if (this.animatingX !== animx || this.animatingY !== animy) {
       return;
-    } else if(y > destY) {
+    } else if (y > destY) {
       this.animatingX = -1;
       this.animatingY = -1;
       this.draw();
       return;
     } else {
 
-      var dist = this.animationDelta;
-      var boardValue = this.board.tilePuzzle[animy][animx];
+      let dist = this.animationDelta;
+      let boardValue = this.board.tilePuzzle[animy][animx];
       this.drawBlankTile(animx, animy - 1);
       this.drawTile(x, y, boardValue);
 
-      var that = this;
+      let that = this;
       setTimeout(
         function() {
           that.animateTileUp(animx, animy, y + dist, x, destY, destX);
@@ -528,21 +542,21 @@ export class TileGameComponent implements OnInit {
   }
 
   animateTileDown(animx, animy, y, x, destY, destX) {
-    if(this.animatingX != animx || this.animatingY != animy) {
+    if (this.animatingX !== animx || this.animatingY !== animy) {
       return;
-    } else if(y < destY) {
+    } else if (y < destY) {
       this.animatingX = -1;
       this.animatingY = -1;
       this.draw();
       return;
     } else {
 
-      var dist = this.animationDelta;
-      var boardValue = this.board.tilePuzzle[animy][animx];
+      const dist = this.animationDelta;
+      const boardValue = this.board.tilePuzzle[animy][animx];
       this.drawBlankTile(animx, animy + 1);
       this.drawTile(x, y, boardValue);
 
-      var that = this;
+      let that = this;
       setTimeout(
         function() {
           that.animateTileDown(animx, animy, y - dist, x, destY, destX);
@@ -551,21 +565,21 @@ export class TileGameComponent implements OnInit {
   }
 
   animateTileLeft(animx, animy, y, x, destY, destX) {
-    if(this.animatingX != animx || this.animatingY != animy) {
+    if (this.animatingX !== animx || this.animatingY !== animy) {
       return;
-    } else if(x > destX) {
+    } else if (x > destX) {
       this.animatingX = -1;
       this.animatingY = -1;
       this.draw();
       return;
     } else {
 
-      var dist = this.animationDelta;
-      var boardValue = this.board.tilePuzzle[animy][animx];
+      const dist = this.animationDelta;
+      const boardValue = this.board.tilePuzzle[animy][animx];
       this.drawBlankTile(animx - 1, animy);
       this.drawTile(x, y, boardValue);
 
-      var that = this;
+      let that = this;
       setTimeout(
         function() {
           that.animateTileLeft(animx, animy, y, x + dist, destY, destX);
@@ -574,21 +588,21 @@ export class TileGameComponent implements OnInit {
   }
 
   animateTileRight(animx, animy, y, x, destY, destX) {
-    if(this.animatingX != animx || this.animatingY != animy) {
+    if (this.animatingX !== animx || this.animatingY !== animy) {
       return;
-    } else if(x < destX) {
+    } else if (x < destX) {
       this.animatingX = -1;
       this.animatingY = -1;
       this.draw();
       return;
     } else {
 
-      var dist = this.animationDelta;
-      var boardValue = this.board.tilePuzzle[animy][animx];
+      let dist = this.animationDelta;
+      let boardValue = this.board.tilePuzzle[animy][animx];
       this.drawBlankTile(animx + 1, animy);
       this.drawTile(x, y, boardValue);
 
-      var that = this;
+      let that = this;
       setTimeout(
         function() {
           that.animateTileRight(animx, animy, y, x - dist, destY, destX);
@@ -597,17 +611,17 @@ export class TileGameComponent implements OnInit {
   }
 
   drawBlankTile(x, y) {
-    var spacing = 0;
+    const spacing = 0;
     this.context.fillStyle = this.colors.BACKGROUND;
     this.context.fillRect(
       (this.gridOffsetX + (x * this.gridBoxSize)) + spacing,
       (this.gridOffsetY + (y * this.gridBoxSize)) + spacing,
-                          this.gridBoxSize - (spacing * 2), 
-                          this.gridBoxSize - (spacing * 2))
+                          this.gridBoxSize - (spacing * 2),
+                          this.gridBoxSize - (spacing * 2));
   }
 
   drawTile(x, y, boardValue) {
-    var drawColors = [
+    const drawColors = [
       this.colors.COLOR_6_ALT, // RED
       this.colors.COLOR_4,     // ORANGE
       this.colors.COLOR_4_ALT, // YELLOW
@@ -618,95 +632,97 @@ export class TileGameComponent implements OnInit {
       this.colors.COLOR_3,     // DARK BLUE
       this.colors.COLOR_5,     // PURPLE
       this.colors.COLOR_5_ALT  // PINK
-    ]
+    ];
 
-    var innerColor = "#FFFFFF";
+    let innerColor = '#FFFFFF';
 
-    if(this.colorScheme == 'Fringe') {
-      for(var u = this.board.width ; u > 0 ; u--) {
-        if(boardValue <= (this.board.width * (u)) ||
-          (boardValue % this.board.width) == (u % 10)) {
+    if (this.colorScheme === 'Fringe') {
+      for (let u = this.board.width ; u > 0 ; u--) {
+        if (boardValue <= (this.board.width * (u)) ||
+          (boardValue % this.board.width) === (u % 10)) {
           this.context.fillStyle = drawColors[(u - 1) % 10];
         }
       }
-    } else if(this.colorScheme == 'Rows') {
-      for(var h = this.board.width ; h >= 0 ; h--) {
-        if(Math.floor((boardValue - 1) / this.board.width) % 10 == h % 10) {
+    } else if (this.colorScheme === 'Rows') {
+      for (let h = this.board.width ; h >= 0 ; h--) {
+        if (Math.floor((boardValue - 1) / this.board.width) % 10 === h % 10) {
           this.context.fillStyle = drawColors[h % 10];
           break;
         }
       }
-    } else if(this.colorScheme == 'Rows & Cols') {
-      for(var h = this.board.width ; h >= 0 ; h--) {
-        if((Math.floor((boardValue - 1) / this.board.width) % 10 == h % 10)
-          && Math.floor((boardValue - 1) / this.board.width) < this.board.width - 2){
+    } else if (this.colorScheme === 'Rows & Cols') {
+      for (let h = this.board.width ; h >= 0 ; h--) {
+        if (
+          (Math.floor((boardValue - 1) / this.board.width) % 10 === h % 10) &&
+           Math.floor((boardValue - 1) / this.board.width) < this.board.width - 2
+        ) {
           this.context.fillStyle = drawColors[h % 10];
           break;
-        } else if(((boardValue - 1) % this.board.width) == h &&
+        } else if (((boardValue - 1) % this.board.width) === h &&
           Math.floor((boardValue - 1) / this.board.width) >= this.board.width - 2) {
           this.context.fillStyle = drawColors[h % 10];
           break;
         }
       }
-    } else if(this.colorScheme == 'Quadrants') {
-      var xi = ((boardValue - 1) % this.board.height);
-      var yi = Math.floor((boardValue - 1) / this.board.width);
-      var innerBoardValue = -1;
+    } else if (this.colorScheme === 'Quadrants') {
+      const xi = ((boardValue - 1) % this.board.height);
+      const yi = Math.floor((boardValue - 1) / this.board.width);
+      let innerBoardValue = -1;
 
-      if(xi < this.board.height/2 && yi < this.board.width/2) {
+      if (xi < this.board.height / 2 && yi < this.board.width / 2) {
         this.context.fillStyle = drawColors[0];
         innerBoardValue = boardValue - (yi * (this.board.height / 2));
-      } else if(xi >= this.board.height/2 && yi < this.board.width/2) {
+      } else if (xi >= this.board.height / 2 && yi < this.board.width / 2) {
         this.context.fillStyle = drawColors[2];
-        innerBoardValue = boardValue - (yi * (this.board.height / 2)) - this.board.width/2;
-      } else if(xi < this.board.height/2 && yi >= this.board.width/2) {
+        innerBoardValue = boardValue - (yi * (this.board.height / 2)) - this.board.width / 2;
+      } else if (xi < this.board.height / 2 && yi >= this.board.width / 2) {
         this.context.fillStyle = drawColors[3];
         innerBoardValue = boardValue - ((yi + this.board.height / 2) * (this.board.height / 2));
-      } else if(xi >= this.board.height/2 && yi >= this.board.width/2) {
+      } else if (xi >= this.board.height / 2 && yi >= this.board.width / 2) {
         this.context.fillStyle = drawColors[9];
-        innerBoardValue = boardValue - ((yi + this.board.height / 2) * (this.board.height / 2)) - this.board.width/2;
+        innerBoardValue = boardValue - ((yi + this.board.height / 2) * (this.board.height / 2)) - this.board.width / 2;
       }
 
-      for(var u = (this.board.width / 2); u > 0 ; u--) {
-        if(innerBoardValue <= ((this.board.width / 2) * (u)) ||
-          (innerBoardValue % Math.floor(this.board.width / 2)) == (u % 10)) {
+      for (let u = (this.board.width / 2); u > 0 ; u--) {
+        if (innerBoardValue <= ((this.board.width / 2) * (u)) ||
+          (innerBoardValue % Math.floor(this.board.width / 2)) === (u % 10)) {
           innerColor = drawColors[(u - 1) % 10];
         }
       }
     }
 
-    var tileString = "" + boardValue;
-    var spacing = this.gridBoxSize/40;
+    const tileString = '' + boardValue;
+    const spacing = this.gridBoxSize / 40;
     this.roundRect(this.context, x, y,
-                          this.gridBoxSize - (spacing * 2), 
-                          this.gridBoxSize - (spacing * 2), 
-                          (this.gridBoxSize/20), 
+                          this.gridBoxSize - (spacing * 2),
+                          this.gridBoxSize - (spacing * 2),
+                          (this.gridBoxSize / 20), 
                           true, 
                           false);
 
-    if(this.colorScheme == 'Quadrants' && (this.board.width * this.board.height) >= 100) {
+    if (this.colorScheme === 'Quadrants' && (this.board.width * this.board.height) >= 100) {
       this.context.fillStyle = innerColor;
-      this.roundRect(this.context, 
-                            x + (0.1 * this.gridBoxSize), 
+      this.roundRect(this.context,
+                            x + (0.1 * this.gridBoxSize),
                             y + (0.8 * this.gridBoxSize),
-                            (this.gridBoxSize - (spacing * 2)) - (0.2 * this.gridBoxSize), 
-                            (this.gridBoxSize - (spacing * 2)) - (0.85 * this.gridBoxSize), 
-                            (this.gridBoxSize/20), 
-                            true, 
+                            (this.gridBoxSize - (spacing * 2)) - (0.2 * this.gridBoxSize),
+                            (this.gridBoxSize - (spacing * 2)) - (0.85 * this.gridBoxSize),
+                            (this.gridBoxSize / 20),
+                            true,
                             true);
     }
 
     this.context.fillStyle = this.colors.BACKGROUND;
-    var textX = (x + (this.gridBoxSize/2) - spacing);
-    var j  = (y - spacing - this.gridOffsetY)/this.gridBoxSize;
-    var textY = (this.gridOffsetY + ( (j + 1) * this.gridBoxSize) - (this.gridBoxSize / 4));
+    const textX = (x + (this.gridBoxSize / 2) - spacing);
+    const j  = (y - spacing - this.gridOffsetY) / this.gridBoxSize;
+    const textY = (this.gridOffsetY + ( (j + 1) * this.gridBoxSize) - (this.gridBoxSize / 4));
     this.context.fillText(tileString, textX, textY);
   }
 
   moveUp(repeat, click) {
-    var directions = this.board.getValidDirections();
+    let directions = this.board.getValidDirections();
 
-    if(directions.includes(0) && (this.up || click)) {
+    if (directions.includes(0) && (this.up || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX];
       this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX] = 0;
       this.board.emptyY--;
@@ -716,12 +732,12 @@ export class TileGameComponent implements OnInit {
 
       this.draw();
 
-      if(this.showAnimations) {
-        var spacing = this.gridBoxSize/40;
-        let y1 = this.board.emptyY + 1;
-        let x1 = this.board.emptyX;
-        let y2 = this.board.emptyY;
-        let x2 = this.board.emptyX;
+      if (this.showAnimations) {
+        const spacing = this.gridBoxSize / 40;
+        const y1 = this.board.emptyY + 1;
+        const x1 = this.board.emptyX;
+        const y2 = this.board.emptyY;
+        const x2 = this.board.emptyX;
         this.animateTileUp(
           this.animatingX, this.animatingY,
           (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
@@ -731,18 +747,18 @@ export class TileGameComponent implements OnInit {
         );
       }
 
-      if(this.board.isSolved()) {
+      if (this.board.isSolved()) {
         this.done();
       }
 
-      if(this.up && repeat && !this.solved) {
-        var that = this;
+      if (this.up && repeat && !this.solved) {
+        let that = this;
 
-        this.upTimeout = 
-        setTimeout( 
+        this.upTimeout =
+        setTimeout(
           function() {
-            that.moveUp(true, false)
-          }, 
+            that.moveUp(true, false);
+          },
           this.continuedDelay );
       }
     }
@@ -750,93 +766,94 @@ export class TileGameComponent implements OnInit {
 
   moveUpFirst() {
     this.moveUp(false, false);
-    var that = this;
+    let that = this;
 
-    if(this.shift && !this.yAxis) {
+    if (this.shift && !this.yAxis) {
       this.xAxis = true;
-      this.upTimeout = 
-      setTimeout( 
+      this.upTimeout =
+      setTimeout(
         function() {
-          that.moveUp(true, false)
-        }, 
+          that.moveUp(true, false);
+        },
         this.continuedDelay );
     } else {
-      this.upTimeout = 
-      setTimeout( 
+      this.upTimeout =
+      setTimeout(
         function() {
-          that.moveUp(true, false)
-        }, 
+          that.moveUp(true, false);
+        },
         this.initialDelay );
     }
   }
   moveDownFirst() {
     this.moveDown(false, false);
-    var that = this;
+    let that = this;
 
-    if(this.shift && !this.yAxis) {
+    if (this.shift && !this.yAxis) {
       this.xAxis = true;
-      this.downTimeout = 
-      setTimeout( 
+      this.downTimeout =
+      setTimeout(
         function() {
-          that.moveDown(true, false)
-        }, 
+          that.moveDown(true, false);
+        },
         this.continuedDelay );
     } else {
-      this.downTimeout = 
-      setTimeout( 
+      this.downTimeout =
+      setTimeout(
         function() {
-          that.moveDown(true, false)
-        }, 
+          that.moveDown(true, false);
+        },
         this.initialDelay );
     }
   }
   moveRightFirst() {
     this.moveRight(false, false);
-    var that = this;
+    let that = this;
 
-    if(this.shift && !this.xAxis) {
+    if (this.shift && !this.xAxis) {
       this.yAxis = true;
-      this.rightTimeout = 
-      setTimeout( 
+      this.rightTimeout =
+      setTimeout(
         function() {
-          that.moveRight(true, false)
-        }, 
+          that.moveRight(true, false);
+        },
         this.continuedDelay );
     } else {
-      this.rightTimeout = 
-      setTimeout( 
+      this.rightTimeout =
+      setTimeout(
         function() {
-          that.moveRight(true, false)
-        }, 
+          that.moveRight(true, false);
+        },
         this.initialDelay );
     }
   }
+
   moveLeftFirst() {
     this.moveLeft(false, false);
-    var that = this;
+    let that = this;
 
-    if(this.shift && !this.xAxis) {
+    if (this.shift && !this.xAxis) {
       this.yAxis = true;
-      this.leftTimeout = 
-      setTimeout( 
+      this.leftTimeout =
+      setTimeout(
         function() {
-          that.moveLeft(true, false)
-        }, 
+          that.moveLeft(true, false);
+        },
         this.continuedDelay );
     } else {
-      this.leftTimeout = 
-      setTimeout( 
+      this.leftTimeout =
+      setTimeout(
         function() {
-          that.moveLeft(true, false)
-        }, 
+          that.moveLeft(true, false);
+        },
         this.initialDelay );
     }
   }
 
   moveDown(repeat, click) {
-    var directions = this.board.getValidDirections();
+    const directions = this.board.getValidDirections();
 
-    if(directions.includes(1) && (this.down || click)) {
+    if (directions.includes(1) && (this.down || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX];
       this.board.tilePuzzle[this.board.emptyY + 1][this.board.emptyX] = 0;
       this.board.emptyY++;
@@ -846,12 +863,12 @@ export class TileGameComponent implements OnInit {
 
       this.draw();
 
-      if(this.showAnimations) {
-        var spacing = this.gridBoxSize/40;
-        let y1 = this.board.emptyY - 1;
-        let x1 = this.board.emptyX;
-        let y2 = this.board.emptyY;
-        let x2 = this.board.emptyX;
+      if (this.showAnimations) {
+        const spacing = this.gridBoxSize / 40;
+        const y1 = this.board.emptyY - 1;
+        const x1 = this.board.emptyX;
+        const y2 = this.board.emptyY;
+        const x2 = this.board.emptyX;
         this.animateTileDown(
           this.animatingX, this.animatingY,
           (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
@@ -861,26 +878,26 @@ export class TileGameComponent implements OnInit {
         );
       }
 
-      if(this.board.isSolved()) {
+      if (this.board.isSolved()) {
         this.done();
       }
 
-      if(this.down && repeat && !this.solved) {
-        var that = this;
-        this.downTimeout = 
-        setTimeout( 
+      if (this.down && repeat && !this.solved) {
+        let that = this;
+        this.downTimeout =
+        setTimeout(
           function() {
-            that.moveDown(true, false)
-          }, 
+            that.moveDown(true, false);
+          },
           this.continuedDelay );
       }
     }
   }
 
   moveLeft(repeat, click) {
-    var directions = this.board.getValidDirections();
+    const directions = this.board.getValidDirections();
 
-    if(directions.includes(2) && (this.left || click)) {
+    if (directions.includes(2) && (this.left || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1];
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX - 1] = 0;
       this.board.emptyX--;
@@ -890,12 +907,12 @@ export class TileGameComponent implements OnInit {
 
       this.draw();
 
-      if(this.showAnimations) {
-        var spacing = this.gridBoxSize/40;
-        let y1 = this.board.emptyY;
-        let x1 = this.board.emptyX + 1;
-        let y2 = this.board.emptyY;
-        let x2 = this.board.emptyX;
+      if (this.showAnimations) {
+        const spacing = this.gridBoxSize / 40;
+        const y1 = this.board.emptyY;
+        const x1 = this.board.emptyX + 1;
+        const y2 = this.board.emptyY;
+        const x2 = this.board.emptyX;
         this.animateTileLeft(
           this.animatingX, this.animatingY,
           (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
@@ -905,12 +922,12 @@ export class TileGameComponent implements OnInit {
         );
       }
 
-      if(this.board.isSolved()) {
+      if (this.board.isSolved()) {
         this.done();
       }
 
-      if(this.left && repeat && !this.solved) {
-        var that = this;
+      if (this.left && repeat && !this.solved) {
+        let that = this;
         this.leftTimeout = 
         setTimeout( 
           function() {
@@ -922,9 +939,9 @@ export class TileGameComponent implements OnInit {
   }
 
   moveRight(repeat, click) {
-    var directions = this.board.getValidDirections();
+    const directions = this.board.getValidDirections();
 
-    if(directions.includes(3) && (this.right || click)) {
+    if (directions.includes(3) && (this.right || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1];
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX + 1] = 0;
       this.board.emptyX++;
@@ -934,12 +951,12 @@ export class TileGameComponent implements OnInit {
 
       this.draw();
 
-      if(this.showAnimations) {
-        var spacing = this.gridBoxSize/40;
-        let y1 = this.board.emptyY;
-        let x1 = this.board.emptyX - 1;
-        let y2 = this.board.emptyY;
-        let x2 = this.board.emptyX;
+      if (this.showAnimations) {
+        const spacing = this.gridBoxSize / 40;
+        const y1 = this.board.emptyY;
+        const x1 = this.board.emptyX - 1;
+        const y2 = this.board.emptyY;
+        const x2 = this.board.emptyX;
         this.animateTileRight(
           this.animatingX, this.animatingY,
           (this.gridOffsetY + (y2 * this.gridBoxSize)) + spacing,
@@ -949,39 +966,39 @@ export class TileGameComponent implements OnInit {
         );
       }
 
-      if(this.board.isSolved()) {
+      if (this.board.isSolved()) {
         this.done();
       }
 
-      if(this.right && repeat && !this.solved) {
-        var that = this;
-        this.rightTimeout = 
-        setTimeout( 
+      if (this.right && repeat && !this.solved) {
+        let that = this;
+        this.rightTimeout =
+        setTimeout(
           function() {
             that.moveRight(true, false);
-          }, 
+          },
           this.continuedDelay );
       }
     }
   }
 
   moveTile(x, y) {
-    var emptyX = this.board.emptyX;
-    var emptyY = this.board.emptyY;
-    if(x - 1 >= emptyX && y == emptyY) {
-      for(var i = emptyX ; i < x ; i++) {
+    const emptyX = this.board.emptyX;
+    const emptyY = this.board.emptyY;
+    if (x - 1 >= emptyX && y === emptyY) {
+      for (let i = emptyX ; i < x ; i++) {
         this.moveRight(false, true);
       }
-    } else if(x + 1 <= emptyX && y == emptyY) {
-      for(var j = x ; j < emptyX ; j++) {
+    } else if (x + 1 <= emptyX && y === emptyY) {
+      for (let j = x ; j < emptyX ; j++) {
         this.moveLeft(false, true);
       }
-    } else if(x == emptyX && y + 1 <= emptyY) {
-      for(var k = y ; k < emptyY ; k++) {
+    } else if (x === emptyX && y + 1 <= emptyY) {
+      for (let k = y ; k < emptyY ; k++) {
         this.moveUp(false, true);
       }
-    } else if(x == emptyX && y - 1 >= emptyY) {
-      for(var l = emptyY ; l < y ; l++) {
+    } else if (x === emptyX && y - 1 >= emptyY) {
+      for (let l = emptyY ; l < y ; l++) {
         this.moveDown(false, true);
       }
     }
@@ -989,47 +1006,51 @@ export class TileGameComponent implements OnInit {
 
   /* EVENT LISTENERS */
   @HostListener('document:mousedown', ['$event'])
-  mousePressed(mouseEvent) { 
+  mousePressed(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
 
-    if(!this.solved) {
+    if (!this.solved) {
       x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-      if(x > -1 
-      && x <  this.board.width
-      && y > -1
-      && y < this.board.height) {
+      if (
+        x > -1 &&
+        x <  this.board.width &&
+        y > -1 &&
+        y < this.board.height
+      ) {
         this.moveTile(x, y);
-        if(this.board.isSolved()) {
+        if (this.board.isSolved()) {
           this.done();
         }
       }
     }
   }
-  mouseReleased(mouseEvent) { 
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
+  mouseReleased(mouseEvent) {
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+    console.log({'mouseReleasedX': x, 'mouseReleasedY': y});
   }
 
   @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
-    if(this.mouseHover) {
+    if (this.mouseHover) {
       let x = mouseEvent.clientX - this.canvasOffsetX;
       let y = mouseEvent.clientY - this.canvasOffsetY;
 
-      if(!this.solved) {
+      if (!this.solved) {
         x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
         y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-        if(x > -1 
-        && x <  this.board.width
-        && y > -1
-        && y < this.board.height) {
+        if (
+          x > -1 &&
+          x <  this.board.width &&
+          y > -1 &&
+          y < this.board.height
+        ) {
           this.moveTile(x, y);
-          if(this.board.isSolved()) {
+          if (this.board.isSolved()) {
             this.done();
           }
         }
@@ -1039,14 +1060,14 @@ export class TileGameComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    let code = keyEvent.keyCode;
-    if(code == 32) {
+    const code = keyEvent.keyCode;
+    if (code === 32) {
       this.newGame();
       return;
     }
 
-    if(!this.solved) {
-      switch(code) {
+    if (!this.solved) {
+      switch (code) {
         // UP
         case(40):
         case(this.upKey):
@@ -1104,8 +1125,8 @@ export class TileGameComponent implements OnInit {
 
   @HostListener('document:keyup', ['$event'])
   keyReleased(keyEvent) {
-    let code = keyEvent.keyCode;
-    switch(code) {
+    const code = keyEvent.keyCode;
+    switch (code) {
       // UP
       case(40):
       case(this.upKey):

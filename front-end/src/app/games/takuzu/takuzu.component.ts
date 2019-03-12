@@ -18,25 +18,27 @@ import { GameStarterService } from '../../services/generators/game-starter.servi
 })
 export class TakuzuComponent implements OnInit {
 
-  controls: string = "Left/Right click";
+  controls = 'Left/Right click';
   options = [
     {
-      'type':'checkbox',
-      'bindTo':'toggleGrid',
-      'name':'Display Grid',
-      'callback':'this.toggleGrid()',
-      'storedName':'takuzuGrid'
+      'type': 'checkbox',
+      'bindTo': 'toggleGrid',
+      'name': 'Display Grid',
+      'callback': 'this.toggleGrid()',
+      'storedName': 'takuzuGrid'
     },
     {
-      'type':'checkbox',
-      'bindTo':'invertControls',
-      'name':'Invert Controls',
-      'callback':'this.invertControls()',
-      'storedName':'takuzuInvert'
+      'type': 'checkbox',
+      'bindTo': 'invertControls',
+      'name': 'Invert Controls',
+      'callback': 'this.invertControls()',
+      'storedName': 'takuzuInvert'
     }
   ];
 
-  rules: string = "The objective is to fill a grid with 1s and 0s, where there is an equal number of 1s and 0s in each row and column and no more than two of either number adjacent to each other. Additionally, there can be no identical rows or columns."
+  rules = 'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
+          '1s and 0s in each row and column and no more than two of either number adjacent to ' +
+          'each other. Additionally, there can be no identical rows or columns.';
 
   // Used for drawing to the screen
   canvas: any;
@@ -49,15 +51,15 @@ export class TakuzuComponent implements OnInit {
   displayGrid: boolean;
   invertedControls: boolean;
 
-  canvasOffsetX: number = 225;
-  canvasOffsetY: number = 56;
+  canvasOffsetX = 225;
+  canvasOffsetY = 56;
 
-  gridOffsetX: number = 100;
-  gridOffsetY: number = 100;
+  gridOffsetX = 100;
+  gridOffsetY = 100;
   gridBoxSize: number;
 
-  selectedX: number = -1;
-  selectedY: number = -1;
+  selectedX = -1;
+  selectedY = -1;
 
   personalBestDaily: string;
   personalBestWeekly: string;
@@ -69,21 +71,22 @@ export class TakuzuComponent implements OnInit {
   t: any;
 
   board: Board;
-  solved: boolean = false;
+  solved = false;
 
-  gameID: number = GameID.TAKUZU;
+  gameID = GameID.TAKUZU;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private colorService: ColorService,
     private router: Router,
     private tunnel: TunnelService,
     private userService: UserService,
     private timer: TimerService,
-    private loader: LoaderService) { 
+    private loader: LoaderService
+  ) {
     this.colors = colorService.getColorScheme();
     this.oColor = this.colors.FOREGROUND;
-    this.cColor = "#66CCFF";
+    this.cColor = '#66CCFF';
   }
 
   ngOnInit() {
@@ -91,62 +94,75 @@ export class TakuzuComponent implements OnInit {
     this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
     this.canvas = document.getElementById('myCanvas');
     this.context = this.canvas.getContext('2d');
-
+    this.setupBoard();
 
     this.displayGrid = SettingsService.getDataBool('takuzuGrid');
     this.invertedControls = SettingsService.getDataBool('takuzuInvert');
 
-    var size;
-    var removePerc;
-
-    // Easy
-    if(this.difficulty == 1) {
-      size = 6;
-      removePerc = 0.6;
-    } 
-    
-    // Medium
-    else if (this.difficulty == 2) {
-      size = 8;    
-      removePerc = 0.6;
-    } 
-    
-    // Hard
-    else if (this.difficulty == 3) {
-      size = 10;    
-      removePerc = 0.7;
-    } 
-    
-    // Extreme
-    else if (this.difficulty == 4) {
-      size = 12;
-      removePerc = 0.7;
-    }
-
-    this.board = new Board(size, 0, removePerc);
-
-    var that = this;
+    let that = this;
     GameStarterService.startGame(that);
   }
 
+  setupBoard() {
+    let size;
+    let removePerc;
+
+    switch (this.difficulty) {
+      // Easy or default
+      case 1:
+      default: {
+        size = 6;
+        removePerc = 0.6;
+        break;
+      }
+      // Medium
+      case 2: {
+        size = 8;
+        removePerc = 0.6;
+        break;
+      }
+      // Hard
+      case 3: {
+        size = 10;
+        removePerc = 0.7;
+        break;
+      }
+      // Extreme
+      case 4: {
+        size = 12;
+        removePerc = 0.7;
+        break;
+      }
+    }
+
+    this.board = new Board(size, 0, removePerc);
+  }
+
+  newGame(difficulty = this.difficulty) {
+    this.difficulty = difficulty;
+    this.setupBoard();
+    let that = this;
+    GameStarterService.newGame(that);
+  }
+
   add(that) {
-    var display = document.getElementById("timer");
-    var now = +new Date();
+    const display = document.getElementById('timer');
+    const now = +new Date();
 
-    var diff = ((now - that.startDate));
+    const diff = ((now - that.startDate));
 
-    var hours   = Math.trunc(diff / (60 * 60 * 1000));
-    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    var seconds = Math.trunc(diff / (1000)) % 60;
-    var millis  = diff % 1000;
+    const hours   = Math.trunc(diff / (60 * 60 * 1000));
+    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    const seconds = Math.trunc(diff / (1000)) % 60;
+    const millis  = diff % 1000;
 
     try {
-      if(!that.solved) {
-        display.textContent = 
-          hours + ":" + 
-          (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
-          (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+      if (!that.solved) {
+        display.textContent =
+          hours + ':' +
+          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
+          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
 
         that.displayTimer();
       }
@@ -155,15 +171,10 @@ export class TakuzuComponent implements OnInit {
     }
   }
 
-  newGame() {
-    var that = this;
-    GameStarterService.newGame(that);
-  }
-
   displayTimer() {
-    if(!this.solved) {
-      var _this = this;
-      this.t = setTimeout(function() {_this.add(_this)}, 50);
+    if (!this.solved) {
+      let _this = this;
+      this.t = setTimeout(function() { _this.add(_this); }, 50);
     }
   }
 
@@ -171,7 +182,7 @@ export class TakuzuComponent implements OnInit {
     this.context.beginPath();
     this.drawBackground();
     this.drawSelectedBox();
-    if(this.displayGrid) {
+    if (this.displayGrid) {
       this.drawGrid();
     } else {
       this.drawBorder();
@@ -180,12 +191,12 @@ export class TakuzuComponent implements OnInit {
   }
 
   drawSelectedBox() {
-    if(this.selectedX < this.board.size && this.selectedX >= 0 &&
-       this.selectedY < this.board.size && this.selectedY >= 0) {
-      this.context.fillStyle = "#3D3D3D";
+    if (this.selectedX < this.board.size && this.selectedX >= 0 &&
+        this.selectedY < this.board.size && this.selectedY >= 0) {
+      this.context.fillStyle = '#3D3D3D';
       this.context.fillRect(this.gridOffsetX + (this.selectedX * this.gridBoxSize),
                             this.gridOffsetY + (this.selectedY * this.gridBoxSize),
-                              this.gridBoxSize, this.gridBoxSize);
+                            this.gridBoxSize, this.gridBoxSize);
     }
   }
 
@@ -195,7 +206,7 @@ export class TakuzuComponent implements OnInit {
   }
 
   drawGrid() {
-    for (var i = 0; i <= this.board.size; i++) {
+    for (let i = 0; i <= this.board.size; i++) {
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.COLOR_1;
@@ -205,11 +216,11 @@ export class TakuzuComponent implements OnInit {
       this.context.stroke();
     }
 
-    for (var j = 0; j <= this.board.size; j++) {
+    for (let j = 0; j <= this.board.size; j++) {
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.FOREGROUND;
-      this.context.moveTo(this.gridOffsetX, 
+      this.context.moveTo(this.gridOffsetX,
                           this.gridOffsetY + (j * this.gridBoxSize));
       this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize),
                           this.gridOffsetY + (j * this.gridBoxSize));
@@ -246,7 +257,7 @@ export class TakuzuComponent implements OnInit {
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.FOREGROUND;
-      this.context.moveTo(this.gridOffsetX, 
+      this.context.moveTo(this.gridOffsetX,
                           this.gridOffsetY + (0 * this.gridBoxSize));
       this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize),
                           this.gridOffsetY + (0 * this.gridBoxSize));
@@ -254,7 +265,7 @@ export class TakuzuComponent implements OnInit {
 
       this.context.lineWidth = 1;
       this.context.strokeStyle = this.colors.FOREGROUND;
-      this.context.moveTo(this.gridOffsetX, 
+      this.context.moveTo(this.gridOffsetX,
                           this.gridOffsetY + (this.board.size * this.gridBoxSize));
       this.context.lineTo(this.gridOffsetX + (this.board.size * this.gridBoxSize),
                           this.gridOffsetY + (this.board.size * this.gridBoxSize));
@@ -285,103 +296,100 @@ export class TakuzuComponent implements OnInit {
 
 
   drawValues() {
-    for (var j = 0; j < this.board.size; j++) {
-      for (var i = 0; i < this.board.size; i++) {
-        var boardValue = this.board.takuzuPuzzle[j][i];
-        var original = this.board.isOriginal(i, j);  
-          
-        var invalidTile = this.board.isInvalidTile(i, j);
-        var entryString = "" + boardValue;
+    for (let j = 0; j < this.board.size; j++) {
+      for (let i = 0; i < this.board.size; i++) {
+        const boardValue = this.board.takuzuPuzzle[j][i];
+        const original = this.board.isOriginal(i, j);
+
+        const invalidTile = this.board.isInvalidTile(i, j);
+        const entryString = '' + boardValue;
         this.context.font = 'Bold ' + Math.floor(this.gridBoxSize / 1.4) + 'px Poppins';
-        this.context.textAlign = "center";
-        
-        var spacing = this.gridBoxSize / 40;
+        this.context.textAlign = 'center';
 
-        if (boardValue == 1) {
+        const spacing = this.gridBoxSize / 40;
+
+        if (boardValue === 1) {
           if (original) {
             this.context.fillStyle = this.oColor;
-            if(invalidTile) {
+            if (invalidTile) {
               this.context.fillStyle = this.colors.COLOR_7;
             }
           } else {
-            this.context.fillStyle = this.cColor; 
-            if(invalidTile) {
+            this.context.fillStyle = this.cColor;
+            if (invalidTile) {
               this.context.fillStyle = this.colors.COLOR_7_ALT;
             }
           }
 
-        
           this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + spacing,
                                        (this.gridOffsetY + (j * this.gridBoxSize)) + spacing,
                                        this.gridBoxSize - (spacing * 2),
                                        this.gridBoxSize - (spacing * 2),
-                                       (this.gridBoxSize/20),
+                                       (this.gridBoxSize / 20),
                                        true,
                                        false);
-        
-          this.context.fillStyle = this.colors.BACKGROUND;  
+
+          this.context.fillStyle = this.colors.BACKGROUND;
           this.context.fillText(entryString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
-                                             (this.gridOffsetY) + ( (j+1) * this.gridBoxSize ) - (this.gridBoxSize/4));
-        
+                                             (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
 
-        } else if (boardValue == 0) {  
+        } else if (boardValue === 0) {
           if (original) {
             this.context.fillStyle = this.oColor;
-            if(invalidTile) {
+            if (invalidTile) {
               this.context.fillStyle = this.colors.COLOR_7;
             }
           } else {
-            this.context.fillStyle = this.cColor; 
-            if(invalidTile) {
+            this.context.fillStyle = this.cColor;
+            if (invalidTile) {
               this.context.fillStyle = this.colors.COLOR_7_ALT;
             }
           }
-            
+
           this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + spacing,
                                        (this.gridOffsetY + (j * this.gridBoxSize)) + spacing,
                                        this.gridBoxSize - (spacing * 2),
                                        this.gridBoxSize - (spacing * 2),
-                                       (this.gridBoxSize/20),
+                                       (this.gridBoxSize / 20),
                                        true,
                                        false);
-        
+
           this.context.fillStyle = this.colors.BACKGROUND;
           this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize)) + (spacing * 3),
                                        (this.gridOffsetY + (j * this.gridBoxSize)) + (spacing * 3),
                                        this.gridBoxSize - (spacing * 6),
                                        this.gridBoxSize - (spacing * 6),
-                                       (this.gridBoxSize/20),
+                                       (this.gridBoxSize / 20),
                                        true,
                                        false);
-            
           if (original) {
             this.context.fillStyle = this.oColor;
-            if(invalidTile) {
+            if (invalidTile) {
               this.context.fillStyle = this.colors.COLOR_7;
             }
           } else {
-            this.context.fillStyle = this.cColor; 
-            if(invalidTile) {
+            this.context.fillStyle = this.cColor;
+            if (invalidTile) {
               this.context.fillStyle = this.colors.COLOR_7_ALT;
             }
           }
 
           this.context.fillText(entryString, (this.gridOffsetX) + ( i * this.gridBoxSize ) + (this.gridBoxSize / 2),
-                                             (this.gridOffsetY) + ( (j+1) * this.gridBoxSize ) - (this.gridBoxSize/4));
+                                             (this.gridOffsetY) + ( (j + 1) * this.gridBoxSize ) - (this.gridBoxSize / 4));
         }
       }
     }
   }
 
   done() {
-    var that = this;
+    let that = this;
     GameStarterService.done(that);
   }
 
   fixSizes() {
     this.context.beginPath();
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
+
     this.canvas.width = window.innerWidth - this.canvasOffsetX;
     this.canvas.height = window.innerHeight - (this.canvasOffsetY * 2);
     this.context.translate(0.5, 0.5);
@@ -389,15 +397,15 @@ export class TakuzuComponent implements OnInit {
     this.gridOffsetX = this.canvas.width / 20;
     this.gridOffsetY = this.canvas.height / 20;
 
-    var boardSize = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
+    const boardSize = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
                              this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
-    let w = this.canvas.offsetWidth;
-    let h = this.canvas.offsetHeight;
+    const w = this.canvas.offsetWidth;
+    const h = this.canvas.offsetHeight;
     if (w > h) {
         this.gridOffsetX = Math.round( ( w - h ) / 2 ) + this.gridOffsetX;
     } else {
-        this.gridOffsetY = Math.round( ( h - w ) / 2 ) + this.gridOffsetY; 
+        this.gridOffsetY = Math.round( ( h - w ) / 2 ) + this.gridOffsetY;
     }
 
     this.gridBoxSize = Math.round((boardSize / this.board.size));
@@ -406,23 +414,23 @@ export class TakuzuComponent implements OnInit {
 
   /* EVENT LISTENERS */
   @HostListener('document:mousedown', ['$event'])
-  mousePressed(mouseEvent) { 
+  mousePressed(mouseEvent) {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
-    
-    if(!this.solved) {
+
+    if (!this.solved) {
       x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
 
-      if(this.invertedControls) {
-        if (mouseEvent.button == 2) {
+      if (this.invertedControls) {
+        if (mouseEvent.button === 2) {
           this.board.rotateValue(x, y, false);
         } else {
           this.board.rotateValue(x, y, true);
         }
       } else {
-        if (mouseEvent.button == 2) {
+        if (mouseEvent.button === 2) {
           this.board.rotateValue(x, y, true);
         } else {
           this.board.rotateValue(x, y, false);
@@ -430,25 +438,25 @@ export class TakuzuComponent implements OnInit {
       }
 
       this.draw();
-      
+
       if (this.board.isSolved()) {
         this.done();
       }
     }
 
   }
-  mouseReleased(mouseEvent) { 
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
+  mouseReleased(mouseEvent) {
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+    console.log({'mouseReleasedX': x, 'mouseReleasedY': y});
   }
 
   @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
 
-    if(!this.solved) {
+    if (!this.solved) {
       this.selectedX = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
       this.draw();
@@ -457,13 +465,13 @@ export class TakuzuComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    if(keyEvent.keyCode == 32) {
+    if (keyEvent.keyCode === 32) {
       this.newGame();
       return;
     }
   }
   keyReleased(keyEvent) {
-    console.log({'keyReleased':keyEvent.keyCode});
+    console.log({'keyReleased': keyEvent.keyCode});
   }
 
   handleOption(callback) {

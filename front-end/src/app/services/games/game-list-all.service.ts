@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Difficulty } from '../../interfaces/difficulty';
-import { Game } from '../../classes/game'
-import { GameList } from '../../classes/game-list'
+import { Game } from '../../classes/game';
+import { GameList } from '../../classes/game-list';
 import { GameID } from '../../enums/game-id.enum';
 
 @Injectable({
@@ -53,7 +53,16 @@ export class GameListAllService extends GameList {
       )
     ];
 
-  constructor() { 
+  constructor() {
     super();
+  }
+
+  public static getGameById(id: number): Game {
+    for (let g of GameListAllService.games) {
+      if (g.id === id) {
+        return g;
+      }
+    }
+    return null;
   }
 }
