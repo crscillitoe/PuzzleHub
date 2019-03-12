@@ -141,20 +141,6 @@ hr {
   width: 100%;
 }
 
-.new-game:hover {
-  background: #3c3c3c;
-}
-
-.new-game {
-  color: white !important;
-  background: #4c4c4d;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: center;
-}
-
 .center {
   margin: auto;
   display: block;

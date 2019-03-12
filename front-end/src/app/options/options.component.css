@@ -1,7 +1,35 @@
+.buttonSubtext {
+  font-size: 11px;
+}
+
 button:focus {
   display: none;
 }
 
 .hidden {
   display: none;
+}
+
+.new-game:hover {
+  background: #3c3c3c;
+}
+
+.new-game {
+  color: white !important;
+  background: #4c4c4d;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.btn-group {
+  width: 100%;
+}
+
+.new-game-button {
+  line-height: 1;
+  width: 100%;
 }
