@@ -41,6 +41,10 @@ export class UserService {
     return Math.floor(this.xp / this.xpPerLevel) + 1;
   }
 
+  static calculateLevelFromXp(xp) {
+    return Math.floor(xp / this.xpPerLevel) + 1;
+  }
+
   static nextLevelThreshold() {
     return this.xpPerLevel;
   }

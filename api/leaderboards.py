@@ -183,6 +183,21 @@ def get_profile_data():
     data = cursor.fetchall()
     d = data[0]
 
+    cursor.close()
+
+    cursor = db.cursor()
+    sql_query = '''
+    SELECT AD.XP, AD.PuzzlerIcon
+        FROM accountData AS AD
+        INNER JOIN users AS U
+            ON U.UserID = AD.UserID
+        WHERE U.Username = %(username)s
+    '''
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+    ad = data[0]
+
     to_return = {
         "DailyGoldMedals":d[6],
         "DailySilverMedals":d[3],
@@ -193,6 +208,8 @@ def get_profile_data():
         "MonthlyGoldMedals":d[8],
         "MonthlySilverMedals":d[5],
         "MonthlyBronzeMedals":d[2],
+        "XP":ad[0],
+        "PuzzlerIcon":ad[1],
         "MatchHistory":match_history
     }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameDataService } from '../services/games/game-data.service';
+import { UserService } from '../services/user/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,10 +15,27 @@ export class ProfileComponent implements OnInit {
   profileData: any;
   games: any = GameDataService.games;
 
+  medalTypes = [
+    'Daily',
+    'Weekly',
+    'Monthly'
+  ]
+  medalNames = [
+    'Gold',
+    'Silver',
+    'Bronze'
+  ]
+
+  medalPath = '/assets/images/medals/';
+
   constructor(
     private route: ActivatedRoute,
     private tunnel: TunnelService
   ) { }
+
+  getLevel(xp) {
+    return UserService.calculateLevelFromXp(xp);
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {

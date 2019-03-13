@@ -1,102 +1,30 @@
 <ng-container *ngIf="profileData != undefined">
   <div id="username">
-    {{username}}
+    {{username}} - Level {{getLevel(profileData.XP)}}
   </div>
-  <!--
-  <p>
-    {{username}}'s profile: (layout design coming soonTM) <br>
-    Daily Gold: {{profileData.DailyGoldMedals}} <br>
-    Daily Silver: {{profileData.DailySilverMedals}} <br>
-    Daily Bronze: {{profileData.DailyBronzeMedals}} <br>
-  
-    Weekly Gold: {{profileData.WeeklyGoldMedals}} <br>
-    Weekly Silver: {{profileData.WeeklySilverMedals}} <br>
-    Weekly Bronze: {{profileData.WeeklyBronzeMedals}} <br>
-  
-    Monthly Gold: {{profileData.MonthlyGoldMedals}} <br>
-    Monthly Silver: {{profileData.MonthlySilverMedals}} <br>
-    Monthly Bronze: {{profileData.MonthlyBronzeMedals}}
-  </p>
-  -->
 
   <div id="medals">
-    <div class="col col1">
-      <div class="colTitle">
-        Daily Medals
-      </div>
-      <div class="medals">
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Daily_Gold.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.DailyGoldMedals}}
-          </div>
+    <ng-container *ngFor="let medalType of medalTypes; let i = index">
+      <div class="col"
+          [ngClass]="'col' + (i + 1)">
+        <div class="colTitle">
+          {{medalType}} Medals
         </div>
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Daily_Silver.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.DailySilverMedals}}
-          </div>
-        </div>
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Daily_Bronze.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.DailyBronzeMedals}}
-          </div>
+        <div class="medals">
+          <ng-container *ngFor="let medalName of medalNames; let j = index">
+            <div class="medalContainer">
+              <img class="medalImage" 
+                   src="{{medalPath}}{{medalType}}_{{medalName}}.svg">
+              <div class="medalNumber monospace">
+                x{{profileData[medalType + medalName + 'Medals']}}
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
-    </div>
-    <div class="col col2">
-      <div class="colTitle">
-        Weekly Medals
-      </div>
-      <div class="medals">
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Weekly_Gold.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.WeeklyGoldMedals}}
-          </div>
-        </div>
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Weekly_Silver.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.WeeklySilverMedals}}
-          </div>
-        </div>
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Weekly_Bronze.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.WeeklyBronzeMedals}}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col col3">
-      <div class="colTitle">
-        Monthly Medals
-      </div>
-      <div class="medals">
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Monthly_Gold.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.MonthlyGoldMedals}}
-          </div>
-        </div>
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Monthly_Silver.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.MonthlySilverMedals}}
-          </div>
-        </div>
-        <div class="medalContainer">
-          <img class="medalImage" src="/assets/images/medals/Monthly_Bronze.svg">
-          <div class="medalNumber monospace">
-            x{{profileData.MonthlyBronzeMedals}}
-          </div>
-        </div>
-      </div>
-    </div>
+    </ng-container>
   </div>
-  
+
   <div id="matchHistory">
     <a class="smallentry odd">
       <a class="smalldata">
@@ -111,10 +39,12 @@
           </a>
           <a class="data">
             <a class="title row">
-                <a [ngClass]="game.Difficulty == 1 ? 'easy' : game.Difficulty == 2 ? 'medium' : game.Difficulty == 3 ? 'hard' : 'extreme'">
+                <a [ngClass]="game.Difficulty == 1 ? 'easy' 
+                            : game.Difficulty == 2 ? 'medium' 
+                            : game.Difficulty == 3 ? 'hard' 
+                            : 'extreme'">
                   {{getDifficulty(game.Difficulty)}}  
                 </a>
-
             </a>
 
             <a class="row gamename">
