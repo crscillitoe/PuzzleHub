@@ -7,11 +7,14 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build:browser": "ng build --prod --app 0",
+    "build:server" : "ng build --prod --app 1 --output-hashing none"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^6.1.0",
+    "@angular/cdk": "^7.3.4",
     "@angular/common": "^6.1.0",
     "@angular/compiler": "^6.1.0",
     "@angular/core": "^6.1.10",
@@ -19,6 +22,7 @@
     "@angular/http": "^6.1.0",
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
+    "@angular/platform-server": "^7.2.9",
     "@angular/router": "^6.1.0",
     "@jlguenego/sudoku-generator": "^1.0.7",
     "again": "0.0.1",
