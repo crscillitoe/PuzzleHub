@@ -125,10 +125,6 @@ export class HashiComponent extends GameBoard implements OnInit {
     return HashiStandardComponent.newBoard(that);
   }
 
-  fullscreen() {
-      document.documentElement.webkitRequestFullScreen();
-  }
-
   back() {
     let that = this;
     return HashiStandardComponent.back(that);
