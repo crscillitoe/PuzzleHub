@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
+import { Options } from '../interfaces/options';
+import { OptionsService } from '../services/games/options.service';
 
 @Component({
   selector: 'app-options',
@@ -13,41 +15,43 @@ import { GameListAllService } from '../services/games/game-list-all.service';
 })
 export class OptionsComponent implements OnInit {
 
-  @Input() personalBestMonthly: string;
-  @Input() personalBestWeekly: string;
-  @Input() personalBestDaily: string;
+  public gameID: number;
+  public seed: number;
+  public difficulty: number;
 
-  @Input() controls: string;
-  @Input() rules: string;
+  public rules: string;
+  public controls: string;
+  public hotkeys: any;
+  public options: any;
 
-  @Input() options: any;
-  @Input() hotkeys: any;
-
-  @Input() gameID: number;
-  @Input() seed: number;
-  @Input() difficulty: number;
+  public personalBestMonthly: string;
+  public personalBestWeekly: string;
+  public personalBestDaily: string;
 
   @Output() optionSelected = new EventEmitter();
 
-  game: Game;
-  diffs: Difficulty[];
+  public game: Game;
+  public diffs: Difficulty[];
 
-  highscoresMinimized: boolean;
-  rulesMinimized: boolean;
-  optionsMinimized: boolean;
-  controlsMinimized: boolean;
-  timerMinimized: boolean;
-  hotkeysMinimized: boolean;
+  public highscoresMinimized: boolean;
+  public rulesMinimized: boolean;
+  public optionsMinimized: boolean;
+  public controlsMinimized: boolean;
+  public timerMinimized: boolean;
+  public hotkeysMinimized: boolean;
 
-  editingHotkey: boolean;
-  editIndex: number;
+  public editingHotkey: boolean;
+  public editIndex: number;
 
-  optionVals: any = [];
-  hotkeyVals: any = [];
+  public optionVals: any = [];
+  public hotkeyVals: any = [];
+
+  private optionsData: Options;
 
   constructor(
     private user: UserService,
-    private router: Router
+    private router: Router,
+    private optionsService: OptionsService
   ) { }
 
   ngOnInit() {
@@ -75,11 +79,6 @@ export class OptionsComponent implements OnInit {
     this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
     this.timerMinimized = SettingsService.getDataBool('timerMinimized');
     this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
-
-    console.log(this.gameID);
-    this.game = GameListAllService.getGameById(this.gameID);
-    console.log(this.game);
-    this.diffs = this.game.diffs;
   }
 
   minimize(name, val) {
@@ -168,5 +167,25 @@ export class OptionsComponent implements OnInit {
 
     this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + diff + ')');
+  }
+
+  public initializeOptionsFromService() {
+    this.optionsData = this.optionsService.getOptions();
+
+    this.gameID = this.optionsData.gameID;
+    this.seed = this.optionsData.seed;
+    this.difficulty = this.optionsData.difficulty;
+    this.rules = this.optionsData.rules;
+    this.controls = this.optionsData.controls;
+    this.hotkeys = this.optionsData.hotkeys;
+    this.options = this.optionsData.options;
+    this.personalBestMonthly = this.optionsData.personalBestMonthly;
+    this.personalBestWeekly = this.optionsData.personalBestWeekly;
+    this.personalBestDaily = this.optionsData.personalBestDaily;
+
+    console.log(this.gameID);
+
+    this.game = GameListAllService.getGameById(this.gameID);
+    this.diffs = this.game.diffs;
   }
 }

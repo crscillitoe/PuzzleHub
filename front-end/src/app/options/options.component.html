@@ -1,7 +1,11 @@
 <style type="text/css">
+.abs-container {
+  min-height: 100%;
+  position: relative;
+}
 .no-move {
-  transform: none!important;
-  left: 200px!important;
+  /*transform: none!important;
+  left: 200px!important;*/
 }
 </style>
 <div class="descriptionBlock">
@@ -167,7 +171,7 @@
     <a id="shareButtonText" class="buttonHeader clickable"><b class="clickable">SHARE GAME</b></a>
   </a>
   <div class="dropdown">
-    <div class="btn-group">
+    <div class="btn-group dropup">
       <button type="button" 
         (click)="callback('this.newGame()')"
         class="btn new-game new-game-button">
@@ -175,7 +179,6 @@
         <br>
         <a class="buttonSubtext">spacebar</a>
       </button>
-      <!--
       <button type="button"
         class="btn new-game dropdown-toggle dropdown-toggle-split new-game-dropdown"
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -198,7 +201,6 @@
           </a>
         </ng-container>
       </div>
-      -->
     </div>
   </div>
 </div>

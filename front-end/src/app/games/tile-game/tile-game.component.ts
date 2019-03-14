@@ -10,74 +10,15 @@ import { Board } from '../../services/boards/tile-game/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-tile-game',
   templateUrl: './tile-game.component.html',
   styleUrls: ['./tile-game.component.css']
 })
-export class TileGameComponent implements OnInit {
-
-  controls = 'Arrow Keys or WASD';
-  options = [
-    {
-      'type': 'checkbox',
-      'bindTo': 'showAnimations',
-      'name': 'Show Animations',
-      'callback': 'this.toggleAnimations()',
-      'storedName': 'tileAnimations'
-    },
-    {
-      'type': 'checkbox',
-      'bindTo': 'mouseHover',
-      'name': 'Mouse Hover',
-      'callback': 'this.toggleMouseHover()',
-      'storedName': 'HoverTileGame'
-    },
-    {
-      'type': 'checkbox',
-      'bindTo': 'staticTileSize',
-      'name': 'Fixed Tile Size',
-      'callback': 'this.toggleStaticSizes()',
-      'storedName': 'StaticTileSize',
-    },
-    {
-      'type': 'dropdown',
-      'bindTo': 'colorScheme',
-      'name': 'Color Scheme',
-      'callback': 'this.updateColorScheme()',
-      'storedName': 'TileGameColorScheme',
-      'options': [
-        'Fringe',
-        'Rows',
-        'Rows & Cols',
-        'Quadrants'
-      ]
-    }
-  ];
-
-  hotkeys = [
-    {
-      'name': 'UP',
-      'bindTo': 'TileGameDOWN',
-      'callback': 'this.configureHotkeys()'
-    },
-    {
-      'name': 'DOWN',
-      'bindTo': 'TileGameUP',
-      'callback': 'this.configureHotkeys()'
-    },
-    {
-      'name': 'LEFT',
-      'bindTo': 'TileGameRIGHT',
-      'callback': 'this.configureHotkeys()'
-    },
-    {
-      'name': 'RIGHT',
-      'bindTo': 'TileGameLEFT',
-      'callback': 'this.configureHotkeys()'
-    }
-  ];
+export class TileGameComponent extends GameBoard implements OnInit {
 
   initialDelay = 200;
   continuedDelay = 16;
@@ -148,15 +89,86 @@ export class TileGameComponent implements OnInit {
   board: Board;
 
   constructor(
-    private route: ActivatedRoute,
-    private colorService: ColorService,
-    private router: Router,
-    private tunnel: TunnelService,
-    private userService: UserService,
-    private timer: TimerService,
-    private loader: LoaderService
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
   ) {
-    this.colors = colorService.getColorScheme();
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
+
+    this.controls = 'Arrow Keys or WASD';
+    this.options = [
+      {
+        'type': 'checkbox',
+        'bindTo': 'showAnimations',
+        'name': 'Show Animations',
+        'callback': 'this.toggleAnimations()',
+        'storedName': 'tileAnimations'
+      },
+      {
+        'type': 'checkbox',
+        'bindTo': 'mouseHover',
+        'name': 'Mouse Hover',
+        'callback': 'this.toggleMouseHover()',
+        'storedName': 'HoverTileGame'
+      },
+      {
+        'type': 'checkbox',
+        'bindTo': 'staticTileSize',
+        'name': 'Fixed Tile Size',
+        'callback': 'this.toggleStaticSizes()',
+        'storedName': 'StaticTileSize',
+      },
+      {
+        'type': 'dropdown',
+        'bindTo': 'colorScheme',
+        'name': 'Color Scheme',
+        'callback': 'this.updateColorScheme()',
+        'storedName': 'TileGameColorScheme',
+        'options': [
+          'Fringe',
+          'Rows',
+          'Rows & Cols',
+          'Quadrants'
+        ]
+      }
+    ];
+
+    this.hotkeys = [
+      {
+        'name': 'UP',
+        'bindTo': 'TileGameDOWN',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': 'DOWN',
+        'bindTo': 'TileGameUP',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': 'LEFT',
+        'bindTo': 'TileGameRIGHT',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': 'RIGHT',
+        'bindTo': 'TileGameLEFT',
+        'callback': 'this.configureHotkeys()'
+      }
+    ];
   }
 
   ngOnInit() {

@@ -1,13 +1,5 @@
 <div id="leftControlPanel">
-  <app-options
-      [personalBestMonthly]="personalBestMonthly"
-      [personalBestWeekly]="personalBestWeekly"
-      [personalBestDaily]="personalBestDaily"
-      [controls]="controls"
-      [rules]="rules"
-      [options]="options"
-      (optionSelected)="handleOption($event)"
-    >
+  <app-options (optionSelected)="handleOption($event)">
   </app-options>
 </div>
 

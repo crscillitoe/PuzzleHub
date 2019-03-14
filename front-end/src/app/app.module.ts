@@ -31,24 +31,98 @@ import { LevelProgressComponent } from './visuals/level-progress/level-progress.
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
+import { GameBoardComponent } from './games/game-board/game-board.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
   { path: 'games', component: CustomGamesComponent},
   { path: 'login', component: LoginComponent},
   { path: 'leaderboards', component: LeaderboardsComponent},
-  { path: 'Hashi', component: HashiComponent},
-  { path: 'Sudoku', component: SudokuComponent},
-  { path: 'Takuzu', component: TakuzuComponent},
-  { path: 'Minesweeper', component: MinesweeperComponent},
-  { path: 'Tile Game', component: TileGameComponent},
   { path: 'EmailVerify', component: VerifyEmailComponent},
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
   { path: 'profile', component: ProfileComponent},
-  { path: 'Kakuro', component: KakuroComponent},
-  { path: 'Thermometers', component: ThermometersComponent},
-  { path: 'Nonograms', component: NonogramsComponent}
+  {
+    path: 'Hashi',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: HashiComponent
+      }
+    ]
+  },
+  {
+    path: 'Sudoku',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: SudokuComponent
+      }
+    ]
+  },
+  {
+    path: 'Takuzu',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: TakuzuComponent
+      }
+    ]
+  },
+  {
+    path: 'Minesweeper',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: MinesweeperComponent
+      }
+    ]
+  },
+  {
+    path: 'Tile Game',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: TileGameComponent
+      }
+    ]
+  },
+  {
+    path: 'Kakuro',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: KakuroComponent
+      }
+    ]
+  },
+  {
+    path: 'Thermometers',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: ThermometersComponent
+      }
+    ]
+  },
+  { path: 'Nonograms', component: NonogramsComponent},
+  {
+    path: 'Nonograms',
+    component: GameBoardComponent,
+    children: [
+      {
+        path: '',
+        component: NonogramsComponent
+      }
+    ]
+  },
 ];
 
 @NgModule({
@@ -75,7 +149,8 @@ const appRoutes: Routes = [
     KakuroComponent,
     ThermometersComponent,
     LevelProgressComponent,
-    NonogramsComponent
+    NonogramsComponent,
+    GameBoardComponent
   ],
   imports: [
     BrowserModule,

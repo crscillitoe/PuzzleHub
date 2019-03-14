@@ -8,23 +8,18 @@ import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { UserService } from '../../services/user/user.service';
 import { GameID } from '../../enums/game-id.enum';
+import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-hashi',
   templateUrl: './hashi.component.html',
   styleUrls: ['./hashi.component.css']
 })
-export class HashiComponent implements OnInit {
-
-  controls = 'Click and drag from an island to build a bridge.';
-  rules = 'The goal is to connect all of the islands into a single connected group by ' +
-          'drawing a series of bridges between the islands. The number of bridges coming off of ' +
-          'an island must match the number written on that island.';
-
-
+export class HashiComponent extends GameBoard implements OnInit {
   diff: any;
-  difficulty: any;
   timePaused: any;
   startPause: any;
   version: string;
@@ -56,8 +51,6 @@ export class HashiComponent implements OnInit {
   name: any;
   coloredNode: MyNode;
   board: Board;
-  context: any;
-  canvas: any;
   extreme: boolean;
   shift: boolean;
   mouseX: number;
@@ -67,10 +60,6 @@ export class HashiComponent implements OnInit {
 
   previousTotalMillis: number;
   previousTime: string;
-
-  personalBestDaily: string;
-  personalBestWeekly: string;
-  personalBestMonthly: string;
 
   hoveredNode: any;
 
@@ -87,7 +76,6 @@ export class HashiComponent implements OnInit {
   minutes: any;
   hours: any;
   millis: any;
-  t: any;
   daily: boolean;
   numNodes: number;
 
@@ -96,63 +84,48 @@ export class HashiComponent implements OnInit {
   loading: boolean;
   playing: boolean;
 
-  startDate: any;
-
-  gameID = GameID.HASHI;
-
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService,
-    private tunnel: TunnelService,
-    private timer: TimerService,
-    private loader: LoaderService) {
-      this.pause = false;
-      this.mouseX = -1;
-      this.mouseY = -1;
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
+  ) {
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
+    this.pause = false;
+    this.mouseX = -1;
+    this.mouseY = -1;
+
+    this.rules = 'The goal is to connect all of the islands into a single connected group by ' +
+        'drawing a series of bridges between the islands. The number of bridges coming off of ' +
+        'an island must match the number written on that island.';
+    this.controls = 'Click and drag from an island to build a bridge.';
+    this.gameID = GameID.HASHI;
   }
 
   // Initializes data
   ngOnInit() {
     let that = this;
-    return HashiStandardComponent.ngOnInitOverwrite(that);
+    HashiStandardComponent.ngOnInitOverwrite(that);
+    this.initializeOptions();
   }
 
   newGame(difficulty = this.difficulty) {
     this.difficulty = difficulty;
     let that = this;
     return HashiStandardComponent.newBoard(that);
-  }
-
-  add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
-
-    const diff = ((now - that.startDate));
-
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
-
-    try {
-      display.textContent =
-        hours + ':' +
-        (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-        (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-        (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
-
-      that.displayTimer();
-    } catch {
-      // Do nothing - page probably re-routed
-    }
-  }
-
-  displayTimer() {
-    if (!this.solved) {
-      let _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
-    }
   }
 
   fullscreen() {
@@ -553,9 +526,4 @@ export class HashiComponent implements OnInit {
   }
 
   contextMenu() { return false; }
-
-  handleOption(callback) {
-    eval(callback);
-  }
-
 }
