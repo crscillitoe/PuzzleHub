@@ -17,7 +17,7 @@ import { OptionsService } from '../../services/games/options.service';
   templateUrl: './minesweeper.component.html',
   styleUrls: ['./minesweeper.component.css']
 })
-export class MinesweeperComponent extends GameBoard implements OnInit {
+export class MinesweeperComponent extends GameBoard {
   public firstPress = true;
   public isPressed = false;
 
@@ -48,7 +48,6 @@ export class MinesweeperComponent extends GameBoard implements OnInit {
     this.gameID = GameID.MINESWEEPER;
     this.rules = 'The objective of the game is to clear a rectangular board containing hidden mines ' +
                  'without detonating any of them.';
-
     this.gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes
     this.gridOffsetX = 100;
     this.gridOffsetY = 56;

@@ -6,80 +6,56 @@ import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { GameID } from '../../enums/game-id.enum';
-import { ColorService } from '../../services/colors/color.service';
-
 import { Board } from '../../services/boards/nonograms/board.service';
+import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-nonograms',
   templateUrl: './nonograms.component.html',
   styleUrls: ['./nonograms.component.css']
 })
-export class NonogramsComponent implements OnInit {
-
-  gameID = GameID.NONOGRAMS;
-
-  selectedX = -1;
-  selectedY = -1;
-
-  controls = 'Left click on a tile to mark it.';
-  rules = 'Google it you goof.';
-
-  // Used for drawing to the screen
-  canvas: any;
-  context: any;
-
-  // Used to display previous best times
-  personalBestDaily: string;
-  personalBestWeekly: string;
-  personalBestMonthly: string;
-
-  colors: any;
-
-  canvasOffsetX = 225;
-  canvasOffsetY = 56;
-
-  // Most games utilize a grid
-  gridOffsetX = 100;
-  gridOffsetY = 100;
-
-  gridBoxSize: number;
-
-  difficulty: number;
-  seed: number;
-
-  solved = false;
+export class NonogramsComponent extends GameBoard {
 
   board: any;
 
-  // Used by the timer
-  startDate: any;
-  t: any;
-
   constructor(
-    private route: ActivatedRoute,
-    private tunnel: TunnelService,
-    private colorService: ColorService,
-    private router: Router,
-    private userService: UserService,
-    private timer: TimerService,
-    private loader: LoaderService
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
   ) {
-    this.colors = colorService.getColorScheme();
-  }
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
+    this.gameID = GameID.NONOGRAMS;
+    this.rules = 'Google it you goof.';
+    this.controls = 'Left click on a tile to mark it.';
 
-  ngOnInit() {
-    // Read difficulty from URL param
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-    this.setupBoard();
-    let that = this;
-    GameStarterService.startGame(that);
+    // Most games utilize a grid
+    this.gridOffsetX = 100;
+    this.gridOffsetY = 100;
+    this.selectedX = -1;
+    this.selectedY = -1;
+
+    this.solved = false;
   }
 
   setupBoard() {
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
+    super.setupBoard();
 
     let width;
     let height;
@@ -115,16 +91,8 @@ export class NonogramsComponent implements OnInit {
     this.board = new Board(width, height, 0);
   }
 
-  newGame(difficulty = this.difficulty) {
-    this.difficulty = difficulty;
-    this.setupBoard();
-    let that = this;
-    GameStarterService.newGame(that);
-  }
-
   draw() {
-    this.context.beginPath();
-    this.drawBackground();
+    super.draw();
     if (!this.solved) {
       this.drawSelectedBox();
     }
@@ -264,42 +232,6 @@ export class NonogramsComponent implements OnInit {
     }
   }
 
-  done() {
-    let that = this;
-    GameStarterService.done(that);
-  }
-
-  add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
-
-    const diff = ((now - that.startDate));
-
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
-
-    try {
-      display.textContent =
-        hours + ':' +
-        (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-        (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-        (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
-
-      that.displayTimer();
-    } catch {
-      // Do nothing - page probably re-routed
-    }
-  }
-
-  displayTimer() {
-    if (!this.solved) {
-      let _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
-    }
-  }
-
   fixSizes() {
     this.context.beginPath();
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -325,10 +257,6 @@ export class NonogramsComponent implements OnInit {
 
     this.gridBoxSize = Math.round((size / boardLength));
     this.draw();
-  }
-
-  handleOption(callback) {
-    eval(callback);
   }
 
   /* EVENT LISTENERS */
@@ -377,16 +305,6 @@ export class NonogramsComponent implements OnInit {
       this.selectedX = x;
       this.selectedY = y;
       this.draw();
-    }
-  }
-
-  // UNCOMMENT HostListener to track given event
-  @HostListener('document:keydown', ['$event'])
-  keyPressed(keyEvent) {
-    const code = keyEvent.keyCode;
-    if (code === 32) {
-      this.newGame();
-      return;
     }
   }
 

@@ -112,7 +112,6 @@ const appRoutes: Routes = [
       }
     ]
   },
-  { path: 'Nonograms', component: NonogramsComponent},
   {
     path: 'Nonograms',
     component: GameBoardComponent,

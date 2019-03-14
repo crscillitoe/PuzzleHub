@@ -183,8 +183,6 @@ export class OptionsComponent implements OnInit {
     this.personalBestWeekly = this.optionsData.personalBestWeekly;
     this.personalBestDaily = this.optionsData.personalBestDaily;
 
-    console.log(this.gameID);
-
     this.game = GameListAllService.getGameById(this.gameID);
     this.diffs = this.game.diffs;
   }

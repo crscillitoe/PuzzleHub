@@ -19,7 +19,6 @@ import { OptionsService } from '../../services/games/options.service';
   styleUrls: ['./takuzu.component.css']
 })
 export class TakuzuComponent extends GameBoard implements OnInit {
-
   oColor: any;
   cColor: any;
 
@@ -78,7 +77,6 @@ export class TakuzuComponent extends GameBoard implements OnInit {
 
     this.gridOffsetX = 100;
     this.gridOffsetY = 100;
-
 
     this.selectedX = -1;
     this.selectedY = -1;
