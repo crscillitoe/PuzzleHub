@@ -1,0 +1,11 @@
+<div class="container-fluid game-screen">
+  <div class="row no-gutters">
+    <div class="col options-panel">
+      <app-options #optionsPanel (optionSelected)="handleOption($event)">
+      </app-options>
+    </div>
+    <div class="col col-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
