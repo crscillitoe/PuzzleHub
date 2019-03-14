@@ -9,6 +9,8 @@ export interface Options {
   controls: string;
   hotkeys: any;
   options: any;
+  takingNotesMode: boolean;
+  takingNotes: boolean;
 
   personalBestMonthly: string;
   personalBestWeekly: string;

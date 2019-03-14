@@ -46,12 +46,8 @@ export class MinesweeperComponent extends GameBoard {
       optionsService
     );
     this.gameID = GameID.MINESWEEPER;
-    this.rules = 'The objective of the game is to clear a rectangular board containing hidden mines ' +
-                 'without detonating any of them.';
     this.gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes
-    this.gridOffsetX = 100;
     this.gridOffsetY = 56;
-    this.solved = false;
   }
 
   public setupBoard() {
@@ -482,9 +478,5 @@ export class MinesweeperComponent extends GameBoard {
         this.draw();
       }
     }
-  }
-
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
   }
 }

@@ -50,7 +50,6 @@ export class TakuzuComponent extends GameBoard implements OnInit {
 
     this.gameID = GameID.TAKUZU;
 
-    this.controls = 'Left/Right click';
     this.options = [
       {
         'type': 'checkbox',
@@ -68,19 +67,12 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       }
     ];
 
-    this.rules = 'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
-            '1s and 0s in each row and column and no more than two of either number adjacent to ' +
-            'each other. Additionally, there can be no identical rows or columns.';
 
     this.oColor = this.colors.FOREGROUND;
     this.cColor = '#66CCFF';
 
-    this.gridOffsetX = 100;
-    this.gridOffsetY = 100;
-
     this.selectedX = -1;
     this.selectedY = -1;
-    this.solved = false;
   }
 
   ngOnInit() {
@@ -407,9 +399,5 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
       this.draw();
     }
-  }
-
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
   }
 }

@@ -33,3 +33,9 @@ button:focus {
   line-height: 1;
   width: 100%;
 }
+
+.notes {
+  font-family: 'Poppins', sans-serif;
+  display: block;
+  width: 180px;
+}

@@ -42,16 +42,9 @@ export class NonogramsComponent extends GameBoard {
       optionsService
     );
     this.gameID = GameID.NONOGRAMS;
-    this.rules = 'Google it you goof.';
-    this.controls = 'Left click on a tile to mark it.';
 
-    // Most games utilize a grid
-    this.gridOffsetX = 100;
-    this.gridOffsetY = 100;
     this.selectedX = -1;
     this.selectedY = -1;
-
-    this.solved = false;
   }
 
   setupBoard() {
@@ -306,11 +299,5 @@ export class NonogramsComponent extends GameBoard {
       this.selectedY = y;
       this.draw();
     }
-  }
-
-  // UNCOMMENT HostListener to track given event
-  // @HostListener('document:keyup', ['$event'])
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
   }
 }

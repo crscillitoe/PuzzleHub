@@ -22,7 +22,6 @@ export class SudokuComponent extends GameBoard implements OnInit {
   numCarved: number;
   board: any;
 
-  takingNotes = false;
   notes: any = {};
 
   constructor(
@@ -47,15 +46,8 @@ export class SudokuComponent extends GameBoard implements OnInit {
     );
 
     this.gameID = GameID.SUDOKU;
-    this.rules = 'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
-            'Each number can only appear once in a row, column, or box.';
-    this.controls = 'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box';
 
-    // this.canvasOffsetX = 500;
-    this.gridOffsetX = 100;
-    this.gridOffsetY = 100;
-
-    this.solved = false;
+    this.takingNotesMode = true;
   }
 
   setupBoard() {
@@ -321,9 +313,5 @@ export class SudokuComponent extends GameBoard implements OnInit {
         this.draw();
       }
     }
-  }
-
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
   }
 }

@@ -39,6 +39,8 @@ export class Game {
   private _imagePath = 'assets/images/game-splashes/';
   private _imageBase: string;
   private _desc: string;
+  private _rules: string;
+  private _controls: string;
   private _diffs: Difficulty[];
 
   get id(): number {
@@ -61,15 +63,32 @@ export class Game {
     return this._desc;
   }
 
+  get rules(): string {
+    return this._rules;
+  }
+
+  get controls(): string {
+    return this._controls;
+  }
+
   get diffs(): Difficulty[] {
     return this._diffs;
   }
 
-  constructor(id: number, name: string, image: string, desc: string, diffs?: Difficulty[]) {
+  constructor(
+    id: number,
+    name: string,
+    image: string,
+    desc: string,
+    rules: string,
+    controls: string,
+    diffs?: Difficulty[]) {
     this._id = id;
     this._name = name;
     this._imageBase = image;
     this._desc = desc;
+    this._rules = rules;
+    this._controls = controls;
     this._diffs = diffs || Game._default_diffs;
   }
 }

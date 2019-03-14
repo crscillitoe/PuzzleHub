@@ -104,15 +104,12 @@ export class HashiComponent extends GameBoard implements OnInit {
       loader,
       optionsService
     );
+
+    this.gameID = GameID.HASHI;
+
     this.pause = false;
     this.mouseX = -1;
     this.mouseY = -1;
-
-    this.rules = 'The goal is to connect all of the islands into a single connected group by ' +
-        'drawing a series of bridges between the islands. The number of bridges coming off of ' +
-        'an island must match the number written on that island.';
-    this.controls = 'Click and drag from an island to build a bridge.';
-    this.gameID = GameID.HASHI;
   }
 
   // Initializes data
@@ -500,7 +497,8 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   @HostListener('document:keyup', ['$event'])
-  keyReleased(event, __this) {
+  // keyReleased(event, __this) {
+  keyReleased(event) {
     let that = this;
     return HashiStandardComponent.keyReleased(that, event, that);
   }

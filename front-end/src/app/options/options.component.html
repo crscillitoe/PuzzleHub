@@ -1,13 +1,12 @@
-<style type="text/css">
-.abs-container {
-  min-height: 100%;
-  position: relative;
-}
-.no-move {
-  /*transform: none!important;
-  left: 200px!important;*/
-}
-</style>
+<ng-container *ngIf="takingNotesMode">
+  <div class=notes>
+    <a
+      (click)="takingNotes = !takingNotes"
+      [ngClass]="takingNotes ? 'btn-warning' : 'btn-danger'"
+      class="center btn"
+    > Taking Notes: {{takingNotes}}</a>
+  </div>
+</ng-container>
 <div class="descriptionBlock">
   <a class="descriptionHeader clickable"
      (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">

@@ -1,21 +1,32 @@
-import { HostListener, Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
+import { HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { Options } from '../interfaces/options';
 import { OptionsService } from '../services/games/options.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
 })
-export class OptionsComponent implements OnInit {
+export class OptionsComponent implements OnInit, OnDestroy {
 
-  public gameID: number;
+  private _gameID: number;
+  get gameID(): number {
+    return this._gameID;
+  }
+  set gameID(gameID: number) {
+    this._gameID = gameID;
+    this.game = GameListAllService.getGameById(this.gameID);
+    this.diffs = this.game.diffs;
+    this.rules = this.game.rules;
+    this.controls = this.game.controls;
+  }
+
   public seed: number;
   public difficulty: number;
 
@@ -23,6 +34,16 @@ export class OptionsComponent implements OnInit {
   public controls: string;
   public hotkeys: any;
   public options: any;
+  public takingNotesMode: boolean;
+
+  private _takingNotes = false;
+  get takingNotes(): boolean {
+    return this._takingNotes;
+  }
+  set takingNotes(takingNotes: boolean) {
+    this._takingNotes = takingNotes;
+    this.optionsService.setTakingNotes(takingNotes);
+  }
 
   public personalBestMonthly: string;
   public personalBestWeekly: string;
@@ -46,7 +67,7 @@ export class OptionsComponent implements OnInit {
   public optionVals: any = [];
   public hotkeyVals: any = [];
 
-  private optionsData: Options;
+  private subscription = new Subscription();
 
   constructor(
     private user: UserService,
@@ -56,7 +77,7 @@ export class OptionsComponent implements OnInit {
 
   ngOnInit() {
     if (this.options !== undefined) {
-      for (let option of this.options) {
+      for (const option of this.options) {
         if (option['type'] === 'checkbox') {
           this.optionVals.push(SettingsService.getDataBool(option['storedName']));
         } else if (option['type'] === 'dropdown') {
@@ -66,7 +87,7 @@ export class OptionsComponent implements OnInit {
     }
 
     if (this.hotkeys !== undefined) {
-      for (let hotkey of this.hotkeys) {
+      for (const hotkey of this.hotkeys) {
         this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
       }
     }
@@ -79,6 +100,28 @@ export class OptionsComponent implements OnInit {
     this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
     this.timerMinimized = SettingsService.getDataBool('timerMinimized');
     this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
+
+    let subscription: Subscription;
+    subscription = this.optionsService.gameID.subscribe(gameID => this.gameID = gameID);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.seed.subscribe(seed => this.seed = seed);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.difficulty.subscribe(difficulty => this.difficulty = difficulty);
+    this.subscription.add(subscription);
+
+    subscription = this.optionsService.hotkeys.subscribe(hotkeys => this.hotkeys = hotkeys);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.options.subscribe(options => this.options = options);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.takingNotesMode.subscribe(takingNotesMode => this.takingNotesMode = takingNotesMode);
+    this.subscription.add(subscription);
+
+    subscription = this.optionsService.personalBestMonthly.subscribe(personalBestMonthly => this.personalBestMonthly = personalBestMonthly);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.personalBestWeekly.subscribe(personalBestWeekly => this.personalBestWeekly = personalBestWeekly);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.personalBestDaily.subscribe(personalBestDaily => this.personalBestDaily = personalBestDaily);
+    this.subscription.add(subscription);
   }
 
   minimize(name, val) {
@@ -169,21 +212,7 @@ export class OptionsComponent implements OnInit {
     this.optionSelected.emit('this.newGame(' + diff + ')');
   }
 
-  public initializeOptionsFromService() {
-    this.optionsData = this.optionsService.getOptions();
-
-    this.gameID = this.optionsData.gameID;
-    this.seed = this.optionsData.seed;
-    this.difficulty = this.optionsData.difficulty;
-    this.rules = this.optionsData.rules;
-    this.controls = this.optionsData.controls;
-    this.hotkeys = this.optionsData.hotkeys;
-    this.options = this.optionsData.options;
-    this.personalBestMonthly = this.optionsData.personalBestMonthly;
-    this.personalBestWeekly = this.optionsData.personalBestWeekly;
-    this.personalBestDaily = this.optionsData.personalBestDaily;
-
-    this.game = GameListAllService.getGameById(this.gameID);
-    this.diffs = this.game.diffs;
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

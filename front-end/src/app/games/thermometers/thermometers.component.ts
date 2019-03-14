@@ -44,16 +44,6 @@ export class ThermometersComponent extends GameBoard implements OnInit {
 
     this.gameID = GameID.THERMOMETERS;
 
-    this.rules = 'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
-            'that given row/column.';
-    this.controls = 'Click anywhere on the thermometer to insert fluid.';
-
-    // Most games utilize a grid
-    this.gridOffsetX = 100;
-    this.gridOffsetY = 100;
-
-    this.solved = false;
-
     this.selectedX = -1;
     this.selectedY = -1;
   }
@@ -473,11 +463,5 @@ export class ThermometersComponent extends GameBoard implements OnInit {
       this.selectedY = y;
       this.draw();
     }
-  }
-
-  // UNCOMMENT HostListener to track given event
-  // @HostListener('document:keyup', ['$event'])
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
   }
 }

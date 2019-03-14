@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OptionsComponent } from '../../options/options.component';
 
 @Component({
@@ -6,18 +6,11 @@ import { OptionsComponent } from '../../options/options.component';
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.css']
 })
-export class GameBoardComponent implements OnInit, AfterViewInit {
-
-  @ViewChild('optionsPanel')
-  optionsPanel: OptionsComponent;
+export class GameBoardComponent implements OnInit {
 
   constructor() { }
 
   ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    this.optionsPanel.initializeOptionsFromService();
   }
 
 }
