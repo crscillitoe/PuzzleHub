@@ -30,14 +30,6 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   public seed: number;
   public difficulty: number;
-  private _newDifficulty: number;
-  get newDifficulty(): number {
-    return this._newDifficulty;
-  }
-  set newDifficulty(newDifficulty: number) {
-    this._newDifficulty = newDifficulty;
-    this.optionsService.setNewDifficulty(newDifficulty);
-  }
 
   public rules: string;
   public controls: string;
@@ -221,8 +213,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   public difficultyChangeHandler(newDiff: any) {
-    this.newDifficulty = newDiff;
-    this.callback('this.newGame()');
+    this.callback('this.newGame(' + newDiff + ')');
   }
 
   public ngOnDestroy() {

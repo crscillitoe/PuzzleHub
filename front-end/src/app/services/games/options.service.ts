@@ -12,8 +12,6 @@ export class OptionsService {
   public seed = this._seed.asObservable();
   private _difficulty = new BehaviorSubject<number>(0);
   public difficulty = this._difficulty.asObservable();
-  private _newDifficulty = new BehaviorSubject<number>(0);
-  public newDifficulty = this._newDifficulty.asObservable();
 
   private _hotkeys = new BehaviorSubject<any>(null);
   public hotkeys = this._hotkeys.asObservable();
@@ -47,10 +45,6 @@ export class OptionsService {
 
   public setDifficulty(difficulty: number) {
     this._difficulty.next(difficulty);
-  }
-
-  public setNewDifficulty(newDifficulty: number) {
-    this._newDifficulty.next(newDifficulty);
   }
 
   public setHotkeys(hotkeys: any) {

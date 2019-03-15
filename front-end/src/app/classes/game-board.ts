@@ -44,9 +44,6 @@ export class GameBoard implements OnInit, OnDestroy {
     this._difficulty = difficulty;
     this.optionsService.setDifficulty(difficulty);
   }
-  set newDifficulty(newDifficulty: number) {
-    this._difficulty = newDifficulty;
-  }
 
   private _hotkeys: any;
   get hotkeys(): any {
@@ -224,8 +221,6 @@ export class GameBoard implements OnInit, OnDestroy {
 
   protected initializeOptions() {
     let subscription: Subscription;
-    subscription = this.optionsService.newDifficulty.subscribe(newDifficulty => this.newDifficulty = newDifficulty);
-    this.subscription.add(subscription);
     subscription = this.optionsService.takingNotes.subscribe(takingNotes => this.takingNotes = takingNotes);
     this.subscription.add(subscription);
     subscription = this.optionsService.optionEvent.subscribe(optionEvent => { this.handleOption(optionEvent); });
