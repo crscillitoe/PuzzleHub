@@ -86,8 +86,7 @@ export class GameStarterService {
 
     that.loader.stopLoadingAnimation();
     if(that.gameID == GameID.MINESWEEPER) {
-      var img = document.getElementById("flag");
-      img.onload = () => {
+      that.imgFlag.onload = () => {
         that.draw();
       }
     } else {

@@ -25,6 +25,10 @@ export class MinesweeperComponent extends GameBoard {
 
   public board: Board;
 
+  private imgBomb = new Image();
+  private imgFlag = new Image();
+  private imgTile = new Image();
+
   constructor(
     route: ActivatedRoute,
     colorService: ColorService,
@@ -48,6 +52,10 @@ export class MinesweeperComponent extends GameBoard {
     this.gameID = GameID.MINESWEEPER;
     this.gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes
     this.gridOffsetY = 56;
+
+    this.imgBomb.src = '/assets/images/minesweeper/bomb.svg';
+    this.imgFlag.src = '/assets/images/minesweeper/flag.svg';
+    this.imgTile.src = '/assets/images/minesweeper/minesweeper_tile.svg';
   }
 
   public setupBoard() {
@@ -192,8 +200,7 @@ export class MinesweeperComponent extends GameBoard {
     this.context.fillStyle = '#FF0000';
     this.context.fillRect(startX, startY, width, height);
 
-    const img = document.getElementById('bomb');
-    this.context.drawImage(img, startX, startY, width, height);
+    this.context.drawImage(this.imgBomb, startX, startY, width, height);
   }
 
   drawVisibleTile(x, y) {
@@ -243,8 +250,7 @@ export class MinesweeperComponent extends GameBoard {
     const width = this.gridBoxSize;
     const height = this.gridBoxSize;
 
-    const img = document.getElementById('tile');
-    this.context.drawImage(img, startX, startY, width, height);
+    this.context.drawImage(this.imgTile, startX, startY, width, height);
   }
 
   drawFlaggedTile (x, y) {
@@ -254,8 +260,7 @@ export class MinesweeperComponent extends GameBoard {
     const width = this.gridBoxSize - (this.gridBoxSize / 2);
     const height = this.gridBoxSize - (this.gridBoxSize / 2);
 
-    const img = document.getElementById('flag');
-    this.context.drawImage(img, startX, startY, width, height);
+    this.context.drawImage(this.imgFlag, startX, startY, width, height);
   }
 
   drawTiles() {
