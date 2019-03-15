@@ -1,50 +1,54 @@
 .buttonSubtext {
-  font-size: 11px;
+    font-size: 11px;
 }
 
 #focusMe:focus {
-  display: none;
+    display: none;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 .new-game {
-  color: white !important;
-  background: #4c4c4d;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: center;
-  margin-top: 10px;
+    color: white !important;
+    background: #4c4c4d;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
 }
 
 .btn-group {
-  width: 100%;
+    width: 100%;
 }
 
-.game-buttons {
-  margin-top: 2em;
+.panel-body {
+    flex: 1;
+}
+
+.panel-footer {
+    padding-top: 2em;
 }
 
 .game-button {
-  width: 100%;
-  margin-top: 0.5em;
-  padding: 0.25em;
-  color: white;
-  font-size: 1.25rem;
-  line-height: 1;
+    width: 100%;
+    margin-top: 0.5em;
+    padding: 0.25em;
+    color: white;
+    font-size: 1.25rem;
+    line-height: 1;
 }
 
 .difficulty-select {
-  padding: 0.25em 0;
-  font-weight: bold;
+    padding: 0.25em 0;
+    font-weight: bold;
 }
 
 .notes {
-  font-family: 'Poppins', sans-serif;
-  display: block;
-  width: 180px;
+    font-family: 'Poppins', sans-serif;
+    display: block;
+    width: 180px;
 }

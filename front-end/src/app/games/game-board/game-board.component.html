@@ -1,11 +1,9 @@
 <div class="game-screen">
-  <div class="row no-gutters">
-    <div class="col options-panel">
-      <app-options #optionsPanel>
-      </app-options>
-    </div>
-    <div class="col col-auto">
-      <router-outlet #game></router-outlet>
-    </div>
+  <div class="options-panel">
+    <app-options #optionsPanel>
+    </app-options>
+  </div>
+  <div class="game-board">
+    <router-outlet #game></router-outlet>
   </div>
 </div>
