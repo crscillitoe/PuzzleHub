@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatFormFieldModule, MatSelectModule,
   MatSnackBarModule } from '@angular/material';
 
@@ -114,7 +114,7 @@ const appRoutes: Routes = [
         appRoutes,
         { enableTracing: false }
     ),
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,

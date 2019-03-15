@@ -41,7 +41,6 @@ html {
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
   font-family: 'Open Sans', sans-serif;
-  cursor: default;
 }
 
 .clickable {

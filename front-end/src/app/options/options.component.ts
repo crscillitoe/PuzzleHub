@@ -152,7 +152,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   callback(func: string) {
     document.getElementById('focusMe').focus();
-    this.optionsService.setOptionEvent(func);
+    this.optionSelected.emit(func);
   }
 
   editHotkey(index) {
