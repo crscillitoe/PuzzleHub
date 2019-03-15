@@ -26,22 +26,15 @@ export class OptionsComponent implements OnInit, OnDestroy {
   @Input() hotkeys: any;
   @Input() options: any;
 
-  public takingNotesMode: boolean;
-
-  private _takingNotes = false;
-  get takingNotes(): boolean {
-    return this._takingNotes;
-  }
-  set takingNotes(takingNotes: boolean) {
-    this._takingNotes = takingNotes;
-    this.optionsService.setTakingNotes(takingNotes);
-  }
+  @Input() takingNotesMode: boolean;
+  public takingNotes = false;
 
   @Input() personalBestMonthly: string;
   @Input() personalBestWeekly: string;
   @Input() personalBestDaily: string;
 
   @Output() optionSelected = new EventEmitter();
+  @Output() notesEvent = new EventEmitter();
 
   public game: Game;
 
@@ -196,6 +189,11 @@ export class OptionsComponent implements OnInit, OnDestroy {
       diff: diff
     };
     this.optionSelected.emit('this.newGame(' + diff + ')');
+  }
+
+  onNotesChange() {
+    this.takingNotes = ! this.takingNotes;
+    this.notesEvent.emit(this.takingNotes);
   }
 
   public difficultyChangeHandler(newDiff: any) {

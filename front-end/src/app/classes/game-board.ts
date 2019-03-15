@@ -230,6 +230,8 @@ export class GameBoard implements OnInit, OnDestroy {
     eval(callback);
   }
 
+  public notesHandler($event: any) { }
+
   public ngOnDestroy() {
     this.subscription.unsubscribe();
   }

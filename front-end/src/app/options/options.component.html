@@ -2,13 +2,13 @@
   <ng-container *ngIf="takingNotesMode">
     <div class=notes>
       <a
-     (click)="takingNotes = !takingNotes"
+     (click)="onNotesChange()"
      [ngClass]="takingNotes ? 'btn-warning' : 'btn-danger'"
      class="center btn"
      > Taking Notes: {{takingNotes}}</a>
     </div>
   </ng-container>
-  <div class="descriptionBlock">
+  <div class="descriptionBlock" *ngIf="isLoggedIn()">
     <a class="descriptionHeader clickable"
        (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
       <ng-container *ngIf="highscoresMinimized">

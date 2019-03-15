@@ -314,4 +314,8 @@ export class SudokuComponent extends GameBoard implements OnInit {
       }
     }
   }
+
+  public notesHandler($event: any) {
+    this.takingNotes = $event;
+  }
 }

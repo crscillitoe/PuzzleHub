@@ -6,10 +6,12 @@
         [difficulty]="difficulty"
         [hotkeys]="hotkeys"
         [options]="options"
+        [takingNotesMode]="takingNotesMode"
         [personalBestMonthly]="personalBestMonthly"
         [personalBestWeekly]="personalBestWeekly"
         [personalBestDaily]="personalBestDaily"
         (optionSelected)="handleOption($event)"
+        (notesEvent)="notesHandler($event)"
         >
     </app-options>
   </div>
