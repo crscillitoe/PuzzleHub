@@ -224,8 +224,6 @@ export class GameBoard implements OnInit, OnDestroy {
     let subscription: Subscription;
     subscription = this.optionsService.takingNotes.subscribe(takingNotes => this.takingNotes = takingNotes);
     this.subscription.add(subscription);
-    subscription = this.optionsService.optionEvent.subscribe(optionEvent => { this.handleOption(optionEvent); });
-    this.subscription.add(subscription);
   }
 
   public handleOption(callback) {

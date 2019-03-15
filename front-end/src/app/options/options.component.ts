@@ -197,7 +197,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
     let route = this.game.name;
 
     this.router.navigate([route, m]);
-    this.callback('this.newGame(' + newDiff + ')');
+    this.optionSelected.emit('this.newGame(' + newDiff + ')');
   }
 
   public ngOnDestroy() {
