@@ -1,16 +1,1 @@
-<div id="leftControlPanel">
-  <app-options
-      [gameID]="gameID"
-      [seed]="seed"
-      [difficulty]="difficulty"
-      [personalBestMonthly]="personalBestMonthly"
-      [personalBestWeekly]="personalBestWeekly"
-      [personalBestDaily]="personalBestDaily"
-      [controls]="controls"
-      [rules]="rules"
-      (optionSelected)="handleOption($event)"
-    >
-  </app-options>
-</div>
-
 <canvas id="myCanvas" (window:resize)="fixSizes()" (contextmenu)="false"></canvas>

@@ -1,205 +1,194 @@
-<style type="text/css">
-.no-move {
-  transform: none!important;
-  left: 200px!important;
-}
-</style>
-<div class="descriptionBlock">
-  <a class="descriptionHeader clickable"
-     (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
-    <ng-container *ngIf="highscoresMinimized">
-      [+]
-    </ng-container>
-    <ng-container *ngIf="!highscoresMinimized">
-      [-]
-    </ng-container>
-    <b class="clickable">
-      HIGH SCORES
-    </b>
-  </a>
-
-  <ng-container *ngIf="!highscoresMinimized">
-    <a class="descriptionText topPad">Monthly</a>
-    <a class="monospace timeSave">{{personalBestMonthly}}</a>
-
-    <a class="descriptionText topPad">Weekly</a>
-    <a class="monospace timeSave">{{personalBestWeekly}}</a>
-
-    <a class="descriptionText topPad">Daily</a>
-    <a class="monospace timeSave">{{personalBestDaily}}</a>
-  </ng-container>
-</div>
-
-<div class="descriptionBlock">
-  <a class="descriptionHeader clickable"
-     (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
-    <ng-container *ngIf="timerMinimized">
-      [+]
-    </ng-container>
-    <ng-container *ngIf="!timerMinimized">
-      [-]
-    </ng-container>
-    <b class="clickable">
-      TIMER
-    </b>
-  </a>
-
-  <a id="timer" 
-     [ngClass]="timerMinimized ? 'hidden' : 'none'"
-     class="monospace time">0:00:00.000</a>
-</div>
-
-<div class="descriptionBlock" *ngIf="controls != undefined">
-  <a class="descriptionHeader clickable"
-     (click)="controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)">
-    <ng-container *ngIf="controlsMinimized">
-      [+]
-    </ng-container>
-    <ng-container *ngIf="!controlsMinimized">
-      [-]
-    </ng-container>
-    <b class="clickable">
-      CONTROLS
-    </b>
-  </a>
-
-  <ng-container *ngIf="!controlsMinimized">
-    <a class="descriptionText">
-      {{controls}}
-    </a>
-  </ng-container>
-</div>
-
-<div class="descriptionBlock" *ngIf="rules != undefined">
-  <a class="descriptionHeader clickable"
-     (click)="rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)">
-    <ng-container *ngIf="rulesMinimized">
-      [+]
-    </ng-container>
-    <ng-container *ngIf="!rulesMinimized">
-      [-]
-    </ng-container>
-    <b class="clickable">
-      RULES
-    </b>
-  </a>
-  <ng-container *ngIf="!rulesMinimized">
-    <a class="descriptionText">
-      {{rules}}
-    </a>
-  </ng-container>
-</div>
-
-<div class="descriptionBlock" *ngIf="options != undefined">
-  <a class="descriptionHeader clickable"
-     (click)="optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)">
-    <ng-container *ngIf="optionsMinimized">
-      [+]
-    </ng-container>
-    <ng-container *ngIf="!optionsMinimized">
-      [-]
-    </ng-container>
-    <b class="clickable">
-      OPTIONS
-    </b>
-  </a>
-
-  <ng-container *ngIf="!optionsMinimized">
-    <ng-container *ngFor="let option of options; let i=index">
-      <ng-container *ngIf="option.type == 'checkbox'">
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" id="{{option.bindTo}}" class="custom-control-input clickable" 
-                                                        [(ngModel)]="optionVals[i]" 
-                                                        (click)="callback(option.callback)">
-          <label class="clickable descriptionText custom-control-label" for="{{option.bindTo}}">{{option.name}}</label>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="option.type == 'dropdown'">
-        <div class="custom-control custom-dropdown">
-          <label style="margin-bottom:0" class="descriptionText" for="{{option.bindTo}}">
-            {{option.name}}
-          </label>
-          <select id="{{option.bindTo}}"
-                  [(ngModel)]="optionVals[i]" 
-                  (ngModelChange)="updateAndCallback(option.callback, option.storedName, $event)">
-            <ng-container *ngFor="let o of option.options">
-              <option>{{o}}</option>
-            </ng-container>
-          </select>
-        </div>
-      </ng-container>
-    </ng-container>
-  </ng-container>
-</div>
-
-<div class="descriptionBlock" *ngIf="hotkeys != undefined">
-  <a class="descriptionHeader clickable"
-     (click)="hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)">
-    <ng-container *ngIf="hotkeysMinimized">
-      [+]
-    </ng-container>
-    <ng-container *ngIf="!hotkeysMinimized">
-      [-]
-    </ng-container>
-    <b class="clickable">
-      HOTKEYS
-    </b>
-  </a>
-  <ng-container *ngIf="!hotkeysMinimized">
-    <ng-container *ngFor="let hotkey of hotkeys; let i=index">
-      <div class="descriptionText">
-        {{hotkey.name}} - 
-        <button (click)="editHotkey(i)">
-          <ng-container *ngIf="editIndex != i">
-            {{convertCodeToStr(hotkeyVals[i])}} ({{hotkeyVals[i]}})
-          </ng-container>
-          <ng-container *ngIf="editIndex == i">
-            Press...
-          </ng-container>
-        </button>
-      </div>
-    </ng-container>
-  </ng-container>
-</div>
-<div class="buttons">
-  <a *ngIf="gameID != undefined" id="copyGameLink" (click)="copyGameLink()" class="center new-game clickable" style="margin-bottom:10px">
-    <a id="shareButtonText" class="buttonHeader clickable"><b class="clickable">SHARE GAME</b></a>
-  </a>
-  <div class="dropdown">
-    <div class="btn-group">
-      <button type="button" 
-        (click)="callback('this.newGame()')"
-        class="btn new-game new-game-button">
-        <b class="buttonHeader">NEW GAME</b>
-        <br>
-        <a class="buttonSubtext">spacebar</a>
-      </button>
-      <!--
-      <button type="button"
-        class="btn new-game dropdown-toggle dropdown-toggle-split new-game-dropdown"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="sr-only">Toggle Dropdown</span>
-      </button>
-      <div class="dropdown-menu no-move">
-        <ng-container *ngFor="let diff of diffs">
-          <a
-            *ngIf="(
-                     diff.minLevel == 0 ||
-                     (isLoggedIn() && getLevel() >= diff.minLevel)
-                   ) &&
-                   (
-                     ! diff.requiresLogin || isLoggedIn()
-                   )"
-            (click)="playGame(game.name, diff.diff)"
-            class="dropdown-item"
-            [ngClass]="{'active': diff.diff == difficulty}">
-            {{diff.name}}
-          </a>
-        </ng-container>
-      </div>
-      -->
+<div class="panel-body">
+  <ng-container *ngIf="takingNotesMode">
+    <div class=notes>
+      <a
+     (click)="onNotesChange()"
+     [ngClass]="takingNotes ? 'btn-warning' : 'btn-danger'"
+     class="center btn"
+     > Taking Notes: {{takingNotes}}</a>
     </div>
+  </ng-container>
+  <div class="descriptionBlock" *ngIf="isLoggedIn()">
+    <a class="descriptionHeader clickable"
+       (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
+      <ng-container *ngIf="highscoresMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!highscoresMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        HIGH SCORES
+      </b>
+    </a>
+
+    <ng-container *ngIf="!highscoresMinimized">
+      <a class="descriptionText topPad">Monthly</a>
+      <a class="monospace timeSave">{{personalBestMonthly}}</a>
+
+      <a class="descriptionText topPad">Weekly</a>
+      <a class="monospace timeSave">{{personalBestWeekly}}</a>
+
+      <a class="descriptionText topPad">Daily</a>
+      <a class="monospace timeSave">{{personalBestDaily}}</a>
+    </ng-container>
   </div>
+
+  <div class="descriptionBlock">
+    <a class="descriptionHeader clickable"
+       (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
+      <ng-container *ngIf="timerMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!timerMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        TIMER
+      </b>
+    </a>
+
+    <a id="timer" 
+       [ngClass]="timerMinimized ? 'hidden' : 'none'"
+       class="monospace time">0:00:00.000</a>
+  </div>
+
+  <div class="descriptionBlock" *ngIf="controls != undefined">
+    <a class="descriptionHeader clickable"
+       (click)="controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)">
+      <ng-container *ngIf="controlsMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!controlsMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        CONTROLS
+      </b>
+    </a>
+
+    <ng-container *ngIf="!controlsMinimized">
+      <a class="descriptionText">
+        {{controls}}
+      </a>
+    </ng-container>
+  </div>
+
+  <div class="descriptionBlock" *ngIf="rules != undefined">
+    <a class="descriptionHeader clickable"
+       (click)="rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)">
+      <ng-container *ngIf="rulesMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!rulesMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        RULES
+      </b>
+    </a>
+    <ng-container *ngIf="!rulesMinimized">
+      <a class="descriptionText">
+        {{rules}}
+      </a>
+    </ng-container>
+  </div>
+
+  <div class="descriptionBlock" *ngIf="options != undefined">
+    <a class="descriptionHeader clickable"
+       (click)="optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)">
+      <ng-container *ngIf="optionsMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!optionsMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        OPTIONS
+      </b>
+    </a>
+
+    <ng-container *ngIf="!optionsMinimized">
+      <ng-container *ngFor="let option of options; let i=index">
+        <ng-container *ngIf="option.type == 'checkbox'">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" id="{{option.bindTo}}" class="custom-control-input clickable" 
+                                                          [(ngModel)]="optionVals[i]" 
+                                                          (click)="callback(option.callback)">
+            <label class="clickable descriptionText custom-control-label" for="{{option.bindTo}}">{{option.name}}</label>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="option.type == 'dropdown'">
+          <div class="custom-control custom-dropdown">
+            <label style="margin-bottom:0" class="descriptionText" for="{{option.bindTo}}">
+              {{option.name}}
+            </label>
+            <select id="{{option.bindTo}}"
+                    [(ngModel)]="optionVals[i]" 
+                    (ngModelChange)="updateAndCallback(option.callback, option.storedName, $event)">
+              <ng-container *ngFor="let o of option.options">
+                <option>{{o}}</option>
+              </ng-container>
+            </select>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div class="descriptionBlock" *ngIf="hotkeys != undefined">
+    <a class="descriptionHeader clickable"
+       (click)="hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)">
+      <ng-container *ngIf="hotkeysMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!hotkeysMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        HOTKEYS
+      </b>
+    </a>
+    <ng-container *ngIf="!hotkeysMinimized">
+      <ng-container *ngFor="let hotkey of hotkeys; let i=index">
+        <div class="descriptionText">
+          {{hotkey.name}} - 
+          <button (click)="editHotkey(i)">
+            <ng-container *ngIf="editIndex != i">
+              {{convertCodeToStr(hotkeyVals[i])}} ({{hotkeyVals[i]}})
+            </ng-container>
+            <ng-container *ngIf="editIndex == i">
+              Press...
+            </ng-container>
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+<div class="panel-footer">
+  <mat-select class="difficulty-select" [(ngModel)]="selectedDifficulty"
+    (ngModelChange)="difficultyChangeHandler($event)">
+    <mat-option *ngFor="let diff of diffs" [value]="diff.diff">
+      {{diff.name | titlecase}}
+    </mat-option>
+  </mat-select>
+  <button
+        mat-raised-button
+        *ngIf="gameID != undefined"
+        id="copyGameLink"
+        class="game-button"
+        (click)="copyGameLink()">
+    <b class="clickable">SHARE GAME</b>
+  </button>
+  <button
+        mat-raised-button
+        class="game-button"
+        (click)="callback('this.newGame()')">
+    <b class="clickable">NEW GAME</b>
+    <br>
+    <span class="buttonSubtext clickable">spacebar</span>
+  </button>
 </div>
 <button id="focusMe" style="background-color:#2c2c2c;border:none"></button>

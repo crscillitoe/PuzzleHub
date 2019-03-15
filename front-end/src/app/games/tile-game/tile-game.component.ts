@@ -10,74 +10,15 @@ import { Board } from '../../services/boards/tile-game/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-tile-game',
-  templateUrl: './tile-game.component.html',
-  styleUrls: ['./tile-game.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
-export class TileGameComponent implements OnInit {
-
-  controls = 'Arrow Keys or WASD';
-  options = [
-    {
-      'type': 'checkbox',
-      'bindTo': 'showAnimations',
-      'name': 'Show Animations',
-      'callback': 'this.toggleAnimations()',
-      'storedName': 'tileAnimations'
-    },
-    {
-      'type': 'checkbox',
-      'bindTo': 'mouseHover',
-      'name': 'Mouse Hover',
-      'callback': 'this.toggleMouseHover()',
-      'storedName': 'HoverTileGame'
-    },
-    {
-      'type': 'checkbox',
-      'bindTo': 'staticTileSize',
-      'name': 'Fixed Tile Size',
-      'callback': 'this.toggleStaticSizes()',
-      'storedName': 'StaticTileSize',
-    },
-    {
-      'type': 'dropdown',
-      'bindTo': 'colorScheme',
-      'name': 'Color Scheme',
-      'callback': 'this.updateColorScheme()',
-      'storedName': 'TileGameColorScheme',
-      'options': [
-        'Fringe',
-        'Rows',
-        'Rows & Cols',
-        'Quadrants'
-      ]
-    }
-  ];
-
-  hotkeys = [
-    {
-      'name': 'UP',
-      'bindTo': 'TileGameDOWN',
-      'callback': 'this.configureHotkeys()'
-    },
-    {
-      'name': 'DOWN',
-      'bindTo': 'TileGameUP',
-      'callback': 'this.configureHotkeys()'
-    },
-    {
-      'name': 'LEFT',
-      'bindTo': 'TileGameRIGHT',
-      'callback': 'this.configureHotkeys()'
-    },
-    {
-      'name': 'RIGHT',
-      'bindTo': 'TileGameLEFT',
-      'callback': 'this.configureHotkeys()'
-    }
-  ];
+export class TileGameComponent extends GameBoard implements OnInit {
 
   initialDelay = 200;
   continuedDelay = 16;
@@ -102,35 +43,8 @@ export class TileGameComponent implements OnInit {
 
   colorScheme: string;
 
-  rules = 'Order the numbers in sequential order from left to right, top to bottom';
-
-  // Used for drawing to the screen
-  canvas: any;
-  context: any;
-
-  solved = false;
-
-  personalBestDaily: string;
-  personalBestWeekly: string;
-  personalBestMonthly: string;
-
-  gridBoxSize: number;
-  colors: any;
-
-  canvasOffsetX = 225;
-  canvasOffsetY = 56;
-
-  gridOffsetX = 100;
-  gridOffsetY = 100;
-
-  difficulty: number;
-  seed: number;
-
   animatingX: number;
   animatingY: number;
-
-  startDate: any;
-  t: any;
 
   showAnimations: boolean;
   mouseHover: boolean;
@@ -143,26 +57,92 @@ export class TileGameComponent implements OnInit {
   left: boolean;
   right: boolean;
 
-  gameID = GameID.TILE_GAME;
-
   board: Board;
 
   constructor(
-    private route: ActivatedRoute,
-    private colorService: ColorService,
-    private router: Router,
-    private tunnel: TunnelService,
-    private userService: UserService,
-    private timer: TimerService,
-    private loader: LoaderService
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
   ) {
-    this.colors = colorService.getColorScheme();
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
+
+    this.gameID = GameID.TILE_GAME;
+    this.options = [
+      {
+        'type': 'checkbox',
+        'bindTo': 'showAnimations',
+        'name': 'Show Animations',
+        'callback': 'this.toggleAnimations()',
+        'storedName': 'tileAnimations'
+      },
+      {
+        'type': 'checkbox',
+        'bindTo': 'mouseHover',
+        'name': 'Mouse Hover',
+        'callback': 'this.toggleMouseHover()',
+        'storedName': 'HoverTileGame'
+      },
+      {
+        'type': 'checkbox',
+        'bindTo': 'staticTileSize',
+        'name': 'Fixed Tile Size',
+        'callback': 'this.toggleStaticSizes()',
+        'storedName': 'StaticTileSize',
+      },
+      {
+        'type': 'dropdown',
+        'bindTo': 'colorScheme',
+        'name': 'Color Scheme',
+        'callback': 'this.updateColorScheme()',
+        'storedName': 'TileGameColorScheme',
+        'options': [
+          'Fringe',
+          'Rows',
+          'Rows & Cols',
+          'Quadrants'
+        ]
+      }
+    ];
+
+    this.hotkeys = [
+      {
+        'name': 'UP',
+        'bindTo': 'TileGameDOWN',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': 'DOWN',
+        'bindTo': 'TileGameUP',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': 'LEFT',
+        'bindTo': 'TileGameRIGHT',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': 'RIGHT',
+        'bindTo': 'TileGameLEFT',
+        'callback': 'this.configureHotkeys()'
+      }
+    ];
   }
 
   ngOnInit() {
-    // Read difficulty from URL param
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-
     this.shift = false;
     this.xAxis = false;
     this.yAxis = false;
@@ -178,15 +158,11 @@ export class TileGameComponent implements OnInit {
 
     this.configureHotkeys();
 
-    this.setupBoard();
-
-    let that = this;
-    GameStarterService.startGame(that);
+    super.ngOnInit();
   }
 
   setupBoard() {
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
+    super.setupBoard();
 
     let width;
     let height;
@@ -235,13 +211,6 @@ export class TileGameComponent implements OnInit {
     this.board = new Board(width, height, 0);
   }
 
-  newGame(difficulty = this.difficulty) {
-    this.difficulty = difficulty;
-    this.setupBoard();
-    let that = this;
-    GameStarterService.newGame(that);
-  }
-
   toggleMouseHover() {
     this.mouseHover = !this.mouseHover;
     SettingsService.storeData('HoverTileGame', this.mouseHover);
@@ -262,42 +231,8 @@ export class TileGameComponent implements OnInit {
     this.rightKey = SettingsService.getDataNum('TileGameRIGHT');
   }
 
-  add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
-
-    const diff = ((now - that.startDate));
-
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
-
-    try {
-      if (!that.solved) {
-        display.textContent =
-          hours + ':' +
-          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
-
-        that.displayTimer();
-      }
-    } catch {
-      // Do nothing - page probably re-routed
-    }
-  }
-
-  displayTimer() {
-    if (!this.solved) {
-      let _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
-    }
-  }
-
   draw() {
-    this.context.beginPath();
-    this.drawBackground();
+    super.draw();
     // this.drawGrid();
     this.drawTiles();
   }
@@ -472,11 +407,6 @@ export class TileGameComponent implements OnInit {
   updateColorScheme() {
     this.colorScheme = SettingsService.getDataStr('TileGameColorScheme');
     this.draw();
-  }
-
-  done() {
-    let that = this;
-    GameStarterService.done(that);
   }
 
   fixSizes() {
@@ -1117,10 +1047,6 @@ export class TileGameComponent implements OnInit {
           break;
       }
     }
-  }
-
-  handleOption(callback) {
-    eval(callback);
   }
 
   @HostListener('document:keyup', ['$event'])

@@ -1,58 +1,71 @@
-import { HostListener, Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
+import { HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
+import { OptionsService } from '../services/games/options.service';
+import { Subscription } from 'rxjs/Subscription';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.css']
 })
-export class OptionsComponent implements OnInit {
-
-  @Input() personalBestMonthly: string;
-  @Input() personalBestWeekly: string;
-  @Input() personalBestDaily: string;
-
-  @Input() controls: string;
-  @Input() rules: string;
-
-  @Input() options: any;
-  @Input() hotkeys: any;
+export class OptionsComponent implements OnInit, OnDestroy {
 
   @Input() gameID: number;
   @Input() seed: number;
   @Input() difficulty: number;
 
+  public rules: string;
+  public controls: string;
+
+  @Input() hotkeys: any;
+  @Input() options: any;
+
+  @Input() takingNotesMode: boolean;
+  public takingNotes = false;
+
+  @Input() personalBestMonthly: string;
+  @Input() personalBestWeekly: string;
+  @Input() personalBestDaily: string;
+
   @Output() optionSelected = new EventEmitter();
+  @Output() notesEvent = new EventEmitter();
 
-  game: Game;
-  diffs: Difficulty[];
+  public game: Game;
 
-  highscoresMinimized: boolean;
-  rulesMinimized: boolean;
-  optionsMinimized: boolean;
-  controlsMinimized: boolean;
-  timerMinimized: boolean;
-  hotkeysMinimized: boolean;
+  public selectedDifficulty: number;
+  public diffs: Difficulty[];
 
-  editingHotkey: boolean;
-  editIndex: number;
+  public highscoresMinimized: boolean;
+  public rulesMinimized: boolean;
+  public optionsMinimized: boolean;
+  public controlsMinimized: boolean;
+  public timerMinimized: boolean;
+  public hotkeysMinimized: boolean;
 
-  optionVals: any = [];
-  hotkeyVals: any = [];
+  public editingHotkey: boolean;
+  public editIndex: number;
+
+  public optionVals: any = [];
+  public hotkeyVals: any = [];
+
+  private subscription = new Subscription();
 
   constructor(
     private user: UserService,
-    private router: Router
+    private router: Router,
+    private optionsService: OptionsService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
     if (this.options !== undefined) {
-      for (let option of this.options) {
+      for (const option of this.options) {
         if (option['type'] === 'checkbox') {
           this.optionVals.push(SettingsService.getDataBool(option['storedName']));
         } else if (option['type'] === 'dropdown') {
@@ -62,7 +75,7 @@ export class OptionsComponent implements OnInit {
     }
 
     if (this.hotkeys !== undefined) {
-      for (let hotkey of this.hotkeys) {
+      for (const hotkey of this.hotkeys) {
         this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
       }
     }
@@ -76,10 +89,20 @@ export class OptionsComponent implements OnInit {
     this.timerMinimized = SettingsService.getDataBool('timerMinimized');
     this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
 
-    console.log(this.gameID);
     this.game = GameListAllService.getGameById(this.gameID);
-    console.log(this.game);
-    this.diffs = this.game.diffs;
+    this.rules = this.game.rules;
+    this.controls = this.game.controls;
+    this.diffs = this.game.diffs.filter(
+      d => (
+        d.minLevel === 0 ||
+        (this.user.isLoggedIn && this.getLevel() >= d.minLevel)
+      ) &&
+      (
+        ! d.requiresLogin || this.isLoggedIn()
+      )
+    );
+
+    this.selectedDifficulty = this.difficulty;
   }
 
   minimize(name, val) {
@@ -97,9 +120,9 @@ export class OptionsComponent implements OnInit {
   }
 
   copyGameLink() {
-    this.setCopyButtonText('Copied!');
-    var that = this;
-    setTimeout(function() { that.setCopyButtonText('SHARE GAME') }, 1500);
+    this.snackBar.open('Copied!', '', {
+      duration: 1500,
+    });
 
     this.copyMessage(this.generatePuzzleLink());
   }
@@ -127,9 +150,9 @@ export class OptionsComponent implements OnInit {
     document.body.removeChild(selBox);
   }
 
-  callback(func) {
+  callback(func: string) {
     document.getElementById('focusMe').focus();
-    this.optionSelected.emit(func);
+    this.optionsService.setOptionEvent(func);
   }
 
   editHotkey(index) {
@@ -165,8 +188,25 @@ export class OptionsComponent implements OnInit {
     const m = {
       diff: diff
     };
+    this.optionSelected.emit('this.newGame(' + diff + ')');
+  }
+
+  onNotesChange() {
+    this.takingNotes = ! this.takingNotes;
+    this.notesEvent.emit(this.takingNotes);
+  }
+
+  public difficultyChangeHandler(newDiff: any) {
+    let m = {
+      diff: newDiff
+    }
+    let route = this.game.name;
 
     this.router.navigate([route, m]);
-    this.optionSelected.emit('this.newGame(' + diff + ')');
+    this.optionSelected.emit('this.newGame(' + newDiff + ')');
+  }
+
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

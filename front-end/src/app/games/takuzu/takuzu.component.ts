@@ -10,100 +10,79 @@ import { Board } from '../../services/boards/takuzu/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-takuzu',
-  templateUrl: './takuzu.component.html',
-  styleUrls: ['./takuzu.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
-export class TakuzuComponent implements OnInit {
-
-  controls = 'Left/Right click';
-  options = [
-    {
-      'type': 'checkbox',
-      'bindTo': 'toggleGrid',
-      'name': 'Display Grid',
-      'callback': 'this.toggleGrid()',
-      'storedName': 'takuzuGrid'
-    },
-    {
-      'type': 'checkbox',
-      'bindTo': 'invertControls',
-      'name': 'Invert Controls',
-      'callback': 'this.invertControls()',
-      'storedName': 'takuzuInvert'
-    }
-  ];
-
-  rules = 'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
-          '1s and 0s in each row and column and no more than two of either number adjacent to ' +
-          'each other. Additionally, there can be no identical rows or columns.';
-
-  // Used for drawing to the screen
-  canvas: any;
-  context: any;
-
-  colors: any;
+export class TakuzuComponent extends GameBoard implements OnInit {
   oColor: any;
   cColor: any;
 
   displayGrid: boolean;
   invertedControls: boolean;
 
-  canvasOffsetX = 225;
-  canvasOffsetY = 56;
-
-  gridOffsetX = 100;
-  gridOffsetY = 100;
-  gridBoxSize: number;
-
-  selectedX = -1;
-  selectedY = -1;
-
-  personalBestDaily: string;
-  personalBestWeekly: string;
-  personalBestMonthly: string;
-
-  difficulty: number;
-  seed: number;
-  startDate: any;
-  t: any;
-
   board: Board;
-  solved = false;
-
-  gameID = GameID.TAKUZU;
 
   constructor(
-    private route: ActivatedRoute,
-    private colorService: ColorService,
-    private router: Router,
-    private tunnel: TunnelService,
-    private userService: UserService,
-    private timer: TimerService,
-    private loader: LoaderService
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
   ) {
-    this.colors = colorService.getColorScheme();
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
+
+    this.gameID = GameID.TAKUZU;
+
+    this.options = [
+      {
+        'type': 'checkbox',
+        'bindTo': 'toggleGrid',
+        'name': 'Display Grid',
+        'callback': 'this.toggleGrid()',
+        'storedName': 'takuzuGrid'
+      },
+      {
+        'type': 'checkbox',
+        'bindTo': 'invertControls',
+        'name': 'Invert Controls',
+        'callback': 'this.invertControls()',
+        'storedName': 'takuzuInvert'
+      }
+    ];
+
+
     this.oColor = this.colors.FOREGROUND;
     this.cColor = '#66CCFF';
+
+    this.selectedX = -1;
+    this.selectedY = -1;
   }
 
   ngOnInit() {
-    // Read difficulty from URL param
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
-    this.setupBoard();
-
     this.displayGrid = SettingsService.getDataBool('takuzuGrid');
     this.invertedControls = SettingsService.getDataBool('takuzuInvert');
-
-    let that = this;
-    GameStarterService.startGame(that);
+    super.ngOnInit();
   }
 
   setupBoard() {
+    super.setupBoard();
     let size;
     let removePerc;
 
@@ -138,49 +117,8 @@ export class TakuzuComponent implements OnInit {
     this.board = new Board(size, 0, removePerc);
   }
 
-  newGame(difficulty = this.difficulty) {
-    this.difficulty = difficulty;
-    this.setupBoard();
-    let that = this;
-    GameStarterService.newGame(that);
-  }
-
-  add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
-
-    const diff = ((now - that.startDate));
-
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
-
-    try {
-      if (!that.solved) {
-        display.textContent =
-          hours + ':' +
-          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
-
-        that.displayTimer();
-      }
-    } catch {
-      // Do nothing - page probably re-routed
-    }
-  }
-
-  displayTimer() {
-    if (!this.solved) {
-      let _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
-    }
-  }
-
   draw() {
-    this.context.beginPath();
-    this.drawBackground();
+    super.draw();
     this.drawSelectedBox();
     if (this.displayGrid) {
       this.drawGrid();
@@ -461,20 +399,5 @@ export class TakuzuComponent implements OnInit {
       this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
       this.draw();
     }
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  keyPressed(keyEvent) {
-    if (keyEvent.keyCode === 32) {
-      this.newGame();
-      return;
-    }
-  }
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
-  }
-
-  handleOption(callback) {
-    eval(callback);
   }
 }

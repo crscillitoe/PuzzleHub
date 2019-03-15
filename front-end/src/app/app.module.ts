@@ -2,6 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatFormFieldModule, MatSelectModule,
+  MatSnackBarModule } from '@angular/material';
+
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -37,18 +41,42 @@ const appRoutes: Routes = [
   { path: 'games', component: CustomGamesComponent},
   { path: 'login', component: LoginComponent},
   { path: 'leaderboards', component: LeaderboardsComponent},
-  { path: 'Hashi', component: HashiComponent},
-  { path: 'Sudoku', component: SudokuComponent},
-  { path: 'Takuzu', component: TakuzuComponent},
-  { path: 'Minesweeper', component: MinesweeperComponent},
-  { path: 'Tile Game', component: TileGameComponent},
   { path: 'EmailVerify', component: VerifyEmailComponent},
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
   { path: 'profile', component: ProfileComponent},
-  { path: 'Kakuro', component: KakuroComponent},
-  { path: 'Thermometers', component: ThermometersComponent},
-  { path: 'Nonograms', component: NonogramsComponent}
+  {
+    path: 'Hashi',
+        component: HashiComponent
+  },
+  {
+    path: 'Sudoku',
+        component: SudokuComponent
+  },
+  {
+    path: 'Takuzu',
+        component: TakuzuComponent
+  },
+  {
+    path: 'Minesweeper',
+        component: MinesweeperComponent
+  },
+  {
+    path: 'Tile Game',
+        component: TileGameComponent
+  },
+  {
+    path: 'Kakuro',
+        component: KakuroComponent
+  },
+  {
+    path: 'Thermometers',
+        component: ThermometersComponent
+  },
+  {
+    path: 'Nonograms',
+        component: NonogramsComponent
+  },
 ];
 
 @NgModule({
@@ -85,7 +113,12 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
         appRoutes,
         { enableTracing: false }
-    )
+    ),
+    NoopAnimationsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatSnackBarModule
   ],
   providers: [
     {

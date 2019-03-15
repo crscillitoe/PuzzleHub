@@ -9,76 +9,49 @@ import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/sudoku/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-sudoku',
-  templateUrl: './sudoku.component.html',
-  styleUrls: ['./sudoku.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
-export class SudokuComponent implements OnInit {
-
-  controls = 'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box';
-  rules = 'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
-          'Each number can only appear once in a row, column, or box.';
-
-  // Used for drawing to the screen
-  canvas: any;
-  context: any;
-
-  colors: any;
-
-  canvasOffsetX = 500;
-  canvasOffsetY = 56;
-
-  gridOffsetX = 100;
-  gridOffsetY = 100;
-
-  gridBoxSize: number;
+export class SudokuComponent extends GameBoard implements OnInit {
 
   numCarved: number;
   board: any;
 
-  difficulty: number;
-  seed: number;
-
-  gameID = GameID.SUDOKU;
-
-  takingNotes = false;
   notes: any = {};
-  solved = false;
-  personalBestDaily: string;
-  personalBestWeekly: string;
-  personalBestMonthly: string;
-
-  startDate: any;
-  t: any;
-
-  selectedX: number;
-  selectedY: number;
 
   constructor(
-    private route: ActivatedRoute,
-    private tunnel: TunnelService,
-    private colorService: ColorService,
-    private router: Router,
-    private userService: UserService,
-    private timer: TimerService,
-    private loader: LoaderService
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
   ) {
-    this.colors = colorService.getColorScheme();
-  }
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
 
-  ngOnInit() {
-    // Read difficulty from URL param
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-    this.setupBoard();
-    let that = this;
-    GameStarterService.startGame(that);
+    this.gameID = GameID.SUDOKU;
+
+    this.takingNotesMode = true;
   }
 
   setupBoard() {
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
+    super.setupBoard();
 
     switch (this.difficulty) {
       // Easy
@@ -111,49 +84,8 @@ export class SudokuComponent implements OnInit {
     this.board = new Board(this.numCarved);
   }
 
-  newGame(difficulty = this.difficulty) {
-    this.difficulty = difficulty;
-    this.setupBoard();
-    let that = this;
-    GameStarterService.newGame(that);
-  }
-
-  add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
-
-    const diff = ((now - that.startDate));
-
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
-
-    try {
-      if (!that.solved) {
-        display.textContent =
-          hours + ':' +
-          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
-
-        that.displayTimer();
-      }
-    } catch {
-      // Do nothing - page probably re-routed
-    }
-  }
-
-  displayTimer() {
-    if (!this.solved) {
-      let _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
-    }
-  }
-
   draw() {
-    this.context.beginPath();
-    this.drawBackground();
+    super.draw();
     this.drawSelectedBox();
     this.drawBadBoxes();
     this.drawGrid();
@@ -301,11 +233,6 @@ export class SudokuComponent implements OnInit {
     this.draw();
   }
 
-  done() {
-    let that = this;
-    GameStarterService.done(that);
-  }
-
   /* EVENT LISTENERS */
   mousePressed(mouseEvent) {
     const x = mouseEvent.clientX - this.canvasOffsetX;
@@ -388,11 +315,7 @@ export class SudokuComponent implements OnInit {
     }
   }
 
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
-  }
-
-  handleOption(callback) {
-    eval(callback);
+  public notesHandler($event: any) {
+    this.takingNotes = $event;
   }
 }

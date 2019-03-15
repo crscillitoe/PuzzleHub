@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { HostListener, Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -9,75 +9,57 @@ import { GameID } from '../../enums/game-id.enum';
 import { Board } from '../../services/boards/minesweeper/board.service';
 import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
+import { GameBoard } from '../../classes/game-board';
+import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-minesweeper',
-  templateUrl: './minesweeper.component.html',
-  styleUrls: ['./minesweeper.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
-export class MinesweeperComponent implements OnInit {
-  // Used for drawing to the screen
-  rules = 'The objective of the game is to clear a rectangular board containing hidden mines ' +
-          'without detonating any of them.';
-  canvas: any;
-  context: any;
+export class MinesweeperComponent extends GameBoard {
+  public firstPress = true;
+  public isPressed = false;
 
-  colors: any;
+  public lose = false;
 
-  canvasOffsetX = 225;
-  canvasOffsetY = 56;
+  public board: Board;
 
-  gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes
-  gridOffsetX = 100;
-  gridOffsetY = 56;
-
-  firstPress = true;
-  isPressed = false;
-
-  selectedX: number;
-  selectedY: number;
-  personalBestDaily: string;
-  personalBestWeekly: string;
-  personalBestMonthly: string;
-
-  mb1Pressed = false;
-  mb2Pressed = false;
-
-  startDate: any;
-  t: any;
-  solved = false;
-
-  gameID = GameID.MINESWEEPER;
-  difficulty: number;
-  seed: number;
-
-  lose = false;
-
-  board: Board;
+  private imgBomb = new Image();
+  private imgFlag = new Image();
+  private imgTile = new Image();
 
   constructor(
-    private route: ActivatedRoute,
-    private colorService: ColorService,
-    private router: Router,
-    private tunnel: TunnelService,
-    private userService: UserService,
-    private timer: TimerService,
-    private loader: LoaderService
+    route: ActivatedRoute,
+    colorService: ColorService,
+    router: Router,
+    tunnel: TunnelService,
+    userService: UserService,
+    timer: TimerService,
+    loader: LoaderService,
+    optionsService: OptionsService
   ) {
-    this.colors = colorService.getColorScheme();
+    super(
+      route,
+      colorService,
+      router,
+      tunnel,
+      userService,
+      timer,
+      loader,
+      optionsService
+    );
+    this.gameID = GameID.MINESWEEPER;
+    this.gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes
+    this.gridOffsetY = 56;
+
+    this.imgBomb.src = '/assets/images/minesweeper/bomb.svg';
+    this.imgFlag.src = '/assets/images/minesweeper/flag.svg';
+    this.imgTile.src = '/assets/images/minesweeper/minesweeper_tile.svg';
   }
 
-  ngOnInit() {
-    // Read difficulty from URL param
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-    this.setupBoard();
-    let that = this;
-    GameStarterService.startGame(that);
-  }
-
-  setupBoard() {
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
+  public setupBoard() {
+    super.setupBoard();
 
     let width;
     let height;
@@ -118,7 +100,7 @@ export class MinesweeperComponent implements OnInit {
     this.board = new Board(width, height, bombCount, 0);
   }
 
-  newGame(difficulty = this.difficulty) {
+  public newGame(difficulty = this.difficulty) {
     this.difficulty = difficulty;
     this.setupBoard();
     this.loader.startLoadingAnimation();
@@ -168,9 +150,8 @@ export class MinesweeperComponent implements OnInit {
     }
   }
 
-  draw() {
-    this.context.beginPath();
-    this.drawBackground();
+  public draw() {
+    super.draw();
 
     this.drawGrid();
     this.drawTiles();
@@ -180,11 +161,6 @@ export class MinesweeperComponent implements OnInit {
     } else {
       this.drawBombs();
     }
-  }
-
-  drawBackground() {
-    this.context.fillStyle = this.colors.BACKGROUND; // Background color
-    this.context.fillRect(0, 0, this.canvas.offsetWidth * 2, this.canvas.offsetHeight * 2);
   }
 
   drawGrid() {
@@ -224,8 +200,7 @@ export class MinesweeperComponent implements OnInit {
     this.context.fillStyle = '#FF0000';
     this.context.fillRect(startX, startY, width, height);
 
-    const img = document.getElementById('bomb');
-    this.context.drawImage(img, startX, startY, width, height);
+    this.context.drawImage(this.imgBomb, startX, startY, width, height);
   }
 
   drawVisibleTile(x, y) {
@@ -275,8 +250,7 @@ export class MinesweeperComponent implements OnInit {
     const width = this.gridBoxSize;
     const height = this.gridBoxSize;
 
-    const img = document.getElementById('tile');
-    this.context.drawImage(img, startX, startY, width, height);
+    this.context.drawImage(this.imgTile, startX, startY, width, height);
   }
 
   drawFlaggedTile (x, y) {
@@ -286,8 +260,7 @@ export class MinesweeperComponent implements OnInit {
     const width = this.gridBoxSize - (this.gridBoxSize / 2);
     const height = this.gridBoxSize - (this.gridBoxSize / 2);
 
-    const img = document.getElementById('flag');
-    this.context.drawImage(img, startX, startY, width, height);
+    this.context.drawImage(this.imgFlag, startX, startY, width, height);
   }
 
   drawTiles() {
@@ -377,44 +350,6 @@ export class MinesweeperComponent implements OnInit {
         this.drawPressedTile(this.selectedX, this.selectedY);
       }
     }
-  }
-
-  add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
-
-    const diff = ((now - that.startDate));
-
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
-
-    try {
-      if (!that.solved) {
-        display.textContent =
-          hours + ':' +
-          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
-
-        that.displayTimer();
-      }
-    } catch {
-      // Do nothing - page probably re-routed
-    }
-  }
-
-  displayTimer() {
-    if (!this.solved) {
-      let _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
-    }
-  }
-
-  done() {
-    let that = this;
-    GameStarterService.done(that);
   }
 
   fixSizes() {
@@ -548,20 +483,5 @@ export class MinesweeperComponent implements OnInit {
         this.draw();
       }
     }
-  }
-
-  handleOption(callback) {
-    eval(callback);
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  keyPressed(keyEvent) {
-    if (keyEvent.keyCode === 32) {
-      this.newGame();
-      return;
-    }
-  }
-  keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
   }
 }
