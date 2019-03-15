@@ -165,42 +165,30 @@
     </ng-container>
   </ng-container>
 </div>
-<div class="buttons">
-  <a *ngIf="gameID != undefined" id="copyGameLink" (click)="copyGameLink()" class="center new-game clickable" style="margin-bottom:10px">
+<div class="game-buttons">
+  <mat-select class="difficulty-select" [(ngModel)]="difficulty" (ngModelChange)="difficultyChangeHandler($event)">
+    <mat-option *ngFor="let diff of diffs" [value]="diff.diff">
+      {{diff.name | titlecase}}
+    </mat-option>
+  </mat-select>
+  <!--<a *ngIf="gameID != undefined" id="copyGameLink" (click)="copyGameLink()" class="center new-game clickable" style="margin-bottom:10px">
     <a id="shareButtonText" class="buttonHeader clickable"><b class="clickable">SHARE GAME</b></a>
-  </a>
-  <div class="dropdown">
-    <div class="btn-group dropup">
-      <button type="button" 
-        (click)="callback('this.newGame()')"
-        class="btn new-game new-game-button">
-        <b class="buttonHeader">NEW GAME</b>
-        <br>
-        <a class="buttonSubtext">spacebar</a>
-      </button>
-      <button type="button"
-        class="btn new-game dropdown-toggle dropdown-toggle-split new-game-dropdown"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="sr-only">Toggle Dropdown</span>
-      </button>
-      <div class="dropdown-menu no-move">
-        <ng-container *ngFor="let diff of diffs">
-          <a
-            *ngIf="(
-                     diff.minLevel == 0 ||
-                     (isLoggedIn() && getLevel() >= diff.minLevel)
-                   ) &&
-                   (
-                     ! diff.requiresLogin || isLoggedIn()
-                   )"
-            (click)="playGame(game.name, diff.diff)"
-            class="dropdown-item"
-            [ngClass]="{'active': diff.diff == difficulty}">
-            {{diff.name}}
-          </a>
-        </ng-container>
-      </div>
-    </div>
-  </div>
+  </a>-->
+  <button
+    mat-raised-button
+    *ngIf="gameID != undefined"
+    id="copyGameLink"
+    class="game-button"
+    (click)="copyGameLink()">
+    <b>SHARE GAME</b>
+  </button>
+  <button
+    mat-raised-button
+    class="game-button"
+    (click)="callback('this.newGame()')">
+    <b>NEW GAME</b>
+    <br>
+    <span class="buttonSubtext">spacebar</span>
+  </button>
 </div>
 <button id="focusMe" style="background-color:#2c2c2c;border:none"></button>

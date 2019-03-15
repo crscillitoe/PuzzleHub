@@ -2,6 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatFormFieldModule, MatSelectModule,
+  MatSnackBarModule } from '@angular/material';
+
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -159,7 +163,12 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
         appRoutes,
         { enableTracing: false }
-    )
+    ),
+    NoopAnimationsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatSnackBarModule
   ],
   providers: [
     {

@@ -7,6 +7,7 @@ import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-options',
@@ -29,6 +30,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   public seed: number;
   public difficulty: number;
+  private _newDifficulty: number;
+  get newDifficulty(): number {
+    return this._newDifficulty;
+  }
+  set newDifficulty(newDifficulty: number) {
+    this._newDifficulty = newDifficulty;
+    this.optionsService.setNewDifficulty(newDifficulty);
+  }
 
   public rules: string;
   public controls: string;
@@ -72,7 +81,8 @@ export class OptionsComponent implements OnInit, OnDestroy {
   constructor(
     private user: UserService,
     private router: Router,
-    private optionsService: OptionsService
+    private optionsService: OptionsService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -139,9 +149,9 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   copyGameLink() {
-    this.setCopyButtonText('Copied!');
-    var that = this;
-    setTimeout(function() { that.setCopyButtonText('SHARE GAME') }, 1500);
+    this.snackBar.open('Copied!', '', {
+      duration: 1500,
+    });
 
     this.copyMessage(this.generatePuzzleLink());
   }
@@ -169,9 +179,9 @@ export class OptionsComponent implements OnInit, OnDestroy {
     document.body.removeChild(selBox);
   }
 
-  callback(func) {
+  callback(func: string) {
     document.getElementById('focusMe').focus();
-    this.optionSelected.emit(func);
+    this.optionsService.setOptionEvent(func);
   }
 
   editHotkey(index) {
@@ -207,9 +217,11 @@ export class OptionsComponent implements OnInit, OnDestroy {
     const m = {
       diff: diff
     };
-
-    this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + diff + ')');
+  }
+
+  public difficultyChangeHandler(event: any) {
+    this.newDifficulty = event;
   }
 
   public ngOnDestroy() {

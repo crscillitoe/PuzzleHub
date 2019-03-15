@@ -12,6 +12,8 @@ export class OptionsService {
   public seed = this._seed.asObservable();
   private _difficulty = new BehaviorSubject<number>(0);
   public difficulty = this._difficulty.asObservable();
+  private _newDifficulty = new BehaviorSubject<number>(0);
+  public newDifficulty = this._newDifficulty.asObservable();
 
   private _hotkeys = new BehaviorSubject<any>(null);
   public hotkeys = this._hotkeys.asObservable();
@@ -30,6 +32,9 @@ export class OptionsService {
   private _personalBestDaily = new BehaviorSubject<string>('');
   public personalBestDaily = this._personalBestDaily.asObservable();
 
+  private _optionEvent = new BehaviorSubject<string>('');
+  public optionEvent = this._optionEvent.asObservable();
+
   constructor() { }
 
   public setGameID(gameID: number) {
@@ -42,6 +47,10 @@ export class OptionsService {
 
   public setDifficulty(difficulty: number) {
     this._difficulty.next(difficulty);
+  }
+
+  public setNewDifficulty(newDifficulty: number) {
+    this._newDifficulty.next(newDifficulty);
   }
 
   public setHotkeys(hotkeys: any) {
@@ -70,5 +79,9 @@ export class OptionsService {
 
   public setPersonalBestDaily(personalBestDaily: string) {
     this._personalBestDaily.next(personalBestDaily);
+  }
+
+  public setOptionEvent(optionEvent: string) {
+    this._optionEvent.next(optionEvent);
   }
 }

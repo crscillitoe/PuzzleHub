@@ -6,8 +6,10 @@ import { UserService } from '../services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { GameID } from '../enums/game-id.enum';
+import { Game } from './game';
 import { ColorService } from '../services/colors/color.service';
 import { GameStarterService } from '../services/generators/game-starter.service';
+import { GameListAllService } from '../services/games/game-list-all.service';
 import { Options } from '../interfaces/options';
 import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -19,8 +21,11 @@ export class GameBoard implements OnInit, OnDestroy {
   }
   set gameID(gameID: number) {
     this._gameID = gameID;
+    this.game = GameListAllService.getGameById(gameID);
     this.optionsService.setGameID(gameID);
   }
+
+  private game: Game;
 
   private _seed: number;
   get seed(): number {
@@ -38,6 +43,9 @@ export class GameBoard implements OnInit, OnDestroy {
   set difficulty(difficulty: number) {
     this._difficulty = difficulty;
     this.optionsService.setDifficulty(difficulty);
+  }
+  set newDifficulty(newDifficulty: number) {
+    this._difficulty = newDifficulty;
   }
 
   private _hotkeys: any;
@@ -148,6 +156,7 @@ export class GameBoard implements OnInit, OnDestroy {
 
   public newGame(difficulty = this.difficulty) {
     this.difficulty = difficulty;
+    console.log(this.difficulty);
     this.setupBoard();
     const that = this;
     GameStarterService.newGame(that);
@@ -215,7 +224,11 @@ export class GameBoard implements OnInit, OnDestroy {
 
   protected initializeOptions() {
     let subscription: Subscription;
+    subscription = this.optionsService.newDifficulty.subscribe(newDifficulty => this.newDifficulty = newDifficulty);
+    this.subscription.add(subscription);
     subscription = this.optionsService.takingNotes.subscribe(takingNotes => this.takingNotes = takingNotes);
+    this.subscription.add(subscription);
+    subscription = this.optionsService.optionEvent.subscribe(optionEvent => { this.handleOption(optionEvent); });
     this.subscription.add(subscription);
   }
 
