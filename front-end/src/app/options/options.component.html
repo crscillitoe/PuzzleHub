@@ -168,26 +168,27 @@
   </div>
 </div>
 <div class="panel-footer">
-  <mat-select class="difficulty-select" [(ngModel)]="difficulty" (ngModelChange)="difficultyChangeHandler($event)">
+  <mat-select class="difficulty-select" [(ngModel)]="selectedDifficulty"
+    (ngModelChange)="difficultyChangeHandler($event)">
     <mat-option *ngFor="let diff of diffs" [value]="diff.diff">
       {{diff.name | titlecase}}
     </mat-option>
   </mat-select>
   <button
-              mat-raised-button
-              *ngIf="gameID != undefined"
-              id="copyGameLink"
-              class="game-button"
-              (click)="copyGameLink()">
-    <b>SHARE GAME</b>
+        mat-raised-button
+        *ngIf="gameID != undefined"
+        id="copyGameLink"
+        class="game-button"
+        (click)="copyGameLink()">
+    <b class="clickable">SHARE GAME</b>
   </button>
   <button
-              mat-raised-button
-              class="game-button"
-              (click)="callback('this.newGame()')">
-    <b>NEW GAME</b>
+        mat-raised-button
+        class="game-button"
+        (click)="callback('this.newGame()')">
+    <b class="clickable">NEW GAME</b>
     <br>
-    <span class="buttonSubtext">spacebar</span>
+    <span class="buttonSubtext clickable">spacebar</span>
   </button>
 </div>
 <button id="focusMe" style="background-color:#2c2c2c;border:none"></button>

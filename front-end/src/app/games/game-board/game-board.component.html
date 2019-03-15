@@ -1,9 +1,18 @@
 <div class="game-screen">
   <div class="options-panel">
-    <app-options #optionsPanel>
+    <app-options
+        [gameID]="gameID"
+        [seed]="seed"
+        [difficulty]="difficulty"
+        [hotkeys]="hotkeys"
+        [options]="options"
+        [personalBestMonthly]="personalBestMonthly"
+        [personalBestWeekly]="personalBestWeekly"
+        [personalBestDaily]="personalBestDaily"
+        >
     </app-options>
   </div>
   <div class="game-board">
-    <router-outlet #game></router-outlet>
+    <canvas id="myCanvas" (window:resize)="fixSizes()" (contextmenu)="false"></canvas>
   </div>
 </div>

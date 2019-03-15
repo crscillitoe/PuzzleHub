@@ -14,8 +14,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-sudoku',
-  templateUrl: './sudoku.component.html',
-  styleUrls: ['./sudoku.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class SudokuComponent extends GameBoard implements OnInit {
 

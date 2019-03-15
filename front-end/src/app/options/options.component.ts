@@ -16,25 +16,16 @@ import { MatSnackBar } from '@angular/material';
 })
 export class OptionsComponent implements OnInit, OnDestroy {
 
-  private _gameID: number;
-  get gameID(): number {
-    return this._gameID;
-  }
-  set gameID(gameID: number) {
-    this._gameID = gameID;
-    this.game = GameListAllService.getGameById(this.gameID);
-    this.diffs = this.game.diffs;
-    this.rules = this.game.rules;
-    this.controls = this.game.controls;
-  }
-
-  public seed: number;
-  public difficulty: number;
+  @Input() gameID: number;
+  @Input() seed: number;
+  @Input() difficulty: number;
 
   public rules: string;
   public controls: string;
-  public hotkeys: any;
-  public options: any;
+
+  @Input() hotkeys: any;
+  @Input() options: any;
+
   public takingNotesMode: boolean;
 
   private _takingNotes = false;
@@ -46,13 +37,15 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.optionsService.setTakingNotes(takingNotes);
   }
 
-  public personalBestMonthly: string;
-  public personalBestWeekly: string;
-  public personalBestDaily: string;
+  @Input() personalBestMonthly: string;
+  @Input() personalBestWeekly: string;
+  @Input() personalBestDaily: string;
 
   @Output() optionSelected = new EventEmitter();
 
   public game: Game;
+
+  public selectedDifficulty: number;
   public diffs: Difficulty[];
 
   public highscoresMinimized: boolean;
@@ -103,27 +96,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.timerMinimized = SettingsService.getDataBool('timerMinimized');
     this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
 
-    let subscription: Subscription;
-    subscription = this.optionsService.gameID.subscribe(gameID => this.gameID = gameID);
-    this.subscription.add(subscription);
-    subscription = this.optionsService.seed.subscribe(seed => this.seed = seed);
-    this.subscription.add(subscription);
-    subscription = this.optionsService.difficulty.subscribe(difficulty => this.difficulty = difficulty);
-    this.subscription.add(subscription);
+    this.game = GameListAllService.getGameById(this.gameID);
+    this.rules = this.game.rules;
+    this.controls = this.game.controls;
+    this.diffs = this.game.diffs
 
-    subscription = this.optionsService.hotkeys.subscribe(hotkeys => this.hotkeys = hotkeys);
-    this.subscription.add(subscription);
-    subscription = this.optionsService.options.subscribe(options => this.options = options);
-    this.subscription.add(subscription);
-    subscription = this.optionsService.takingNotesMode.subscribe(takingNotesMode => this.takingNotesMode = takingNotesMode);
-    this.subscription.add(subscription);
-
-    subscription = this.optionsService.personalBestMonthly.subscribe(personalBestMonthly => this.personalBestMonthly = personalBestMonthly);
-    this.subscription.add(subscription);
-    subscription = this.optionsService.personalBestWeekly.subscribe(personalBestWeekly => this.personalBestWeekly = personalBestWeekly);
-    this.subscription.add(subscription);
-    subscription = this.optionsService.personalBestDaily.subscribe(personalBestDaily => this.personalBestDaily = personalBestDaily);
-    this.subscription.add(subscription);
+    this.selectedDifficulty = this.difficulty;
   }
 
   minimize(name, val) {
@@ -213,6 +191,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   public difficultyChangeHandler(newDiff: any) {
+    let m = {
+      diff: newDiff
+    }
+    let route = this.game.name;
+
+    this.router.navigate([route, m]);
     this.callback('this.newGame(' + newDiff + ')');
   }
 

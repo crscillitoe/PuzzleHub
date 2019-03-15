@@ -156,6 +156,7 @@ export class GameBoard implements OnInit, OnDestroy {
     this.difficulty = difficulty;
     this.setupBoard();
     const that = this;
+    GameStarterService.loadBestTimes(that);
     GameStarterService.newGame(that);
   }
 

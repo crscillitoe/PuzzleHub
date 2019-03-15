@@ -15,16 +15,7 @@ export class GameStarterService {
     this.customSeed = Number(that.route.snapshot.paramMap.get('seed'));
 
     if(that.userService.isLoggedIn()) {
-      let m = {
-        GameID: that.gameID,
-        Difficulty: that.difficulty
-      }
-      that.tunnel.getPersonalBest(m)
-        .subscribe( (data) => {
-          that.personalBestDaily = data['daily'];
-          that.personalBestWeekly = data['weekly'];
-          that.personalBestMonthly = data['monthly'];
-        });
+      this.loadBestTimes(that);
 
       if(this.customSeed == 0) {
         that.timer.startTimer(that.gameID, that.difficulty)
@@ -44,7 +35,6 @@ export class GameStarterService {
   }
 
   static done(that) {
-    console.log(this.customSeed);
     if(that.userService.isLoggedIn() && !that.solved && this.customSeed == 0) {
       that.timer.stopTimer(that.seed, that.gameID, that.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
@@ -103,6 +93,19 @@ export class GameStarterService {
     } else {
       that.draw();
     }
+  }
+
+  static loadBestTimes(that) {
+    let m = {
+      GameID: that.gameID,
+      Difficulty: that.difficulty
+    }
+    that.tunnel.getPersonalBest(m)
+      .subscribe( (data) => {
+        that.personalBestDaily = data['daily'];
+        that.personalBestWeekly = data['weekly'];
+        that.personalBestMonthly = data['monthly'];
+      });
   }
 
   static newGame(that) {

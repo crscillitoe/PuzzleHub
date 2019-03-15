@@ -14,8 +14,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-thermometers',
-  templateUrl: './thermometers.component.html',
-  styleUrls: ['./thermometers.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class ThermometersComponent extends GameBoard implements OnInit {
 

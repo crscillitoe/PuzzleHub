@@ -15,8 +15,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-tile-game',
-  templateUrl: './tile-game.component.html',
-  styleUrls: ['./tile-game.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class TileGameComponent extends GameBoard implements OnInit {
 

@@ -14,8 +14,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-nonograms',
-  templateUrl: './nonograms.component.html',
-  styleUrls: ['./nonograms.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class NonogramsComponent extends GameBoard {
 

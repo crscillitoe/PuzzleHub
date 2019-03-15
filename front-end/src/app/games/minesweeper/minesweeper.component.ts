@@ -14,8 +14,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-minesweeper',
-  templateUrl: './minesweeper.component.html',
-  styleUrls: ['./minesweeper.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class MinesweeperComponent extends GameBoard {
   public firstPress = true;

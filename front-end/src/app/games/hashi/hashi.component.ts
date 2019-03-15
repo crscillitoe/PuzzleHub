@@ -15,8 +15,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-hashi',
-  templateUrl: './hashi.component.html',
-  styleUrls: ['./hashi.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class HashiComponent extends GameBoard implements OnInit {
   diff: any;

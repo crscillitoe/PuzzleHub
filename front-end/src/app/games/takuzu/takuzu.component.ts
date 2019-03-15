@@ -15,8 +15,8 @@ import { OptionsService } from '../../services/games/options.service';
 
 @Component({
   selector: 'app-takuzu',
-  templateUrl: './takuzu.component.html',
-  styleUrls: ['./takuzu.component.css']
+  templateUrl: '../game-board/game-board.component.html',
+  styleUrls: ['../game-board/game-board.component.css']
 })
 export class TakuzuComponent extends GameBoard implements OnInit {
   oColor: any;

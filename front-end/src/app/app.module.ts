@@ -35,7 +35,6 @@ import { LevelProgressComponent } from './visuals/level-progress/level-progress.
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
-import { GameBoardComponent } from './games/game-board/game-board.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -48,83 +47,35 @@ const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent},
   {
     path: 'Hashi',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: HashiComponent
-      }
-    ]
   },
   {
     path: 'Sudoku',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: SudokuComponent
-      }
-    ]
   },
   {
     path: 'Takuzu',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: TakuzuComponent
-      }
-    ]
   },
   {
     path: 'Minesweeper',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: MinesweeperComponent
-      }
-    ]
   },
   {
     path: 'Tile Game',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: TileGameComponent
-      }
-    ]
   },
   {
     path: 'Kakuro',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: KakuroComponent
-      }
-    ]
   },
   {
     path: 'Thermometers',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: ThermometersComponent
-      }
-    ]
   },
   {
     path: 'Nonograms',
-    component: GameBoardComponent,
-    children: [
-      {
-        path: '',
         component: NonogramsComponent
-      }
-    ]
   },
 ];
 
@@ -152,8 +103,7 @@ const appRoutes: Routes = [
     KakuroComponent,
     ThermometersComponent,
     LevelProgressComponent,
-    NonogramsComponent,
-    GameBoardComponent
+    NonogramsComponent
   ],
   imports: [
     BrowserModule,
