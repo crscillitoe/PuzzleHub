@@ -143,6 +143,7 @@ export class GameBoard implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
+
     this.setupBoard();
     const that = this;
     GameStarterService.startGame(that);
@@ -156,7 +157,6 @@ export class GameBoard implements OnInit, OnDestroy {
 
   public newGame(difficulty = this.difficulty) {
     this.difficulty = difficulty;
-    console.log(this.difficulty);
     this.setupBoard();
     const that = this;
     GameStarterService.newGame(that);

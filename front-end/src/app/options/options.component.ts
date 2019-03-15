@@ -220,8 +220,9 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.optionSelected.emit('this.newGame(' + diff + ')');
   }
 
-  public difficultyChangeHandler(event: any) {
-    this.newDifficulty = event;
+  public difficultyChangeHandler(newDiff: any) {
+    this.newDifficulty = newDiff;
+    this.callback('this.newGame()');
   }
 
   public ngOnDestroy() {
