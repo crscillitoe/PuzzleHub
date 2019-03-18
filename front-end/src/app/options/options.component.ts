@@ -197,7 +197,6 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   public difficultyChangeHandler(newDiff: any) {
-    document.getElementById('focusMe').focus();
     let m = {
       diff: newDiff
     }

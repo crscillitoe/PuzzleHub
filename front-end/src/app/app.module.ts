@@ -19,7 +19,6 @@ import { FooterComponent } from './footer/footer.component';
 import { HashiComponent } from './games/hashi/hashi.component';
 import { SudokuComponent } from './games/sudoku/sudoku.component';
 import { TakuzuComponent } from './games/takuzu/takuzu.component';
-import { HashiStandardComponent } from './hashi-standard/hashi-standard.component';
 import { CustomGamesComponent } from './custom-games/custom-games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { TileGameComponent } from './games/tile-game/tile-game.component';
@@ -90,7 +89,6 @@ const appRoutes: Routes = [
     HashiComponent,
     SudokuComponent,
     TakuzuComponent,
-    HashiStandardComponent,
     CustomGamesComponent,
     MinesweeperComponent,
     TileGameComponent,

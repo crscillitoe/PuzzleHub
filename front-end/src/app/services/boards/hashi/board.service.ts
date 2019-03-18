@@ -14,31 +14,31 @@ export class Board {
     height: number;
     numNodes: number;
     extreme: boolean;
-    initialSeed:number;
     seed: number;
-    hotkeys: boolean;
     nodes: Array<MyNode>;
-    numbers: boolean;
-    grid: boolean;
-    daily: boolean;
-    gauntlet: number;
-    dailyDiff: string;
 
-    constructor(width: number, height: number, numNodes: number, extreme: boolean, seed: number, theme: string, hotkeys: boolean, numbers: boolean, grid: boolean, daily: boolean, gauntlet: number, dailyDiff: string) {
-        this.width = width;
-        this.height = height;
-        this.numNodes = numNodes;
-        this.extreme = extreme;
-        this.initialSeed = seed;
-        this.seed = seed;
-        this.theme = theme;
-        this.hotkeys = hotkeys;
-        this.numbers = numbers;
-        this.grid = grid;
-        this.daily = daily;
-        this.gauntlet = gauntlet;
-        this.nodes = new Array<MyNode>();
-        this.dailyDiff = dailyDiff;
+    constructor(width: number, height: number, numNodes: number, extreme: boolean, seed: number) {
+      this.width = width;
+      this.height = height;
+      this.numNodes = numNodes;
+      this.extreme = extreme;
+      this.seed = seed;
+      this.nodes = new Array<MyNode>();
+    }
+
+    isSolved() {
+      for(let n of this.getNodes()) {
+        let total = 0;
+        for(let b of n.bridges) {
+          total += b.num;
+        }
+
+        if(total != n.val) {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     public toString() {
@@ -71,15 +71,34 @@ export class Board {
     }
 
     public generateBoard() {
+      let min = 0;
+      let max = 0;
+
+      if(this.width == 10 && this.height == 10) {
+        min = 18;
+        max = 22;
+      } else if(this.width == 15 && this.height == 15) {
+        min = 28;
+        max = 35;
+      } else if(this.width == 25 && this.height == 25) {
+        min = 80;
+        max = 100;
+      }
+
+      this.tryGenerateBoard();
+      if(min > 0) {
+        while(this.nodes.length < min || this.nodes.length > max) {
+          this.nodes = [];
+          this.tryGenerateBoard();
+        }
+      }
+    }
+
+    public tryGenerateBoard() {
         var chance = 8;
         var nodesToAdd = this.numNodes;
         var difficulty = '';
         var difficultyDistance;
-        
-        if(this.seed == 0) {
-            this.seed = this.randomIntReal(0, 2000000000);
-            this.initialSeed = this.seed;
-        }
 
         var firstX = 1;
         var firstY = 1;
