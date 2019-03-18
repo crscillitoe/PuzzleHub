@@ -10,25 +10,13 @@ import { GameID } from '../../enums/game-id.enum';
 export class GameListAllService extends GameList {
     public static games: Game[] = [
       new Game(
-        GameID.MINESWEEPER,
-        'Minesweeper',
-        'minesweeper.svg',
-        'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
-        'clear a rectangular board containing hidden mines.',
-        'The objective of the game is to clear a rectangular board containing hidden mines ' +
-        'without detonating any of them.',
-        ''
-      ),
-      new Game(
-        GameID.HASHI,
-        'Hashi',
-        'hashi.svg',
-        'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and ' +
-        'challenging solutions.',
-        'The goal is to connect all of the islands into a single connected group by ' +
-        'drawing a series of bridges between the islands. The number of bridges coming off of ' +
-        'an island must match the number written on that island.',
-        'Click and drag from an island to build a bridge.'
+        GameID.SUDOKU,
+        'Sudoku',
+        'sudoku.svg',
+        'A classic puzzle game where you must fill out the board with numbers 1-9.',
+        'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
+        'Each number can only appear once in a row, column, or box.',
+        'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box'
       ),
       new Game(
         GameID.TAKUZU,
@@ -42,21 +30,13 @@ export class GameListAllService extends GameList {
         'Left/Right click'
       ),
       new Game(
-        GameID.TILE_GAME,
-        'Tile Game',
-        'tilegame.svg',
-        'Tile game is a common puzzle where the user slides tiles into the correct order.',
-        'Order the numbers in sequential order from left to right, top to bottom',
-        'Arrow Keys or WASD',
-      ),
-      new Game(
-        GameID.SUDOKU,
-        'Sudoku',
-        'sudoku.svg',
-        'A classic puzzle game where you must fill out the board with numbers 1-9.',
-        'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
-        'Each number can only appear once in a row, column, or box.',
-        'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box'
+        GameID.NONOGRAMS,
+        'Nonograms',
+        'nonograms.svg',
+        'Nonograms are picture logic puzzles in which cells in a grid must be colored according ' +
+        'to numbers at the side of the grid to reveal a hidden picture.',
+        'Google it you goof.',
+        'Left click on a tile to mark it.'
       ),
       new Game(
         GameID.THERMOMETERS,
@@ -68,13 +48,33 @@ export class GameListAllService extends GameList {
         'Click anywhere on the thermometer to insert fluid.'
       ),
       new Game(
-        GameID.NONOGRAMS,
-        'Nonograms',
-        'nonograms.svg',
-        'Nonograms are picture logic puzzles in which cells in a grid must be colored according ' +
-        'to numbers at the side of the grid to reveal a hidden picture.',
-        'Google it you goof.',
-        'Left click on a tile to mark it.'
+        GameID.HASHI,
+        'Hashi',
+        'hashi.svg',
+        'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and ' +
+        'challenging solutions.',
+        'The goal is to connect all of the islands into a single connected group by ' +
+        'drawing a series of bridges between the islands. The number of bridges coming off of ' +
+        'an island must match the number written on that island.',
+        'Click and drag from an island to build a bridge.'
+      ),
+      new Game(
+        GameID.TILE_GAME,
+        'Tile Game',
+        'tilegame.svg',
+        'Tile game is a common puzzle where the user slides tiles into the correct order.',
+        'Order the numbers in sequential order from left to right, top to bottom',
+        'Arrow Keys or WASD',
+      ),
+      new Game(
+        GameID.MINESWEEPER,
+        'Minesweeper',
+        'minesweeper.svg',
+        'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
+        'clear a rectangular board containing hidden mines.',
+        'The objective of the game is to clear a rectangular board containing hidden mines ' +
+        'without detonating any of them.',
+        ''
       )
     ];
 
