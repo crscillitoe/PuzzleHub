@@ -12,7 +12,7 @@ import { GameListAllService } from '../services/games/game-list-all.service';
 @Component({
   selector: 'app-leaderboards',
   templateUrl: './leaderboards.component.html',
-  styleUrls: ['./leaderboards.component.css']
+  styleUrls: ['./leaderboards.component.scss']
 })
 export class LeaderboardsComponent implements OnInit {
   games: Game[] = GameListAllService.games;

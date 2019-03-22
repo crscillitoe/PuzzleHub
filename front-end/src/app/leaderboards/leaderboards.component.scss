@@ -1,0 +1,12 @@
+// Configuration and helpers
+@import
+  '../../sass/abstracts/variables';
+
+// Components
+@import
+  '../../sass/components/card',
+  '../../sass/components/tooltip';
+
+// Page-specific
+@import
+  '../../sass/pages/leaderboards';

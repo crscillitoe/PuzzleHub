@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule,
-  MatFormFieldModule, MatInputModule, MatSelectModule, MatSnackBarModule,
+  MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatSnackBarModule,
   MatTabsModule } from '@angular/material';
 
 import { RouterModule, Routes } from '@angular/router';
@@ -119,6 +120,7 @@ const appRoutes: Routes = [
     MatCardModule,
     MatCheckboxModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
