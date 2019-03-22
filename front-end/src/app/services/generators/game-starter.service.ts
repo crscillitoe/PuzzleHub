@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameID } from '../../enums/game-id.enum';
-import { UserService }  from '../user/user.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'

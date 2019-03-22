@@ -151,7 +151,7 @@ export class Board {
                   let startY = Math.floor(y / 3) * 3;
                   for (let y2 = startY; y2 < startY + 3; ++y2) {
                       let startX = Math.floor(x / 3) * 3;
-                      for (x2 = startX; x2 < startX + 3; ++x2) {
+                      for (let x2 = startX; x2 < startX + 3; ++x2) {
                           if ((x2 != x || y2 != y) && arraySolution[y2][x2] == value) {
                               return false;
                           }

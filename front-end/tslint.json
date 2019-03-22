@@ -12,7 +12,7 @@
     ],
     "curly": true,
     "deprecation": {
-      "severity": "warn"
+      "severity": "none"
     },
     "eofline": true,
     "forin": true,
@@ -58,7 +58,7 @@
     "no-duplicate-super": true,
     "no-empty": false,
     "no-empty-interface": true,
-    "no-eval": true,
+    "no-eval": false,
     "no-inferrable-types": [
       true,
       "ignore-params"
@@ -66,14 +66,14 @@
     "no-misused-new": true,
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
-    "no-shadowed-variable": true,
+    "no-shadowed-variable": false,
     "no-string-literal": false,
     "no-string-throw": true,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
+    "no-use-before-declare": false,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
@@ -83,18 +83,18 @@
       "check-else",
       "check-whitespace"
     ],
-    "prefer-const": true,
+    "prefer-const": false,
     "quotemark": [
       true,
       "single"
     ],
-    "radix": true,
+    "radix": false,
     "semicolon": [
       true,
       "always"
     ],
     "triple-equals": [
-      true,
+      false,
       "allow-null-check"
     ],
     "typedef-whitespace": [

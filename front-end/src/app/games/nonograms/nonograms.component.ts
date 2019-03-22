@@ -147,7 +147,7 @@ export class NonogramsComponent extends GameBoard {
     for (let i = this.board.maxWidth - this.board.width; i < this.board.maxWidth + 1; i++) {
       if (((i - this.board.getLegendLength()) % 5) === 0) {
         this.context.fillRect( (this.gridOffsetX + (i * this.gridBoxSize)) - bigSize, this.gridOffsetY,
-                               2 * bigSize, ((this.board.maxHeight) * this.gridBoxSize)) + bigSize;
+                               2 * bigSize, (((this.board.maxHeight) * this.gridBoxSize)) + bigSize);
       } else {
         this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
         this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + ((this.board.maxHeight) * this.gridBoxSize));

@@ -1,4 +1,4 @@
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, OnChanges } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { UserService } from '../../services/user/user.service';
   templateUrl: './level-progress.component.html',
   styleUrls: ['./level-progress.component.scss']
 })
-export class LevelProgressComponent implements OnInit {
+export class LevelProgressComponent implements OnInit, OnChanges {
 
   @Input() level;
   @Input() currVal;

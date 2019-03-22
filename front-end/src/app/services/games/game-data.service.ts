@@ -10,7 +10,8 @@ export class GameDataService {
     {'GameID': GameID.MINESWEEPER,
       'Name': 'Minesweeper',
       'Image': 'assets/images/game-splashes/minesweeper.svg',
-      'Description': 'Minesweeper is a single-player puzzle video game. The objective of the game is to clear a rectangular board containing hidden mines.'},
+      'Description':  'Minesweeper is a single-player puzzle video game. ' +
+                      'The objective of the game is to clear a rectangular board containing hidden mines.'},
 
     {'GameID': GameID.HASHI,
       'Name': 'Hashi',
@@ -41,7 +42,8 @@ export class GameDataService {
       'GameID': GameID.NONOGRAMS,
       'Name': 'Nonograms',
       'Image': 'assets/images/game-splashes/nonograms.svg',
-      'Description': 'Nonograms are picture logic puzzles in which cells in a grid must be colored according to numbers at the side of the grid to reveal a hidden picture.'
+      'Description':  'Nonograms are picture logic puzzles in which cells in a ' +
+                      'grid must be colored according to numbers at the side of the grid to reveal a hidden picture.'
     }
   ];
 

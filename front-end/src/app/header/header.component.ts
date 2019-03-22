@@ -65,7 +65,9 @@ export class HeaderComponent implements OnInit {
     }
 
     // Main process
-    if (typeof window['process'] !== 'undefined' && typeof window['process'].versions === 'object' && !!window['process'].versions.electron) {
+    if (typeof window['process'] !== 'undefined'
+      && typeof window['process'].versions === 'object'
+      && !!window['process'].versions.electron) {
         return true;
     }
 
