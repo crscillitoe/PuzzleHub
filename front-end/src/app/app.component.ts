@@ -32,14 +32,14 @@ export class AppComponent {
   ) {
     loader.loading
      .subscribe( (data) => {
-        if(data) {
+        if (data) {
           // loading
           this.ngZone.runOutsideAngular( () => {
             this.renderer.setElementStyle(
               this.spinnerElement.nativeElement,
               'display',
               'inline'
-            )
+            );
           });
         } else {
           // stop loading
@@ -48,7 +48,7 @@ export class AppComponent {
               this.spinnerElement.nativeElement,
               'display',
               'none'
-            )
+            );
           });
         }
       });

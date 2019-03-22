@@ -9,8 +9,8 @@ export class ColorService {
 
   getColorScheme() {
     // TODO - check user preferred theme
-    if(true) {
-      let m = {
+    if (true) {
+      const m = {
         BACKGROUND:  '#2C2C2C',
         GRID:        '#A89984',
         FOREGROUND:  '#FFF2AD',
@@ -39,14 +39,11 @@ export class ColorService {
 
         COLOR_8:     '#EC2474',
         COLOR_8_ALT: '#FF77AD'
-      }
+      };
 
       return m;
-    } 
-    
-    // Colorblind
-    else {
-      let m = {
+    } else {
+      const m = {
         BACKGROUND:  '#2C2C2C',
         GRID:        '#A89984',
         FOREGROUND:  '#FFF2AD',
@@ -75,7 +72,7 @@ export class ColorService {
 
         COLOR_8:     '#851F53',
         COLOR_8_ALT: '#B47696'
-      }
+      };
 
       return m;
     }

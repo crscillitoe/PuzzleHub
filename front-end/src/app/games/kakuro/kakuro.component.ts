@@ -21,10 +21,10 @@ export class KakuroComponent implements OnInit {
   gameID: number = GameID.TILE_GAME;
 
   // TODO - enter control scheme here
-  controls: string = "Description of game controls goes here";
+  controls = 'Description of game controls goes here';
 
   // TODO - enter game rules here
-  rules: string = "Rules of the game goes here";
+  rules = 'Rules of the game goes here';
 
   // Used for drawing to the screen
   canvas: any;
@@ -36,20 +36,20 @@ export class KakuroComponent implements OnInit {
   personalBestMonthly: string;
 
   colors: any;
-  
-  canvasOffsetX: number = 225;
-  canvasOffsetY: number = 56;
+
+  canvasOffsetX = 225;
+  canvasOffsetY = 56;
 
   // Most games utilize a grid
-  gridOffsetX: number = 100;
-  gridOffsetY: number = 100;
+  gridOffsetX = 100;
+  gridOffsetY = 100;
 
   gridBoxSize: number;
 
   difficulty: number;
   seed: number;
 
-  solved: boolean = false;
+  solved = false;
 
   board: any;
 
@@ -58,13 +58,13 @@ export class KakuroComponent implements OnInit {
   t: any;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private tunnel: TunnelService,
     private colorService: ColorService,
     private router: Router,
     private userService: UserService,
     private timer: TimerService,
-    private loader: LoaderService) { 
+    private loader: LoaderService) {
     this.colors = colorService.getColorScheme();
   }
 
@@ -75,32 +75,23 @@ export class KakuroComponent implements OnInit {
     this.context = this.canvas.getContext('2d');
 
     // Easy
-    if(this.difficulty == 1) {
+    if (this.difficulty == 1) {
       console.log('Easy difficulty');
-    } 
-    
-    // Medium
-    else if (this.difficulty == 2) {
+    } else if (this.difficulty == 2) {
       console.log('Medium difficulty');
-    } 
-    
-    // Hard
-    else if (this.difficulty == 3) {
+    } else if (this.difficulty == 3) {
       console.log('Hard difficulty');
-    } 
-    
-    // Extreme
-    else if (this.difficulty == 4) {
+    } else if (this.difficulty == 4) {
       console.log('Extreme difficulty');
     }
 
     // Start timer if we are logged in
-    if(this.userService.isLoggedIn()) {
+    if (this.userService.isLoggedIn()) {
       // Get personal high scores
-      let m = {
+      const m = {
         GameID: this.gameID,
         Difficulty: this.difficulty
-      }
+      };
       this.tunnel.getPersonalBest(m)
         .subscribe( (data) => {
           this.personalBestDaily = data['daily'];
@@ -146,7 +137,7 @@ export class KakuroComponent implements OnInit {
 
   done() {
     this.solved = true;
-    if(this.userService.isLoggedIn()) {
+    if (this.userService.isLoggedIn()) {
       this.timer.stopTimer(this.seed, this.gameID, this.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {});
     } else {
@@ -155,22 +146,22 @@ export class KakuroComponent implements OnInit {
   }
 
   add(that) {
-    var display = document.getElementById("timer");
-    var now = +new Date();
+    const display = document.getElementById('timer');
+    const now = +new Date();
 
-    var diff = ((now - that.startDate));
+    const diff = ((now - that.startDate));
 
-    var hours   = Math.trunc(diff / (60 * 60 * 1000));
-    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    var seconds = Math.trunc(diff / (1000)) % 60;
-    var millis  = diff % 1000;
+    const hours   = Math.trunc(diff / (60 * 60 * 1000));
+    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    const seconds = Math.trunc(diff / (1000)) % 60;
+    const millis  = diff % 1000;
 
     try {
-      display.textContent = 
-        hours + ":" + 
-        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
-        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") + "." +
-        (millis  ? (millis > 99 ? millis : millis > 9 ? "0" + millis : "00" + millis) : "000")
+      display.textContent =
+        hours + ':' +
+        (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+        (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
+        (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
 
       that.displayTimer();
     } catch {
@@ -179,9 +170,9 @@ export class KakuroComponent implements OnInit {
   }
 
   displayTimer() {
-    if(!this.solved) {
-      var _this = this;
-      this.t = setTimeout(function() {_this.add(_this)}, 50);
+    if (!this.solved) {
+      const _this = this;
+      this.t = setTimeout(function() {_this.add(_this); }, 50);
     }
   }
 
@@ -196,13 +187,13 @@ export class KakuroComponent implements OnInit {
     this.gridOffsetX = this.canvas.width / 20;
     this.gridOffsetY = this.canvas.height / 20;
 
-    var boardLength = Math.max(this.board.width, this.board.height);
-    var size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
+    const boardLength = Math.max(this.board.width, this.board.height);
+    const size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
                         this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
-    let w = this.canvas.offsetWidth;
-    let h = this.canvas.offsetHeight;
-    if(w > h) {
+    const w = this.canvas.offsetWidth;
+    const h = this.canvas.offsetHeight;
+    if (w > h) {
       this.gridOffsetX = Math.round( ( w - h) / 2 ) + this.gridOffsetX;
     } else {
       this.gridOffsetY = Math.round( (h - w) / 2 ) + this.gridOffsetY;
@@ -214,14 +205,14 @@ export class KakuroComponent implements OnInit {
 
   newGame() {
     this.loader.startLoadingAnimation();
-    if(this.userService.isLoggedIn()) {
+    if (this.userService.isLoggedIn()) {
       this.timer.startTimer(GameID.TILE_GAME, this.difficulty)
         .subscribe( (data) => {
           this.seed = data['seed'];
 
           // TODO - generate board with seed
 
-          if(this.solved) {
+          if (this.solved) {
             this.solved = false;
 
             this.startDate = new Date();
@@ -241,7 +232,7 @@ export class KakuroComponent implements OnInit {
 
       // TODO - generate board with seed
 
-      if(this.solved) {
+      if (this.solved) {
         this.solved = false;
 
         this.startDate = new Date();
@@ -260,38 +251,38 @@ export class KakuroComponent implements OnInit {
   /* EVENT LISTENERS */
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mousedown', ['$event'])
-  mousePressed(mouseEvent) { 
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mousePressedX':x, 'mousePressedY':y});
+  // @HostListener('document:mousedown', ['$event'])
+  mousePressed(mouseEvent) {
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+    console.log({'mousePressedX': x, 'mousePressedY': y});
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mouseup', ['$event'])
-  mouseReleased(mouseEvent) { 
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseReleasedX':x, 'mouseReleasedY':y});
+  // @HostListener('document:mouseup', ['$event'])
+  mouseReleased(mouseEvent) {
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+    console.log({'mouseReleasedX': x, 'mouseReleasedY': y});
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:mousemove', ['$event'])
+  // @HostListener('document:mousemove', ['$event'])
   mouseMove(mouseEvent) {
-    let x = mouseEvent.clientX - this.canvasOffsetX;
-    let y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseMoveX':x, 'mouseMoveY':y});
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+    console.log({'mouseMoveX': x, 'mouseMoveY': y});
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:keydown', ['$event'])
+  // @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    console.log({'keyPressed':keyEvent.keyCode});
+    console.log({'keyPressed': keyEvent.keyCode});
   }
 
   // UNCOMMENT HostListener to track given event
-  //@HostListener('document:keyup', ['$event'])
+  // @HostListener('document:keyup', ['$event'])
   keyReleased(keyEvent) {
-    console.log({'keyReleased':keyEvent.keyCode});
+    console.log({'keyReleased': keyEvent.keyCode});
   }
 }

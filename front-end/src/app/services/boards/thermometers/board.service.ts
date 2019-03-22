@@ -15,113 +15,113 @@ export class Board {
     this.seed = seed;
   }
 
-  
+
   generateBoard() {
     this.thermometers = [];
     this.bottomLegends = [];
     this.sideLegends = [];
 
-    var realWidth = this.width - 1;
-    var realHeight = this.height - 1;
+    let realWidth = this.width - 1;
+    let realHeight = this.height - 1;
 
     // 0 - Down
     // 1 - Up
     // 2 - Left
     // 3 - Right
     //
-    var numSkips = 0;
-    
-    //while(!this.isFull()) {
-    while(numSkips < 200 && !this.isFull()) {
-      var tile = this.getRandomEmptyTile();
-      var dir = Math.floor(this.random() * 4);
-      var added = false;
+    let numSkips = 0;
 
-      if(dir == 0) {
-        if(tile.y <= realHeight - 1) {
-          var length = Math.floor(this.random() * ((realHeight - 1) - tile.y)) + 2;
-          var filledAmount = Math.floor(this.random() * (length + 1));
+    // while(!this.isFull()) {
+    while (numSkips < 200 && !this.isFull()) {
+      let tile = this.getRandomEmptyTile();
+      let dir = Math.floor(this.random() * 4);
+      let added = false;
 
-          var add = true;
-          for(var h = 0 ; h < length ; h++) {
-            if(this.getThermometerAt(tile.x, tile.y + h) != null) {
+      if (dir == 0) {
+        if (tile.y <= realHeight - 1) {
+          let length = Math.floor(this.random() * ((realHeight - 1) - tile.y)) + 2;
+          let filledAmount = Math.floor(this.random() * (length + 1));
+
+          let add = true;
+          for (let h = 0 ; h < length ; h++) {
+            if (this.getThermometerAt(tile.x, tile.y + h) != null) {
               add = false;
               break;
             }
           }
 
-          if(add) {
+          if (add) {
             added = true;
             this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
           }
         }
-      } else if(dir == 1) {
-        if(tile.y >= 2) {
-          var length = Math.floor(this.random() * (tile.y - 2)) + 2;
-          var filledAmount = Math.floor(this.random() * (length + 1));
+      } else if (dir == 1) {
+        if (tile.y >= 2) {
+          let length = Math.floor(this.random() * (tile.y - 2)) + 2;
+          let filledAmount = Math.floor(this.random() * (length + 1));
 
-          var add = true;
-          for(var h = 0 ; h < length ; h++) {
-            if(this.getThermometerAt(tile.x, tile.y - h) != null) {
+          let add = true;
+          for (let h = 0 ; h < length ; h++) {
+            if (this.getThermometerAt(tile.x, tile.y - h) != null) {
               add = false;
               break;
             }
           }
 
-          if(add) {
+          if (add) {
             added = true;
             this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
           }
         }
-      } else if(dir == 2) {
-        if(tile.x >= 2) {
-          var length = Math.floor(this.random() * (tile.x - 2)) + 2;
-          var filledAmount = Math.floor(this.random() * (length + 1));
+      } else if (dir == 2) {
+        if (tile.x >= 2) {
+          let length = Math.floor(this.random() * (tile.x - 2)) + 2;
+          let filledAmount = Math.floor(this.random() * (length + 1));
 
-          var add = true;
-          for(var h = 0 ; h < length ; h++) {
-            if(this.getThermometerAt(tile.x - h, tile.y) != null) {
+          let add = true;
+          for (let h = 0 ; h < length ; h++) {
+            if (this.getThermometerAt(tile.x - h, tile.y) != null) {
               add = false;
               break;
             }
           }
 
-          if(add) {
+          if (add) {
             added = true;
             this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
           }
         }
-      } else if(dir == 3) {
-        if(tile.x <= realWidth - 1) {
-          var length = Math.floor(this.random() * ((realWidth - 1) - tile.x)) + 2;
-          var filledAmount = Math.floor(this.random() * (length + 1));
+      } else if (dir == 3) {
+        if (tile.x <= realWidth - 1) {
+          let length = Math.floor(this.random() * ((realWidth - 1) - tile.x)) + 2;
+          let filledAmount = Math.floor(this.random() * (length + 1));
 
-          var add = true;
-          for(var h = 0 ; h < length ; h++) {
-            if(this.getThermometerAt(tile.x + h, tile.y) != null) {
+          let add = true;
+          for (let h = 0 ; h < length ; h++) {
+            if (this.getThermometerAt(tile.x + h, tile.y) != null) {
               add = false;
               break;
             }
           }
 
-          if(add) {
+          if (add) {
             added = true;
             this.thermometers.push(new Thermometer(tile.x, tile.y, length, dir, filledAmount));
           }
         }
       }
 
-      if(!added) {
+      if (!added) {
         numSkips++;
       }
     }
-    //}
+    // }
 
     // Set legends
-    for(var i = 0 ; i < this.width - 1 ; i++) {
-      var count = 0;
-      for(var j = 0 ; j < this.height - 1 ; j++) {
-        if(this.isFilled(i + 1, j + 1)) {
+    for (let i = 0 ; i < this.width - 1 ; i++) {
+      let count = 0;
+      for (let j = 0 ; j < this.height - 1 ; j++) {
+        if (this.isFilled(i + 1, j + 1)) {
           count++;
         }
       }
@@ -129,10 +129,10 @@ export class Board {
       this.bottomLegends.push(count);
     }
 
-    for(var j = 0 ; j < this.height - 1 ; j++) {
-      var count = 0;
-      for(var i = 0 ; i < this.width - 1 ; i++) {
-        if(this.isFilled(i + 1, j + 1)) {
+    for (let j = 0 ; j < this.height - 1 ; j++) {
+      let count = 0;
+      for (let i = 0 ; i < this.width - 1 ; i++) {
+        if (this.isFilled(i + 1, j + 1)) {
           count++;
         }
       }
@@ -140,22 +140,22 @@ export class Board {
       this.sideLegends.push(count);
     }
 
-    if(this.bottomLegends.reduce(this.add) < (this.width * 1.5) || 
+    if (this.bottomLegends.reduce(this.add) < (this.width * 1.5) ||
        this.sideLegends.reduce(this.add)   < (this.height * 1.5)) {
       this.generateBoard();
     }
 
     // Empty thermometers
-    for(var k = 0 ; k < this.thermometers.length ; k++) {
+    for (let k = 0 ; k < this.thermometers.length ; k++) {
       this.thermometers[k].filledAmount = 0;
     }
   }
 
   getRandomEmptyTile() {
-    var x = Math.floor(this.random() * (this.width  - 1)) + 1;
-    var y = Math.floor(this.random() * (this.height - 1)) + 1;
+    let x = Math.floor(this.random() * (this.width  - 1)) + 1;
+    let y = Math.floor(this.random() * (this.height - 1)) + 1;
 
-    while(this.getThermometerAt(x, y) != null) {
+    while (this.getThermometerAt(x, y) != null) {
       x = Math.floor(this.random() * (this.width  - 1)) + 1;
       y = Math.floor(this.random() * (this.height - 1)) + 1;
     }
@@ -163,7 +163,7 @@ export class Board {
     return {
       x: x,
       y: y
-    }
+    };
   }
 
   add(a, b) {
@@ -171,9 +171,9 @@ export class Board {
   }
 
   isFull() {
-    for(var i = 0 ; i < this.width - 1 ; i++) {
-      for(var j = 0 ; j < this.height - 1 ; j++) {
-        if(this.getThermometerAt(i + 1, j + 1) == null) {
+    for (let i = 0 ; i < this.width - 1 ; i++) {
+      for (let j = 0 ; j < this.height - 1 ; j++) {
+        if (this.getThermometerAt(i + 1, j + 1) == null) {
           return false;
         }
       }
@@ -183,28 +183,28 @@ export class Board {
   }
 
   isSolved() {
-    for(var i = 0 ; i < this.width - 1 ; i++) {
-      var count = 0;
-      for(var j = 0 ; j < this.height - 1 ; j++) {
-        if(this.isFilled(i + 1, j + 1)) {
+    for (let i = 0 ; i < this.width - 1 ; i++) {
+      let count = 0;
+      for (let j = 0 ; j < this.height - 1 ; j++) {
+        if (this.isFilled(i + 1, j + 1)) {
           count++;
         }
       }
 
-      if(count != this.bottomLegends[i]) {
+      if (count != this.bottomLegends[i]) {
         return false;
       }
     }
 
-    for(var j = 0 ; j < this.height - 1 ; j++) {
-      var count = 0;
-      for(var i = 0 ; i < this.width - 1 ; i++) {
-        if(this.isFilled(i + 1, j + 1)) {
+    for (let j = 0 ; j < this.height - 1 ; j++) {
+      let count = 0;
+      for (let i = 0 ; i < this.width - 1 ; i++) {
+        if (this.isFilled(i + 1, j + 1)) {
           count++;
         }
       }
 
-      if(count != this.sideLegends[j]) {
+      if (count != this.sideLegends[j]) {
         return false;
       }
     }
@@ -213,8 +213,8 @@ export class Board {
   }
 
   isFilled(x, y) {
-    var thermometer = this.getThermometerAt(x, y);
-    if(thermometer != null) {
+    let thermometer = this.getThermometerAt(x, y);
+    if (thermometer != null) {
       return thermometer.isFilledTo(x, y);
     }
 
@@ -222,8 +222,8 @@ export class Board {
   }
 
   getThermometerAt(x, y) {
-    for(var i = 0 ; i < this.thermometers.length ; i++) {
-      if(this.thermometers[i].livesIn(x, y)) {
+    for (let i = 0 ; i < this.thermometers.length ; i++) {
+      if (this.thermometers[i].livesIn(x, y)) {
         return this.thermometers[i];
       }
     }
@@ -232,28 +232,28 @@ export class Board {
   }
 
   click(x, y) {
-    var thermometer = this.getThermometerAt(x, y);
-    if(thermometer != null) {
+    let thermometer = this.getThermometerAt(x, y);
+    if (thermometer != null) {
       thermometer.fillTo(x, y);
     }
   }
 
   random() {
-      var x = Math.sin(++this.seed) * 10000;
+      let x = Math.sin(++this.seed) * 10000;
       return x - Math.floor(x);
   }
 
   bottomLegendValid(i) {
-    var count = 0;
-    for(var j = 0 ; j < this.height - 1 ; j++) {
-      if(this.isFilled(i + 1, j + 1)) {
+    let count = 0;
+    for (let j = 0 ; j < this.height - 1 ; j++) {
+      if (this.isFilled(i + 1, j + 1)) {
         count++;
       }
     }
 
-    if(count < this.bottomLegends[i]) {
+    if (count < this.bottomLegends[i]) {
       return 0;
-    } else if(count > this.bottomLegends[i]) {
+    } else if (count > this.bottomLegends[i]) {
       return -1;
     }
 
@@ -261,16 +261,16 @@ export class Board {
   }
 
   sideLegendValid(j) {
-    var count = 0;
-    for(var i = 0 ; i < this.width - 1 ; i++) {
-      if(this.isFilled(i + 1, j + 1)) {
+    let count = 0;
+    for (let i = 0 ; i < this.width - 1 ; i++) {
+      if (this.isFilled(i + 1, j + 1)) {
         count++;
       }
     }
 
-    if(count < this.sideLegends[j]) {
+    if (count < this.sideLegends[j]) {
       return 0;
-    } else if(count > this.sideLegends[j]) {
+    } else if (count > this.sideLegends[j]) {
       return -1;
     }
 
@@ -296,33 +296,33 @@ export class Thermometer {
   }
 
   livesIn(paramX, paramY) {
-    if(this.direction == 0) {
-      //DOWN
-      return (paramX == this.x) && 
-             (paramY >= this.y) && 
+    if (this.direction == 0) {
+      // DOWN
+      return (paramX == this.x) &&
+             (paramY >= this.y) &&
              (paramY < this.y + this.length);
-    } else if(this.direction == 1) {
-      //UP
-      return (paramX == this.x) && 
-             (paramY <= this.y) && 
+    } else if (this.direction == 1) {
+      // UP
+      return (paramX == this.x) &&
+             (paramY <= this.y) &&
              (paramY > this.y - this.length);
-    } else if(this.direction == 2) {
-      //LEFT
-      return (paramY == this.y) && 
-             (paramX <= this.x) && 
+    } else if (this.direction == 2) {
+      // LEFT
+      return (paramY == this.y) &&
+             (paramX <= this.x) &&
              (paramX > this.x - this.length);
-    } else if(this.direction == 3) {
-      //RIGHT
-      return (paramY == this.y) && 
-             (paramX >= this.x) && 
+    } else if (this.direction == 3) {
+      // RIGHT
+      return (paramY == this.y) &&
+             (paramX >= this.x) &&
              (paramX < this.x + this.length);
     }
   }
 
   fillTo(paramX, paramY) {
-    var diff = Math.abs(this.x - paramX) + Math.abs(this.y - paramY);
+    let diff = Math.abs(this.x - paramX) + Math.abs(this.y - paramY);
 
-    if(this.filledAmount >= diff + 1) {
+    if (this.filledAmount >= diff + 1) {
       this.filledAmount = diff;
     } else {
       this.filledAmount = diff + 1;
@@ -330,7 +330,7 @@ export class Thermometer {
   }
 
   isFilledTo(paramX, paramY) {
-    var diff = Math.abs(this.x - paramX) + Math.abs(this.y - paramY);
+    let diff = Math.abs(this.x - paramX) + Math.abs(this.y - paramY);
 
     return this.filledAmount >= diff + 1;
   }

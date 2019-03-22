@@ -27,13 +27,13 @@ export class Board {
     }
 
     isSolved() {
-      for(let n of this.getNodes()) {
+      for (const n of this.getNodes()) {
         let total = 0;
-        for(let b of n.bridges) {
+        for (const b of n.bridges) {
           total += b.num;
         }
 
-        if(total != n.val) {
+        if (total != n.val) {
           return false;
         }
       }
@@ -42,23 +42,23 @@ export class Board {
     }
 
     public toString() {
-      var m = [];
-      for(let n of this.nodes) {
-        let nodeModel = {
+      const m = [];
+      for (const n of this.nodes) {
+        const nodeModel = {
           x: n.x,
           y: n.y,
           val: n.val
-        }
+        };
 
-        var bridges = [];
-        for(let b of n.bridges) {
-          let bridgeModel = {
+        const bridges = [];
+        for (const b of n.bridges) {
+          const bridgeModel = {
             n1x: b.n1.x,
             n2x: b.n2.x,
             n1y: b.n1.y,
             n2y: b.n2.y,
             num: b.num
-          }
+          };
           bridges.push(bridgeModel);
         }
 
@@ -74,20 +74,20 @@ export class Board {
       let min = 0;
       let max = 0;
 
-      if(this.width == 10 && this.height == 10) {
+      if (this.width == 10 && this.height == 10) {
         min = 18;
         max = 22;
-      } else if(this.width == 15 && this.height == 15) {
+      } else if (this.width == 15 && this.height == 15) {
         min = 28;
         max = 35;
-      } else if(this.width == 25 && this.height == 25) {
+      } else if (this.width == 25 && this.height == 25) {
         min = 80;
         max = 100;
       }
 
       this.tryGenerateBoard();
-      if(min > 0) {
-        while(this.nodes.length < min || this.nodes.length > max) {
+      if (min > 0) {
+        while (this.nodes.length < min || this.nodes.length > max) {
           this.nodes = [];
           this.tryGenerateBoard();
         }
@@ -95,91 +95,89 @@ export class Board {
     }
 
     public tryGenerateBoard() {
-        var chance = 8;
-        var nodesToAdd = this.numNodes;
-        var difficulty = '';
-        var difficultyDistance;
+        const chance = 8;
+        let nodesToAdd = this.numNodes;
+        let difficulty = '';
+        let difficultyDistance;
 
-        var firstX = 1;
-        var firstY = 1;
+        let firstX = 1;
+        let firstY = 1;
 
-        if(!this.extreme) {
+        if (!this.extreme) {
             firstX = this.randomInt(1, this.width);
             firstY = this.randomInt(1, this.height);
         }
 
-        if(this.numNodes == Math.floor(Math.sqrt(this.width * this.height)) * 2) {
+        if (this.numNodes == Math.floor(Math.sqrt(this.width * this.height)) * 2) {
             difficulty = 'easy';
             difficultyDistance = 0;
         }
 
-        var tempNodes = new Array<MyNode>();
-        var occupiedSquares = new Array<MyNode>();
+        const tempNodes = new Array<MyNode>();
+        const occupiedSquares = new Array<MyNode>();
 
-        let tempNode = new MyNode(firstX, firstY);
+        const tempNode = new MyNode(firstX, firstY);
         tempNode.setVal(0);
         tempNodes.push(tempNode);
 
-        var LagCount = 0;
-        var toCountTo = 50000;
+        let LagCount = 0;
+        let toCountTo = 50000;
         nodesToAdd--;
-        if(this.extreme) {
+        if (this.extreme) {
             toCountTo = 200000;
             nodesToAdd = 50000000;
         }
-        while(nodesToAdd > 0) {
+        while (nodesToAdd > 0) {
             LagCount++;
-            if(LagCount > toCountTo) {
+            if (LagCount > toCountTo) {
                 nodesToAdd = 0;
             }
 
-            var randomNode = tempNodes[this.randomInt(0, tempNodes.length - 1)];
+            const randomNode = tempNodes[this.randomInt(0, tempNodes.length - 1)];
 
             // Determine direction
-            var diceRoll = this.randomInt(1, 4);
+            const diceRoll = this.randomInt(1, 4);
 
-            //UP
-            if(diceRoll === 1) {
-                if(!randomNode.getUp()) {
-                    if(randomNode.getY() - 1 > 2) {
+            // UP
+            if (diceRoll === 1) {
+                if (!randomNode.getUp()) {
+                    if (randomNode.getY() - 1 > 2) {
 
-                        var randomDistanceAway = 0;
-                        if(this.extreme) {
-                            if(randomNode.getY() - 1 > 3) {
-                                randomDistanceAway = this.randomInt(2, 3)
+                        let randomDistanceAway = 0;
+                        if (this.extreme) {
+                            if (randomNode.getY() - 1 > 3) {
+                                randomDistanceAway = this.randomInt(2, 3);
                             } else {
                                 randomDistanceAway = this.randomInt(2, randomNode.getY() - 1);
                             }
-                        } else if(difficulty == 'easy') {
-                            if(randomNode.getY() - 1 < difficultyDistance) {
+                        } else if (difficulty == 'easy') {
+                            if (randomNode.getY() - 1 < difficultyDistance) {
                             } else {
                                 randomDistanceAway = this.randomInt(difficultyDistance, randomNode.getY() - 1);
                             }
-                        }
-                        
-                        else {
+                        } else {
                             randomDistanceAway = this.randomInt(2, randomNode.getY() - 1);
                         }
 
-                        var count;
-                        var add = true;
-                        for(count = randomNode.getY() - 1 ; count >= randomNode.getY() - randomDistanceAway ; count--) {
-                            for(let n of tempNodes) {
-                                if(n.getX() == randomNode.getX() && n.getY() == count) {
-                                    if(count <= randomNode.getY() - 2 && add) {
-                                        if(!n.getDown()) {
-                                            var numBridges = 1;
-                                            if(difficulty != 'easy') {
-                                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        let count;
+                        let add = true;
+                        for (count = randomNode.getY() - 1 ; count >= randomNode.getY() - randomDistanceAway ; count--) {
+                            for (const n of tempNodes) {
+                                if (n.getX() == randomNode.getX() && n.getY() == count) {
+                                    if (count <= randomNode.getY() - 2 && add) {
+                                        if (!n.getDown()) {
+                                            let numBridges = 1;
+                                            if (difficulty != 'easy') {
+                                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                                             } else {
-                                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                                             }
                                             randomNode.setVal(randomNode.getVal() + numBridges);
                                             n.setVal(n.getVal() + numBridges);
                                             randomNode.setUp(true);
                                             n.setDown(true);
-                                            var tempCount;
-                                            for(tempCount = randomNode.getY() ; tempCount >= n.getY() ; tempCount--) {
+                                            let tempCount;
+                                            for (tempCount = randomNode.getY() ; tempCount >= n.getY() ; tempCount--) {
                                                 occupiedSquares.push(new MyNode(randomNode.getX(), tempCount));
                                             }
                                             add = false;
@@ -189,47 +187,47 @@ export class Board {
                                 }
                             }
 
-                            for(let n of occupiedSquares) {
-                                if(n.getX() == randomNode.getX() && n.getY() == count) {
+                            for (const n of occupiedSquares) {
+                                if (n.getX() == randomNode.getX() && n.getY() == count) {
                                     add = false;
                                 }
                             }
                         }
-                        if(add) {
-                            var numBridges = 1;
-                            if(difficulty != 'easy') {
-                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        if (add) {
+                            let numBridges = 1;
+                            if (difficulty != 'easy') {
+                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                             } else {
-                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                             }
-                            let tempNode = new MyNode(randomNode.getX(), randomNode.getY() - randomDistanceAway);
+                            const tempNode = new MyNode(randomNode.getX(), randomNode.getY() - randomDistanceAway);
 
-                            for(let n of tempNodes) {
-                                var neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
-                                var neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
-                                var neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
-                                var neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
-                                var neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
-                                var neighbors = new Array<MyNode>();
+                            for (const n of tempNodes) {
+                                const neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
+                                const neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
+                                const neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
+                                const neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
+                                const neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
+                                const neighbors = new Array<MyNode>();
                                 neighbors.push(neighbor1);
                                 neighbors.push(neighbor2);
                                 neighbors.push(neighbor3);
                                 neighbors.push(neighbor4);
                                 neighbors.push(neighbor5);
-                                for(let n2 of neighbors) {
-                                    if(n.getX() == n2.getX() && n.getY() == n2.getY()) {
+                                for (const n2 of neighbors) {
+                                    if (n.getX() == n2.getX() && n.getY() == n2.getY()) {
                                         add = false;
                                     }
                                 }
                             }
 
-                            if(add) {
+                            if (add) {
                                 randomNode.setVal(randomNode.getVal() + numBridges);
                                 tempNode.setVal(numBridges);
                                 randomNode.setUp(true);
                                 tempNode.setDown(true);
                                 tempNodes.push(tempNode);
-                                for(count = randomNode.getY() ; count >= tempNode.getY() ; count--) {
+                                for (count = randomNode.getY() ; count >= tempNode.getY() ; count--) {
                                     occupiedSquares.push(new MyNode(randomNode.getX(), count));
                                 }
                                 nodesToAdd--;
@@ -237,49 +235,45 @@ export class Board {
                         }
                     }
                 }
-            } 
-            //DOWN 
-            else if(diceRoll === 2) {
-                if(!randomNode.getDown()) {
-                    if(randomNode.getY() + 1 < this.height - 2) {
+            } else if (diceRoll === 2) {
+                if (!randomNode.getDown()) {
+                    if (randomNode.getY() + 1 < this.height - 2) {
 
-                        var randomDistanceAway = 0;
-                        if(this.extreme) {
-                            if(this.height - randomNode.getY() > 3) {
-                                randomDistanceAway = this.randomInt(2, 3)
+                        let randomDistanceAway = 0;
+                        if (this.extreme) {
+                            if (this.height - randomNode.getY() > 3) {
+                                randomDistanceAway = this.randomInt(2, 3);
                             } else {
                                 randomDistanceAway = this.randomInt(2, this.height - randomNode.getY());
                             }
-                        } 
-                        else if(difficulty == 'easy') {
-                            if(this.height - randomNode.getY() < difficultyDistance) {
+                        } else if (difficulty == 'easy') {
+                            if (this.height - randomNode.getY() < difficultyDistance) {
                             } else {
                                 randomDistanceAway = this.randomInt(difficultyDistance, this.height - randomNode.getY());
                             }
-                        }
-                        else {
+                        } else {
                             randomDistanceAway = this.randomInt(2, this.height - randomNode.getY());
                         }
 
-                        var count;
-                        var add = true;
-                        for(count = randomNode.getY() + 1 ; count <= randomNode.getY() + randomDistanceAway ; count++) {
-                            for(let n of tempNodes) {
-                                if(n.getX() == randomNode.getX() && n.getY() == count) {
-                                    if(count >= randomNode.getY() + 2 && add) {
-                                        if(!n.getUp()) {
-                                            var numBridges = 1;
-                                            if(difficulty != 'easy') {
-                                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        let count;
+                        let add = true;
+                        for (count = randomNode.getY() + 1 ; count <= randomNode.getY() + randomDistanceAway ; count++) {
+                            for (const n of tempNodes) {
+                                if (n.getX() == randomNode.getX() && n.getY() == count) {
+                                    if (count >= randomNode.getY() + 2 && add) {
+                                        if (!n.getUp()) {
+                                            let numBridges = 1;
+                                            if (difficulty != 'easy') {
+                                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                                             } else {
-                                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                                             }
                                             randomNode.setVal(randomNode.getVal() + numBridges);
                                             n.setVal(n.getVal() + numBridges);
                                             randomNode.setDown(true);
                                             n.setUp(true);
-                                            var tempCount;
-                                            for(tempCount = randomNode.getY() ; tempCount <= n.getY() ; tempCount++) {
+                                            let tempCount;
+                                            for (tempCount = randomNode.getY() ; tempCount <= n.getY() ; tempCount++) {
                                                 occupiedSquares.push(new MyNode(randomNode.getX(), tempCount));
                                             }
                                             add = false;
@@ -289,45 +283,45 @@ export class Board {
                                 }
                             }
 
-                            for(let n of occupiedSquares) {
-                                if(n.getX() == randomNode.getX() && n.getY() == count) {
+                            for (const n of occupiedSquares) {
+                                if (n.getX() == randomNode.getX() && n.getY() == count) {
                                     add = false;
                                 }
                             }
                         }
-                        if(add) {
-                            var numBridges = 1;
-                            if(difficulty != 'easy') {
-                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        if (add) {
+                            let numBridges = 1;
+                            if (difficulty != 'easy') {
+                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                             } else {
-                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                             }
-                            let tempNode = new MyNode(randomNode.getX(), randomNode.getY() + randomDistanceAway);
-                            for(let n of tempNodes) {
-                                var neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
-                                var neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
-                                var neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
-                                var neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
-                                var neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
-                                var neighbors = new Array<MyNode>();
+                            const tempNode = new MyNode(randomNode.getX(), randomNode.getY() + randomDistanceAway);
+                            for (const n of tempNodes) {
+                                const neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
+                                const neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
+                                const neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
+                                const neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
+                                const neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
+                                const neighbors = new Array<MyNode>();
                                 neighbors.push(neighbor1);
                                 neighbors.push(neighbor2);
                                 neighbors.push(neighbor3);
                                 neighbors.push(neighbor4);
                                 neighbors.push(neighbor5);
-                                for(let n2 of neighbors) {
-                                    if(n.getX() == n2.getX() && n.getY() == n2.getY()) {
+                                for (const n2 of neighbors) {
+                                    if (n.getX() == n2.getX() && n.getY() == n2.getY()) {
                                         add = false;
                                     }
                                 }
                             }
-                            if(add) {
+                            if (add) {
                                 randomNode.setVal(randomNode.getVal() + numBridges);
                                 tempNode.setVal(numBridges);
                                 randomNode.setDown(true);
                                 tempNode.setUp(true);
                                 tempNodes.push(tempNode);
-                                for(count = randomNode.getY() ; count <= tempNode.getY() ; count++) {
+                                for (count = randomNode.getY() ; count <= tempNode.getY() ; count++) {
                                     occupiedSquares.push(new MyNode(randomNode.getX(), count));
                                 }
                                 nodesToAdd--;
@@ -335,49 +329,45 @@ export class Board {
                         }
                     }
                 }
-            } 
-            //LEFT
-            else if(diceRoll === 3) {
-                if(!randomNode.getLeft()) {
-                    if(randomNode.getX() - 1 > 2) {
+            } else if (diceRoll === 3) {
+                if (!randomNode.getLeft()) {
+                    if (randomNode.getX() - 1 > 2) {
 
-                        var randomDistanceAway = 0;
-                        if(this.extreme) {
-                            if(randomNode.getX() - 1 > 3) {
-                                randomDistanceAway = this.randomInt(2, 3)
+                        let randomDistanceAway = 0;
+                        if (this.extreme) {
+                            if (randomNode.getX() - 1 > 3) {
+                                randomDistanceAway = this.randomInt(2, 3);
                             } else {
                                 randomDistanceAway = this.randomInt(2, randomNode.getX() - 1);
                             }
-                        } else if(difficulty == 'easy') {
-                            if(randomNode.getX() - 1 < difficultyDistance) {
+                        } else if (difficulty == 'easy') {
+                            if (randomNode.getX() - 1 < difficultyDistance) {
                             } else {
                                 randomDistanceAway = this.randomInt(difficultyDistance, randomNode.getX() - 1);
                             }
-                        }
-                        
-                        else {
+                        } else {
                             randomDistanceAway = this.randomInt(2, randomNode.getX() - 1);
                         }
 
-                        var count;
-                        var add = true;
-                        for(count = randomNode.getX() - 1 ; count >= randomNode.getX() - randomDistanceAway ; count--) {
-                            for(let n of tempNodes) {
-                                if(n.getX() == count && n.getY() == randomNode.getY()) {
-                                    if(count <= randomNode.getX() - 2 && add) {
-                                        if(!n.getRight()) {
-                                            var numBridges = 1;
-                                            if(difficulty != 'easy') {
-                                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        let count;
+                        let add = true;
+                        for (count = randomNode.getX() - 1 ; count >= randomNode.getX() - randomDistanceAway ; count--) {
+                            for (const n of tempNodes) {
+                                if (n.getX() == count && n.getY() == randomNode.getY()) {
+                                    if (count <= randomNode.getX() - 2 && add) {
+                                        if (!n.getRight()) {
+                                            let numBridges = 1;
+                                            if (difficulty != 'easy') {
+                                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                                             } else {
-                                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                                             }
                                             randomNode.setVal(randomNode.getVal() + numBridges);
                                             n.setVal(n.getVal() + numBridges);
                                             randomNode.setLeft(true);
                                             n.setRight(true);
-                                            var tempCount;
-                                            for(tempCount = randomNode.getX() ; tempCount >= n.getX() ; tempCount--) {
+                                            let tempCount;
+                                            for (tempCount = randomNode.getX() ; tempCount >= n.getX() ; tempCount--) {
                                                 occupiedSquares.push(new MyNode(tempCount, randomNode.getY()));
                                             }
                                             add = false;
@@ -387,45 +377,45 @@ export class Board {
                                 }
                             }
 
-                            for(let n of occupiedSquares) {
-                                if(n.getX() == count && n.getY() == randomNode.getY()) {
+                            for (const n of occupiedSquares) {
+                                if (n.getX() == count && n.getY() == randomNode.getY()) {
                                     add = false;
                                 }
                             }
                         }
-                        if(add) {
-                            var numBridges = 1;
-                            if(difficulty != 'easy') {
-                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        if (add) {
+                            let numBridges = 1;
+                            if (difficulty != 'easy') {
+                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                             } else {
-                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                             }
-                            let tempNode = new MyNode(randomNode.getX() - randomDistanceAway, randomNode.getY());
-                            for(let n of tempNodes) {
-                                var neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
-                                var neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
-                                var neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
-                                var neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
-                                var neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
-                                var neighbors = new Array<MyNode>();
+                            const tempNode = new MyNode(randomNode.getX() - randomDistanceAway, randomNode.getY());
+                            for (const n of tempNodes) {
+                                const neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
+                                const neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
+                                const neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
+                                const neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
+                                const neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
+                                const neighbors = new Array<MyNode>();
                                 neighbors.push(neighbor1);
                                 neighbors.push(neighbor2);
                                 neighbors.push(neighbor3);
                                 neighbors.push(neighbor4);
                                 neighbors.push(neighbor5);
-                                for(let n2 of neighbors) {
-                                    if(n.getX() == n2.getX() && n.getY() == n2.getY()) {
+                                for (const n2 of neighbors) {
+                                    if (n.getX() == n2.getX() && n.getY() == n2.getY()) {
                                         add = false;
                                     }
                                 }
                             }
-                            if(add) {
+                            if (add) {
                                 randomNode.setVal(randomNode.getVal() + numBridges);
                                 tempNode.setVal(numBridges);
                                 randomNode.setLeft(true);
                                 tempNode.setRight(true);
                                 tempNodes.push(tempNode);
-                                for(count = randomNode.getX() ; count >= tempNode.getX() ; count--) {
+                                for (count = randomNode.getX() ; count >= tempNode.getX() ; count--) {
                                     occupiedSquares.push(new MyNode(count, randomNode.getY()));
                                 }
                                 nodesToAdd--;
@@ -433,48 +423,44 @@ export class Board {
                         }
                     }
                 }
-            } 
-            //RIGHT 
-            else if(diceRoll === 4) {
-                if(!randomNode.getRight()) {
-                    if(randomNode.getX() + 1 < this.width - 2) {
-                        var randomDistanceAway = 0;
-                        if(this.extreme) {
-                            if(this.width - randomNode.getX() > 3) {
-                                randomDistanceAway = this.randomInt(2, 3)
+            } else if (diceRoll === 4) {
+                if (!randomNode.getRight()) {
+                    if (randomNode.getX() + 1 < this.width - 2) {
+                        let randomDistanceAway = 0;
+                        if (this.extreme) {
+                            if (this.width - randomNode.getX() > 3) {
+                                randomDistanceAway = this.randomInt(2, 3);
                             } else {
                                 randomDistanceAway = this.randomInt(2, this.width - randomNode.getX());
                             }
-                        } 
-                        else if(difficulty == 'easy') {
-                            if(this.width - randomNode.getX() < difficultyDistance) {
+                        } else if (difficulty == 'easy') {
+                            if (this.width - randomNode.getX() < difficultyDistance) {
                             } else {
                                 randomDistanceAway = this.randomInt(difficultyDistance, this.width - randomNode.getX());
                             }
-                        }
-                        else {
+                        } else {
                             randomDistanceAway = this.randomInt(2, this.width - randomNode.getX());
                         }
 
-                        var count;
-                        var add = true;
-                        for(count = randomNode.getX() + 1 ; count <= randomNode.getX() + randomDistanceAway ; count++) {
-                            for(let n of tempNodes) {
-                                if(n.getX() == count && n.getY() == randomNode.getY()) {
-                                    if(count >= randomNode.getX() + 2 && add) {
-                                        if(!n.getLeft()) {
-                                            var numBridges = 1;
-                                            if(difficulty != 'easy') {
-                                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        let count;
+                        let add = true;
+                        for (count = randomNode.getX() + 1 ; count <= randomNode.getX() + randomDistanceAway ; count++) {
+                            for (const n of tempNodes) {
+                                if (n.getX() == count && n.getY() == randomNode.getY()) {
+                                    if (count >= randomNode.getX() + 2 && add) {
+                                        if (!n.getLeft()) {
+                                            let numBridges = 1;
+                                            if (difficulty != 'easy') {
+                                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                                             } else {
-                                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                                             }
                                             randomNode.setVal(randomNode.getVal() + numBridges);
                                             n.setVal(n.getVal() + numBridges);
                                             randomNode.setRight(true);
                                             n.setLeft(true);
-                                            var tempCount;
-                                            for(tempCount = randomNode.getX() ; tempCount <= n.getX() ; tempCount++) {
+                                            let tempCount;
+                                            for (tempCount = randomNode.getX() ; tempCount <= n.getX() ; tempCount++) {
                                                 occupiedSquares.push(new MyNode(tempCount, randomNode.getY()));
                                             }
                                             add = false;
@@ -484,45 +470,45 @@ export class Board {
                                 }
                             }
 
-                            for(let n of occupiedSquares) {
-                                if(n.getX() == count && n.getY() == randomNode.getY()) {
+                            for (const n of occupiedSquares) {
+                                if (n.getX() == count && n.getY() == randomNode.getY()) {
                                     add = false;
                                 }
                             }
                         }
-                        if(add) {
-                            var numBridges = 1;
-                            if(difficulty != 'easy') {
-                                if(this.randomInt(1,2) == 2) {numBridges = 2;}
+                        if (add) {
+                            let numBridges = 1;
+                            if (difficulty != 'easy') {
+                                if (this.randomInt(1, 2) == 2) {numBridges = 2; }
                             } else {
-                                if(this.randomInt(1,chance) == chance) {numBridges = 1;} else { numBridges = 2; }
+                                if (this.randomInt(1, chance) == chance) {numBridges = 1; } else { numBridges = 2; }
                             }
-                            let tempNode = new MyNode(randomNode.getX() + randomDistanceAway, randomNode.getY());
-                            for(let n of tempNodes) {
-                                var neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
-                                var neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
-                                var neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
-                                var neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
-                                var neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
-                                var neighbors = new Array<MyNode>();
+                            const tempNode = new MyNode(randomNode.getX() + randomDistanceAway, randomNode.getY());
+                            for (const n of tempNodes) {
+                                const neighbor1 = new MyNode(tempNode.getX(), tempNode.getY());
+                                const neighbor2 = new MyNode(tempNode.getX(), tempNode.getY() + 1);
+                                const neighbor3 = new MyNode(tempNode.getX(), tempNode.getY() - 1);
+                                const neighbor4 = new MyNode(tempNode.getX() + 1, tempNode.getY());
+                                const neighbor5 = new MyNode(tempNode.getX() - 1, tempNode.getY());
+                                const neighbors = new Array<MyNode>();
                                 neighbors.push(neighbor1);
                                 neighbors.push(neighbor2);
                                 neighbors.push(neighbor3);
                                 neighbors.push(neighbor4);
                                 neighbors.push(neighbor5);
-                                for(let n2 of neighbors) {
-                                    if(n.getX() == n2.getX() && n.getY() == n2.getY()) {
+                                for (const n2 of neighbors) {
+                                    if (n.getX() == n2.getX() && n.getY() == n2.getY()) {
                                         add = false;
                                     }
                                 }
                             }
-                            if(add) {
+                            if (add) {
                                 randomNode.setVal(randomNode.getVal() + numBridges);
                                 tempNode.setVal(numBridges);
                                 randomNode.setRight(true);
                                 tempNode.setLeft(true);
                                 tempNodes.push(tempNode);
-                                for(count = randomNode.getX() ; count <= tempNode.getX() ; count++) {
+                                for (count = randomNode.getX() ; count <= tempNode.getX() ; count++) {
                                     occupiedSquares.push(new MyNode(count, randomNode.getY()));
                                 }
                                 nodesToAdd--;
@@ -532,7 +518,7 @@ export class Board {
                 }
             }
         }
-        for(let n of tempNodes) {
+        for (const n of tempNodes) {
             this.addNode(n);
         }
     }
@@ -546,21 +532,21 @@ export class Board {
     }
 
     random() {
-        var x = Math.sin(++this.seed) * 10000;
+        const x = Math.sin(++this.seed) * 10000;
         return x - Math.floor(x);
     }
 
     private testAddingNodes() {
-        let node1 = new MyNode(this.width, this.height);
+        const node1 = new MyNode(this.width, this.height);
         node1.setVal(5);
 
-        let node2 = new MyNode(this.width, 1);
+        const node2 = new MyNode(this.width, 1);
         node2.setVal(4);
 
-        let node3 = new MyNode(1, this.height);
+        const node3 = new MyNode(1, this.height);
         node3.setVal(2);
 
-        let node4 = new MyNode(1, 1);
+        const node4 = new MyNode(1, 1);
         node4.setVal(1);
 
         this.addNode(node1);
@@ -612,7 +598,7 @@ export class MyNode {
     left: boolean;
     down: boolean;
 
-    constructor(x: number, y:number) {
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
         this.bridges = new Array<Bridge>();

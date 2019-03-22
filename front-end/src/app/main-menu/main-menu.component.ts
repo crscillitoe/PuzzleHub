@@ -21,7 +21,7 @@ export class MainMenuComponent implements OnInit {
     private router: Router,
     private user: UserService,
     private loader: LoaderService
-  ) { 
+  ) {
   }
 
   isLoggedIn() {
@@ -33,9 +33,9 @@ export class MainMenuComponent implements OnInit {
   }
 
   playGame(route, diff) {
-    let m = {
+    const m = {
       diff: diff
-    }
+    };
 
     this.router.navigate([route, m]);
   }

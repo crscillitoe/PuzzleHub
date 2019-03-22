@@ -237,7 +237,7 @@ export class NonogramsComponent extends GameBoard {
     this.gridOffsetY = this.canvas.height / 20;
 
     const boardLength = Math.max(this.board.maxWidth, this.board.maxHeight);
-    const size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
+    const size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
                         this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
     const w = this.canvas.offsetWidth;

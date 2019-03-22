@@ -38,7 +38,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   drawMouseX: number;
   drawMouseY: number;
 
-  shift: boolean = false;
+  shift = false;
 
   coloredNode: MyNode;
   hoveredNode: MyNode;
@@ -182,7 +182,7 @@ export class HashiComponent extends GameBoard implements OnInit {
     this.drawCircleRed(this.coloredNode);
     this.drawCircleRed(this.hoveredNode);
 
-    if(this.board.isSolved()) {
+    if (this.board.isSolved()) {
       this.done();
     }
   }
@@ -222,41 +222,41 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   drawBridges() {
-    for(let node of this.board.getNodes()) {
-      for(let bridge of node.getBridges()) {
+    for (const node of this.board.getNodes()) {
+      for (const bridge of node.getBridges()) {
         if (bridge.getNum() > 0) {
           if (bridge.getNum() === 1) {
-            var n1x = this.xAdd + (bridge.getN1().getX() * (this.factor));
-            var n1y = this.yAdd + (bridge.getN1().getY() * (this.factor));
-            var n2x = this.xAdd + (bridge.getN2().getX() * (this.factor));
-            var n2y = this.yAdd + (bridge.getN2().getY() * (this.factor));
+            const n1x = this.xAdd + (bridge.getN1().getX() * (this.factor));
+            const n1y = this.yAdd + (bridge.getN1().getY() * (this.factor));
+            const n2x = this.xAdd + (bridge.getN2().getX() * (this.factor));
+            const n2y = this.yAdd + (bridge.getN2().getY() * (this.factor));
 
             this.context.strokeStyle = this.bridgeColor;
-            this.context.lineWidth = this.factor/10;
-            this.context.strokeRect(n1x, n1y, n2x-n1x, n2y-n1y);
+            this.context.lineWidth = this.factor / 10;
+            this.context.strokeRect(n1x, n1y, n2x - n1x, n2y - n1y);
           } else {
-            var n1x = this.xAdd + (bridge.getN1().getX() * (this.factor));
-            var n1y = this.yAdd + (bridge.getN1().getY() * (this.factor));
-            var n2x = this.xAdd + (bridge.getN2().getX() * (this.factor));
-            var n2y = this.yAdd + (bridge.getN2().getY() * (this.factor));
+            const n1x = this.xAdd + (bridge.getN1().getX() * (this.factor));
+            const n1y = this.yAdd + (bridge.getN1().getY() * (this.factor));
+            const n2x = this.xAdd + (bridge.getN2().getX() * (this.factor));
+            const n2y = this.yAdd + (bridge.getN2().getY() * (this.factor));
             if (n1x === n2x) {
-              var b1x = n1x - this.factor/5;
-              var b2x = n2x - this.factor/5;
-              var b3x = n1x + this.factor/5;
-              var b4x = n2x + this.factor/5;
+              const b1x = n1x - this.factor / 5;
+              const b2x = n2x - this.factor / 5;
+              const b3x = n1x + this.factor / 5;
+              const b4x = n2x + this.factor / 5;
               this.context.strokeStyle = this.bridgeColor;
-              this.context.lineWidth = this.factor/10;
-              this.context.strokeRect(b1x, n1y, b2x-b1x, (n2y-n1y));
-              this.context.strokeRect(b3x, n1y, b4x-b3x, (n2y-n1y));
+              this.context.lineWidth = this.factor / 10;
+              this.context.strokeRect(b1x, n1y, b2x - b1x, (n2y - n1y));
+              this.context.strokeRect(b3x, n1y, b4x - b3x, (n2y - n1y));
             } else {
-              var b1y = n1y - this.factor/5;
-              var b2y = n2y - this.factor/5;
-              var b3y = n1y + this.factor/5;
-              var b4y = n2y + this.factor/5;
+              const b1y = n1y - this.factor / 5;
+              const b2y = n2y - this.factor / 5;
+              const b3y = n1y + this.factor / 5;
+              const b4y = n2y + this.factor / 5;
               this.context.strokeStyle = this.bridgeColor;
-              this.context.lineWidth = this.factor/10;
-              this.context.strokeRect(n1x, b1y, (n2x-n1x), (b2y-b1y));
-              this.context.strokeRect(n1x, b3y, (n2x-n1x), (b4y-b3y));
+              this.context.lineWidth = this.factor / 10;
+              this.context.strokeRect(n1x, b1y, (n2x - n1x), (b2y - b1y));
+              this.context.strokeRect(n1x, b3y, (n2x - n1x), (b4y - b3y));
             }
           }
         }
@@ -265,9 +265,9 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   drawCircles() {
-    for(let node of this.board.getNodes()) {
+    for (const node of this.board.getNodes()) {
       let colorStr;
-      if(node.getVal() - this.getNumBridges(node) >= 0) {
+      if (node.getVal() - this.getNumBridges(node) >= 0) {
         colorStr = this.circleColor[node.getVal() - this.getNumBridges(node)];
       } else {
         colorStr = this.wrongCircleColor;
@@ -278,7 +278,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   getCircleHere(x: number, y: number) {
-    for(let node of this.board.getNodes()) {
+    for (const node of this.board.getNodes()) {
       if (node.getX() == x && node.getY() == y) {
         return node;
       }
@@ -287,7 +287,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   isCircleHere(x: number, y: number) {
-    for(let node of this.board.getNodes()) {
+    for (const node of this.board.getNodes()) {
       if (node.getX() == x && node.getY() == y) {
         return true;
       }
@@ -296,7 +296,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   drawCircleRed(node: MyNode) {
-    if(node != undefined) {
+    if (node != undefined) {
       if (node.getVal() - this.getNumBridges(node) >= 0) {
         this.drawCircle(node, this.circleSelectedColor[node.getVal() - this.getNumBridges(node)]);
       } else {
@@ -306,8 +306,8 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   getNumBridges(node) {
-    var toReturn = 0;
-    for(let b of node.getBridges()) {
+    let toReturn = 0;
+    for (const b of node.getBridges()) {
       toReturn += b.getNum();
     }
     return toReturn;
@@ -315,18 +315,18 @@ export class HashiComponent extends GameBoard implements OnInit {
 
   drawCircle(node, colorStr) {
     try {
-      var circleX = (node.getX() * (this.factor)) - this.factor/2;
-      var circleY = (node.getY() * (this.factor)) - this.factor/2;
+      const circleX = (node.getX() * (this.factor)) - this.factor / 2;
+      const circleY = (node.getY() * (this.factor)) - this.factor / 2;
 
-      var circleString = "" + node.getVal();
+      const circleString = '' + node.getVal();
 
       this.context.fillStyle = colorStr;
-      this.context.strokeStlye = "#FFFFFF";
+      this.context.strokeStlye = '#FFFFFF';
       this.ellipse(this.context, this.xAdd + circleX, this.yAdd + circleY, this.squareSize, this.squareSize);
 
       this.context.textAlign = 'center';
       this.context.fillStyle = this.circleTextColor;
-      this.context.fillText(circleString, this.xAdd + circleX + this.factor/2, this.yAdd + circleY + this.factor/1.2);
+      this.context.fillText(circleString, this.xAdd + circleX + this.factor / 2, this.yAdd + circleY + this.factor / 1.2);
     } catch {
       return;
     }
@@ -336,7 +336,7 @@ export class HashiComponent extends GameBoard implements OnInit {
     context.save(); // save state
     context.beginPath();
     context.translate(cx, cy);
-    context.scale(rx/2, ry/2);
+    context.scale(rx / 2, ry / 2);
     context.arc(1, 1, 1, 0, 2 * Math.PI, false);
     context.fill();
 
@@ -349,19 +349,19 @@ export class HashiComponent extends GameBoard implements OnInit {
 
     this.canvas.width = window.innerWidth - 225;
     this.canvas.height = window.innerHeight - 112;
-    this.context.translate(0.5, 0.5)
+    this.context.translate(0.5, 0.5);
 
 
 
-    var larger = Math.max(this.board.width, this.board.height) + 1;
-    var size = Math.min(this.canvas.offsetWidth, this.canvas.offsetHeight);
+    const larger = Math.max(this.board.width, this.board.height) + 1;
+    const size = Math.min(this.canvas.offsetWidth, this.canvas.offsetHeight);
 
-    this.factor = Math.floor(size/larger);
+    this.factor = Math.floor(size / larger);
     this.squareSize = this.factor;
-    this.context.font = 'bold '+Math.round(this.factor)+'px Poppins';
+    this.context.font = 'bold ' + Math.round(this.factor) + 'px Poppins';
 
-    let w = this.canvas.offsetWidth;
-    let h = this.canvas.offsetHeight;
+    const w = this.canvas.offsetWidth;
+    const h = this.canvas.offsetHeight;
 
     if (w > h) {
       this.xAdd = Math.round( ( w - h) / 2 );
@@ -371,21 +371,21 @@ export class HashiComponent extends GameBoard implements OnInit {
       this.yAdd = Math.round( (h - w) / 2 );
     }
 
-    this.draw();    
+    this.draw();
   }
 
   /* EVENT LISTENERS */
   @HostListener('document:mousedown', ['$event'])
   mousePressed(mouseEvent) {
     if (!this.solved) {
-      var x = mouseEvent.clientX + window.scrollX;
-      var y = mouseEvent.clientY + window.scrollY;
+      const x = mouseEvent.clientX + window.scrollX;
+      const y = mouseEvent.clientY + window.scrollY;
       this.pressedX = x;
       this.pressedY = y;
 
 
-      var pointX = Math.round(((x - 225 - this.xAdd))/this.factor);
-      var pointY = Math.round(((y - 56 - this.yAdd))/this.factor);
+      const pointX = Math.round(((x - 225 - this.xAdd)) / this.factor);
+      const pointY = Math.round(((y - 56 - this.yAdd)) / this.factor);
 
       if (this.isCircleHere(pointX, pointY)) {
         this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -397,7 +397,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   numBridgeDown(num) {
-    var counter;
+    let counter;
     try {
       if (this.isCircleHere(this.coloredNode.getX() , this.coloredNode.getY() + 1)) {
         return;
@@ -408,13 +408,13 @@ export class HashiComponent extends GameBoard implements OnInit {
     if (this.isCrossing(this.coloredNode.getX() , this.coloredNode.getY() + 1, 'd')) {
       return;
     }
-    for(counter = this.coloredNode.getY() + 1; counter < this.board.height + 1; counter++) {
+    for (counter = this.coloredNode.getY() + 1; counter < this.board.height + 1; counter++) {
       if (this.isCircleHere(this.coloredNode.getX(), counter)) {
-        var toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             bridge.setNum(num);
@@ -423,7 +423,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, num);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, num);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -434,20 +434,20 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   specialBridgeDown() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() , this.coloredNode.getY() + 1)) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() , this.coloredNode.getY() + 1, 'd')) {
       return;
     }
-    for(counter = this.coloredNode.getY() + 1; counter < this.board.height + 1; counter++) {
+    for (counter = this.coloredNode.getY() + 1; counter < this.board.height + 1; counter++) {
       if (this.isCircleHere(this.coloredNode.getX(), counter)) {
-        var toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -460,7 +460,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -471,20 +471,20 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   bridgeDown() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() , this.coloredNode.getY() + 1)) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() , this.coloredNode.getY() + 1, 'd')) {
       return;
     }
-    for(counter = this.coloredNode.getY() + 1; counter < this.board.height + 1; counter++) {
+    for (counter = this.coloredNode.getY() + 1; counter < this.board.height + 1; counter++) {
       if (this.isCircleHere(this.coloredNode.getX(), counter)) {
-        var toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -497,7 +497,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -508,7 +508,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   bridgeUp() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() , this.coloredNode.getY() - 1)) {
       return;
     }
@@ -517,13 +517,13 @@ export class HashiComponent extends GameBoard implements OnInit {
       return;
     }
 
-    for(counter = this.coloredNode.getY() - 1; counter > 0; counter--) {
+    for (counter = this.coloredNode.getY() - 1; counter > 0; counter--) {
       if (this.isCircleHere(this.coloredNode.getX(), counter)) {
-        var toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -536,7 +536,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -547,20 +547,20 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   specialBridgeUp() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() , this.coloredNode.getY() - 1)) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() , this.coloredNode.getY() - 1, 'u')) {
       return;
     }
-    for(counter = this.coloredNode.getY() - 1; counter > 0; counter--) {
+    for (counter = this.coloredNode.getY() - 1; counter > 0; counter--) {
       if (this.isCircleHere(this.coloredNode.getX(), counter)) {
-        var toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -573,7 +573,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -581,10 +581,10 @@ export class HashiComponent extends GameBoard implements OnInit {
         return;
       }
     }
-  } 
+  }
 
   numBridgeUp(num) {
-    var counter;
+    let counter;
     try {
       if (this.isCircleHere(this.coloredNode.getX() , this.coloredNode.getY() - 1)) {
         return;
@@ -595,13 +595,13 @@ export class HashiComponent extends GameBoard implements OnInit {
     if (this.isCrossing(this.coloredNode.getX() , this.coloredNode.getY() - 1, 'u')) {
       return;
     }
-    for(counter = this.coloredNode.getY() - 1; counter > 0; counter--) {
+    for (counter = this.coloredNode.getY() - 1; counter > 0; counter--) {
       if (this.isCircleHere(this.coloredNode.getX(), counter)) {
-        var toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(this.coloredNode.getX(), counter);
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             bridge.setNum(num);
@@ -610,7 +610,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, num);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, num);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -618,23 +618,23 @@ export class HashiComponent extends GameBoard implements OnInit {
         return;
       }
     }
-  } 
+  }
 
   bridgeRight() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() + 1, this.coloredNode.getY())) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() + 1, this.coloredNode.getY(), 'r')) {
       return;
     }
-    for(counter = this.coloredNode.getX() + 1; counter < this.board.width + 1; counter++) {
+    for (counter = this.coloredNode.getX() + 1; counter < this.board.width + 1; counter++) {
       if (this.isCircleHere(counter, this.coloredNode.getY())) {
-        var toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -647,7 +647,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -658,7 +658,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   numBridgeRight(num) {
-    var counter;
+    let counter;
     try {
       if (this.isCircleHere(this.coloredNode.getX() + 1, this.coloredNode.getY())) {
         return;
@@ -671,9 +671,9 @@ export class HashiComponent extends GameBoard implements OnInit {
     }
     for (counter = this.coloredNode.getX() + 1; counter < this.board.width + 1; counter++) {
       if (this.isCircleHere(counter, this.coloredNode.getY())) {
-        let toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
+        const toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
         let bridgeExists = false;
-        for (let bridge of toBridgeTo.getBridges()) {
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
             bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
@@ -684,7 +684,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          let bridge = new Bridge(this.coloredNode, toBridgeTo, num);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, num);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -695,20 +695,20 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   specialBridgeRight() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() + 1, this.coloredNode.getY())) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() + 1, this.coloredNode.getY(), 'r')) {
       return;
     }
-    for(counter = this.coloredNode.getX() + 1; counter < this.board.width + 1; counter++) {
+    for (counter = this.coloredNode.getX() + 1; counter < this.board.width + 1; counter++) {
       if (this.isCircleHere(counter, this.coloredNode.getY())) {
-        var toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -721,7 +721,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -732,20 +732,20 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   bridgeLeft() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() - 1, this.coloredNode.getY())) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() - 1, this.coloredNode.getY(), 'l')) {
       return;
     }
-    for(counter = this.coloredNode.getX() - 1; counter > 0; counter--) {
+    for (counter = this.coloredNode.getX() - 1; counter > 0; counter--) {
       if (this.isCircleHere(counter, this.coloredNode.getY())) {
-        var toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -758,7 +758,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 1);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -769,7 +769,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   numBridgeLeft(num) {
-    var counter;
+    let counter;
     try {
       if (this.isCircleHere(this.coloredNode.getX() - 1, this.coloredNode.getY())) {
         return;
@@ -780,13 +780,13 @@ export class HashiComponent extends GameBoard implements OnInit {
     if (this.isCrossing(this.coloredNode.getX() - 1, this.coloredNode.getY(), 'l')) {
       return;
     }
-    for(counter = this.coloredNode.getX() - 1; counter > 0; counter--) {
+    for (counter = this.coloredNode.getX() - 1; counter > 0; counter--) {
       if (this.isCircleHere(counter, this.coloredNode.getY())) {
-        var toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             bridge.setNum(num);
@@ -795,7 +795,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, num);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, num);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -806,20 +806,20 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   specialBridgeLeft() {
-    var counter;
+    let counter;
     if (this.isCircleHere(this.coloredNode.getX() - 1, this.coloredNode.getY())) {
       return;
     }
     if (this.isCrossing(this.coloredNode.getX() - 1, this.coloredNode.getY(), 'l')) {
       return;
     }
-    for(counter = this.coloredNode.getX() - 1; counter > 0; counter--) {
+    for (counter = this.coloredNode.getX() - 1; counter > 0; counter--) {
       if (this.isCircleHere(counter, this.coloredNode.getY())) {
-        var toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
-        var bridgeExists = false;
-        for(let bridge of toBridgeTo.getBridges()) {
+        const toBridgeTo = this.getCircleHere(counter, this.coloredNode.getY());
+        let bridgeExists = false;
+        for (const bridge of toBridgeTo.getBridges()) {
           if ((bridge.getN1().getX() === this.coloredNode.getX() &&
-            bridge.getN1().getY() === this.coloredNode.getY())||
+            bridge.getN1().getY() === this.coloredNode.getY()) ||
             (bridge.getN2().getX() === this.coloredNode.getX() &&
               bridge.getN2().getY() === this.coloredNode.getY())) {
             if (bridge.getNum() === 2) {
@@ -832,7 +832,7 @@ export class HashiComponent extends GameBoard implements OnInit {
         }
 
         if (!bridgeExists) {
-          var bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
+          const bridge = new Bridge(this.coloredNode, toBridgeTo, 2);
           this.coloredNode.addBridge(bridge);
           toBridgeTo.addBridge(bridge);
         }
@@ -844,34 +844,34 @@ export class HashiComponent extends GameBoard implements OnInit {
 
   isCrossing(startX, startY, direction) {
     if (direction == 'u') {
-      while(true) {
-        if (this.isBridgeHere(startX, startY, 'h')) return true;
-        if (this.isCircleHere(startX, startY)) return false;
-        if (startY <= 0) return true;
+      while (true) {
+        if (this.isBridgeHere(startX, startY, 'h')) { return true; }
+        if (this.isCircleHere(startX, startY)) { return false; }
+        if (startY <= 0) { return true; }
 
         startY--;
       }
     } else if (direction == 'd') {
-      while(true) {
-        if (this.isBridgeHere(startX, startY, 'h')) return true;
-        if (this.isCircleHere(startX, startY)) return false;
-        if (startY >= this.board.height) return true;
+      while (true) {
+        if (this.isBridgeHere(startX, startY, 'h')) { return true; }
+        if (this.isCircleHere(startX, startY)) { return false; }
+        if (startY >= this.board.height) { return true; }
 
         startY++;
       }
     } else if (direction == 'r') {
-      while(true) {
-        if (this.isBridgeHere(startX, startY, 'v')) return true;
-        if (this.isCircleHere(startX, startY)) return false;
-        if (startX >= this.board.width) return true;
+      while (true) {
+        if (this.isBridgeHere(startX, startY, 'v')) { return true; }
+        if (this.isCircleHere(startX, startY)) { return false; }
+        if (startX >= this.board.width) { return true; }
 
         startX++;
       }
     } else if (direction == 'l') {
-      while(true) {
-        if (this.isBridgeHere(startX, startY, 'v')) return true;
-        if (this.isCircleHere(startX, startY)) return false;
-        if (startX <= 0) return true;
+      while (true) {
+        if (this.isBridgeHere(startX, startY, 'v')) { return true; }
+        if (this.isCircleHere(startX, startY)) { return false; }
+        if (startX <= 0) { return true; }
 
         startX--;
       }
@@ -879,7 +879,7 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   isBridgeHere(x, y, direction) {
-    var bridges = this.getBridgeArray();
+    let bridges = this.getBridgeArray();
     if (direction == 'v') {
       bridges = bridges.filter(b => b.n1.x == b.n2.x && b.n1.x == x && ((b.n1.y > y && b.n2.y < y) || (b.n1.y < y && b.n2.y > y)));
     } else if (direction == 'h') {
@@ -890,10 +890,10 @@ export class HashiComponent extends GameBoard implements OnInit {
   }
 
   getBridgeArray() {
-    var toReturn = [];
-    for(let node of this.board.getNodes()) {
-      for(let bridge of node.getBridges()) {
-        if (bridge.getNum() > 0) toReturn.push(bridge);
+    const toReturn = [];
+    for (const node of this.board.getNodes()) {
+      for (const bridge of node.getBridges()) {
+        if (bridge.getNum() > 0) { toReturn.push(bridge); }
       }
     }
     return toReturn;
@@ -901,9 +901,9 @@ export class HashiComponent extends GameBoard implements OnInit {
 
   @HostListener('document:mouseup', ['$event'])
   mouseReleased(mouseEvent) {
-    var x = mouseEvent.clientX;
-    var y = mouseEvent.clientY;
-    var button = mouseEvent.button;
+    const x = mouseEvent.clientX;
+    const y = mouseEvent.clientY;
+    const button = mouseEvent.button;
     if (!this.shift) {
       if (this.coloredNode !== undefined) {
         if (Math.abs(this.pressedX - x) > Math.abs(this.pressedY - y)) {
@@ -978,13 +978,13 @@ export class HashiComponent extends GameBoard implements OnInit {
     }
 
     if (!this.solved) {
-      if (keyEvent.code == "ShiftLeft") {
+      if (keyEvent.code == 'ShiftLeft') {
         this.shift = true;
       }
 
-      if (keyEvent.key == "w") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      if (keyEvent.key == 'w') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -992,9 +992,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "W") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 'W') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1002,9 +1002,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "s") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 's') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1012,9 +1012,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "S") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 'S') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1022,9 +1022,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "a") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 'a') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1032,9 +1032,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "A") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 'A') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1042,9 +1042,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "d") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 'd') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1052,9 +1052,9 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.draw();
           this.coloredNode = undefined;
         }
-      } else if (keyEvent.key == "D") {
-        let pointX = this.mouseX;
-        let pointY = this.mouseY;
+      } else if (keyEvent.key == 'D') {
+        const pointX = this.mouseX;
+        const pointY = this.mouseY;
 
         if (this.isCircleHere(pointX, pointY)) {
           this.coloredNode = this.getCircleHere(pointX, pointY);
@@ -1068,7 +1068,7 @@ export class HashiComponent extends GameBoard implements OnInit {
 
   @HostListener('document:keyup', ['$event'])
   keyReleased(keyEvent) {
-    if (keyEvent.code == "ShiftLeft") {
+    if (keyEvent.code == 'ShiftLeft') {
       this.shift = false;
     }
   }

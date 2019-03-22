@@ -6,8 +6,8 @@ import { Difficulty } from '../interfaces/difficulty';
  * who knows maybe we add some less puzzly games
  * that fall under a new category
  * although we are called puzzle hub.."
- * - Christian 
- */ 
+ * - Christian
+ */
 
 export abstract class GameList {
   public static games: Game[];

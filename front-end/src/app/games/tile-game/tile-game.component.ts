@@ -375,23 +375,23 @@ export class TileGameComponent extends GameBoard implements OnInit {
 
         if ((i !== this.animatingX || j !== this.animatingY) || !this.showAnimations) {
           if (boardValue !== 0) {
-            this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
+            this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing,
                                   (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
-                                  this.gridBoxSize - (spacing * 2), 
-                                  this.gridBoxSize - (spacing * 2), 
-                                  (this.gridBoxSize/20), 
-                                  true, 
+                                  this.gridBoxSize - (spacing * 2),
+                                  this.gridBoxSize - (spacing * 2),
+                                  (this.gridBoxSize / 20),
+                                  true,
                                   false);
 
             if (this.colorScheme === 'Quadrants' && (this.board.width * this.board.height) >= 100) {
               this.context.fillStyle = innerColor;
-              this.roundRect(this.context, 
-                                    ((this.gridOffsetX + (i * this.gridBoxSize )) + spacing) + (0.1 * this.gridBoxSize), 
+              this.roundRect(this.context,
+                                    ((this.gridOffsetX + (i * this.gridBoxSize )) + spacing) + (0.1 * this.gridBoxSize),
                                     ((this.gridOffsetY + (j * this.gridBoxSize )) + spacing) + (0.8 * this.gridBoxSize),
-                                    (this.gridBoxSize - (spacing * 2)) - (0.2 * this.gridBoxSize), 
-                                    (this.gridBoxSize - (spacing * 2)) - (0.85 * this.gridBoxSize), 
-                                    (this.gridBoxSize/20), 
-                                    true, 
+                                    (this.gridBoxSize - (spacing * 2)) - (0.2 * this.gridBoxSize),
+                                    (this.gridBoxSize - (spacing * 2)) - (0.85 * this.gridBoxSize),
+                                    (this.gridBoxSize / 20),
+                                    true,
                                     true);
             }
           }
@@ -420,12 +420,12 @@ export class TileGameComponent extends GameBoard implements OnInit {
     this.gridOffsetX = this.canvas.width / 20;
     this.gridOffsetY = this.canvas.height / 20;
 
-    let boardLength = Math.max(this.board.width, this.board.height);
-    let size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
+    const boardLength = Math.max(this.board.width, this.board.height);
+    const size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
                         this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
-    let w = this.canvas.offsetWidth;
-    let h = this.canvas.offsetHeight;
+    const w = this.canvas.offsetWidth;
+    const h = this.canvas.offsetHeight;
     if (w > h) {
       this.gridOffsetX = Math.round( ( w - h) / 2 ) + this.gridOffsetX;
     } else {
@@ -437,7 +437,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
     } else {
       this.gridBoxSize = 75;
     }
-    this.animationDelta = this.gridBoxSize/5;
+    this.animationDelta = this.gridBoxSize / 5;
 
     this.draw();
   }
@@ -458,12 +458,12 @@ export class TileGameComponent extends GameBoard implements OnInit {
       return;
     } else {
 
-      let dist = this.animationDelta;
-      let boardValue = this.board.tilePuzzle[animy][animx];
+      const dist = this.animationDelta;
+      const boardValue = this.board.tilePuzzle[animy][animx];
       this.drawBlankTile(animx, animy - 1);
       this.drawTile(x, y, boardValue);
 
-      let that = this;
+      const that = this;
       setTimeout(
         function() {
           that.animateTileUp(animx, animy, y + dist, x, destY, destX);
@@ -486,7 +486,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
       this.drawBlankTile(animx, animy + 1);
       this.drawTile(x, y, boardValue);
 
-      let that = this;
+      const that = this;
       setTimeout(
         function() {
           that.animateTileDown(animx, animy, y - dist, x, destY, destX);
@@ -509,7 +509,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
       this.drawBlankTile(animx - 1, animy);
       this.drawTile(x, y, boardValue);
 
-      let that = this;
+      const that = this;
       setTimeout(
         function() {
           that.animateTileLeft(animx, animy, y, x + dist, destY, destX);
@@ -527,12 +527,12 @@ export class TileGameComponent extends GameBoard implements OnInit {
       return;
     } else {
 
-      let dist = this.animationDelta;
-      let boardValue = this.board.tilePuzzle[animy][animx];
+      const dist = this.animationDelta;
+      const boardValue = this.board.tilePuzzle[animy][animx];
       this.drawBlankTile(animx + 1, animy);
       this.drawTile(x, y, boardValue);
 
-      let that = this;
+      const that = this;
       setTimeout(
         function() {
           that.animateTileRight(animx, animy, y, x - dist, destY, destX);
@@ -626,8 +626,8 @@ export class TileGameComponent extends GameBoard implements OnInit {
     this.roundRect(this.context, x, y,
                           this.gridBoxSize - (spacing * 2),
                           this.gridBoxSize - (spacing * 2),
-                          (this.gridBoxSize / 20), 
-                          true, 
+                          (this.gridBoxSize / 20),
+                          true,
                           false);
 
     if (this.colorScheme === 'Quadrants' && (this.board.width * this.board.height) >= 100) {
@@ -650,7 +650,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   }
 
   moveUp(repeat, click) {
-    let directions = this.board.getValidDirections();
+    const directions = this.board.getValidDirections();
 
     if (directions.includes(0) && (this.up || click)) {
       this.board.tilePuzzle[this.board.emptyY][this.board.emptyX] = this.board.tilePuzzle[this.board.emptyY - 1][this.board.emptyX];
@@ -682,7 +682,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
       }
 
       if (this.up && repeat && !this.solved) {
-        let that = this;
+        const that = this;
 
         this.upTimeout =
         setTimeout(
@@ -696,7 +696,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
 
   moveUpFirst() {
     this.moveUp(false, false);
-    let that = this;
+    const that = this;
 
     if (this.shift && !this.yAxis) {
       this.xAxis = true;
@@ -717,7 +717,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   }
   moveDownFirst() {
     this.moveDown(false, false);
-    let that = this;
+    const that = this;
 
     if (this.shift && !this.yAxis) {
       this.xAxis = true;
@@ -738,7 +738,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   }
   moveRightFirst() {
     this.moveRight(false, false);
-    let that = this;
+    const that = this;
 
     if (this.shift && !this.xAxis) {
       this.yAxis = true;
@@ -760,7 +760,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
 
   moveLeftFirst() {
     this.moveLeft(false, false);
-    let that = this;
+    const that = this;
 
     if (this.shift && !this.xAxis) {
       this.yAxis = true;
@@ -813,7 +813,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
       }
 
       if (this.down && repeat && !this.solved) {
-        let that = this;
+        const that = this;
         this.downTimeout =
         setTimeout(
           function() {
@@ -857,12 +857,12 @@ export class TileGameComponent extends GameBoard implements OnInit {
       }
 
       if (this.left && repeat && !this.solved) {
-        let that = this;
-        this.leftTimeout = 
-        setTimeout( 
+        const that = this;
+        this.leftTimeout =
+        setTimeout(
           function() {
             that.moveLeft(true, false);
-          }, 
+          },
           this.continuedDelay );
       }
     }
@@ -901,7 +901,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
       }
 
       if (this.right && repeat && !this.solved) {
-        let that = this;
+        const that = this;
         this.rightTimeout =
         setTimeout(
           function() {

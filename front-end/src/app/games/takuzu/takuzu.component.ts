@@ -320,7 +320,7 @@ export class TakuzuComponent extends GameBoard implements OnInit {
   }
 
   done() {
-    let that = this;
+    const that = this;
     GameStarterService.done(that);
   }
 

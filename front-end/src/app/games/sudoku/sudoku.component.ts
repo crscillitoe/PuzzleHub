@@ -123,7 +123,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
   }
 
   drawNotes() {
-    for (let key of Object.keys(this.notes)) {
+    for (const key of Object.keys(this.notes)) {
       const x = Math.trunc(Number(key) / 10);
       const y = Number(key) - (x * 10);
 
@@ -132,7 +132,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
         this.context.textAlign = 'center';
         this.context.fillStyle = this.colors.COLOR_3_ALT;
 
-        for (let num of this.notes[key]) {
+        for (const num of this.notes[key]) {
           if (num !== 0) {
             const row = Math.trunc(num / 3.1);
             const col = (num + 2) % 3;

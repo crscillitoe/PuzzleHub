@@ -197,10 +197,10 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   public difficultyChangeHandler(newDiff: any) {
-    let m = {
+    const m = {
       diff: newDiff
-    }
-    let route = this.game.name;
+    };
+    const route = this.game.name;
 
     this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + newDiff + ')');

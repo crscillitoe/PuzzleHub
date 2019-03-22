@@ -110,7 +110,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
     this.context.lineWidth = 1;
     for (let i = 0; i <= this.board.width - 1; i++) {
       this.context.moveTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY);
-      this.context.lineTo(this.gridOffsetX + (i* this.gridBoxSize), this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize));
+      this.context.lineTo(this.gridOffsetX + (i * this.gridBoxSize), this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize));
       this.context.stroke();
     }
 
@@ -126,7 +126,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
     this.context.textAlign = 'center';
 
     for (let i = 0 ; i < this.board.width - 1; i++) {
-      let valid = this.board.bottomLegendValid(i);
+      const valid = this.board.bottomLegendValid(i);
 
       if (valid === 1) {
         this.context.fillStyle = this.colors.COLOR_1;
@@ -137,11 +137,11 @@ export class ThermometersComponent extends GameBoard implements OnInit {
       }
       this.context.fillText('' + this.board.bottomLegends[i],
                             this.gridOffsetX + (i * this.gridBoxSize) + (this.gridBoxSize / 2),
-                            this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize) + (this.gridBoxSize/1.3));
+                            this.gridOffsetY + ((this.board.height - 1) * this.gridBoxSize) + (this.gridBoxSize / 1.3));
     }
 
     for (let j = 0 ; j < this.board.height - 1; j++) {
-      let validSide = this.board.sideLegendValid(j);
+      const validSide = this.board.sideLegendValid(j);
 
       if (validSide === 1) {
         this.context.fillStyle = this.colors.COLOR_1;
@@ -153,7 +153,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
 
       this.context.fillText('' + this.board.sideLegends[j],
                             this.gridOffsetX + ((this.board.width - 1) * this.gridBoxSize) + (this.gridBoxSize / 2),
-        this.gridOffsetY + (j * this.gridBoxSize) + (this.gridBoxSize/1.3));
+        this.gridOffsetY + (j * this.gridBoxSize) + (this.gridBoxSize / 1.3));
     }
   }
 
@@ -163,7 +163,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
   }
 
   drawThermometers() {
-    for (let thermometer of this.board.thermometers) {
+    for (const thermometer of this.board.thermometers) {
       this.drawThermometerHead(thermometer.x, thermometer.y, thermometer.direction, thermometer.filledAmount);
       this.drawThermometerBody(thermometer.x, thermometer.y, thermometer.direction, thermometer.length, thermometer.filledAmount);
       this.drawThermometerTail(thermometer.x, thermometer.y, thermometer.direction, thermometer.length, thermometer.filledAmount);
@@ -183,11 +183,11 @@ export class ThermometersComponent extends GameBoard implements OnInit {
     }
     this.context.lineWidth = 3;
     this.context.beginPath();
-    let drawX = this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize / 2;
-    let drawY = this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize / 2;
+    const drawX = this.gridOffsetX + (x * this.gridBoxSize) - this.gridBoxSize / 2;
+    const drawY = this.gridOffsetY + (y * this.gridBoxSize) - this.gridBoxSize / 2;
 
-    let radius = this.gridBoxSize / 2.5;
-    let thermometerOpenAmount = 0.15 * Math.PI;
+    const radius = this.gridBoxSize / 2.5;
+    const thermometerOpenAmount = 0.15 * Math.PI;
     let startPoint;
 
     if (dir === 0) {
@@ -236,11 +236,11 @@ export class ThermometersComponent extends GameBoard implements OnInit {
       newX = x + length - 1;
     }
 
-    let drawX = this.gridOffsetX + (newX * this.gridBoxSize) - this.gridBoxSize / 2;
-    let drawY = this.gridOffsetY + (newY * this.gridBoxSize) - this.gridBoxSize / 2;
+    const drawX = this.gridOffsetX + (newX * this.gridBoxSize) - this.gridBoxSize / 2;
+    const drawY = this.gridOffsetY + (newY * this.gridBoxSize) - this.gridBoxSize / 2;
 
-    let radius = this.gridBoxSize/5.8;
-    let thermometerOpenAmount = 0.5 * Math.PI;
+    const radius = this.gridBoxSize / 5.8;
+    const thermometerOpenAmount = 0.5 * Math.PI;
     let startPoint;
     if (dir === 0) {
       startPoint = 1.5 * Math.PI;

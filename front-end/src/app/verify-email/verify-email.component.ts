@@ -9,7 +9,7 @@ import { TunnelService } from '../services/tunnel/tunnel.service';
 })
 export class VerifyEmailComponent implements OnInit {
 
-  serverMessage: string = "";
+  serverMessage = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -18,16 +18,16 @@ export class VerifyEmailComponent implements OnInit {
   }
 
   ngOnInit() {
-    var code = this.route.snapshot.paramMap.get('code')
-    if(code != null) {
+    let code = this.route.snapshot.paramMap.get('code');
+    if (code != null) {
       this.tunnel.verifyEmail(code)
         .subscribe( (data) => {
-          if(data['validated']) {
-            this.serverMessage = 
-              "Thank you, your email address has been verified! You can now log in.";
+          if (data['validated']) {
+            this.serverMessage =
+              'Thank you, your email address has been verified! You can now log in.';
           } else {
-            this.serverMessage = 
-              "Invalid verification link.";
+            this.serverMessage =
+              'Invalid verification link.';
           }
         });
     }

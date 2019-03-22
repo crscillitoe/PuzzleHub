@@ -14,10 +14,10 @@ export class GameStarterService {
 
     this.customSeed = Number(that.route.snapshot.paramMap.get('seed'));
 
-    if(that.userService.isLoggedIn()) {
+    if (that.userService.isLoggedIn()) {
       this.loadBestTimes(that);
 
-      if(this.customSeed == 0) {
+      if (this.customSeed == 0) {
         that.timer.startTimer(that.gameID, that.difficulty)
           .subscribe( (data) => {
             this.loadGame(that, data['seed']);
@@ -26,7 +26,7 @@ export class GameStarterService {
         this.loadGame(that, this.customSeed);
       }
     } else {
-      if(this.customSeed == 0) {
+      if (this.customSeed == 0) {
         this.loadGame(that, Math.floor(Math.random() * (2000000000)));
       } else {
         this.loadGame(that, this.customSeed);
@@ -35,23 +35,23 @@ export class GameStarterService {
   }
 
   static done(that) {
-    if(that.userService.isLoggedIn() && !that.solved && this.customSeed == 0) {
+    if (that.userService.isLoggedIn() && !that.solved && this.customSeed == 0) {
       that.timer.stopTimer(that.seed, that.gameID, that.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           UserService.addXp(data['XPGain']);
-          if(data['Daily']) {
+          if (data['Daily']) {
             that.personalBestDaily = data['TimeElapsed'];
           }
 
-          if(data['Weekly']) {
+          if (data['Weekly']) {
             that.personalBestWeekly = data['TimeElapsed'];
           }
 
-          if(data['Monthly']) {
+          if (data['Monthly']) {
             that.personalBestMonthly = data['TimeElapsed'];
           }
 
-          var display = document.getElementById("timer");
+          const display = document.getElementById('timer');
           display.textContent = data['TimeElapsed'];
         });
     } else {
@@ -61,19 +61,19 @@ export class GameStarterService {
   }
 
   static loadGame(that, seed) {
-    that.seed = seed
+    that.seed = seed;
 
     that.board.seed = that.seed;
     that.board.generateBoard();
 
-    if(that.gameID == GameID.MINESWEEPER) {
+    if (that.gameID == GameID.MINESWEEPER) {
       that.lose = false;
       that.firstPress = true;
-    } else if(that.gameID == GameID.SUDOKU) {
+    } else if (that.gameID == GameID.SUDOKU) {
       that.notes = {};
     }
 
-    if(that.solved) {
+    if (that.solved) {
       that.solved = false;
 
       that.startDate = new Date();
@@ -85,20 +85,20 @@ export class GameStarterService {
     that.fixSizes();
 
     that.loader.stopLoadingAnimation();
-    if(that.gameID == GameID.MINESWEEPER) {
+    if (that.gameID == GameID.MINESWEEPER) {
       that.imgFlag.onload = () => {
         that.draw();
-      }
+      };
     } else {
       that.draw();
     }
   }
 
   static loadBestTimes(that) {
-    let m = {
+    const m = {
       GameID: that.gameID,
       Difficulty: that.difficulty
-    }
+    };
     that.tunnel.getPersonalBest(m)
       .subscribe( (data) => {
         that.personalBestDaily = data['daily'];
@@ -111,7 +111,7 @@ export class GameStarterService {
     that.loader.startLoadingAnimation();
     this.customSeed = 0;
 
-    if(that.userService.isLoggedIn()) {
+    if (that.userService.isLoggedIn()) {
       that.timer.startTimer(that.gameID, that.difficulty)
         .subscribe( (data) => {
           this.loadGame(that, data['seed']);
