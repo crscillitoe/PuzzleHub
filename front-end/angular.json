@@ -25,7 +25,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/styles.scss"
+              "src/styles.scss",
+	      "src/sass/styles.scss"
             ],
             "scripts": []
           },
@@ -125,5 +126,10 @@
       }
     }
   },
-  "defaultProject": "front-end"
+  "defaultProject": "front-end",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }

@@ -1,37 +1,33 @@
 <div class="body">
   <div class="flex-container">
     <ng-container *ngFor="let game of games">
-      <div class="flex-element puzzle-card">
-        <div class="card text-white bg-dark mb-3">
-          <img class="svg-image card-img-top" src={{game.image}}>
-          <div class="card-body">
-            <div class="flex-container">
-              <ng-container *ngFor="let diff of game.diffs">
-                <div class="mytooltip">
-                  <button (click)="playGame(game.name, diff.diff)" 
-                     class="puzzle-button btn" 
-                     [disabled]="(isLoggedIn() && getLevel() < diff.minLevel) ||
-                     (!isLoggedIn() && diff.requiresLogin)"
-                     [ngClass]="{'btn-success': diff.color=='green', 
-                     'btn-info': diff.color=='cyan', 
-                     'btn-primary': diff.color=='blue', 
-                     'btn-danger': diff.color=='red'}">
-                    {{diff.name}}
-                  </button>
-                  <div class="tooltiptext" *ngIf="isLoggedIn() && getLevel() < diff.minLevel">
-                    Reach level {{diff.minLevel}} to play {{diff.name}} difficulty
-                  </div>
-                  <div class="tooltiptext" *ngIf="!isLoggedIn() && diff.requiresLogin">
-                    Log in to play harder difficulties
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-            <h4 style="padding-top:30px;margin-bottom:0px;padding-left:11px">{{game.name}}</h4>
-            <p style="padding-left:11px; padding-right:30px;">{{game.desc}}</p>
-          </div>
-        </div>
-      </div>
+        <mat-card class="puzzle-card">
+          <img mat-card-image src={{game.image}} alt="{{game.name}} logo" />
+          <mat-card-actions>
+            <ng-container *ngFor="let diff of game.diffs">
+              <button mat-raised-button
+                 (click)="playGame(game.name, diff.diff)" 
+                 [disabled]="(isLoggedIn() && getLevel() < diff.minLevel) ||
+                 (!isLoggedIn() && diff.requiresLogin)"
+                 [attr.data-tooltip]="(isLoggedIn() && getLevel() < diff.minLevel) ? 'Reach level ' +  
+                 diff.minLevel + ' to play ' + diff.name + ' difficulty' : ((! isLoggedIn() &&
+                 diff.requiresLogin) ? 'Log in to play harder difficulties' : 
+                 null)"
+                 [ngClass]="{'btn-diff-easy': diff.color=='green', 
+                 'btn-diff-medium': diff.color=='cyan', 
+                 'btn-diff-hard': diff.color=='blue', 
+                 'btn-diff-extreme': diff.color=='red'}">
+                {{diff.name}}
+              </button>
+            </ng-container>
+          </mat-card-actions>
+          <mat-card-header>
+            <mat-card-title>{{game.name}}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{game.desc}}</p>
+          </mat-card-content>
+        </mat-card>
     </ng-container>
   </div>
 </div>

@@ -1,0 +1,102 @@
+// -----------------------------------------------------------------------------
+// This file contains tooltip related styles
+// -----------------------------------------------------------------------------
+
+[data-tooltip] {
+  margin: 1.25rem;
+  position: relative;
+
+  &::before,
+  &::after {
+    position: absolute;
+    top: -0.5rem;
+    left: 50%;
+    opacity: 0;
+  }
+
+  &::before {
+    z-index: 100;
+    transform: translateX(-50%);
+    border-width: 0.3rem 0.5rem 0 0.5rem;
+    border-style: solid;
+    border-color: $tooltip-border-color transparent transparent transparent;
+    content: "";
+  }
+
+  &::after {
+    min-width: 5rem;
+    padding: 0.2rem 0.4rem;
+    transform: translateX(-50%) translateY(-100%);
+    border-radius: 0.3rem;
+    color: $text-color;
+    font-size: 0.9rem;
+    text-align: center;
+    background-color: $tooltip-bg-color;
+    pointer-events: none;
+    content: attr(data-tooltip);
+  }
+
+  &:hover::before,
+  &:hover::after,
+  &:focus::before,
+  &:focus::after {
+    opacity: 1;
+    transition: opacity 0.3s ease-in 0.0s;
+  }
+}
+
+[data-tooltip-position='top'] {
+  &::before {
+    left: 50%;
+  }
+
+  &::after {
+    left: 50%;
+  }
+}
+
+[data-tooltip-position='left'] {
+  &::before {
+    margin-left: -0.75rem;
+    top: 50%;
+    left: 0%;
+    transform: translateY(-50%) rotate(-90deg);
+  }
+
+  &::after {
+    margin-left: 0.5rem;
+    top: 50%;
+    left: 0%;
+    transform: translateX(-100%) translateY(-50%);
+  }
+}
+
+[data-tooltip-position='bottom'] {
+  &::before {
+    margin-top: 0.5rem;
+    top: 100%;
+    transform: translateX(-50%) translateY(-100%) rotate(-180deg);
+  }
+
+  &::after {
+    margin-top: 0.5rem;
+    top: 100%;
+    transform: translateX(-50%) translateY(0%);
+  }
+}
+
+[data-tooltip-position='right'] {
+  &::before {
+    margin-left: 0.1rem;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%) rotate(90deg);
+  }
+
+  &::after {
+    margin-left: 0.5rem;
+    top: 50%;
+    left: 100%;
+    transform: translateX(0%) translateY(-50%);
+  }
+}

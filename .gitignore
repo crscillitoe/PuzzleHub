@@ -6,4 +6,4 @@ api/tests
 env/
 api/api/config.json
 aws
-
+*.ignore
