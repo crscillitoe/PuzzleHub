@@ -5,9 +5,9 @@
 }
 
 .mytooltip {
-  float:left;
+  /*float:left;
+  width:5.5rem;*/
   position: relative;
-  width:5.5rem;
   display: inline-block;
 }
 
@@ -45,50 +45,140 @@
 
 .flex-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  height: 40px;
-}
-
-.puzzle-button {
-  width:5.5rem;
-  height:40px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.svg-image {
-  height: 280px !important;
+  flex-flow: row wrap;
+  align-items: stretch;
+  align-content: flex-start;
+  justify-content: space-around;
 }
 
 .puzzle-card {
-  padding-top:20px;
-  padding-bottom:20px;
-  padding-left: 20px;
-  padding-right: 20px;
-  width: 500px;
-  height: 590px;
+    width: 28.75rem;
+    min-height: 36.875rem;
+    margin: 1.4rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.5rem;
+    background-color: #343a40;
 }
 
-.card {
-  height: 100%;
-  border-radius: 25px;
-  box-shadow: 10px 5px 10px #222222;
+.puzzle-card .mat-card-header {
+    margin: 0;
+    margin-left: -16px;
 }
 
-.card-body {
-  padding-top: 50px;
+.puzzle-card .mat-card-title {
+    font-size: 1.5rem;
 }
 
-.card-img-top {
-  height: 100%;
-  padding-top: 70px;
-  padding-bottom: 20px;
+.puzzle-card img:first-of-type {
+    width: 100%;
+    max-height: 18.125rem;
+    margin: 0;
+    padding: 3.125rem 0;
 }
 
-h5 {
-  font-size: 24pt;
+.puzzle-card .mat-card-content {
+    height: 100%;
+    padding: 1.5rem 0;
+    flex: 1;
+    font-size: 1rem;
 }
 
-.flex-element {
+.puzzle-card .mat-card-actions {
+    display: flex;
+    flex-flow: row no-wrap;
+    justify-content: space-evenly;
+}
+
+.mat-card-actions div {
+    flex: 1 0 auto;
+}
+
+.mat-card-actions div button {
+    width: 80%;
+}
+
+.button:hover {
+    text-decoration: none;
+}
+
+.button:disabled {
+    opacity: 0.65;
+}
+
+.button:not(:disabled) {
+    cursor: pointer;
+}
+
+.button-green {
+    color: #fff;
+    background-color: #1e7e34;
+    border-color: #1c7430;
+}
+
+.button-green:hover {
+    color: #fff;
+    background-color: #218838;
+    border-color: #1c7c34;
+}
+
+.button-green:disabled {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.button-cyan {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.button-cyan:hover {
+  color: #fff;
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+.button-cyan:disabled {
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.button-blue {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.button-blue:hover {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.button-blue:disabled {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.button-red {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.button-red:hover {
+  color: #fff;
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.button-red:disabled {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }

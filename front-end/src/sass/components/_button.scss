@@ -1,0 +1,27 @@
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the button component.
+// -----------------------------------------------------------------------------
+
+button {
+  color: $text-color;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+  &:not(disabled) {
+    cursor: pointer;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Difficulty Buttons
+// -----------------------------------------------------------------------------
+
+@each $diff, $value in $difficulty-colors {
+  .btn-diff-#{$diff} {
+    @include button-variant($value, $value);
+  }
+}

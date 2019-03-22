@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { TimerService } from '../services/timer/timer.service'
-import { TunnelService } from '../services/tunnel/tunnel.service'
-import { LoaderService } from '../services/loading-service/loader.service'
+import { TimerService } from '../services/timer/timer.service';
+import { TunnelService } from '../services/tunnel/tunnel.service';
+import { LoaderService } from '../services/loading-service/loader.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
-import { GameListAllService } from '../services/games/game-list-all.service'
+import { GameListAllService } from '../services/games/game-list-all.service';
 
 @Component({
   selector: 'app-main-menu',
   templateUrl: './main-menu.component.html',
-  styleUrls: ['./main-menu.component.css']
+  styleUrls: ['./main-menu.component.scss']
 })
 export class MainMenuComponent implements OnInit {
 
