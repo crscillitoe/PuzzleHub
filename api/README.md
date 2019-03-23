@@ -1,4 +1,0 @@
-Running Instructions:
-
-export FLASK_APP=api
-python3 -m flask run

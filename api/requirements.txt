@@ -1,8 +1,0 @@
-Flask
-flask-cors
-mysql-connector-python
-pycrypto
-passlib
-dnspython
-requests
-argon2_cffi
