@@ -191,8 +191,8 @@ export class LeaderboardsComponent implements OnInit {
           console.log(data);
           var that = this;
           setTimeout(function() {
-            that.loader.stopLoadingAnimation()
-            that.leaderboards[m['Difficulty']] = new MatTableDataSource<any>(data);
+            that.loader.stopLoadingAnimation();
+            that.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
             that.leaderboards[m['Difficulty']].paginator = that.paginator;
             that.leaderboards[m['Difficulty']].sort = that.sort;
           }, 500);
