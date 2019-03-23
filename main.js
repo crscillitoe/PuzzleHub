@@ -328,8 +328,11 @@ var AppModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatFormFieldModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatIconModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatPaginatorModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSelectModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSortModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatTableModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatTabsModule"]
             ],
             providers: [
@@ -630,10 +633,11 @@ var GameList = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Game", function() { return Game; });
 var Game = /** @class */ (function () {
-    function Game(id, name, image, desc, rules, controls, diffs) {
+    function Game(id, name, cleanName, image, desc, rules, controls, diffs) {
         this._imagePath = 'assets/images/game-splashes/';
         this._id = id;
         this._name = name;
+        this._cleanName = cleanName;
         this._imageBase = image;
         this._desc = desc;
         this._rules = rules;
@@ -650,6 +654,13 @@ var Game = /** @class */ (function () {
     Object.defineProperty(Game.prototype, "name", {
         get: function () {
             return this._name;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Game.prototype, "cleanName", {
+        get: function () {
+            return this._cleanName;
         },
         enumerable: true,
         configurable: true
@@ -5651,7 +5662,11 @@ var HeaderComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+<<<<<<< HEAD
 module.exports = "<div class=\"container-stretch\">\n  <div id=\"navController\" class=\"col-1 container-flex-row game-selector\">\n    <ng-container *ngFor=\"let game of games\">\n      <div class=\"col-12\">\n        <a (click)=\"setGame(game.id)\" \n           [ngClass]=\"gameID == game.id ? 'navActive' : 'navInactive'\" \n           class=\"navItem nav-item nav-link\"><img class=\"clickable\" src=\"{{game.image}}\"></a>\n      </div>\n    </ng-container>\n  </div>\n  <div class=\"col-11 container-stretch\">\n    <div class=\"col-12 container-flex-row leaderboard-header\">\n      <div class=\"col-4\">\n        <mat-button-toggle-group>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 0\"\n           (click)=\"changeLeaderboard(0)\">\n            Daily\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 1\"\n           (click)=\"changeLeaderboard(1)\">\n            Weekly\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 2\"\n           (click)=\"changeLeaderboard(2)\">\n            Monthly\n          </mat-button-toggle>\n        </mat-button-toggle-group>\n      </div>\n\n      <div class=\"game-title col-4\">\n        <h2 class=\"gameName\">{{getGameName(gameID)}}</h2>\n      </div>\n\n      <div class=\"countdown col-4\">\n        <h2 class=\"timerTitle monospace\">RESET IN:&nbsp;</h2>\n        <h2 id=\"leaderboardstimer\" class=\"timer monospace\">000:00:00</h2>\n      </div>\n    </div><!-- leaderboard-header -->\n\n    <div id=\"page\" class=\"col-12 leaderboard-tables\">\n      <div class=\"container-flex-row\">\n        <ng-container *ngFor=\"let diff of getGameDiffs(gameID);let i=index\">\n          <div\n           class=\"card  leaderboard-card\"\n           [ngClass]=\"i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'\">\n            <h3>{{diff.name | titlecase}}</h3>\n            <div class=\"leaderboard-table\">\n              <table>\n                <thead>\n                  <tr>\n                    <th>#</th>\n                    <th>Name</th>\n                    <th></th>\n                    <th>Time</th>\n                  </tr>\n                </thead>\n                <tbody>\n                  <ng-container *ngFor=\"let entry of leaderboards[i + 1];let k=index\">\n                    <tr [ngClass]=\"username == entry.username ? 'you' : ''\">\n                      <td class=\"pos firstcol\">\n                        {{k + 1}}\n                      </td>\n                      <td class=\"name secondcol\" (click)=\"viewProfile(entry.username)\">\n                        {{entry.username}}\n                      </td>\n\n                      <td class=\"medals thirdcol\">\n                        <div \n                          class=\"medalRow\"\n                          attr.data-tooltip=\"{{leaderboardName}} Gold Medal\"\n                          data-tooltip-position=\"top\">\n                          <ng-container *ngIf=\"hasMedals(entry)\">\n                            <img\n                          class=\"goldMedals medal\"\n                          src=\"/assets/images/medals/{{leaderboardName}}_Gold.svg\">\n                            <a class=\"monospace medalText\">\n                              {{entry.goldMedals}}\n                            </a>\n                          </ng-container>\n                        </div>\n\n                        <div \n                               class=\"medalRow\"\n                               attr.data-tooltip=\"{{leaderboardName}} Silver Medal\"\n                               data-tooltip-position=\"left\">\n                          <ng-container *ngIf=\"hasMedals(entry)\">\n                            <img\n                               class=\"goldMedals medal\"\n                               src=\"/assets/images/medals/{{leaderboardName}}_Silver.svg\">\n                            <a class=\"monospace medalText\">\n                              {{entry.silverMedals}}\n                            </a>\n                          </ng-container>\n                        </div>\n\n                        <div class=\"medalRow\"\n                             attr.data-tooltip=\"{{leaderboardName}} Bronze Medal\"\n                             data-tooltip-position=\"left\">\n                          <ng-container *ngIf=\"hasMedals(entry)\">\n                            <img\n                             class=\"goldMedals medal\"\n                             src=\"/assets/images/medals/{{leaderboardName}}_Bronze.svg\">\n                            <a class=\"monospace medalText\">\n                              {{entry.bronzeMedals}}\n                            </a>\n                          </ng-container>\n                        </div>\n                      </td>\n\n                      <td class=\"timeText monospace fourthcol\">\n                        {{entry.time}}\n                      </td>\n                    </tr>\n                  </ng-container>\n                </tbody>\n              </table>\n            </div>\n          </div>\n        </ng-container>\n      </div>\n    </div><!-- container-flex-row -->\n  </div>\n</div><!-- container-stretch -->\n"
+=======
+module.exports = "<div class=\"container-static-stretch container-scroll-y\">\n  <div class=\"container-static\">\n    <div class=\"container-flex-row leaderboard-header\">\n      <div class=\"game-title col-12\">\n        <h2 class=\"gameName\">{{getGameName(gameID)}}</h2>\n      </div>\n    </div><!-- leaderboard-header -->\n    <div class=\"container-flex-row\">\n      <div class=\"countdown col-12\">\n        <span class=\"timerTitle monospace\">RESET IN:&nbsp;</span>\n        <span id=\"leaderboardstimer\" class=\"timer monospace\">000:00:00</span>\n      </div>\n    </div>\n    <div class=\"container-flex-row\">\n      <div class=\"col-6\">\n        <mat-button-toggle-group>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 0\"\n           (click)=\"changeLeaderboard(0)\">\n            Daily\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 1\"\n           (click)=\"changeLeaderboard(1)\">\n            Weekly\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 2\"\n           (click)=\"changeLeaderboard(2)\">\n            Monthly\n          </mat-button-toggle>\n        </mat-button-toggle-group>\n      </div>\n      <div class=\"col-6\" style=\"text-align: right\">\n        <mat-button-toggle-group>\n          <ng-container *ngFor=\"let game of games\">\n            <mat-button-toggle \n                         (click)=\"setGame(game.id)\" \n                         [checked]=\"gameID == game.id\"> \n              <mat-icon svgIcon=\"{{game.cleanName}}Icon\"></mat-icon>\n            </mat-button-toggle>\n          </ng-container>\n        </mat-button-toggle-group>\n      </div>\n    </div>\n    <div class=\"col-12 leaderboard-tables\">\n      <mat-tab-group\n         [selectedIndex]=\"leaderboardDifficulty\"\n         (selectedIndexChange)=\"setLeaderboardDifficulty($event)\">\n        <ng-container *ngFor=\"let diff of getGameDiffs(gameID);let i=index\">\n          <mat-tab label=\"{{diff.name | titlecase}}\">\n            <table mat-table [dataSource]=\"leaderboards[i + 1]\" matSort>\n              <ng-container matColumnDef=\"rowIndex\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>\n                <td mat-cell *matCellDef=\"let k = index;\">{{k + 1}}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"username\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>\n                <td\n                            mat-cell\n                            *matCellDef=\"let element\"\n                            (click)=\"viewProfile(element.username)\">\n                  {{element.username}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"goldMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gold Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Gold.svg\">\n                  {{element.goldMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"silverMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Silver Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Silver.svg\">\n                  {{element.silverMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"bronzeMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Bronze Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Bronze.svg\">\n                  {{element.bronzeMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"time\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{element.time}}\n                </td>\n              </ng-container>\n\n              <tr\n                            mat-header-row\n                            *matHeaderRowDef=\"leaderboardColumns; sticky: true\">\n              </tr>\n              <tr\n                            mat-row \n                            *matRowDef=\"let row; columns: leaderboardColumns; let k = index;\"\n                            [ngClass]=\"username == row.username ? 'you' : ''\">\n              </tr>\n            </table>\n            <mat-paginator\n              [pageSizeOptions]=\"pageSizeOptions\"\n              [pageSize]=\"pageSize\"\n              showFirstLastButtons>\n            </mat-paginator>\n          </mat-tab>\n        </ng-container>\n      </mat-tab-group>\n    </div>\n  </div><!-- container-stretch -->\n</div>\n"
+>>>>>>> 89334736496b525b4ce4904b28ff7ae9cc2f50aa
 
 /***/ }),
 
@@ -5662,7 +5677,11 @@ module.exports = "<div class=\"container-stretch\">\n  <div id=\"navController\"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+<<<<<<< HEAD
 module.exports = ".card {\n  margin: 1.4rem;\n  padding: 2rem;\n  border-radius: 1.5rem;\n  background-color: #343a40; }\n  .card .mat-card-header {\n    margin: 0;\n    margin-left: -16px; }\n  .card .mat-card-title {\n    font-family: \"Poppins\", sans-serif;\n    font-size: 1.5rem; }\n  .card .mat-card-content {\n    font-size: 1rem; }\n  [data-tooltip] {\n  margin: 1.25rem;\n  position: relative; }\n  [data-tooltip]::before, [data-tooltip]::after {\n    position: absolute;\n    top: -0.5rem;\n    left: 50%;\n    opacity: 0; }\n  [data-tooltip]::before {\n    z-index: 100;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    border-width: 0.3rem 0.5rem 0 0.5rem;\n    border-style: solid;\n    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;\n    content: \"\"; }\n  [data-tooltip]::after {\n    min-width: 5rem;\n    padding: 0.2rem 0.4rem;\n    -webkit-transform: translateX(-50%) translateY(-100%);\n            transform: translateX(-50%) translateY(-100%);\n    border-radius: 0.3rem;\n    color: white;\n    font-size: 0.9rem;\n    text-align: center;\n    background-color: rgba(0, 0, 0, 0.5);\n    pointer-events: none;\n    content: attr(data-tooltip); }\n  [data-tooltip]:hover::before, [data-tooltip]:hover::after, [data-tooltip]:focus::before, [data-tooltip]:focus::after {\n    opacity: 1;\n    transition: opacity 0.3s ease-in 0.0s; }\n  [data-tooltip-position='top']::before {\n  left: 50%; }\n  [data-tooltip-position='top']::after {\n  left: 50%; }\n  [data-tooltip-position='left']::before {\n  margin-left: -0.75rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateY(-50%) rotate(-90deg);\n          transform: translateY(-50%) rotate(-90deg); }\n  [data-tooltip-position='left']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateX(-100%) translateY(-50%);\n          transform: translateX(-100%) translateY(-50%); }\n  [data-tooltip-position='bottom']::before {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(-100%) rotate(-180deg);\n          transform: translateX(-50%) translateY(-100%) rotate(-180deg); }\n  [data-tooltip-position='bottom']::after {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(0%);\n          transform: translateX(-50%) translateY(0%); }\n  [data-tooltip-position='right']::before {\n  margin-left: 0.1rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateY(-50%) rotate(90deg);\n          transform: translateY(-50%) rotate(90deg); }\n  [data-tooltip-position='right']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateX(0%) translateY(-50%);\n          transform: translateX(0%) translateY(-50%); }\n  .leaderboard-header {\n  height: 4rem;\n  align-items: center;\n  justify-content: space-between;\n  text-align: center; }\n  .leaderboard-header h2 {\n    display: inline-block; }\n  .game-title {\n  font-family: \"Poppins\", sans-serif; }\n  .game-selector {\n  max-height: 100%;\n  padding: 0;\n  align-items: center;\n  align-content: center; }\n  .game-selector img {\n    max-width: 6rem; }\n  .leaderboard-tables {\n  height: 100%;\n  max-height: calc(100% - 4rem);\n  overflow-y: auto; }\n  .leaderboard-tables .container-flex-row {\n    justify-content: space-between; }\n  .leaderboard-tables tr {\n    padding: 5rem 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.15); }\n  .leaderboard-tables .medalRow {\n    height: 1.5rem; }\n  .leaderboard-tables [data-tooltip] {\n    margin: 0.1rem; }\n  .leaderboard-card {\n  width: 26rem;\n  max-width: 26rem;\n  height: 48rem;\n  max-height: 48rem;\n  padding: 0.5rem 0.25rem 1.5rem;\n  text-align: center; }\n  .leaderboard-card h3 {\n    font-weight: bold; }\n  .leaderboard-table {\n  height: 43rem;\n  max-height: 48rem;\n  overflow-y: auto;\n  background: #343a40; }\n  .leaderboard-table table {\n    width: 100%;\n    padding: 0.25rem; }\n  .easy {\n  background-color: #1e7e34; }\n  .medium {\n  background-color: #007bff; }\n  .hard {\n  background-color: #f28c32; }\n  .extreme {\n  background-color: #dc3545; }\n  .you {\n  background-color: rgba(255, 255, 255, 0.2); }\n  .medals {\n  font-size: 0.75rem;\n  text-align: left; }\n  .medal {\n  width: 0.95rem;\n  height: 0.95rem;\n  margin: 0.3rem 0; }\n"
+=======
+module.exports = ".card {\n  margin: 1.4rem;\n  padding: 2rem;\n  border-radius: 1.5rem;\n  background-color: #343a40; }\n  .card .mat-card-header {\n    margin: 0;\n    margin-left: -16px; }\n  .card .mat-card-title {\n    font-family: \"Poppins\", sans-serif;\n    font-size: 1.5rem; }\n  .card .mat-card-content {\n    font-size: 1rem; }\n  [data-tooltip] {\n  margin: 1.25rem;\n  position: relative; }\n  [data-tooltip]::before, [data-tooltip]::after {\n    position: absolute;\n    top: -0.5rem;\n    left: 50%;\n    opacity: 0; }\n  [data-tooltip]::before {\n    z-index: 100;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    border-width: 0.3rem 0.5rem 0 0.5rem;\n    border-style: solid;\n    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;\n    content: \"\"; }\n  [data-tooltip]::after {\n    min-width: 5rem;\n    padding: 0.2rem 0.4rem;\n    -webkit-transform: translateX(-50%) translateY(-100%);\n            transform: translateX(-50%) translateY(-100%);\n    border-radius: 0.3rem;\n    color: white;\n    font-size: 0.9rem;\n    text-align: center;\n    background-color: rgba(0, 0, 0, 0.5);\n    pointer-events: none;\n    content: attr(data-tooltip); }\n  [data-tooltip]:hover::before, [data-tooltip]:hover::after, [data-tooltip]:focus::before, [data-tooltip]:focus::after {\n    opacity: 1;\n    transition: opacity 0.3s ease-in 0.0s; }\n  [data-tooltip-position='top']::before {\n  left: 50%; }\n  [data-tooltip-position='top']::after {\n  left: 50%; }\n  [data-tooltip-position='left']::before {\n  margin-left: -0.75rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateY(-50%) rotate(-90deg);\n          transform: translateY(-50%) rotate(-90deg); }\n  [data-tooltip-position='left']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateX(-100%) translateY(-50%);\n          transform: translateX(-100%) translateY(-50%); }\n  [data-tooltip-position='bottom']::before {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(-100%) rotate(-180deg);\n          transform: translateX(-50%) translateY(-100%) rotate(-180deg); }\n  [data-tooltip-position='bottom']::after {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(0%);\n          transform: translateX(-50%) translateY(0%); }\n  [data-tooltip-position='right']::before {\n  margin-left: 0.1rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateY(-50%) rotate(90deg);\n          transform: translateY(-50%) rotate(90deg); }\n  [data-tooltip-position='right']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateX(0%) translateY(-50%);\n          transform: translateX(0%) translateY(-50%); }\n  .leaderboard-header {\n  height: 4rem;\n  align-items: center;\n  justify-content: space-between;\n  text-align: center; }\n  .leaderboard-header h2 {\n    display: inline-block; }\n  .game-title {\n  font-family: \"Poppins\", sans-serif; }\n  .game-selector {\n  max-height: 100%;\n  padding: 0;\n  align-items: center;\n  align-content: center; }\n  .game-selector img {\n    max-width: 6rem; }\n  .leaderboard-tables table {\n  width: 100%; }\n  .leaderboard-card {\n  width: 26rem;\n  max-width: 26rem;\n  height: 48rem;\n  max-height: 48rem;\n  padding: 0.5rem 0.25rem 1.5rem;\n  text-align: center; }\n  .leaderboard-card h3 {\n    font-weight: bold; }\n  .leaderboard-table {\n  height: 43rem;\n  max-height: 48rem;\n  overflow-y: auto;\n  background: #343a40; }\n  .leaderboard-table table {\n    width: 100%;\n    padding: 0.25rem; }\n  .easy {\n  background-color: #1e7e34; }\n  .medium {\n  background-color: #007bff; }\n  .hard {\n  background-color: #f28c32; }\n  .extreme {\n  background-color: #dc3545; }\n  .you {\n  background-color: rgba(255, 255, 255, 0.2); }\n  .medals {\n  font-size: 0.75rem;\n  text-align: left; }\n  .medal {\n  width: 0.95rem;\n  height: 0.95rem;\n  margin: 0.3rem 0; }\n"
+>>>>>>> 89334736496b525b4ce4904b28ff7ae9cc2f50aa
 
 /***/ }),
 
@@ -5684,6 +5703,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_loading_service_loader_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/loading-service/loader.service */ "./src/app/services/loading-service/loader.service.ts");
 /* harmony import */ var _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/persistence/settings.service */ "./src/app/services/persistence/settings.service.ts");
 /* harmony import */ var _services_games_game_list_all_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/games/game-list-all.service */ "./src/app/services/games/game-list-all.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5693,6 +5713,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -5712,6 +5733,17 @@ var LeaderboardsComponent = /** @class */ (function () {
         this.games = _services_games_game_list_all_service__WEBPACK_IMPORTED_MODULE_7__["GameListAllService"].games;
         this.leaderboard = 0;
         this.leaderboardName = "Daily";
+        this.leaderboardDifficulty = 0;
+        this.leaderboardColumns = [
+            'rowIndex',
+            'username',
+            'goldMedals',
+            'silverMedals',
+            'bronzeMedals',
+            'time'
+        ];
+        this.pageSize = 25;
+        this.pageSizeOptions = [5, 10, 25, 100];
         this.username = "";
     }
     LeaderboardsComponent.prototype.getGameName = function (id) {
@@ -5741,6 +5773,7 @@ var LeaderboardsComponent = /** @class */ (function () {
         });
         this.gameID = _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_6__["SettingsService"].getDataNum('selectedGameID');
         this.leaderboard = _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_6__["SettingsService"].getDataNum('selectedLeaderboard');
+        this.leaderboardDifficulty = _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_6__["SettingsService"].getDataNum('selectedLeaderboardDifficulty');
         this.countDownTimer();
         if (this.leaderboard == 0) {
             this.leaderboardName = 'Daily';
@@ -5818,10 +5851,14 @@ var LeaderboardsComponent = /** @class */ (function () {
         }
         this.loadScores();
     };
+    LeaderboardsComponent.prototype.setLeaderboardDifficulty = function (n) {
+        this.leaderboardDifficulty = n;
+        _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_6__["SettingsService"].storeData('selectedLeaderboardDifficulty', n);
+    };
     LeaderboardsComponent.prototype.loadScores = function () {
         var _this_1 = this;
         this.loader.startLoadingAnimation();
-        this.leaderboards = {};
+        this.leaderboards = [];
         var _loop_1 = function () {
             var m = {
                 "GameID": this_1.gameID,
@@ -5834,7 +5871,9 @@ var LeaderboardsComponent = /** @class */ (function () {
                 var that = _this_1;
                 setTimeout(function () {
                     that.loader.stopLoadingAnimation();
-                    that.leaderboards[m['Difficulty']] = data;
+                    that.leaderboards[m['Difficulty']] = new _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatTableDataSource"](data);
+                    that.leaderboards[m['Difficulty']].paginator = that.paginator;
+                    that.leaderboards[m['Difficulty']].sort = that.sort;
                 }, 500);
             });
         };
@@ -5863,6 +5902,14 @@ var LeaderboardsComponent = /** @class */ (function () {
     LeaderboardsComponent.prototype.logLeaderboards = function () {
         console.log(this.leaderboards);
     };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_8__["MatPaginator"]),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatPaginator"])
+    ], LeaderboardsComponent.prototype, "paginator", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSort"]),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSort"])
+    ], LeaderboardsComponent.prototype, "sort", void 0);
     LeaderboardsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-leaderboards',
@@ -9442,22 +9489,22 @@ var GameListAllService = /** @class */ (function (_super) {
     };
     var GameListAllService_1;
     GameListAllService.games = [
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].SUDOKU, 'Sudoku', 'sudoku.svg', 'A classic puzzle game where you must fill out the board with numbers 1-9.', 'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].SUDOKU, 'Sudoku', 'sudoku', 'sudoku.svg', 'A classic puzzle game where you must fill out the board with numbers 1-9.', 'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
             'Each number can only appear once in a row, column, or box.', 'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TAKUZU, 'Takuzu', 'takuzu.svg', 'Takuzu is a logic-based number placement puzzle. The objective is to fill a ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TAKUZU, 'Takuzu', 'takuzu', 'takuzu.svg', 'Takuzu is a logic-based number placement puzzle. The objective is to fill a ' +
             '(usually 10×10) grid with 1s and 0s.', 'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
             '1s and 0s in each row and column and no more than two of either number adjacent to ' +
             'each other. Additionally, there can be no identical rows or columns.', 'Left/Right click'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].NONOGRAMS, 'Nonograms', 'nonograms.svg', 'Nonograms are picture logic puzzles in which cells in a grid must be colored according ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].NONOGRAMS, 'Nonograms', 'nonograms', 'nonograms.svg', 'Nonograms are picture logic puzzles in which cells in a grid must be colored according ' +
             'to numbers at the side of the grid to reveal a hidden picture.', 'Google it you goof.', 'Left click on a tile to mark it.'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].THERMOMETERS, 'Thermometers', 'thermometers.svg', 'A New York Times classic where you must fill up thermometers to a certain amount.', 'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].THERMOMETERS, 'Thermometers', 'thermometers', 'thermometers.svg', 'A New York Times classic where you must fill up thermometers to a certain amount.', 'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
             'that given row/column.', 'Click anywhere on the thermometer to insert fluid.'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].HASHI, 'Hashi', 'hashi.svg', 'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].HASHI, 'Hashi', 'hashi', 'hashi.svg', 'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and ' +
             'challenging solutions.', 'The goal is to connect all of the islands into a single connected group by ' +
             'drawing a series of bridges between the islands. The number of bridges coming off of ' +
             'an island must match the number written on that island.', 'Click and drag from an island to build a bridge.'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TILE_GAME, 'Tile Game', 'tilegame.svg', 'Tile game is a common puzzle where the user slides tiles into the correct order.', 'Order the numbers in sequential order from left to right, top to bottom', 'Arrow Keys or WASD'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].MINESWEEPER, 'Minesweeper', 'minesweeper.svg', 'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TILE_GAME, 'Tile Game', 'tilegame', 'tilegame.svg', 'Tile game is a common puzzle where the user slides tiles into the correct order.', 'Order the numbers in sequential order from left to right, top to bottom', 'Arrow Keys or WASD'),
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].MINESWEEPER, 'Minesweeper', 'minesweeper', 'minesweeper.svg', 'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
             'clear a rectangular board containing hidden mines.', 'The objective of the game is to clear a rectangular board containing hidden mines ' +
             'without detonating any of them.', '')
     ];
@@ -9860,6 +9907,7 @@ var SettingsService = /** @class */ (function () {
         "tileAnimations": true,
         "selectedGameID": 5,
         "selectedLeaderboard": 0,
+        "selectedLeaderboardDifficulty": 0,
         "rulesMinimized": true,
         "optionsMinimized": true,
         "controlsMinimized": true,
