@@ -25,25 +25,8 @@
 }
 
 .leaderboard-tables {
-  height: 100%;
-  max-height: calc(100% - 4rem);
-  overflow-y: auto;
-
-  .container-flex-row {
-    justify-content: space-between;
-  }
-
-  tr {
-    padding: 5rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  }
-
-  .medalRow {
-    height: 1.5rem;
-  }
-
-  [data-tooltip] {
-    margin: 0.1rem;
+  table {
+    width: 100%;
   }
 }
 

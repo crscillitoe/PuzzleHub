@@ -1,3 +1,21 @@
+%stretch {
+  width: 100%;
+  height: calc(100vh - #{$nav-height});
+  max-height: calc(100vh - #{$nav-height});
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.container-static {
+  @include make-container();
+  @include make-container-max-widths();
+}
+
+.container-static-stretch {
+  @extend %stretch;
+}
+
 %flex-row {
   display: flex;
   flex-flow: row wrap;
@@ -24,13 +42,14 @@
 }
 
 .container-stretch {
-  width: 100%;
-  height: calc(100vh - #{$nav-height});
-  max-height: calc(100vh - #{$nav-height});
-  padding: 0;
-  margin: 0;
+  @extend %stretch;
   @extend %flex-row;
   overflow: hidden;
+}
+
+.container-scroll-y {
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .flex-align-center {
