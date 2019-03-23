@@ -57,6 +57,7 @@
               <ng-container matColumnDef="username">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                 <td
+                            id="username-cell"
                             mat-cell
                             *matCellDef="let element"
                             (click)="viewProfile(element.username)">
