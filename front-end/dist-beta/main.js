@@ -56,9 +56,11 @@ module.exports = "<div class=\"loading-overlay\" #spinnerElement style=\"display
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_user_user_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./services/user/user.service */ "./src/app/services/user/user.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_loading_service_loader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/loading-service/loader.service */ "./src/app/services/loading-service/loader.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+/* harmony import */ var _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/user/user.service */ "./src/app/services/user/user.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_loading_service_loader_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./services/loading-service/loader.service */ "./src/app/services/loading-service/loader.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -73,14 +75,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var AppComponent = /** @class */ (function () {
-    function AppComponent(loader, router, ngZone, renderer, user) {
+    function AppComponent(loader, router, ngZone, renderer, user, domSanitizer, matIconRegistry) {
         var _this = this;
         this.loader = loader;
         this.router = router;
         this.ngZone = ngZone;
         this.renderer = renderer;
         this.user = user;
+        this.domSanitizer = domSanitizer;
+        this.matIconRegistry = matIconRegistry;
         loader.loading
             .subscribe(function (data) {
             if (data) {
@@ -99,12 +105,19 @@ var AppComponent = /** @class */ (function () {
         /*router.events.subscribe( (event) => {
             this.navigationInterceptor(event)
           });*/
+        matIconRegistry.addSvgIcon('sudokuIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/sudoku.svg'));
+        matIconRegistry.addSvgIcon('takuzuIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/takuzu.svg'));
+        matIconRegistry.addSvgIcon('nonogramsIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/nonograms.svg'));
+        matIconRegistry.addSvgIcon('thermometersIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/thermometers.svg'));
+        matIconRegistry.addSvgIcon('hashiIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/hashi.svg'));
+        matIconRegistry.addSvgIcon('tilegameIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/tilegame.svg'));
+        matIconRegistry.addSvgIcon('minesweeperIcon', domSanitizer.bypassSecurityTrustResourceUrl('assets/images/game-splashes/minesweeper.svg'));
     }
     AppComponent.prototype.isLoggedIn = function () {
         return this.user.isLoggedIn();
     };
     AppComponent.prototype.navigationInterceptor = function (event) {
-        if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__["NavigationStart"]) {
+        if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_4__["NavigationStart"]) {
             this.loader.startLoadingAnimation();
         }
         /*if (event instanceof NavigationEnd) {
@@ -119,13 +132,13 @@ var AppComponent = /** @class */ (function () {
       }*/
     };
     AppComponent.prototype.getLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"].calculateLevel();
+        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"].calculateLevel();
     };
     AppComponent.prototype.xpToNextLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"].xpToNextLevel();
+        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"].xpToNextLevel();
     };
     AppComponent.prototype.nextLevelThreshold = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"].nextLevelThreshold();
+        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"].nextLevelThreshold();
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('spinnerElement'),
@@ -137,11 +150,13 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
         }),
-        __metadata("design:paramtypes", [_services_loading_service_loader_service__WEBPACK_IMPORTED_MODULE_3__["LoaderService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+        __metadata("design:paramtypes", [_services_loading_service_loader_service__WEBPACK_IMPORTED_MODULE_5__["LoaderService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"],
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["Renderer"],
-            _services_user_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"]])
+            _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
+            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatIconRegistry"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -311,6 +326,7 @@ var AppModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatCardModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatCheckboxModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatFormFieldModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatIconModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSelectModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSnackBarModule"],
@@ -975,9 +991,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2329,9 +2348,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2827,9 +2849,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3135,9 +3160,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3459,9 +3487,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4119,9 +4150,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4562,9 +4596,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -5607,17 +5644,6 @@ var HeaderComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/leaderboards/leaderboards.component.css":
-/*!*********************************************************!*\
-  !*** ./src/app/leaderboards/leaderboards.component.css ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ".gridContainer {\n  height:calc(100% - 2rem);\n  display:flex;\n}\n.mytooltip {\n  float:left;\n  position: relative;\n  display: inline-block;\n}\n.medalRow {\n  width: 100%;\n  height: 26px;\n}\n.mytooltip .tooltiptext {\n  opacity: 0;\n  transition: opacity 0.5s;\n}\n.mytooltip:hover .tooltiptext {\n  opacity: 1;\n}\n.medals {\n  font-size: 12px;\n}\n.medal {\n  width:15px;\n  height:15px;\n  margin-top:5px;\n  margin-bottom:5px;\n}\n.name:hover {\n  color: #FFD79D;\n}\n.name {\n  cursor: pointer;\n  color: white;\n  font-size: 12pt;\n  text-align: left;\n  padding-left: 10px;\n}\n.nameTitle {\n  color: white;\n  font-size: 13pt;\n  text-align: left;\n  padding-left: 10px;\n}\n.gameName {\n  color: white;\n  text-align: left;\n  display: inline-block;\n}\n.textContainer {\n  text-align: center;\n}\n.pos {\n  font-size: 8pt;\n}\n.time {\n  color: white;\n  font-size: 13pt;\n  text-align: right;\n  padding-right: 15px;\n}\n.timeText {\n  color: white;\n  font-size: 12pt;\n  text-align: right;\n  padding-right: 7px;\n}\n.mytooltip .tooltiptext::after {\n  content: \" \";\n  position: absolute;\n  top: 50%;\n  left: 100%; /* To the right of the tooltip */\n  margin-top: -5px;\n  border-width: 5px;\n  border-style: solid;\n  border-color: transparent transparent transparent black;\n}\n.medalText {\n  float: right;\n  padding-top:3px;\n}\n/* Tooltip text */\n.mytooltip .tooltiptext {\n  visibility: hidden;\n  width: 150px;\n  background-color: black;\n  color: #fff;\n  text-align: center;\n  padding: 5px 0;\n  border-radius: 6px;\n\n\n\n  /* Position the tooltip text - see examples below! */\n  position: absolute;\n  top: 0px;\n  right: calc(100% + 10px); \n  z-index: 1;\n}\n/* Show the tooltip text when you mouse over the tooltip container */\n.mytooltip:hover .tooltiptext {\n  visibility: visible;\n}\n.timerTitle {\n  color: white;\n  float: left;\n}\n.timer {\n  float: right;\n}\n.countdown {\n  background: #2c2c2c;\n  position: absolute;\n  top: 10px;\n  right: 20px;\n  width: 400px;\n  height: 2.5rem;\n}\n.title {\n  background: #2c2c2c;\n  position: absolute;\n  top: 10px;\n  left: 0px;\n  width: 100%;\n  height: 2.5rem;\n}\n.leaderboardButtons {\n  background: #2c2c2c;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  width: 30%;\n  height: 2.5rem;\n}\n.leaderbutton:hover {\n  background: #7c7c7c;\n}\n.leaderbutton {\n  width: 5.5rem;\n  height: 2rem;\n  padding-left: 0px;\n  padding-right: 0px;\n  margin-right: 20px;\n  margin-top: 0.5rem;\n  background: #3a3a3a;\n  color: white;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n}\n.selectedButton {\n  width: 5.5rem;\n  height: 2rem;\n  padding-left: 0px;\n  padding-right: 0px;\n  margin-right: 20px;\n  margin-top: 0.5rem;\n  border-radius: 5px;\n  background: #7c7c7c;\n  color: white;\n  border: none;\n}\n#page {\n  background: #2C2C2C;\n  position: absolute;\n  top:3.5rem;\n  left:100px;\n  overflow-y: auto;\n  width: calc(100% - 100px);\n  height: calc(100vh - 3.5rem);\n}\n#navController {\n  background: #2C2C2C;\n  position: absolute;\n  top:calc(50vh - 250px);\n  left: 0px;\n  width: 100px;\n  height: calc(60vh - 7rem);\n  color: white;\n}\n.navActive {\n  background: #2C2C2C;\n}\n.navInactive {\n  background: #3D3D3D;\n}\n.navItem {\n  cursor:pointer;\n}\n.leaderboardEntry {\n    color: white;   \n    border: white solid;\n    margin: auto;\n    border-radius: 25px;\n    \n    margin-top: 3rem;\n    max-width:409px;\n    min-width: 409px;\n    max-height:calc(100vh - 11rem);\n    min-height:calc(100vh - 11rem);\n    text-align: center;\n}\nthead, tbody { display: block; }\ntbody {\n  height: calc(100vh - 9rem - 135px);       /* Just for the demo          */\n  overflow-y: auto;    /* Trigger vertical scroll    */\n  overflow-x: hidden;  /* Hide the horizontal scroll */\n}\n.firstcol {\n  width:20px;\n}\n.secondcol {\n  width: 210px;\n}\n.thirdcol {\n  width: 50px;\n}\n.fourthcol {\n  width: 129px;\n}\n.flexElement {\n    flex:1;\n    max-width:420px;\n    min-width: 420px;\n    margin: auto;\n\n    max-height:calc(100vh - 9rem);\n    min-height:calc(100vh - 9rem);\n}\n.columnContainer {\n    display:flex;\n    flex-wrap: wrap;\n    min-height: 800px;\n    width: 100%;\n    margin: auto;\n}\n.first {\n    color:yellow;\n}\n.second {\n    color:white;\n}\n.third {\n    color:#CD7F32;\n}\n.even {\n  background: #333333;\n}\n.odd {\n  background: #202020;\n}\n.others {\n    color:#C0C0C0;\n}\n.you {\n    color:#C0C0C0;\n    background: #4c4c4d;\n}\n.easy {\n    border: #28a745 solid;\n}\n.medium {\n    border: #17a2b8 solid;\n}\n.hard {\n    border: #007bff solid;\n}\n.extreme {\n    border: #dc3545 solid;\n}\n"
-
-/***/ }),
-
 /***/ "./src/app/leaderboards/leaderboards.component.html":
 /*!**********************************************************!*\
   !*** ./src/app/leaderboards/leaderboards.component.html ***!
@@ -5625,7 +5651,18 @@ module.exports = ".gridContainer {\n  height:calc(100% - 2rem);\n  display:flex;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"navController\" class=\"\">\n  <ng-container *ngFor=\"let game of games\">\n    <a (click)=\"setGame(game.id)\" \n      [ngClass]=\"gameID == game.id ? 'navActive' : 'navInactive'\" \n      class=\"navItem nav-item nav-link\"><img class=\"clickable\" src=\"{{game.image}}\"></a>\n  </ng-container>\n</div>\n\n<div id=\"page\">\n  <div class=\"title textContainer\">\n    <h2 class=\"gameName\">{{getGameName(gameID)}}</h2>\n  </div>\n\n  <div class=\"leaderboardButtons\">\n    <button [ngClass]=\"leaderboard == 0 ? 'selectedButton' : 'leaderbutton'\" (click)=\"changeLeaderboard(0)\">Daily</button>\n    <button [ngClass]=\"leaderboard == 1 ? 'selectedButton' : 'leaderbutton'\" (click)=\"changeLeaderboard(1)\">Weekly</button>\n    <button [ngClass]=\"leaderboard == 2 ? 'selectedButton' : 'leaderbutton'\" (click)=\"changeLeaderboard(2)\">Monthly</button>\n  </div>\n\n  <div class=\"countdown\">\n    <h2 class=\"timerTitle monospace\">RESET IN:</h2>\n    <h2 id=\"leaderboardstimer\" class=\"timer monospace\">000:00:00</h2>\n  </div>\n\n  <div class=\"gridContainer\">\n    <div class=\"columnContainer\">\n      <ng-container *ngFor=\"let diff of getGameDiffs(gameID);let i=index\">\n        <div class=\"flexElement\">\n          <div [ngClass]=\"i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'\"\n             class=\"leaderboardEntry\">\n            <h3 style=\"padding-top:10px\"><b>{{diff.name | titlecase}}</b></h3>\n            <table>\n              <thead>\n                <tr>\n                  <td class=\"firstcol\"></td>\n                  <td class=\"secondcol nameTitle\"><b>Name</b></td>\n                  <td class=\"thirdcol medals\"></td>\n                  <td class=\"fourthcol time\"><b>Time</b></td>\n                </tr>\n              </thead>\n              <tbody class=\"scrollable\">\n                <ng-container *ngFor=\"let entry of leaderboards[i + 1];let k=index\">\n                  <tr [ngClass]=\"username == entry.username ? 'you' : k % 2 == 0 ? 'even' : 'odd'\">\n                    <td class=\"pos firstcol\">\n                      {{k + 1}}\n                    </td>\n                    <td class=\"name secondcol\" (click)=\"viewProfile(entry.username)\">\n                      {{entry.username}}\n                    </td>\n\n                    <td class=\"medals thirdcol\">\n                      <div class=\"medalRow\">\n                        <ng-container *ngIf=\"hasMedals(entry)\">\n                          <div class=\"mytooltip\">\n                            <img class=\"goldMedals medal\" src=\"/assets/images/medals/{{leaderboardName}}_Gold.svg\">\n                            <div class=\"tooltiptext\">\n                              {{leaderboardName}} Gold Medal\n                            </div>\n                          </div>\n                          <a class=\"monospace medalText\">\n                            {{entry.goldMedals}}\n                          </a>\n                        </ng-container>\n                      </div>\n\n                      <div class=\"medalRow\">\n                        <ng-container *ngIf=\"hasMedals(entry)\">\n                          <div class=\"mytooltip\">\n                            <img class=\"goldMedals medal\" src=\"/assets/images/medals/{{leaderboardName}}_Silver.svg\">\n                            <div class=\"tooltiptext\">\n                              {{leaderboardName}} Silver Medal\n                            </div>\n                          </div>\n                          <a class=\"monospace medalText\">\n                            {{entry.silverMedals}}\n                          </a>\n                        </ng-container>\n                      </div>\n\n                      <div class=\"medalRow\">\n                        <ng-container *ngIf=\"hasMedals(entry)\">\n                          <div class=\"mytooltip\">\n                            <img class=\"goldMedals medal\" src=\"/assets/images/medals/{{leaderboardName}}_Bronze.svg\">\n                            <div class=\"tooltiptext\">\n                              {{leaderboardName}} Bronze Medal\n                            </div>\n                          </div>\n                          <a class=\"monospace medalText\">\n                            {{entry.bronzeMedals}}\n                          </a>\n                        </ng-container>\n                      </div>\n                    </td>\n\n                    <td class=\"timeText monospace fourthcol\">\n                      {{entry.time}}\n                    </td>\n                  </tr>\n                </ng-container>\n              </tbody>\n            </table>\n          </div>\n        </div>\n      </ng-container>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container-stretch\">\n  <div id=\"navController\" class=\"col-1 container-flex-row game-selector\">\n    <ng-container *ngFor=\"let game of games\">\n      <div class=\"col-12\">\n        <a (click)=\"setGame(game.id)\" \n           [ngClass]=\"gameID == game.id ? 'navActive' : 'navInactive'\" \n           class=\"navItem nav-item nav-link\"><img class=\"clickable\" src=\"{{game.image}}\"></a>\n      </div>\n    </ng-container>\n  </div>\n  <div class=\"col-11 container-stretch\">\n    <div class=\"col-12 container-flex-row leaderboard-header\">\n      <div class=\"col-4\">\n        <mat-button-toggle-group>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 0\"\n           (click)=\"changeLeaderboard(0)\">\n            Daily\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 1\"\n           (click)=\"changeLeaderboard(1)\">\n            Weekly\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 2\"\n           (click)=\"changeLeaderboard(2)\">\n            Monthly\n          </mat-button-toggle>\n        </mat-button-toggle-group>\n      </div>\n\n      <div class=\"game-title col-4\">\n        <h2 class=\"gameName\">{{getGameName(gameID)}}</h2>\n      </div>\n\n      <div class=\"countdown col-4\">\n        <h2 class=\"timerTitle monospace\">RESET IN:&nbsp;</h2>\n        <h2 id=\"leaderboardstimer\" class=\"timer monospace\">000:00:00</h2>\n      </div>\n    </div><!-- leaderboard-header -->\n\n    <div id=\"page\" class=\"col-12 leaderboard-tables\">\n      <div class=\"container-flex-row\">\n        <ng-container *ngFor=\"let diff of getGameDiffs(gameID);let i=index\">\n          <div\n           class=\"card  leaderboard-card\"\n           [ngClass]=\"i==0 ? 'easy' : i==1 ? 'medium' : i==2 ? 'hard' : 'extreme'\">\n            <h3>{{diff.name | titlecase}}</h3>\n            <div class=\"leaderboard-table\">\n              <table>\n                <thead>\n                  <tr>\n                    <th>#</th>\n                    <th>Name</th>\n                    <th></th>\n                    <th>Time</th>\n                  </tr>\n                </thead>\n                <tbody>\n                  <ng-container *ngFor=\"let entry of leaderboards[i + 1];let k=index\">\n                    <tr [ngClass]=\"username == entry.username ? 'you' : ''\">\n                      <td class=\"pos firstcol\">\n                        {{k + 1}}\n                      </td>\n                      <td class=\"name secondcol\" (click)=\"viewProfile(entry.username)\">\n                        {{entry.username}}\n                      </td>\n\n                      <td class=\"medals thirdcol\">\n                        <div \n                          class=\"medalRow\"\n                          attr.data-tooltip=\"{{leaderboardName}} Gold Medal\"\n                          data-tooltip-position=\"top\">\n                          <ng-container *ngIf=\"hasMedals(entry)\">\n                            <img\n                          class=\"goldMedals medal\"\n                          src=\"/assets/images/medals/{{leaderboardName}}_Gold.svg\">\n                            <a class=\"monospace medalText\">\n                              {{entry.goldMedals}}\n                            </a>\n                          </ng-container>\n                        </div>\n\n                        <div \n                               class=\"medalRow\"\n                               attr.data-tooltip=\"{{leaderboardName}} Silver Medal\"\n                               data-tooltip-position=\"left\">\n                          <ng-container *ngIf=\"hasMedals(entry)\">\n                            <img\n                               class=\"goldMedals medal\"\n                               src=\"/assets/images/medals/{{leaderboardName}}_Silver.svg\">\n                            <a class=\"monospace medalText\">\n                              {{entry.silverMedals}}\n                            </a>\n                          </ng-container>\n                        </div>\n\n                        <div class=\"medalRow\"\n                             attr.data-tooltip=\"{{leaderboardName}} Bronze Medal\"\n                             data-tooltip-position=\"left\">\n                          <ng-container *ngIf=\"hasMedals(entry)\">\n                            <img\n                             class=\"goldMedals medal\"\n                             src=\"/assets/images/medals/{{leaderboardName}}_Bronze.svg\">\n                            <a class=\"monospace medalText\">\n                              {{entry.bronzeMedals}}\n                            </a>\n                          </ng-container>\n                        </div>\n                      </td>\n\n                      <td class=\"timeText monospace fourthcol\">\n                        {{entry.time}}\n                      </td>\n                    </tr>\n                  </ng-container>\n                </tbody>\n              </table>\n            </div>\n          </div>\n        </ng-container>\n      </div>\n    </div><!-- container-flex-row -->\n  </div>\n</div><!-- container-stretch -->\n"
+
+/***/ }),
+
+/***/ "./src/app/leaderboards/leaderboards.component.scss":
+/*!**********************************************************!*\
+  !*** ./src/app/leaderboards/leaderboards.component.scss ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".card {\n  margin: 1.4rem;\n  padding: 2rem;\n  border-radius: 1.5rem;\n  background-color: #343a40; }\n  .card .mat-card-header {\n    margin: 0;\n    margin-left: -16px; }\n  .card .mat-card-title {\n    font-family: \"Poppins\", sans-serif;\n    font-size: 1.5rem; }\n  .card .mat-card-content {\n    font-size: 1rem; }\n  [data-tooltip] {\n  margin: 1.25rem;\n  position: relative; }\n  [data-tooltip]::before, [data-tooltip]::after {\n    position: absolute;\n    top: -0.5rem;\n    left: 50%;\n    opacity: 0; }\n  [data-tooltip]::before {\n    z-index: 100;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    border-width: 0.3rem 0.5rem 0 0.5rem;\n    border-style: solid;\n    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;\n    content: \"\"; }\n  [data-tooltip]::after {\n    min-width: 5rem;\n    padding: 0.2rem 0.4rem;\n    -webkit-transform: translateX(-50%) translateY(-100%);\n            transform: translateX(-50%) translateY(-100%);\n    border-radius: 0.3rem;\n    color: white;\n    font-size: 0.9rem;\n    text-align: center;\n    background-color: rgba(0, 0, 0, 0.5);\n    pointer-events: none;\n    content: attr(data-tooltip); }\n  [data-tooltip]:hover::before, [data-tooltip]:hover::after, [data-tooltip]:focus::before, [data-tooltip]:focus::after {\n    opacity: 1;\n    transition: opacity 0.3s ease-in 0.0s; }\n  [data-tooltip-position='top']::before {\n  left: 50%; }\n  [data-tooltip-position='top']::after {\n  left: 50%; }\n  [data-tooltip-position='left']::before {\n  margin-left: -0.75rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateY(-50%) rotate(-90deg);\n          transform: translateY(-50%) rotate(-90deg); }\n  [data-tooltip-position='left']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateX(-100%) translateY(-50%);\n          transform: translateX(-100%) translateY(-50%); }\n  [data-tooltip-position='bottom']::before {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(-100%) rotate(-180deg);\n          transform: translateX(-50%) translateY(-100%) rotate(-180deg); }\n  [data-tooltip-position='bottom']::after {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(0%);\n          transform: translateX(-50%) translateY(0%); }\n  [data-tooltip-position='right']::before {\n  margin-left: 0.1rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateY(-50%) rotate(90deg);\n          transform: translateY(-50%) rotate(90deg); }\n  [data-tooltip-position='right']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateX(0%) translateY(-50%);\n          transform: translateX(0%) translateY(-50%); }\n  .leaderboard-header {\n  height: 4rem;\n  align-items: center;\n  justify-content: space-between;\n  text-align: center; }\n  .leaderboard-header h2 {\n    display: inline-block; }\n  .game-title {\n  font-family: \"Poppins\", sans-serif; }\n  .game-selector {\n  max-height: 100%;\n  padding: 0;\n  align-items: center;\n  align-content: center; }\n  .game-selector img {\n    max-width: 6rem; }\n  .leaderboard-tables {\n  height: 100%;\n  max-height: calc(100% - 4rem);\n  overflow-y: auto; }\n  .leaderboard-tables .container-flex-row {\n    justify-content: space-between; }\n  .leaderboard-tables tr {\n    padding: 5rem 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.15); }\n  .leaderboard-tables .medalRow {\n    height: 1.5rem; }\n  .leaderboard-tables [data-tooltip] {\n    margin: 0.1rem; }\n  .leaderboard-card {\n  width: 26rem;\n  max-width: 26rem;\n  height: 48rem;\n  max-height: 48rem;\n  padding: 0.5rem 0.25rem 1.5rem;\n  text-align: center; }\n  .leaderboard-card h3 {\n    font-weight: bold; }\n  .leaderboard-table {\n  height: 43rem;\n  max-height: 48rem;\n  overflow-y: auto;\n  background: #343a40; }\n  .leaderboard-table table {\n    width: 100%;\n    padding: 0.25rem; }\n  .easy {\n  background-color: #1e7e34; }\n  .medium {\n  background-color: #007bff; }\n  .hard {\n  background-color: #f28c32; }\n  .extreme {\n  background-color: #dc3545; }\n  .you {\n  background-color: rgba(255, 255, 255, 0.2); }\n  .medals {\n  font-size: 0.75rem;\n  text-align: left; }\n  .medal {\n  width: 0.95rem;\n  height: 0.95rem;\n  margin: 0.3rem 0; }\n"
 
 /***/ }),
 
@@ -5830,7 +5867,7 @@ var LeaderboardsComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-leaderboards',
             template: __webpack_require__(/*! ./leaderboards.component.html */ "./src/app/leaderboards/leaderboards.component.html"),
-            styles: [__webpack_require__(/*! ./leaderboards.component.css */ "./src/app/leaderboards/leaderboards.component.css")]
+            styles: [__webpack_require__(/*! ./leaderboards.component.scss */ "./src/app/leaderboards/leaderboards.component.scss")]
         }),
         __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"],
             _services_loading_service_loader_service__WEBPACK_IMPORTED_MODULE_5__["LoaderService"],
@@ -9363,9 +9400,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_list__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../classes/game-list */ "./src/app/classes/game-list.ts");
 /* harmony import */ var _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../enums/game-id.enum */ "./src/app/enums/game-id.enum.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -10403,7 +10443,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /root/projects/PuzzleHub/front-end/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/christian/git/PuzzleHub/front-end/src/main.ts */"./src/main.ts");
 
 
 /***/ })
