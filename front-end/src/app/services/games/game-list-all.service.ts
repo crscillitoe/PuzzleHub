@@ -12,6 +12,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.SUDOKU,
         'Sudoku',
+        'sudoku',
         'sudoku.svg',
         'A classic puzzle game where you must fill out the board with numbers 1-9.',
         'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
@@ -21,6 +22,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.TAKUZU,
         'Takuzu',
+        'takuzu',
         'takuzu.svg',
         'Takuzu is a logic-based number placement puzzle. The objective is to fill a ' +
         '(usually 10×10) grid with 1s and 0s.',
@@ -32,6 +34,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.NONOGRAMS,
         'Nonograms',
+        'nonograms',
         'nonograms.svg',
         'Nonograms are picture logic puzzles in which cells in a grid must be colored according ' +
         'to numbers at the side of the grid to reveal a hidden picture.',
@@ -41,6 +44,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.THERMOMETERS,
         'Thermometers',
+        'thermometers',
         'thermometers.svg',
         'A New York Times classic where you must fill up thermometers to a certain amount.',
         'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
@@ -50,6 +54,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.HASHI,
         'Hashi',
+        'hashi',
         'hashi.svg',
         'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and ' +
         'challenging solutions.',
@@ -61,6 +66,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.TILE_GAME,
         'Tile Game',
+        'tilegame',
         'tilegame.svg',
         'Tile game is a common puzzle where the user slides tiles into the correct order.',
         'Order the numbers in sequential order from left to right, top to bottom',
@@ -69,6 +75,7 @@ export class GameListAllService extends GameList {
       new Game(
         GameID.MINESWEEPER,
         'Minesweeper',
+        'minesweeper',
         'minesweeper.svg',
         'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
         'clear a rectangular board containing hidden mines.',

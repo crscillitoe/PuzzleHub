@@ -36,6 +36,7 @@ export class Game {
 
   private _id: number;
   private _name: string;
+  private _cleanName: string;
   private _imagePath = 'assets/images/game-splashes/';
   private _imageBase: string;
   private _desc: string;
@@ -49,6 +50,10 @@ export class Game {
 
   get name(): string {
     return this._name;
+  }
+
+  get cleanName(): string {
+    return this._cleanName;
   }
 
   get image(): string {
@@ -78,6 +83,7 @@ export class Game {
   constructor(
     id: number,
     name: string,
+    cleanName: string,
     image: string,
     desc: string,
     rules: string,
@@ -85,6 +91,7 @@ export class Game {
     diffs?: Difficulty[]) {
     this._id = id;
     this._name = name;
+    this._cleanName = cleanName;
     this._imageBase = image;
     this._desc = desc;
     this._rules = rules;

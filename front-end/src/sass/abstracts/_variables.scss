@@ -84,6 +84,15 @@ $breakpoints: (
 $grid-columns: 12 !default;
 $grid-gutter: 2rem !default;
 
+/// Static Containers
+/// Also ripped from Bootstrap
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px
+) !default;
+
 /// Nav
 $nav-font-size: 1rem;
 $nav-line-height: 1.5rem;

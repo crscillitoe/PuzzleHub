@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user/user.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameID } from '../enums/game-id.enum';
@@ -8,6 +8,7 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-leaderboards',
@@ -18,10 +19,25 @@ export class LeaderboardsComponent implements OnInit {
   games: Game[] = GameListAllService.games;
 
   resetDate: any;
-  leaderboards: any;
+  leaderboards: MatTableDataSource<any>[];
 
   leaderboard: number = 0;
   leaderboardName: string = "Daily";
+  leaderboardDifficulty = 0;
+  leaderboardColumns: string[] = [
+    'rowIndex',
+    'username',
+    'goldMedals',
+    'silverMedals',
+    'bronzeMedals',
+    'time'
+  ];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  pageSize = 25;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
 
   gameID: number;
   username: string = "";
@@ -63,6 +79,7 @@ export class LeaderboardsComponent implements OnInit {
       });
     this.gameID = SettingsService.getDataNum('selectedGameID');
     this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
+    this.leaderboardDifficulty = SettingsService.getDataNum('selectedLeaderboardDifficulty');
 
     this.countDownTimer();
 
@@ -153,9 +170,14 @@ export class LeaderboardsComponent implements OnInit {
     this.loadScores();
   }
 
+  setLeaderboardDifficulty(n) {
+    this.leaderboardDifficulty = n;
+    SettingsService.storeData('selectedLeaderboardDifficulty', n);
+  }
+
   loadScores() {
     this.loader.startLoadingAnimation();
-    this.leaderboards = {};
+    this.leaderboards = [];
 
     for(var i = 1 ; i <= 4 ; i++) {
       let m = {
@@ -169,8 +191,10 @@ export class LeaderboardsComponent implements OnInit {
           console.log(data);
           var that = this;
           setTimeout(function() {
-            that.loader.stopLoadingAnimation()
-            that.leaderboards[m['Difficulty']] = data;
+            that.loader.stopLoadingAnimation();
+            that.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
+            that.leaderboards[m['Difficulty']].paginator = that.paginator;
+            that.leaderboards[m['Difficulty']].sort = that.sort;
           }, 500);
         });
     }
