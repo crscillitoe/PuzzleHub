@@ -1002,9 +1002,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2356,9 +2359,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2854,9 +2860,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3162,9 +3171,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3486,9 +3498,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4146,9 +4161,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4589,9 +4607,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_board__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../classes/game-board */ "./src/app/classes/game-board.ts");
 /* harmony import */ var _services_games_options_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../services/games/options.service */ "./src/app/services/games/options.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -5641,7 +5662,7 @@ var HeaderComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-static-stretch container-scroll-y\">\n  <div class=\"container-static\">\n    <div class=\"container-flex-row leaderboard-header\">\n      <div class=\"game-title col-12\">\n        <h2 class=\"gameName\">{{getGameName(gameID)}}</h2>\n      </div>\n    </div><!-- leaderboard-header -->\n    <div class=\"container-flex-row\">\n      <div class=\"countdown col-12\">\n        <span class=\"timerTitle monospace\">RESET IN:&nbsp;</span>\n        <span id=\"leaderboardstimer\" class=\"timer monospace\">000:00:00</span>\n      </div>\n    </div>\n    <div class=\"container-flex-row\">\n      <div class=\"col-6\">\n        <mat-button-toggle-group>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 0\"\n           (click)=\"changeLeaderboard(0)\">\n            Daily\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 1\"\n           (click)=\"changeLeaderboard(1)\">\n            Weekly\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 2\"\n           (click)=\"changeLeaderboard(2)\">\n            Monthly\n          </mat-button-toggle>\n        </mat-button-toggle-group>\n      </div>\n      <div class=\"col-6\" style=\"text-align: right\">\n        <mat-button-toggle-group>\n          <ng-container *ngFor=\"let game of games\">\n            <mat-button-toggle \n                         (click)=\"setGame(game.id)\" \n                         [checked]=\"gameID == game.id\"> \n              <mat-icon svgIcon=\"{{game.cleanName}}Icon\"></mat-icon>\n            </mat-button-toggle>\n          </ng-container>\n        </mat-button-toggle-group>\n      </div>\n    </div>\n    <div class=\"col-12 leaderboard-tables\">\n      <mat-tab-group\n         [selectedIndex]=\"leaderboardDifficulty\"\n         (selectedIndexChange)=\"setLeaderboardDifficulty($event)\">\n        <ng-container *ngFor=\"let diff of getGameDiffs(gameID);let i=index\">\n          <mat-tab label=\"{{diff.name | titlecase}}\">\n            <table mat-table [dataSource]=\"leaderboards[i + 1]\" matSort>\n              <ng-container matColumnDef=\"rowIndex\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>\n                <td mat-cell *matCellDef=\"let k = index;\">{{k + 1}}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"username\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>\n                <td\n                            mat-cell\n                            *matCellDef=\"let element\"\n                            (click)=\"viewProfile(element.username)\">\n                  {{element.username}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"goldMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gold Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Gold.svg\">\n                  {{element.goldMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"silverMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Silver Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Silver.svg\">\n                  {{element.silverMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"bronzeMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Bronze Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Bronze.svg\">\n                  {{element.bronzeMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"time\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{element.time}}\n                </td>\n              </ng-container>\n\n              <tr\n                            mat-header-row\n                            *matHeaderRowDef=\"leaderboardColumns; sticky: true\">\n              </tr>\n              <tr\n                            mat-row \n                            *matRowDef=\"let row; columns: leaderboardColumns; let k = index;\"\n                            [ngClass]=\"username == row.username ? 'you' : ''\">\n              </tr>\n            </table>\n            <mat-paginator\n              [pageSizeOptions]=\"pageSizeOptions\"\n              [pageSize]=\"pageSize\"\n              showFirstLastButtons>\n            </mat-paginator>\n          </mat-tab>\n        </ng-container>\n      </mat-tab-group>\n    </div>\n  </div><!-- container-stretch -->\n</div>\n"
+module.exports = "<div class=\"container-static-stretch container-scroll-y\">\n  <div class=\"container-static\">\n    <div class=\"container-flex-row leaderboard-header\">\n      <div class=\"game-title col-12\">\n        <h2 class=\"gameName\">{{getGameName(gameID)}}</h2>\n      </div>\n    </div><!-- leaderboard-header -->\n    <div class=\"container-flex-row\">\n      <div class=\"countdown col-12\">\n        <span class=\"timerTitle monospace\">RESET IN:&nbsp;</span>\n        <span id=\"leaderboardstimer\" class=\"timer monospace\">000:00:00</span>\n      </div>\n    </div>\n    <div class=\"container-flex-row\">\n      <div class=\"col-6\">\n        <mat-button-toggle-group>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 0\"\n           (click)=\"changeLeaderboard(0)\">\n            Daily\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 1\"\n           (click)=\"changeLeaderboard(1)\">\n            Weekly\n          </mat-button-toggle>\n          <mat-button-toggle\n           [checked]=\"leaderboard == 2\"\n           (click)=\"changeLeaderboard(2)\">\n            Monthly\n          </mat-button-toggle>\n        </mat-button-toggle-group>\n      </div>\n      <div class=\"col-6\" style=\"text-align: right\">\n        <mat-button-toggle-group>\n          <ng-container *ngFor=\"let game of games\">\n            <mat-button-toggle \n                         (click)=\"setGame(game.id)\" \n                         [checked]=\"gameID == game.id\"> \n              <mat-icon svgIcon=\"{{game.cleanName}}Icon\"></mat-icon>\n            </mat-button-toggle>\n          </ng-container>\n        </mat-button-toggle-group>\n      </div>\n    </div>\n    <div class=\"col-12 leaderboard-tables\">\n      <mat-tab-group\n         [selectedIndex]=\"leaderboardDifficulty\"\n         (selectedIndexChange)=\"setLeaderboardDifficulty($event)\">\n        <ng-container *ngFor=\"let diff of getGameDiffs(gameID);let i=index\">\n          <mat-tab label=\"{{diff.name | titlecase}}\">\n            <table mat-table [dataSource]=\"leaderboards[i + 1]\" matSort>\n              <ng-container matColumnDef=\"rowIndex\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>\n                <td mat-cell *matCellDef=\"let k = index;\">{{k + 1}}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"username\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>\n                <td\n                            id=\"username-cell\"\n                            mat-cell\n                            *matCellDef=\"let element\"\n                            (click)=\"viewProfile(element.username)\">\n                  {{element.username}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"goldMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gold Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Gold.svg\">\n                  {{element.goldMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"silverMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Silver Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Silver.svg\">\n                  {{element.silverMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"bronzeMedals\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Bronze Medals</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  <img\n                            class=\"goldMedals medal\"\n                            src=\"/assets/images/medals/{{leaderboardName}}_Bronze.svg\">\n                  {{element.bronzeMedals}}\n                </td>\n              </ng-container>\n\n              <ng-container matColumnDef=\"time\">\n                <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{element.time}}\n                </td>\n              </ng-container>\n\n              <tr\n                            mat-header-row\n                            *matHeaderRowDef=\"leaderboardColumns; sticky: true\">\n              </tr>\n              <tr\n                            mat-row \n                            *matRowDef=\"let row; columns: leaderboardColumns; let k = index;\"\n                            [ngClass]=\"username == row.username ? 'you' : ''\">\n              </tr>\n            </table>\n            <mat-paginator\n              [pageSizeOptions]=\"pageSizeOptions\"\n              [pageSize]=\"pageSize\"\n              showFirstLastButtons>\n            </mat-paginator>\n          </mat-tab>\n        </ng-container>\n      </mat-tab-group>\n    </div>\n  </div><!-- container-stretch -->\n</div>\n"
 
 /***/ }),
 
@@ -5652,7 +5673,7 @@ module.exports = "<div class=\"container-static-stretch container-scroll-y\">\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".card {\n  margin: 1.4rem;\n  padding: 2rem;\n  border-radius: 1.5rem;\n  background-color: #343a40; }\n  .card .mat-card-header {\n    margin: 0;\n    margin-left: -16px; }\n  .card .mat-card-title {\n    font-family: \"Poppins\", sans-serif;\n    font-size: 1.5rem; }\n  .card .mat-card-content {\n    font-size: 1rem; }\n  [data-tooltip] {\n  margin: 1.25rem;\n  position: relative; }\n  [data-tooltip]::before, [data-tooltip]::after {\n    position: absolute;\n    top: -0.5rem;\n    left: 50%;\n    opacity: 0; }\n  [data-tooltip]::before {\n    z-index: 100;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    border-width: 0.3rem 0.5rem 0 0.5rem;\n    border-style: solid;\n    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;\n    content: \"\"; }\n  [data-tooltip]::after {\n    min-width: 5rem;\n    padding: 0.2rem 0.4rem;\n    -webkit-transform: translateX(-50%) translateY(-100%);\n            transform: translateX(-50%) translateY(-100%);\n    border-radius: 0.3rem;\n    color: white;\n    font-size: 0.9rem;\n    text-align: center;\n    background-color: rgba(0, 0, 0, 0.5);\n    pointer-events: none;\n    content: attr(data-tooltip); }\n  [data-tooltip]:hover::before, [data-tooltip]:hover::after, [data-tooltip]:focus::before, [data-tooltip]:focus::after {\n    opacity: 1;\n    transition: opacity 0.3s ease-in 0.0s; }\n  [data-tooltip-position='top']::before {\n  left: 50%; }\n  [data-tooltip-position='top']::after {\n  left: 50%; }\n  [data-tooltip-position='left']::before {\n  margin-left: -0.75rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateY(-50%) rotate(-90deg);\n          transform: translateY(-50%) rotate(-90deg); }\n  [data-tooltip-position='left']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateX(-100%) translateY(-50%);\n          transform: translateX(-100%) translateY(-50%); }\n  [data-tooltip-position='bottom']::before {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(-100%) rotate(-180deg);\n          transform: translateX(-50%) translateY(-100%) rotate(-180deg); }\n  [data-tooltip-position='bottom']::after {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(0%);\n          transform: translateX(-50%) translateY(0%); }\n  [data-tooltip-position='right']::before {\n  margin-left: 0.1rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateY(-50%) rotate(90deg);\n          transform: translateY(-50%) rotate(90deg); }\n  [data-tooltip-position='right']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateX(0%) translateY(-50%);\n          transform: translateX(0%) translateY(-50%); }\n  .leaderboard-header {\n  height: 4rem;\n  align-items: center;\n  justify-content: space-between;\n  text-align: center; }\n  .leaderboard-header h2 {\n    display: inline-block; }\n  .game-title {\n  font-family: \"Poppins\", sans-serif; }\n  .game-selector {\n  max-height: 100%;\n  padding: 0;\n  align-items: center;\n  align-content: center; }\n  .game-selector img {\n    max-width: 6rem; }\n  .leaderboard-tables table {\n  width: 100%; }\n  .leaderboard-card {\n  width: 26rem;\n  max-width: 26rem;\n  height: 48rem;\n  max-height: 48rem;\n  padding: 0.5rem 0.25rem 1.5rem;\n  text-align: center; }\n  .leaderboard-card h3 {\n    font-weight: bold; }\n  .leaderboard-table {\n  height: 43rem;\n  max-height: 48rem;\n  overflow-y: auto;\n  background: #343a40; }\n  .leaderboard-table table {\n    width: 100%;\n    padding: 0.25rem; }\n  .easy {\n  background-color: #1e7e34; }\n  .medium {\n  background-color: #007bff; }\n  .hard {\n  background-color: #f28c32; }\n  .extreme {\n  background-color: #dc3545; }\n  .you {\n  background-color: rgba(255, 255, 255, 0.2); }\n  .medals {\n  font-size: 0.75rem;\n  text-align: left; }\n  .medal {\n  width: 0.95rem;\n  height: 0.95rem;\n  margin: 0.3rem 0; }\n"
+module.exports = ".card {\n  margin: 1.4rem;\n  padding: 2rem;\n  border-radius: 1.5rem;\n  background-color: #343a40; }\n  .card .mat-card-header {\n    margin: 0;\n    margin-left: -16px; }\n  .card .mat-card-title {\n    font-family: \"Poppins\", sans-serif;\n    font-size: 1.5rem; }\n  .card .mat-card-content {\n    font-size: 1rem; }\n  [data-tooltip] {\n  margin: 1.25rem;\n  position: relative; }\n  [data-tooltip]::before, [data-tooltip]::after {\n    position: absolute;\n    top: -0.5rem;\n    left: 50%;\n    opacity: 0; }\n  [data-tooltip]::before {\n    z-index: 100;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    border-width: 0.3rem 0.5rem 0 0.5rem;\n    border-style: solid;\n    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;\n    content: \"\"; }\n  [data-tooltip]::after {\n    min-width: 5rem;\n    padding: 0.2rem 0.4rem;\n    -webkit-transform: translateX(-50%) translateY(-100%);\n            transform: translateX(-50%) translateY(-100%);\n    border-radius: 0.3rem;\n    color: white;\n    font-size: 0.9rem;\n    text-align: center;\n    background-color: rgba(0, 0, 0, 0.5);\n    pointer-events: none;\n    content: attr(data-tooltip); }\n  [data-tooltip]:hover::before, [data-tooltip]:hover::after, [data-tooltip]:focus::before, [data-tooltip]:focus::after {\n    opacity: 1;\n    transition: opacity 0.3s ease-in 0.0s; }\n  [data-tooltip-position='top']::before {\n  left: 50%; }\n  [data-tooltip-position='top']::after {\n  left: 50%; }\n  [data-tooltip-position='left']::before {\n  margin-left: -0.75rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateY(-50%) rotate(-90deg);\n          transform: translateY(-50%) rotate(-90deg); }\n  [data-tooltip-position='left']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 0%;\n  -webkit-transform: translateX(-100%) translateY(-50%);\n          transform: translateX(-100%) translateY(-50%); }\n  [data-tooltip-position='bottom']::before {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(-100%) rotate(-180deg);\n          transform: translateX(-50%) translateY(-100%) rotate(-180deg); }\n  [data-tooltip-position='bottom']::after {\n  margin-top: 0.5rem;\n  top: 100%;\n  -webkit-transform: translateX(-50%) translateY(0%);\n          transform: translateX(-50%) translateY(0%); }\n  [data-tooltip-position='right']::before {\n  margin-left: 0.1rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateY(-50%) rotate(90deg);\n          transform: translateY(-50%) rotate(90deg); }\n  [data-tooltip-position='right']::after {\n  margin-left: 0.5rem;\n  top: 50%;\n  left: 100%;\n  -webkit-transform: translateX(0%) translateY(-50%);\n          transform: translateX(0%) translateY(-50%); }\n  #username-cell:hover {\n  color: red;\n  cursor: pointer; }\n  .leaderboard-header {\n  height: 4rem;\n  align-items: center;\n  justify-content: space-between;\n  text-align: center; }\n  .leaderboard-header h2 {\n    display: inline-block; }\n  .game-title {\n  font-family: \"Poppins\", sans-serif; }\n  .game-selector {\n  max-height: 100%;\n  padding: 0;\n  align-items: center;\n  align-content: center; }\n  .game-selector img {\n    max-width: 6rem; }\n  .leaderboard-tables table {\n  width: 100%; }\n  .leaderboard-card {\n  width: 26rem;\n  max-width: 26rem;\n  height: 48rem;\n  max-height: 48rem;\n  padding: 0.5rem 0.25rem 1.5rem;\n  text-align: center; }\n  .leaderboard-card h3 {\n    font-weight: bold; }\n  .leaderboard-table {\n  height: 43rem;\n  max-height: 48rem;\n  overflow-y: auto;\n  background: #343a40; }\n  .leaderboard-table table {\n    width: 100%;\n    padding: 0.25rem; }\n  .easy {\n  background-color: #1e7e34; }\n  .medium {\n  background-color: #007bff; }\n  .hard {\n  background-color: #f28c32; }\n  .extreme {\n  background-color: #dc3545; }\n  .you {\n  background-color: rgba(255, 255, 255, 0.2); }\n  .medals {\n  font-size: 0.75rem;\n  text-align: left; }\n  .medal {\n  width: 0.95rem;\n  height: 0.95rem;\n  margin: 0.3rem 0; }\n"
 
 /***/ }),
 
@@ -9418,9 +9439,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_game_list__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../classes/game-list */ "./src/app/classes/game-list.ts");
 /* harmony import */ var _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../enums/game-id.enum */ "./src/app/enums/game-id.enum.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -10459,7 +10483,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /root/projects/PuzzleHub/front-end/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/christian/git/PuzzleHub/front-end/src/main.ts */"./src/main.ts");
 
 
 /***/ })
