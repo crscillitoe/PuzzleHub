@@ -129,9 +129,9 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   generatePuzzleLink() {
     const link = 'https://puzzle-hub.com/' +
-                this.game.name + ';diff=' +
-                this.difficulty + ';seed=' +
-                this.seed;
+      this.game.name + ';diff=' +
+      this.difficulty + ';seed=' +
+      this.seed;
 
     return link.replace(/ /g, '%20');
   }
@@ -166,6 +166,11 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
+    const numPressed = keyEvent.keyCode;
+    if (numPressed === 84) {
+      this.onNotesChange();
+      return;
+    }
     if (this.editingHotkey) {
       SettingsService.storeData( (this.hotkeys[this.editIndex])['bindTo'], keyEvent.keyCode );
       this.hotkeyVals[this.editIndex] = keyEvent.keyCode;
