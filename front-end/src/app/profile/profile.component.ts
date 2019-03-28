@@ -19,31 +19,32 @@ export class ProfileComponent implements OnInit {
     'Daily',
     'Weekly',
     'Monthly'
-  ]
+  ];
   medalNames = [
     'Gold',
     'Silver',
     'Bronze'
-  ]
+  ];
 
   medalPath = '/assets/images/medals/';
 
   constructor(
     private route: ActivatedRoute,
-    private tunnel: TunnelService
+    private tunnel: TunnelService,
+    private user: UserService
   ) { }
 
   getLevel(xp) {
-    return UserService.calculateLevelFromXp(xp);
+    return this.user.calculateLevelFromXp(xp);
   }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
 
-      let m = {
-        'Username':this.username
-      }
+      const m = {
+        'Username': this.username
+      };
 
       this.tunnel.getProfileData(m)
         .subscribe( (data) => {
@@ -57,18 +58,18 @@ export class ProfileComponent implements OnInit {
   }
 
   getGameName(id) {
-    for(var i = 0 ; i < this.games.length ; i++) {
-      if((this.games[i])['GameID'] == id) {
+    for (let i = 0 ; i < this.games.length ; i++) {
+      if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Name'];
       }
     }
   }
 
   loadMore() {
-    let m = {
-      "Username":this.username,
-      "Offset":this.profileData.MatchHistory.length
-    }
+    const m = {
+      'Username': this.username,
+      'Offset': this.profileData.MatchHistory.length
+    };
 
     this.tunnel.getMoreMatchHistory(m)
       .subscribe( (data) => {
@@ -77,15 +78,15 @@ export class ProfileComponent implements OnInit {
   }
 
   getGameImage(id) {
-    for(var i = 0 ; i < this.games.length ; i++) {
-      if((this.games[i])['GameID'] == id) {
+    for (let i = 0 ; i < this.games.length ; i++) {
+      if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Image'];
       }
     }
   }
 
   getDifficulty(num) {
-    switch(num) {
+    switch (num) {
       case 1:
         return 'Easy';
       case 2:

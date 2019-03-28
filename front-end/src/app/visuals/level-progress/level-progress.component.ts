@@ -1,4 +1,4 @@
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, OnChanges } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
@@ -6,16 +6,16 @@ import { UserService } from '../../services/user/user.service';
   templateUrl: './level-progress.component.html',
   styleUrls: ['./level-progress.component.scss']
 })
-export class LevelProgressComponent implements OnInit {
+export class LevelProgressComponent implements OnInit, OnChanges {
 
   @Input() level;
   @Input() currVal;
   @Input() maxVal;
 
-  first: boolean = true;
+  first = true;
 
-  displayXpGain: boolean = false;
-  xpGain: string = '';
+  displayXpGain = false;
+  xpGain = '';
 
   constructor() { }
 
@@ -23,9 +23,9 @@ export class LevelProgressComponent implements OnInit {
   }
 
   isVisible() {
-    var canvas = document.getElementById('myCanvas');
-    if(canvas != null) {
-      var bar = document.getElementById('levelProgressBar');
+    const canvas = document.getElementById('myCanvas');
+    if (canvas != null) {
+      const bar = document.getElementById('levelProgressBar');
       try {
         bar.setAttribute('data-progress', '' + this.getProgress());
       } catch {}
@@ -34,27 +34,27 @@ export class LevelProgressComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    var xpGain = changes.currVal.currentValue - changes.currVal.previousValue;
-    var levelup = false;
-    if(xpGain < 0) {
+    let xpGain = changes.currVal.currentValue - changes.currVal.previousValue;
+    let levelup = false;
+    if (xpGain < 0) {
       levelup = true;
       xpGain = xpGain + UserService.xpPerLevel;
     }
 
-    if('' + xpGain != 'NaN' && !this.first) {
-      if(!levelup) {
+    if ('' + xpGain !== 'NaN' && !this.first) {
+      if (!levelup) {
         this.xpGain = '+ ' + xpGain;
       } else {
         this.xpGain = 'Level up!';
       }
       this.displayXpGain = true;
-      var that = this;
+      const that = this;
       setTimeout(function() { that.displayXpGain = false; } , 1500);
-    } else if('' + xpGain != 'NaN') {
+    } else if ('' + xpGain !== 'NaN') {
       this.first = false;
     }
 
-    var bar = document.getElementById('levelProgressBar');
+    const bar = document.getElementById('levelProgressBar');
     try {
       bar.setAttribute('data-progress', '' + this.getProgress());
     } catch {

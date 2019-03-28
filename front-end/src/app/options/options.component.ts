@@ -92,6 +92,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.game = GameListAllService.getGameById(this.gameID);
     this.rules = this.game.rules;
     this.controls = this.game.controls;
+    this.populateDifficulties();
+
+    this.selectedDifficulty = this.difficulty;
+  }
+
+  populateDifficulties() {
     this.diffs = this.game.diffs.filter(
       d => (
         d.minLevel === 0 ||
@@ -101,8 +107,6 @@ export class OptionsComponent implements OnInit, OnDestroy {
         ! d.requiresLogin || this.isLoggedIn()
       )
     );
-
-    this.selectedDifficulty = this.difficulty;
   }
 
   minimize(name, val) {
@@ -186,7 +190,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   getLevel() {
-    return UserService.calculateLevel();
+    return this.user.calculateLevel();
   }
 
   playGame(route, diff) {
@@ -202,10 +206,10 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   public difficultyChangeHandler(newDiff: any) {
-    let m = {
+    const m = {
       diff: newDiff
-    }
-    let route = this.game.name;
+    };
+    const route = this.game.name;
 
     this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + newDiff + ')');

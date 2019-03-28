@@ -2,7 +2,7 @@
 <div class="levelBox" cdkDrag>
   <div class="xpGain">
     <ng-container *ngIf="displayXpGain">
-      {{xpGain}}
+      {{xpGain | async}}
     </ng-container>
   </div>
   <div class="description">

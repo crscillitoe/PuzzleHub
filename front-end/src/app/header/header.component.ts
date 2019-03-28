@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TunnelService } from '../services/tunnel/tunnel.service'
+import { TunnelService } from '../services/tunnel/tunnel.service';
 import { UserService } from '../services/user/user.service';
-import { LoaderService } from '../services/loading-service/loader.service'
+import { LoaderService } from '../services/loading-service/loader.service';
 import { GameID } from '../enums/game-id.enum';
 
 @Component({
@@ -11,13 +11,13 @@ import { GameID } from '../enums/game-id.enum';
 })
 export class HeaderComponent implements OnInit {
 
-  username: any = "";
+  username: any = '';
 
   constructor(
     private tunnelService: TunnelService,
     private loader: LoaderService,
     private user: UserService
-  ) { 
+  ) {
     user.username
       .subscribe( (data) => {
         this.username = data;
@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
 
     tunnelService.getLevel()
       .subscribe( (data) => {
-        UserService.setXp(data['xp']);
+        user.setXp(data['xp']);
       });
   }
 
@@ -39,16 +39,16 @@ export class HeaderComponent implements OnInit {
   }
 
   signOut() {
-    this.user.setUserName("");
-    document.cookie = "PuzzleHubToken=; Max-Age=0";
+    this.user.setUserName('');
+    document.cookie = 'PuzzleHubToken=; Max-Age=0';
   }
 
   getLevel() {
-    return UserService.calculateLevel();
+    return this.user.calculateLevel();
   }
 
   xpToNextLevel() {
-    return UserService.xpToNextLevel();
+    return this.user.xpToNextLevel();
   }
 
   nextLevelThreshold() {

@@ -32,14 +32,14 @@ export class AppComponent {
   ) {
     loader.loading
      .subscribe( (data) => {
-        if(data) {
+        if (data) {
           // loading
           this.ngZone.runOutsideAngular( () => {
             this.renderer.setElementStyle(
               this.spinnerElement.nativeElement,
               'display',
               'inline'
-            )
+            );
           });
         } else {
           // stop loading
@@ -48,7 +48,7 @@ export class AppComponent {
               this.spinnerElement.nativeElement,
               'display',
               'none'
-            )
+            );
           });
         }
       });
@@ -100,11 +100,11 @@ export class AppComponent {
     }
 
   getLevel() {
-    return UserService.calculateLevel();
+    return this.user.calculateLevel();
   }
 
   xpToNextLevel() {
-    return UserService.xpToNextLevel();
+    return this.user.xpToNextLevel();
   }
 
   nextLevelThreshold() {

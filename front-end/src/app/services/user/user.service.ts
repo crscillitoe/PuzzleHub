@@ -5,68 +5,77 @@ import { Subject } from 'rxjs/Subject';
   providedIn: 'root'
 })
 export class UserService {
-  public username: any = new Subject();
-  private loggedIn: boolean = false;
-  private static xp: number = 0;
-  public user: string;
+  public static xpPerLevel = 2000;
 
-  public static xpPerLevel: number = 2000;
+  private loggedIn = false;
+  private xp = 0;
+  private _level = 0;
+  public user: string;
+  public username: any = new Subject();
+  public level: any = new Subject();
+
+  static nextLevelThreshold() {
+    return UserService.xpPerLevel;
+  }
 
   constructor() { }
 
   setUserName(name) {
-    if(name != "") {
+    if (name !== '') {
       this.loggedIn = true;
     } else {
       this.loggedIn = false;
     }
-    
+
     this.user = name;
     this.username.next(name);
   }
 
-  static setXp(xp) {
+  setXp(xp) {
     this.xp = xp;
+    this.setLevel();
   }
 
-  static addXp(xp) {
+  addXp(xp) {
     this.xp += xp;
+    this.setLevel();
+  }
+
+  setLevel() {
+    this._level = this.calculateLevel();
+    this.level.next(this._level);
   }
 
   isLoggedIn() {
-    return this.getCookie('PuzzleHubToken') != "";
+    return this.getCookie('PuzzleHubToken') !== '';
   }
 
-  static calculateLevel() {
-    return Math.floor(this.xp / this.xpPerLevel) + 1;
+  calculateLevel() {
+    return Math.floor(this.xp / UserService.xpPerLevel) + 1;
   }
 
-  static calculateLevelFromXp(xp) {
-    return Math.floor(xp / this.xpPerLevel) + 1;
+  calculateLevelFromXp(xp) {
+    return Math.floor(xp / UserService.xpPerLevel) + 1;
   }
 
-  static nextLevelThreshold() {
-    return this.xpPerLevel;
-  }
-
-  static xpToNextLevel() {
-    return this.xp % this.xpPerLevel;
+  xpToNextLevel() {
+    return this.xp % UserService.xpPerLevel;
   }
 
   getCookie(cookieName) {
-    var name = cookieName + '=';
-    var cookies = document.cookie.split(';');
-    for(var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i];
-      while(cookie.charAt(0) === ' ') {
+    const name = cookieName + '=';
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i];
+      while (cookie.charAt(0) === ' ') {
         cookie = cookie.substring(1);
       }
 
-      if(cookie.indexOf(cookieName) === 0) {
+      if (cookie.indexOf(cookieName) === 0) {
         return cookie.substring(cookieName.length + 1, cookie.length);
       }
     }
 
-    return "";
+    return '';
   }
 }
