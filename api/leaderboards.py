@@ -312,7 +312,7 @@ def get_leaderboards():
     try:
         position = request.json["Position"]
     except:
-        position = 1
+        position = 0
 
     try:
         num_entries = request.json["NumEntries"]
