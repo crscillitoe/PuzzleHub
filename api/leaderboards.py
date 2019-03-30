@@ -216,6 +216,73 @@ def get_profile_data():
     return jsonify(to_return)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getNumEntries
+# Required POST parameters:
+#   GameID: int
+#   Difficulty: int
+#                     D   W   M
+#   Leaderboard: int (0 - 1 - 2)
+#
+# Returns on success:
+#   NumEntries: int
+# Returns on failure:
+#   No return, throw error on failure.
+@app.route('/api/getNumEntries', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_num_entries():
+    try:
+        game_id = request.json["GameID"]
+    except:
+        abort(500, "GameID not found")
+
+    try:
+        difficulty = request.json["Difficulty"]
+    except:
+        abort(500, "Difficulty not found")
+
+    try:
+        leaderboard = request.json["Leaderboard"]
+    except:
+        abort(500, "Leaderboard not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+
+    if leaderboard == 0:
+        sql_query = '''
+            SELECT COUNT(*)
+            FROM dailyLeaderboards AS L
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+        '''
+    elif leaderboard == 1:
+        sql_query = '''
+            SELECT COUNT(*)
+            FROM weeklyLeaderboards AS L
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+        '''
+    elif leaderboard == 2:
+        sql_query = '''
+            SELECT COUNT(*)
+            FROM monthlyLeaderboards AS L
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+        '''
+
+    query_model = {
+        "game_id": game_id,
+        "difficulty": difficulty
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    to_return = {
+        "NumEntries":data[0][0]
+    }
+
+    return jsonify(to_return)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getLeaderboards
 # Required POST parameters:
 #   GameID: int
