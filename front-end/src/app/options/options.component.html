@@ -8,6 +8,26 @@
      > Taking Notes: {{takingNotes}}</a>
     </div>
   </ng-container>
+
+  <div class="descriptionBlock">
+    <a class="descriptionHeader clickable"
+       (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
+      <ng-container *ngIf="timerMinimized">
+        [+]
+      </ng-container>
+      <ng-container *ngIf="!timerMinimized">
+        [-]
+      </ng-container>
+      <b class="clickable">
+        TIMER
+      </b>
+    </a>
+
+    <a id="timer" 
+       [ngClass]="timerMinimized ? 'hidden' : 'none'"
+       class="monospace time">0:00:00.000</a>
+  </div>
+
   <div class="descriptionBlock" *ngIf="isLoggedIn()">
     <a class="descriptionHeader clickable"
        (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
@@ -32,25 +52,6 @@
       <a class="descriptionText topPad">Daily</a>
       <a class="monospace timeSave">{{personalBestDaily}}</a>
     </ng-container>
-  </div>
-
-  <div class="descriptionBlock">
-    <a class="descriptionHeader clickable"
-       (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
-      <ng-container *ngIf="timerMinimized">
-        [+]
-      </ng-container>
-      <ng-container *ngIf="!timerMinimized">
-        [-]
-      </ng-container>
-      <b class="clickable">
-        TIMER
-      </b>
-    </a>
-
-    <a id="timer" 
-       [ngClass]="timerMinimized ? 'hidden' : 'none'"
-       class="monospace time">0:00:00.000</a>
   </div>
 
   <div class="descriptionBlock" *ngIf="controls != undefined">

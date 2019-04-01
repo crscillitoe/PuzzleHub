@@ -26,6 +26,7 @@ export class Board {
   markTile(x, y) {
     if(this.boardVals[x][y] == 0) {
       this.boardVals[x][y] = 1;
+      this.markedVals[x][y] = 0;
     } else {
       this.boardVals[x][y] = 0;
       this.markedVals[x][y] = 0;
@@ -35,10 +36,23 @@ export class Board {
   markRed(x, y) {
     if(this.markedVals[x][y] == 0) {
       this.markedVals[x][y] = 1;
+      this.boardVals[x][y] = 0;
     } else {
       this.boardVals[x][y] = 0;
       this.markedVals[x][y] = 0;
     }
+  }
+
+  isLabeled(x, y) {
+    return (this.markedVals[x][y] === 1 || this.boardVals[x][y] === 1)
+  }
+
+  isMarked(x, y) {
+    return (this.markedVals[x][y] === 1)
+  }
+
+  isClicked(x, y) {
+    return (this.boardVals[x][y] === 1)
   }
 
   mark(x, y) {
