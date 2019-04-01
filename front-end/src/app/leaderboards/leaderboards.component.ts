@@ -18,12 +18,12 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 export class LeaderboardsComponent implements OnInit {
   games: Game[] = GameListAllService.games;
 
-  footer: any;
+  footer: any = [];
   resetDate: any;
   leaderboards: MatTableDataSource<any>[];
 
-  leaderboard: number = 0;
-  leaderboardName: string = "Daily";
+  leaderboard = 0;
+  leaderboardName = 'Daily';
   leaderboardDifficulty = 0;
   leaderboardColumns: string[] = [
     'rowIndex',
@@ -41,20 +41,19 @@ export class LeaderboardsComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 25];
 
   gameID: number;
-  username: string = "";
+  username = '';
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private loader: LoaderService,
     private router: Router,
     private tunnel: TunnelService,
     private user: UserService
-  ) { 
-  }
+  ) { }
 
   getGameName(id) {
-    for(let game of this.games) {
-      if(game.id == id) {
+    for (let game of this.games) {
+      if (game.id === id) {
         return game.name;
       }
     }
@@ -63,8 +62,8 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   getGameDiffs(id) {
-    for(let game of this.games) {
-      if (game.id == id) {
+    for (let game of this.games) {
+      if (game.id === id) {
         return game.diffs;
       }
     }
@@ -84,30 +83,30 @@ export class LeaderboardsComponent implements OnInit {
 
     this.countDownTimer();
 
-    if(this.leaderboard == 0) {
+    if (this.leaderboard === 0) {
       this.leaderboardName = 'Daily';
-    } else if(this.leaderboard == 1) {
+    } else if (this.leaderboard === 1) {
       this.leaderboardName = 'Weekly';
-    } else if(this.leaderboard == 2) {
+    } else if (this.leaderboard === 2) {
       this.leaderboardName = 'Monthly';
     }
     this.loadScores();
   }
 
   decrementTimer(that) {
-    var display = document.getElementById("leaderboardstimer");
-    var now = +new Date();
+    const display = document.getElementById('leaderboardstimer');
+    const now = +new Date();
 
-    var diff = ((that.resetDate - now));
-    var hours   = Math.trunc(diff / (60 * 60 * 1000));
-    var minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    var seconds = Math.trunc(diff / (1000)) % 60;
+    const diff = ((that.resetDate - now));
+    const hours   = Math.trunc(diff / (60 * 60 * 1000));
+    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
+    const seconds = Math.trunc(diff / (1000)) % 60;
 
     try {
-      display.textContent = 
-        hours + ":" + 
-        (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" +
-        (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00")
+      display.textContent =
+        hours + ':' +
+        (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+        (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00');
 
       that.countDownTimer();
     } catch {
@@ -117,20 +116,20 @@ export class LeaderboardsComponent implements OnInit {
 
   countDownTimer() {
     this.resetDate = new Date();
-    if(this.leaderboard == 0) {
+    if (this.leaderboard === 0) {
       this.resetDate.setDate(this.resetDate.getDate() + 1);
       this.resetDate.setUTCHours(5, 0, 0, 0);
 
-      var date = +new Date();
-      var diff = (this.resetDate - date);
-      if(diff > 86400000) {
+      const date = +new Date();
+      const diff = (this.resetDate - date);
+      if (diff > 86400000) {
         this.resetDate.setDate(this.resetDate.getDate() - 1);
         this.resetDate.setUTCHours(5, 0, 0, 0);
       }
-    } else if(this.leaderboard == 1) {
+    } else if (this.leaderboard === 1) {
 
-      var friday = this.resetDate.getDate() + (13 - this.resetDate.getDay()) % 7;
-      if(this.resetDate.getDay() == 6) {
+      let friday = this.resetDate.getDate() + (13 - this.resetDate.getDay()) % 7;
+      if (this.resetDate.getDay() === 6) {
         friday = friday + 7;
       }
 
@@ -138,8 +137,8 @@ export class LeaderboardsComponent implements OnInit {
       this.resetDate.setUTCHours(5, 0, 0, 0);
       this.resetDate.setDate(friday);
 
-    } else if(this.leaderboard == 2) {
-      var newMonth = this.resetDate.getMonth() + 1;
+    } else if (this.leaderboard === 2) {
+      const newMonth = this.resetDate.getMonth() + 1;
       this.resetDate.setDate(1);
       this.resetDate.setMonth(
         newMonth
@@ -150,7 +149,7 @@ export class LeaderboardsComponent implements OnInit {
       this.resetDate.setDate(1);
     }
 
-    var _this = this;
+    const _this = this;
     setTimeout(function() {
       _this.decrementTimer(_this);
     },
@@ -161,11 +160,11 @@ export class LeaderboardsComponent implements OnInit {
   changeLeaderboard(num) {
     this.leaderboard = num;
     SettingsService.storeData('selectedLeaderboard', num);
-    if(num == 0) {
+    if (num === 0) {
       this.leaderboardName = 'Daily';
-    } else if(num == 1) {
+    } else if (num === 1) {
       this.leaderboardName = 'Weekly';
-    } else if(num == 2) {
+    } else if (num === 2) {
       this.leaderboardName = 'Monthly';
     }
     this.loadScores();
@@ -180,19 +179,19 @@ export class LeaderboardsComponent implements OnInit {
     this.loader.startLoadingAnimation();
     this.leaderboards = [];
 
-    for(var i = 1 ; i <= 4 ; i++) {
-      let m = {
-        "GameID":this.gameID,
-        "Difficulty":i,
-        "Leaderboard":this.leaderboard
-      }
+    for (let i = 1 ; i <= 4 ; i++) {
+      const m = {
+        'GameID': this.gameID,
+        'Difficulty': i,
+        'Leaderboard': this.leaderboard
+      };
 
       this.tunnel.getLeaderboards(m)
         .subscribe( (data: any) => {
 
-          if((data[data.length - 1])['position'] == 0) {
+          if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
             // TODO - this value should go in the footer
-            this.footer = data.pop();
+            this.footer[i] = data.pop();
           }
 
           this.loader.stopLoadingAnimation();
@@ -204,7 +203,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   hasMedals(user) {
-    return user.bronzeMedals > 0 || user.silverMedals > 0 || user.goldMedals > 0
+    return user.bronzeMedals > 0 || user.silverMedals > 0 || user.goldMedals > 0;
   }
 
   setGame(id) {
@@ -214,9 +213,9 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   viewProfile(name) {
-    let m = {
+    const m = {
       user: name
-    }
+    };
 
     this.router.navigate(['profile'], {queryParams: m});
   }
