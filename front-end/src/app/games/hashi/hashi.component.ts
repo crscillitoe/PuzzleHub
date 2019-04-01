@@ -77,6 +77,18 @@ export class HashiComponent extends GameBoard implements OnInit {
     this.gameID = GameID.HASHI;
   }
 
+  done() {
+    this.coloredNode = null;
+    this.hoveredNode = null;
+    super.done();
+  }
+
+  newGame() {
+    this.coloredNode = null;
+    this.hoveredNode = null;
+    super.newGame();
+  }
+
   ngOnInit() {
     this.solved = false;
 
@@ -181,10 +193,6 @@ export class HashiComponent extends GameBoard implements OnInit {
 
     this.drawCircleRed(this.coloredNode);
     this.drawCircleRed(this.hoveredNode);
-
-    if(this.board.isSolved()) {
-      this.done();
-    }
   }
 
   drawGrid() {
@@ -953,6 +961,10 @@ export class HashiComponent extends GameBoard implements OnInit {
       this.coloredNode = undefined;
       this.draw();
     }
+
+    if(this.board.isSolved() && !this.solved) {
+      this.done();
+    }
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -1063,6 +1075,10 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.coloredNode = undefined;
         }
       }
+    }
+
+    if(this.board.isSolved() && !this.solved) {
+      this.done();
     }
   }
 

@@ -21,6 +21,9 @@ export class NonogramsComponent extends GameBoard {
 
   board: any;
 
+  mouseDown: number;
+  addingMode: boolean;
+
   constructor(
     route: ActivatedRoute,
     colorService: ColorService,
@@ -86,7 +89,7 @@ export class NonogramsComponent extends GameBoard {
 
   draw() {
     super.draw();
-    if (!this.solved) {
+    if (!this.solved && this.mouseDown === -1) {
       this.drawSelectedBox();
     }
     this.drawLegends();
@@ -265,11 +268,16 @@ export class NonogramsComponent extends GameBoard {
 
       const diff = this.board.maxWidth - this.board.width;
 
+      this.mouseDown = mouseEvent.button;
+
       if (mouseEvent.button === 0) {
         this.board.click(x - diff, y - diff);
       } else if (mouseEvent.button === 2) {
         this.board.mark(x - diff, y - diff);
       }
+
+      this.addingMode = (this.board.isLabeled(x - diff, y - diff));
+
       if (this.board.isSolved()) {
         this.done();
       }
@@ -278,11 +286,12 @@ export class NonogramsComponent extends GameBoard {
   }
 
   // UNCOMMENT HostListener to track given event
-  // @HostListener('document:mouseup', ['$event'])
+  @HostListener('document:mouseup', ['$event'])
   mouseReleased(mouseEvent) {
     const x = mouseEvent.clientX - this.canvasOffsetX;
     const y = mouseEvent.clientY - this.canvasOffsetY;
-    console.log({'mouseReleasedX': x, 'mouseReleasedY': y});
+
+    this.mouseDown = -1;
   }
 
   // UNCOMMENT HostListener to track given event
@@ -291,13 +300,34 @@ export class NonogramsComponent extends GameBoard {
     let x = mouseEvent.clientX - this.canvasOffsetX;
     let y = mouseEvent.clientY - this.canvasOffsetY;
 
-    if (!this.solved) {
-      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
-      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+    x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+    y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
-      this.selectedX = x;
-      this.selectedY = y;
-      this.draw();
+    if (!this.solved) {
+      if(this.mouseDown === -1) {
+        this.selectedX = x;
+        this.selectedY = y;
+        this.draw();
+      } else {
+        const diff = this.board.maxWidth - this.board.width;
+
+        if (this.mouseDown === 0) {
+          if ((this.addingMode && !this.board.isClicked(x - diff, y - diff)) ||
+              (!this.addingMode && this.board.isClicked(x - diff, y - diff))) {
+            this.board.click(x - diff, y - diff);
+          }
+        } else if (this.mouseDown === 2) {
+          if ((this.addingMode && !this.board.isMarked(x - diff, y - diff)) ||
+              (!this.addingMode && this.board.isMarked(x - diff, y - diff))) {
+            this.board.mark(x - diff, y - diff);
+          }
+        }
+
+        if (this.board.isSolved()) {
+          this.done();
+        }
+        this.draw();
+      }
     }
   }
 }

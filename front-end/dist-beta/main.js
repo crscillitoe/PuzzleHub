@@ -132,10 +132,10 @@ var AppComponent = /** @class */ (function () {
       }*/
     };
     AppComponent.prototype.getLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"].calculateLevel();
+        return this.user.calculateLevel();
     };
     AppComponent.prototype.xpToNextLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"].xpToNextLevel();
+        return this.user.xpToNextLevel();
     };
     AppComponent.prototype.nextLevelThreshold = function () {
         return _services_user_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"].nextLevelThreshold();
@@ -531,8 +531,7 @@ var GameBoard = /** @class */ (function () {
         try {
             if (!that.solved) {
                 display.textContent =
-                    hours + ':' +
-                        (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+                    (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
                         (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
                         (millis ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
                 that.displayTimer();
@@ -1043,6 +1042,16 @@ var HashiComponent = /** @class */ (function (_super) {
         _this.gameID = _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_7__["GameID"].HASHI;
         return _this;
     }
+    HashiComponent.prototype.done = function () {
+        this.coloredNode = null;
+        this.hoveredNode = null;
+        _super.prototype.done.call(this);
+    };
+    HashiComponent.prototype.newGame = function () {
+        this.coloredNode = null;
+        this.hoveredNode = null;
+        _super.prototype.newGame.call(this);
+    };
     HashiComponent.prototype.ngOnInit = function () {
         this.solved = false;
         this.setupColors();
@@ -1135,9 +1144,6 @@ var HashiComponent = /** @class */ (function (_super) {
         this.drawCircles();
         this.drawCircleRed(this.coloredNode);
         this.drawCircleRed(this.hoveredNode);
-        if (this.board.isSolved()) {
-            this.done();
-        }
     };
     HashiComponent.prototype.drawGrid = function () {
         var circleX;
@@ -1885,6 +1891,9 @@ var HashiComponent = /** @class */ (function (_super) {
             this.coloredNode = undefined;
             this.draw();
         }
+        if (this.board.isSolved() && !this.solved) {
+            this.done();
+        }
     };
     HashiComponent.prototype.mouseMove = function (mouseEvent) {
         this.mouseX = Math.round((mouseEvent.clientX - 225 - this.xAdd) / this.factor);
@@ -1987,6 +1996,9 @@ var HashiComponent = /** @class */ (function (_super) {
                     this.coloredNode = undefined;
                 }
             }
+        }
+        if (this.board.isSolved() && !this.solved) {
+            this.done();
         }
     };
     HashiComponent.prototype.keyReleased = function (keyEvent) {
@@ -2937,7 +2949,7 @@ var NonogramsComponent = /** @class */ (function (_super) {
     };
     NonogramsComponent.prototype.draw = function () {
         _super.prototype.draw.call(this);
-        if (!this.solved) {
+        if (!this.solved && this.mouseDown === -1) {
             this.drawSelectedBox();
         }
         this.drawLegends();
@@ -3084,12 +3096,14 @@ var NonogramsComponent = /** @class */ (function (_super) {
             x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
             y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
             var diff = this.board.maxWidth - this.board.width;
+            this.mouseDown = mouseEvent.button;
             if (mouseEvent.button === 0) {
                 this.board.click(x - diff, y - diff);
             }
             else if (mouseEvent.button === 2) {
                 this.board.mark(x - diff, y - diff);
             }
+            this.addingMode = (this.board.isLabeled(x - diff, y - diff));
             if (this.board.isSolved()) {
                 this.done();
             }
@@ -3097,22 +3111,42 @@ var NonogramsComponent = /** @class */ (function (_super) {
         }
     };
     // UNCOMMENT HostListener to track given event
-    // @HostListener('document:mouseup', ['$event'])
     NonogramsComponent.prototype.mouseReleased = function (mouseEvent) {
         var x = mouseEvent.clientX - this.canvasOffsetX;
         var y = mouseEvent.clientY - this.canvasOffsetY;
-        console.log({ 'mouseReleasedX': x, 'mouseReleasedY': y });
+        this.mouseDown = -1;
     };
     // UNCOMMENT HostListener to track given event
     NonogramsComponent.prototype.mouseMove = function (mouseEvent) {
         var x = mouseEvent.clientX - this.canvasOffsetX;
         var y = mouseEvent.clientY - this.canvasOffsetY;
+        x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+        y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
         if (!this.solved) {
-            x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
-            y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
-            this.selectedX = x;
-            this.selectedY = y;
-            this.draw();
+            if (this.mouseDown === -1) {
+                this.selectedX = x;
+                this.selectedY = y;
+                this.draw();
+            }
+            else {
+                var diff = this.board.maxWidth - this.board.width;
+                if (this.mouseDown === 0) {
+                    if ((this.addingMode && !this.board.isClicked(x - diff, y - diff)) ||
+                        (!this.addingMode && this.board.isClicked(x - diff, y - diff))) {
+                        this.board.click(x - diff, y - diff);
+                    }
+                }
+                else if (this.mouseDown === 2) {
+                    if ((this.addingMode && !this.board.isMarked(x - diff, y - diff)) ||
+                        (!this.addingMode && this.board.isMarked(x - diff, y - diff))) {
+                        this.board.mark(x - diff, y - diff);
+                    }
+                }
+                if (this.board.isSolved()) {
+                    this.done();
+                }
+                this.draw();
+            }
         }
     };
     __decorate([
@@ -3121,6 +3155,12 @@ var NonogramsComponent = /** @class */ (function (_super) {
         __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", void 0)
     ], NonogramsComponent.prototype, "mousePressed", null);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('document:mouseup', ['$event']),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], NonogramsComponent.prototype, "mouseReleased", null);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('document:mousemove', ['$event']),
         __metadata("design:type", Function),
@@ -5586,7 +5626,7 @@ var HeaderComponent = /** @class */ (function () {
         this.tunnelService = tunnelService;
         this.loader = loader;
         this.user = user;
-        this.username = "";
+        this.username = '';
         user.username
             .subscribe(function (data) {
             _this.username = data;
@@ -5597,21 +5637,21 @@ var HeaderComponent = /** @class */ (function () {
         });
         tunnelService.getLevel()
             .subscribe(function (data) {
-            _services_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"].setXp(data['xp']);
+            user.setXp(data['xp']);
         });
     }
     HeaderComponent.prototype.getEnum = function (name) {
         return _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_4__["GameID"][name];
     };
     HeaderComponent.prototype.signOut = function () {
-        this.user.setUserName("");
-        document.cookie = "PuzzleHubToken=; Max-Age=0";
+        this.user.setUserName('');
+        document.cookie = 'PuzzleHubToken=; Max-Age=0';
     };
     HeaderComponent.prototype.getLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"].calculateLevel();
+        return this.user.calculateLevel();
     };
     HeaderComponent.prototype.xpToNextLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"].xpToNextLevel();
+        return this.user.xpToNextLevel();
     };
     HeaderComponent.prototype.nextLevelThreshold = function () {
         return _services_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"].nextLevelThreshold();
@@ -5735,7 +5775,7 @@ var LeaderboardsComponent = /** @class */ (function () {
             'time'
         ];
         this.pageSize = 25;
-        this.pageSizeOptions = [5, 10, 25, 100];
+        this.pageSizeOptions = [5, 10, 25];
         this.username = "";
     }
     LeaderboardsComponent.prototype.getGameName = function (id) {
@@ -5859,14 +5899,14 @@ var LeaderboardsComponent = /** @class */ (function () {
             };
             this_1.tunnel.getLeaderboards(m)
                 .subscribe(function (data) {
-                console.log(data);
-                var that = _this_1;
-                setTimeout(function () {
-                    that.loader.stopLoadingAnimation();
-                    that.leaderboards[m['Difficulty']] = new _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatTableDataSource"](data);
-                    that.leaderboards[m['Difficulty']].paginator = that.paginator;
-                    that.leaderboards[m['Difficulty']].sort = that.sort;
-                }, 500);
+                if ((data[data.length - 1])['position'] == 0) {
+                    // TODO - this value should go in the footer
+                    _this_1.footer = data.pop();
+                }
+                _this_1.loader.stopLoadingAnimation();
+                _this_1.leaderboards[m['Difficulty']] = new _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatTableDataSource"](data);
+                _this_1.leaderboards[m['Difficulty']].paginator = _this_1.paginator;
+                _this_1.leaderboards[m['Difficulty']].sort = _this_1.sort;
             });
         };
         var this_1 = this;
@@ -5978,52 +6018,52 @@ var LoginComponent = /** @class */ (function () {
         this.tunnel = tunnel;
         this.router = router;
         this.user = user;
-        this.registerUsername = "";
-        this.registerPass1 = "";
-        this.registerPass2 = "";
-        this.email1 = "";
-        this.email2 = "";
-        this.errorMessage = "Please enter a username";
-        this.selectedTab = "login";
+        this.registerUsername = '';
+        this.registerPass1 = '';
+        this.registerPass2 = '';
+        this.email1 = '';
+        this.email2 = '';
+        this.errorMessage = 'Please enter a username';
+        this.selectedTab = 'login';
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
     LoginComponent.prototype.canRegister = function () {
-        if (this.registerUsername == "") {
-            this.errorMessage = "Please enter a username";
+        if (this.registerUsername === '') {
+            this.errorMessage = 'Please enter a username';
             return false;
         }
         if (this.registerUsername.length > 16) {
-            this.errorMessage = "Username length must be no greater than 16 characters";
+            this.errorMessage = 'Username length must be no greater than 16 characters';
             return false;
         }
         var emailTest = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!emailTest.test(this.email1)) {
-            this.errorMessage = "Please enter a valid email";
+            this.errorMessage = 'Please enter a valid email';
             return false;
         }
-        if (this.email1 != this.email2) {
-            this.errorMessage = "Emails must match";
+        if (this.email1 !== this.email2) {
+            this.errorMessage = 'Emails must match';
             return false;
         }
         if (this.registerPass1.length < 8) {
-            this.errorMessage = "Password length must be at least 8 characters";
+            this.errorMessage = 'Password length must be at least 8 characters';
             return false;
         }
         if (this.registerPass1.length > 64) {
-            this.errorMessage = "Password length must be no longer than 64 characters";
+            this.errorMessage = 'Password length must be no longer than 64 characters';
             return false;
         }
         var repeatTest = /^(.)\1\1\1\1\1/;
         if (repeatTest.test(this.registerPass1)) {
-            this.errorMessage = "Password cannot contain repeating characters";
+            this.errorMessage = 'Password cannot contain repeating characters';
             return false;
         }
-        if (this.registerPass1 != this.registerPass2) {
-            this.errorMessage = "Passwords must match";
+        if (this.registerPass1 !== this.registerPass2) {
+            this.errorMessage = 'Passwords must match';
             return false;
         }
-        this.errorMessage = "";
+        this.errorMessage = '';
         return true;
     };
     LoginComponent.prototype.register = function () {
@@ -6155,7 +6195,7 @@ var MainMenuComponent = /** @class */ (function () {
         return this.user.isLoggedIn();
     };
     MainMenuComponent.prototype.getLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_4__["UserService"].calculateLevel();
+        return this.user.calculateLevel();
     };
     MainMenuComponent.prototype.playGame = function (route, diff) {
         var m = {
@@ -6202,7 +6242,7 @@ module.exports = ".buttonSubtext {\n    font-size: 11px;\n}\n\n#focusMe:focus {\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"panel-body\">\n  <ng-container *ngIf=\"takingNotesMode\">\n    <div class=notes>\n      <a\n     (click)=\"onNotesChange()\"\n     [ngClass]=\"takingNotes ? 'btn-warning' : 'btn-danger'\"\n     class=\"center btn\"\n     > Taking Notes: {{takingNotes}}</a>\n    </div>\n  </ng-container>\n  <div class=\"descriptionBlock\" *ngIf=\"isLoggedIn()\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)\">\n      <ng-container *ngIf=\"highscoresMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!highscoresMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        HIGH SCORES\n      </b>\n    </a>\n\n    <ng-container *ngIf=\"!highscoresMinimized\">\n      <a class=\"descriptionText topPad\">Monthly</a>\n      <a class=\"monospace timeSave\">{{personalBestMonthly}}</a>\n\n      <a class=\"descriptionText topPad\">Weekly</a>\n      <a class=\"monospace timeSave\">{{personalBestWeekly}}</a>\n\n      <a class=\"descriptionText topPad\">Daily</a>\n      <a class=\"monospace timeSave\">{{personalBestDaily}}</a>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)\">\n      <ng-container *ngIf=\"timerMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!timerMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        TIMER\n      </b>\n    </a>\n\n    <a id=\"timer\" \n       [ngClass]=\"timerMinimized ? 'hidden' : 'none'\"\n       class=\"monospace time\">0:00:00.000</a>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"controls != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)\">\n      <ng-container *ngIf=\"controlsMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!controlsMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        CONTROLS\n      </b>\n    </a>\n\n    <ng-container *ngIf=\"!controlsMinimized\">\n      <a class=\"descriptionText\">\n        {{controls}}\n      </a>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"rules != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)\">\n      <ng-container *ngIf=\"rulesMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!rulesMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        RULES\n      </b>\n    </a>\n    <ng-container *ngIf=\"!rulesMinimized\">\n      <a class=\"descriptionText\">\n        {{rules}}\n      </a>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"options != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)\">\n      <ng-container *ngIf=\"optionsMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!optionsMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        OPTIONS\n      </b>\n    </a>\n\n    <ng-container *ngIf=\"!optionsMinimized\">\n      <ng-container *ngFor=\"let option of options; let i=index\">\n        <ng-container *ngIf=\"option.type == 'checkbox'\">\n          <div class=\"custom-control custom-checkbox\">\n            <input type=\"checkbox\" id=\"{{option.bindTo}}\" class=\"custom-control-input clickable\" \n                                                          [(ngModel)]=\"optionVals[i]\" \n                                                          (click)=\"callback(option.callback)\">\n            <label class=\"clickable descriptionText custom-control-label\" for=\"{{option.bindTo}}\">{{option.name}}</label>\n          </div>\n        </ng-container>\n\n        <ng-container *ngIf=\"option.type == 'dropdown'\">\n          <div class=\"custom-control custom-dropdown\">\n            <label style=\"margin-bottom:0\" class=\"descriptionText\" for=\"{{option.bindTo}}\">\n              {{option.name}}\n            </label>\n            <select id=\"{{option.bindTo}}\"\n                    [(ngModel)]=\"optionVals[i]\" \n                    (ngModelChange)=\"updateAndCallback(option.callback, option.storedName, $event)\">\n              <ng-container *ngFor=\"let o of option.options\">\n                <option>{{o}}</option>\n              </ng-container>\n            </select>\n          </div>\n        </ng-container>\n      </ng-container>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"hotkeys != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)\">\n      <ng-container *ngIf=\"hotkeysMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!hotkeysMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        HOTKEYS\n      </b>\n    </a>\n    <ng-container *ngIf=\"!hotkeysMinimized\">\n      <ng-container *ngFor=\"let hotkey of hotkeys; let i=index\">\n        <div class=\"descriptionText\">\n          {{hotkey.name}} - \n          <button (click)=\"editHotkey(i)\">\n            <ng-container *ngIf=\"editIndex != i\">\n              {{convertCodeToStr(hotkeyVals[i])}} ({{hotkeyVals[i]}})\n            </ng-container>\n            <ng-container *ngIf=\"editIndex == i\">\n              Press...\n            </ng-container>\n          </button>\n        </div>\n      </ng-container>\n    </ng-container>\n  </div>\n</div>\n<div class=\"panel-footer\">\n  <mat-select class=\"difficulty-select clickable\" [(ngModel)]=\"selectedDifficulty\"\n    (ngModelChange)=\"difficultyChangeHandler($event)\">\n    <mat-option *ngFor=\"let diff of diffs\" [value]=\"diff.diff\">\n      {{diff.name | titlecase}}\n    </mat-option>\n  </mat-select>\n  <button\n        mat-raised-button\n        *ngIf=\"gameID != undefined\"\n        id=\"copyGameLink\"\n        class=\"game-button\"\n        (click)=\"copyGameLink()\">\n    <b class=\"clickable\">SHARE GAME</b>\n  </button>\n  <button\n        mat-raised-button\n        class=\"game-button\"\n        style=\"background-color: #f24b3e\"\n        (click)=\"callback('this.newGame()')\">\n    <b class=\"clickable\">NEW GAME</b>\n    <br>\n    <span class=\"buttonSubtext clickable\">spacebar</span>\n  </button>\n</div>\n<button id=\"focusMe\" style=\"background-color:#2c2c2c;border:none\"></button>\n"
+module.exports = "<div class=\"panel-body\">\n  <ng-container *ngIf=\"takingNotesMode\">\n    <div class=notes>\n      <a\n     (click)=\"onNotesChange()\"\n     [ngClass]=\"takingNotes ? 'btn-warning' : 'btn-danger'\"\n     class=\"center btn\"\n     > Taking Notes: {{takingNotes}}</a>\n    </div>\n  </ng-container>\n\n  <div class=\"descriptionBlock\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)\">\n      <ng-container *ngIf=\"timerMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!timerMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        TIMER\n      </b>\n    </a>\n\n    <a id=\"timer\" \n       [ngClass]=\"timerMinimized ? 'hidden' : 'none'\"\n       class=\"monospace time\">0:00:00.000</a>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"isLoggedIn()\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)\">\n      <ng-container *ngIf=\"highscoresMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!highscoresMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        HIGH SCORES\n      </b>\n    </a>\n\n    <ng-container *ngIf=\"!highscoresMinimized\">\n      <a class=\"descriptionText topPad\">Monthly</a>\n      <a class=\"monospace timeSave\">{{personalBestMonthly}}</a>\n\n      <a class=\"descriptionText topPad\">Weekly</a>\n      <a class=\"monospace timeSave\">{{personalBestWeekly}}</a>\n\n      <a class=\"descriptionText topPad\">Daily</a>\n      <a class=\"monospace timeSave\">{{personalBestDaily}}</a>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"controls != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)\">\n      <ng-container *ngIf=\"controlsMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!controlsMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        CONTROLS\n      </b>\n    </a>\n\n    <ng-container *ngIf=\"!controlsMinimized\">\n      <a class=\"descriptionText\">\n        {{controls}}\n      </a>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"rules != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)\">\n      <ng-container *ngIf=\"rulesMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!rulesMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        RULES\n      </b>\n    </a>\n    <ng-container *ngIf=\"!rulesMinimized\">\n      <a class=\"descriptionText\">\n        {{rules}}\n      </a>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"options != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)\">\n      <ng-container *ngIf=\"optionsMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!optionsMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        OPTIONS\n      </b>\n    </a>\n\n    <ng-container *ngIf=\"!optionsMinimized\">\n      <ng-container *ngFor=\"let option of options; let i=index\">\n        <ng-container *ngIf=\"option.type == 'checkbox'\">\n          <div class=\"custom-control custom-checkbox\">\n            <input type=\"checkbox\" id=\"{{option.bindTo}}\" class=\"custom-control-input clickable\" \n                                                          [(ngModel)]=\"optionVals[i]\" \n                                                          (click)=\"callback(option.callback)\">\n            <label class=\"clickable descriptionText custom-control-label\" for=\"{{option.bindTo}}\">{{option.name}}</label>\n          </div>\n        </ng-container>\n\n        <ng-container *ngIf=\"option.type == 'dropdown'\">\n          <div class=\"custom-control custom-dropdown\">\n            <label style=\"margin-bottom:0\" class=\"descriptionText\" for=\"{{option.bindTo}}\">\n              {{option.name}}\n            </label>\n            <select id=\"{{option.bindTo}}\"\n                    [(ngModel)]=\"optionVals[i]\" \n                    (ngModelChange)=\"updateAndCallback(option.callback, option.storedName, $event)\">\n              <ng-container *ngFor=\"let o of option.options\">\n                <option>{{o}}</option>\n              </ng-container>\n            </select>\n          </div>\n        </ng-container>\n      </ng-container>\n    </ng-container>\n  </div>\n\n  <div class=\"descriptionBlock\" *ngIf=\"hotkeys != undefined\">\n    <a class=\"descriptionHeader clickable\"\n       (click)=\"hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)\">\n      <ng-container *ngIf=\"hotkeysMinimized\">\n        [+]\n      </ng-container>\n      <ng-container *ngIf=\"!hotkeysMinimized\">\n        [-]\n      </ng-container>\n      <b class=\"clickable\">\n        HOTKEYS\n      </b>\n    </a>\n    <ng-container *ngIf=\"!hotkeysMinimized\">\n      <ng-container *ngFor=\"let hotkey of hotkeys; let i=index\">\n        <div class=\"descriptionText\">\n          {{hotkey.name}} - \n          <button (click)=\"editHotkey(i)\">\n            <ng-container *ngIf=\"editIndex != i\">\n              {{convertCodeToStr(hotkeyVals[i])}} ({{hotkeyVals[i]}})\n            </ng-container>\n            <ng-container *ngIf=\"editIndex == i\">\n              Press...\n            </ng-container>\n          </button>\n        </div>\n      </ng-container>\n    </ng-container>\n  </div>\n</div>\n<div class=\"panel-footer\">\n  <mat-select class=\"difficulty-select clickable\" [(ngModel)]=\"selectedDifficulty\"\n    (ngModelChange)=\"difficultyChangeHandler($event)\">\n    <mat-option *ngFor=\"let diff of diffs\" [value]=\"diff.diff\">\n      {{diff.name | titlecase}}\n    </mat-option>\n  </mat-select>\n  <button\n        mat-raised-button\n        *ngIf=\"gameID != undefined\"\n        id=\"copyGameLink\"\n        class=\"game-button\"\n        (click)=\"copyGameLink()\">\n    <b class=\"clickable\">SHARE GAME</b>\n  </button>\n  <button\n        mat-raised-button\n        class=\"game-button\"\n        style=\"background-color: #f24b3e\"\n        (click)=\"callback('this.newGame()')\">\n    <b class=\"clickable\">NEW GAME</b>\n    <br>\n    <span class=\"buttonSubtext clickable\">spacebar</span>\n  </button>\n</div>\n<button id=\"focusMe\" style=\"background-color:#2c2c2c;border:none\"></button>\n"
 
 /***/ }),
 
@@ -6255,7 +6295,6 @@ var OptionsComponent = /** @class */ (function () {
         this.subscription = new rxjs_Subscription__WEBPACK_IMPORTED_MODULE_6__["Subscription"]();
     }
     OptionsComponent.prototype.ngOnInit = function () {
-        var _this = this;
         if (this.options !== undefined) {
             for (var _i = 0, _a = this.options; _i < _a.length; _i++) {
                 var option = _a[_i];
@@ -6284,10 +6323,14 @@ var OptionsComponent = /** @class */ (function () {
         this.game = _services_games_game_list_all_service__WEBPACK_IMPORTED_MODULE_4__["GameListAllService"].getGameById(this.gameID);
         this.rules = this.game.rules;
         this.controls = this.game.controls;
+        this.populateDifficulties();
+        this.selectedDifficulty = this.difficulty;
+    };
+    OptionsComponent.prototype.populateDifficulties = function () {
+        var _this = this;
         this.diffs = this.game.diffs.filter(function (d) { return (d.minLevel === 0 ||
             (_this.user.isLoggedIn && _this.getLevel() >= d.minLevel)) &&
             (!d.requiresLogin || _this.isLoggedIn()); });
-        this.selectedDifficulty = this.difficulty;
     };
     OptionsComponent.prototype.minimize = function (name, val) {
         _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_1__["SettingsService"].storeData(name, val);
@@ -6338,6 +6381,11 @@ var OptionsComponent = /** @class */ (function () {
         return String.fromCharCode(code);
     };
     OptionsComponent.prototype.keyPressed = function (keyEvent) {
+        var numPressed = keyEvent.keyCode;
+        if (numPressed === 84) {
+            this.onNotesChange();
+            return;
+        }
         if (this.editingHotkey) {
             _services_persistence_settings_service__WEBPACK_IMPORTED_MODULE_1__["SettingsService"].storeData((this.hotkeys[this.editIndex])['bindTo'], keyEvent.keyCode);
             this.hotkeyVals[this.editIndex] = keyEvent.keyCode;
@@ -6350,7 +6398,7 @@ var OptionsComponent = /** @class */ (function () {
         return this.user.isLoggedIn();
     };
     OptionsComponent.prototype.getLevel = function () {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"].calculateLevel();
+        return this.user.calculateLevel();
     };
     OptionsComponent.prototype.playGame = function (route, diff) {
         var m = {
@@ -6493,9 +6541,10 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var ProfileComponent = /** @class */ (function () {
-    function ProfileComponent(route, tunnel) {
+    function ProfileComponent(route, tunnel, user) {
         this.route = route;
         this.tunnel = tunnel;
+        this.user = user;
         this.games = _services_games_game_data_service__WEBPACK_IMPORTED_MODULE_3__["GameDataService"].games;
         this.medalTypes = [
             'Daily',
@@ -6510,7 +6559,7 @@ var ProfileComponent = /** @class */ (function () {
         this.medalPath = '/assets/images/medals/';
     }
     ProfileComponent.prototype.getLevel = function (xp) {
-        return _services_user_user_service__WEBPACK_IMPORTED_MODULE_4__["UserService"].calculateLevelFromXp(xp);
+        return this.user.calculateLevelFromXp(xp);
     };
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -6530,7 +6579,7 @@ var ProfileComponent = /** @class */ (function () {
     };
     ProfileComponent.prototype.getGameName = function (id) {
         for (var i = 0; i < this.games.length; i++) {
-            if ((this.games[i])['GameID'] == id) {
+            if ((this.games[i])['GameID'] === id) {
                 return (this.games[i])['Name'];
             }
         }
@@ -6538,8 +6587,8 @@ var ProfileComponent = /** @class */ (function () {
     ProfileComponent.prototype.loadMore = function () {
         var _this = this;
         var m = {
-            "Username": this.username,
-            "Offset": this.profileData.MatchHistory.length
+            'Username': this.username,
+            'Offset': this.profileData.MatchHistory.length
         };
         this.tunnel.getMoreMatchHistory(m)
             .subscribe(function (data) {
@@ -6548,7 +6597,7 @@ var ProfileComponent = /** @class */ (function () {
     };
     ProfileComponent.prototype.getGameImage = function (id) {
         for (var i = 0; i < this.games.length; i++) {
-            if ((this.games[i])['GameID'] == id) {
+            if ((this.games[i])['GameID'] === id) {
                 return (this.games[i])['Image'];
             }
         }
@@ -6572,7 +6621,8 @@ var ProfileComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./profile.component.css */ "./src/app/profile/profile.component.css")]
         }),
         __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
-            _services_tunnel_tunnel_service__WEBPACK_IMPORTED_MODULE_2__["TunnelService"]])
+            _services_tunnel_tunnel_service__WEBPACK_IMPORTED_MODULE_2__["TunnelService"],
+            _services_user_user_service__WEBPACK_IMPORTED_MODULE_4__["UserService"]])
     ], ProfileComponent);
     return ProfileComponent;
 }());
@@ -7531,6 +7581,9 @@ var Board = /** @class */ (function () {
                 if (this.mineField[j][i] >= 0 && this.visible[j][i] == 0) {
                     return false;
                 }
+                else if (this.visible[j][i] == 2 && this.mineField[j][i] >= 0) {
+                    return false;
+                }
                 else if (this.visible[j][i] == 2) {
                     numBombs++;
                 }
@@ -7546,6 +7599,7 @@ var Board = /** @class */ (function () {
                 }
             }
         }
+        console.log('solved!');
         return true;
     };
     Board.prototype.random = function () {
@@ -7588,6 +7642,7 @@ var Board = /** @class */ (function () {
     Board.prototype.markTile = function (x, y) {
         if (this.boardVals[x][y] == 0) {
             this.boardVals[x][y] = 1;
+            this.markedVals[x][y] = 0;
         }
         else {
             this.boardVals[x][y] = 0;
@@ -7597,11 +7652,21 @@ var Board = /** @class */ (function () {
     Board.prototype.markRed = function (x, y) {
         if (this.markedVals[x][y] == 0) {
             this.markedVals[x][y] = 1;
+            this.boardVals[x][y] = 0;
         }
         else {
             this.boardVals[x][y] = 0;
             this.markedVals[x][y] = 0;
         }
+    };
+    Board.prototype.isLabeled = function (x, y) {
+        return (this.markedVals[x][y] === 1 || this.boardVals[x][y] === 1);
+    };
+    Board.prototype.isMarked = function (x, y) {
+        return (this.markedVals[x][y] === 1);
+    };
+    Board.prototype.isClicked = function (x, y) {
+        return (this.boardVals[x][y] === 1);
     };
     Board.prototype.mark = function (x, y) {
         if (x < this.width && x >= 0 && y < this.height && y >= 0) {
@@ -9481,24 +9546,35 @@ var GameListAllService = /** @class */ (function (_super) {
     };
     var GameListAllService_1;
     GameListAllService.games = [
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].SUDOKU, 'Sudoku', 'sudoku', 'sudoku.svg', 'A classic puzzle game where you must fill out the board with numbers 1-9.', 'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
-            'Each number can only appear once in a row, column, or box.', 'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box'),
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].SUDOKU, 'Sudoku', 'sudoku', 'sudoku.svg', 'Sudoku is a classic puzzle game where you must fill out the board with numbers 1-9.', 'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
+            'Each number can only appear once in a row, column, or box.', 'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box. Pressing "t" ' +
+            'will switch Taking Notes mode on and off.'),
         new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TAKUZU, 'Takuzu', 'takuzu', 'takuzu.svg', 'Takuzu is a logic-based number placement puzzle. The objective is to fill a ' +
             '(usually 10×10) grid with 1s and 0s.', 'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
             '1s and 0s in each row and column and no more than two of either number adjacent to ' +
             'each other. Additionally, there can be no identical rows or columns.', 'Left/Right click'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].NONOGRAMS, 'Nonograms', 'nonograms', 'nonograms.svg', 'Nonograms are picture logic puzzles in which cells in a grid must be colored according ' +
-            'to numbers at the side of the grid to reveal a hidden picture.', 'Google it you goof.', 'Left click on a tile to mark it.'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].THERMOMETERS, 'Thermometers', 'thermometers', 'thermometers.svg', 'A New York Times classic where you must fill up thermometers to a certain amount.', 'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].NONOGRAMS, 'Nonograms', 'nonograms', 'nonograms.svg', 'Nonograms is a picture logic puzzles in which tiles in a grid must be colored ' +
+            'according to numbers at the side of the grid to reveal a hidden picture.', 'The object is to color in tiles based on the numbers on the outside of the rows and ' +
+            'columns. The numbers represent the number of consecutive tiles that need to be ' +
+            'colored in in the row or column. There must be at least one blank tile between each ' +
+            'group.', 'Left-click on a tile to fill it in, right-click on a tile to mark it blank.'),
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].THERMOMETERS, 'Thermometers', 'thermometers', 'thermometers.svg', 'Thermometers is a New York Times classic where you must fill up thermometers to a ' +
+            'certain amount.', 'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
             'that given row/column.', 'Click anywhere on the thermometer to insert fluid.'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].HASHI, 'Hashi', 'hashi', 'hashi.svg', 'Hashi (Hashiwokakero) also known as Bridges is a logic puzzle with simple rules and ' +
-            'challenging solutions.', 'The goal is to connect all of the islands into a single connected group by ' +
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].HASHI, 'Hashi', 'hashi', 'hashi.svg', 'Hashi (Hashiwokakero), also known as Bridges, is a logic puzzle with simple rules and ' +
+            'challenging solutions where all islands must be connected by drawing a series of ' +
+            'bridges.', 'The goal is to connect all of the islands into a single connected group by ' +
             'drawing a series of bridges between the islands. The number of bridges coming off of ' +
             'an island must match the number written on that island.', 'Click and drag from an island to build a bridge.'),
-        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TILE_GAME, 'Tile Game', 'tilegame', 'tilegame.svg', 'Tile game is a common puzzle where the user slides tiles into the correct order.', 'Order the numbers in sequential order from left to right, top to bottom', 'Arrow Keys or WASD'),
+        new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].TILE_GAME, 'Tile Game', 'tilegame', 'tilegame.svg', 'Tile Game, also know as 15-puzzle, is a common puzzle where the user slides tiles into ' +
+            'the correct order.', 'Order the numbers in sequential order from left to right, top to bottom', 'Arrow Keys or WASD'),
         new _classes_game__WEBPACK_IMPORTED_MODULE_1__["Game"](_enums_game_id_enum__WEBPACK_IMPORTED_MODULE_3__["GameID"].MINESWEEPER, 'Minesweeper', 'minesweeper', 'minesweeper.svg', 'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
             'clear a rectangular board containing hidden mines.', 'The objective of the game is to clear a rectangular board containing hidden mines ' +
-            'without detonating any of them.', '')
+            'without detonating any of them. Left-clicking a tile will reveal a number or a mine. ' +
+            'If a mine is revealed it will detonate. If a number is revealed, that number ' +
+            'represents the number of mines in the tiles adjacent to that number (diagonals are ' +
+            'adjacent). Right-clicking a tile will flag it as a mine. You win when all non-mines ' +
+            'are revealed.', 'Left-click to reveal a tile, right-click to flag a tile as a mine.')
     ];
     GameListAllService = GameListAllService_1 = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
@@ -9619,7 +9695,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameStarterService", function() { return GameStarterService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../enums/game-id.enum */ "./src/app/enums/game-id.enum.ts");
-/* harmony import */ var _user_user_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../user/user.service */ "./src/app/services/user/user.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9629,7 +9704,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 var GameStarterService = /** @class */ (function () {
@@ -9642,7 +9716,7 @@ var GameStarterService = /** @class */ (function () {
         this.customSeed = Number(that.route.snapshot.paramMap.get('seed'));
         if (that.userService.isLoggedIn()) {
             this.loadBestTimes(that);
-            if (this.customSeed == 0) {
+            if (this.customSeed === 0) {
                 that.timer.startTimer(that.gameID, that.difficulty)
                     .subscribe(function (data) {
                     _this.loadGame(that, data['seed']);
@@ -9653,7 +9727,7 @@ var GameStarterService = /** @class */ (function () {
             }
         }
         else {
-            if (this.customSeed == 0) {
+            if (this.customSeed === 0) {
                 this.loadGame(that, Math.floor(Math.random() * (2000000000)));
             }
             else {
@@ -9662,10 +9736,10 @@ var GameStarterService = /** @class */ (function () {
         }
     };
     GameStarterService.done = function (that) {
-        if (that.userService.isLoggedIn() && !that.solved && this.customSeed == 0) {
+        if (that.userService.isLoggedIn() && !that.solved && this.customSeed === 0) {
             that.timer.stopTimer(that.seed, that.gameID, that.difficulty, 'TODO - Board Solution String')
                 .subscribe(function (data) {
-                _user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"].addXp(data['XPGain']);
+                that.userService.addXp(data['XPGain']);
                 if (data['Daily']) {
                     that.personalBestDaily = data['TimeElapsed'];
                 }
@@ -9675,7 +9749,7 @@ var GameStarterService = /** @class */ (function () {
                 if (data['Monthly']) {
                     that.personalBestMonthly = data['TimeElapsed'];
                 }
-                var display = document.getElementById("timer");
+                var display = document.getElementById('timer');
                 display.textContent = data['TimeElapsed'];
             });
         }
@@ -9688,11 +9762,11 @@ var GameStarterService = /** @class */ (function () {
         that.seed = seed;
         that.board.seed = that.seed;
         that.board.generateBoard();
-        if (that.gameID == _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__["GameID"].MINESWEEPER) {
+        if (that.gameID === _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__["GameID"].MINESWEEPER) {
             that.lose = false;
             that.firstPress = true;
         }
-        else if (that.gameID == _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__["GameID"].SUDOKU) {
+        else if (that.gameID === _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__["GameID"].SUDOKU) {
             that.notes = {};
         }
         if (that.solved) {
@@ -9705,7 +9779,7 @@ var GameStarterService = /** @class */ (function () {
         }
         that.fixSizes();
         that.loader.stopLoadingAnimation();
-        if (that.gameID == _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__["GameID"].MINESWEEPER) {
+        if (that.gameID === _enums_game_id_enum__WEBPACK_IMPORTED_MODULE_1__["GameID"].MINESWEEPER) {
             that.imgFlag.onload = function () {
                 that.draw();
             };
@@ -10088,11 +10162,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var UserService = /** @class */ (function () {
     function UserService() {
-        this.username = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
         this.loggedIn = false;
+        this.xp = 0;
+        this._level = 0;
+        this.username = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.level = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
     }
+    UserService_1 = UserService;
+    UserService.nextLevelThreshold = function () {
+        return UserService_1.xpPerLevel;
+    };
     UserService.prototype.setUserName = function (name) {
-        if (name != "") {
+        if (name !== '') {
             this.loggedIn = true;
         }
         else {
@@ -10101,26 +10182,29 @@ var UserService = /** @class */ (function () {
         this.user = name;
         this.username.next(name);
     };
-    UserService.setXp = function (xp) {
+    UserService.prototype.setXp = function (xp) {
         this.xp = xp;
+        this.setLevel();
     };
-    UserService.addXp = function (xp) {
+    UserService.prototype.addXp = function (xp) {
         this.xp += xp;
+        this.setLevel();
+    };
+    UserService.prototype.setLevel = function () {
+        this._level = this.calculateLevel();
+        this.level.next(this._level);
     };
     UserService.prototype.isLoggedIn = function () {
-        return this.getCookie('PuzzleHubToken') != "";
+        return this.getCookie('PuzzleHubToken') !== '';
     };
-    UserService.calculateLevel = function () {
-        return Math.floor(this.xp / this.xpPerLevel) + 1;
+    UserService.prototype.calculateLevel = function () {
+        return Math.floor(this.xp / UserService_1.xpPerLevel) + 1;
     };
-    UserService.calculateLevelFromXp = function (xp) {
-        return Math.floor(xp / this.xpPerLevel) + 1;
+    UserService.prototype.calculateLevelFromXp = function (xp) {
+        return Math.floor(xp / UserService_1.xpPerLevel) + 1;
     };
-    UserService.nextLevelThreshold = function () {
-        return this.xpPerLevel;
-    };
-    UserService.xpToNextLevel = function () {
-        return this.xp % this.xpPerLevel;
+    UserService.prototype.xpToNextLevel = function () {
+        return this.xp % UserService_1.xpPerLevel;
     };
     UserService.prototype.getCookie = function (cookieName) {
         var name = cookieName + '=';
@@ -10134,11 +10218,11 @@ var UserService = /** @class */ (function () {
                 return cookie.substring(cookieName.length + 1, cookie.length);
             }
         }
-        return "";
+        return '';
     };
-    UserService.xp = 0;
+    var UserService_1;
     UserService.xpPerLevel = 2000;
-    UserService = __decorate([
+    UserService = UserService_1 = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
@@ -10307,7 +10391,7 @@ var VerifyEmailComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ng-container *ngIf=\"isVisible()\">\n<div class=\"levelBox\" cdkDrag>\n  <div class=\"xpGain\">\n    <ng-container *ngIf=\"displayXpGain\">\n      {{xpGain}}\n    </ng-container>\n  </div>\n  <div class=\"description\">\n    <br>\n    Level {{level}}<br>\n    {{currVal}}/{{maxVal}}\n  </div>\n  <div class=\"radial-progress\" data-progress=\"0\" id=\"levelProgressBar\">\n  \t<div class=\"circle\">\n  \t\t<div class=\"mask full\">\n  \t\t\t<div class=\"fill\"></div>\n  \t\t</div>\n  \t\t<div class=\"mask half\">\n  \t\t\t<div class=\"fill\"></div>\n  \t\t\t<div class=\"fill fix\"></div>\n  \t\t</div>\n  \t\t<div class=\"shadow\"></div>\n  \t</div>\n  \t<div class=\"inset\">\n  \t\t<div class=\"percentage\">\n  \t\t\t<div class=\"numbers\"><span>-</span>\n          <span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span>\n  \t\t</div>\n  \t</div>\n  </div>\n</div>\n</div>\n</ng-container>\n"
+module.exports = "<ng-container *ngIf=\"isVisible()\">\n<div class=\"levelBox\" cdkDrag>\n  <div class=\"xpGain\">\n    <ng-container *ngIf=\"displayXpGain\">\n      {{xpGain | async}}\n    </ng-container>\n  </div>\n  <div class=\"description\">\n    <br>\n    Level {{level}}<br>\n    {{currVal}}/{{maxVal}}\n  </div>\n  <div class=\"radial-progress\" data-progress=\"0\" id=\"levelProgressBar\">\n  \t<div class=\"circle\">\n  \t\t<div class=\"mask full\">\n  \t\t\t<div class=\"fill\"></div>\n  \t\t</div>\n  \t\t<div class=\"mask half\">\n  \t\t\t<div class=\"fill\"></div>\n  \t\t\t<div class=\"fill fix\"></div>\n  \t\t</div>\n  \t\t<div class=\"shadow\"></div>\n  \t</div>\n  \t<div class=\"inset\">\n  \t\t<div class=\"percentage\">\n  \t\t\t<div class=\"numbers\"><span>-</span>\n          <span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span><span>{{level}}</span>\n  \t\t</div>\n  \t</div>\n  </div>\n</div>\n</div>\n</ng-container>\n"
 
 /***/ }),
 
@@ -10371,7 +10455,7 @@ var LevelProgressComponent = /** @class */ (function () {
             levelup = true;
             xpGain = xpGain + _services_user_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"].xpPerLevel;
         }
-        if ('' + xpGain != 'NaN' && !this.first) {
+        if ('' + xpGain !== 'NaN' && !this.first) {
             if (!levelup) {
                 this.xpGain = '+ ' + xpGain;
             }
@@ -10379,10 +10463,10 @@ var LevelProgressComponent = /** @class */ (function () {
                 this.xpGain = 'Level up!';
             }
             this.displayXpGain = true;
-            var that = this;
-            setTimeout(function () { that.displayXpGain = false; }, 1500);
+            var that_1 = this;
+            setTimeout(function () { that_1.displayXpGain = false; }, 1500);
         }
-        else if ('' + xpGain != 'NaN') {
+        else if ('' + xpGain !== 'NaN') {
             this.first = false;
         }
         var bar = document.getElementById('levelProgressBar');

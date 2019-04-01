@@ -216,14 +216,86 @@ def get_profile_data():
     return jsonify(to_return)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getNumEntries
+# Required POST parameters:
+#   GameID: int
+#   Difficulty: int
+#                     D   W   M
+#   Leaderboard: int (0 - 1 - 2)
+#
+# Returns on success:
+#   NumEntries: int
+# Returns on failure:
+#   No return, throw error on failure.
+@app.route('/api/getNumEntries', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_num_entries():
+    try:
+        game_id = request.json["GameID"]
+    except:
+        abort(500, "GameID not found")
+
+    try:
+        difficulty = request.json["Difficulty"]
+    except:
+        abort(500, "Difficulty not found")
+
+    try:
+        leaderboard = request.json["Leaderboard"]
+    except:
+        abort(500, "Leaderboard not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+
+    if leaderboard == 0:
+        sql_query = '''
+            SELECT COUNT(*)
+            FROM dailyLeaderboards AS L
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+        '''
+    elif leaderboard == 1:
+        sql_query = '''
+            SELECT COUNT(*)
+            FROM weeklyLeaderboards AS L
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+        '''
+    elif leaderboard == 2:
+        sql_query = '''
+            SELECT COUNT(*)
+            FROM monthlyLeaderboards AS L
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+        '''
+
+    query_model = {
+        "game_id": game_id,
+        "difficulty": difficulty
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    to_return = {
+        "NumEntries":data[0][0]
+    }
+
+    return jsonify(to_return)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getLeaderboards
 # Required POST parameters:
 #   GameID: int
 #   Difficulty: int
 #                     D   W   M
 #   Leaderboard: int (0 - 1 - 2)
+#
+# Optional POST parameters:
+#   Position: int - starting position in leaderboards
+#   NumEntries: int - number of entries to get (max 25, min 1)
+#
 # Returns on success:
-#   List (length 10) <
+#   List (length NumEntriesw) <
 #       Username: string
 #       Time: TimeString
 #   >
@@ -232,6 +304,25 @@ def get_profile_data():
 @app.route('/api/getLeaderboards', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def get_leaderboards():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+    except:
+        user_id = -1
+
+    try:
+        position = request.json["Position"]
+    except:
+        position = 0
+
+    try:
+        num_entries = request.json["NumEntries"]
+        if num_entries > 25:
+            num_entries = 25
+        elif num_entries < 1:
+            num_entries = 1
+    except:
+        num_entries = 25
+
     try:
         game_id = request.json["GameID"]
     except:
@@ -261,7 +352,8 @@ def get_leaderboards():
             UM.Type = 0
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
-            LIMIT 25
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
         '''
     elif leaderboard == 1:
         sql_query = '''
@@ -274,7 +366,8 @@ def get_leaderboards():
             UM.Type = 1
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
-            LIMIT 25
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
         '''
     elif leaderboard == 2:
         sql_query = '''
@@ -287,12 +380,15 @@ def get_leaderboards():
             UM.Type = 2
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
-            LIMIT 25
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
         '''
 
     query_model = {
         "game_id": game_id,
-        "difficulty": difficulty
+        "difficulty": difficulty,
+        "num_entries": num_entries,
+        "position": position
     }
 
     cursor.execute(sql_query, query_model)
@@ -308,7 +404,8 @@ def get_leaderboards():
                 "role":str(d[2]),
                 "bronzeMedals":d[3],
                 "silverMedals":d[4],
-                "goldMedals":d[5]
+                "goldMedals":d[5],
+                "position":position
             }
             to_return.append(model)
         else :
@@ -318,9 +415,84 @@ def get_leaderboards():
                 "role":str(d[2]),
                 "bronzeMedals":d[3],
                 "silverMedals":d[4],
-                "goldMedals":d[5]
+                "goldMedals":d[5],
+                "position":position
             }
             to_return.append(model)
+
+        position = position + 1
+
+    if user_id != -1:
+        cursor = db.cursor()
+        if leaderboard == 0:
+            sql_query = '''
+                SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+                FROM dailyLeaderboards AS L
+                INNER JOIN users AS U ON
+                U.UserID = L.UserID
+                INNER JOIN userMedals AS UM ON
+                UM.UserID = L.UserID AND
+                UM.Type = 0
+                WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                    AND U.UserID = %(user_id)s
+            '''
+        elif leaderboard == 1:
+            sql_query = '''
+                SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+                FROM weeklyLeaderboards AS L
+                INNER JOIN users AS U ON
+                U.UserID = L.UserID
+                INNER JOIN userMedals AS UM ON
+                UM.UserID = L.UserID AND
+                UM.Type = 1
+                WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                    AND U.UserID = %(user_id)s
+            '''
+        elif leaderboard == 2:
+            sql_query = '''
+                SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+                FROM monthlyLeaderboards AS L
+                INNER JOIN users AS U ON
+                U.UserID = L.UserID
+                INNER JOIN userMedals AS UM ON
+                UM.UserID = L.UserID AND
+                UM.Type = 2
+                WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                    AND U.UserID = %(user_id)s
+            '''
+
+        query_model = {
+            "game_id": game_id,
+            "difficulty": difficulty,
+            "user_id": user_id
+        }
+
+        cursor.execute(sql_query, query_model)
+        data = cursor.fetchall()
+
+        for d in data:
+            if len( str(d[1]).split(':')[2] ) != 2:
+                model = {
+                    "username":d[0],
+                    "time":str(d[1])[:-3],
+                    "role":str(d[2]),
+                    "bronzeMedals":d[3],
+                    "silverMedals":d[4],
+                    "goldMedals":d[5],
+                    "position":0
+                }
+                to_return.append(model)
+            else :
+                model = {
+                    "username":d[0],
+                    "time":str(d[1]) + '.000',
+                    "role":str(d[2]),
+                    "bronzeMedals":d[3],
+                    "silverMedals":d[4],
+                    "goldMedals":d[5],
+                    "position":0
+                }
+                to_return.append(model)
 
     return jsonify(to_return)
 

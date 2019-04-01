@@ -277,6 +277,8 @@ export class Board {
       for(var i = 0 ; i < this.width ; i++) {
         if(this.mineField[j][i] >= 0 && this.visible[j][i] == 0){
           return false;
+        } else if(this.visible[j][i] == 2 && this.mineField[j][i] >= 0) {
+          return false;
         } else if(this.visible[j][i] == 2) {
           numBombs++;
         }
@@ -295,6 +297,7 @@ export class Board {
       }
     }
 
+    console.log('solved!');
     return true;
   }
 

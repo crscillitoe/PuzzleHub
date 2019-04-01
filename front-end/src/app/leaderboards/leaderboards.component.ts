@@ -18,6 +18,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 export class LeaderboardsComponent implements OnInit {
   games: Game[] = GameListAllService.games;
 
+  footer: any;
   resetDate: any;
   leaderboards: MatTableDataSource<any>[];
 
@@ -37,7 +38,7 @@ export class LeaderboardsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   pageSize = 25;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSizeOptions: number[] = [5, 10, 25];
 
   gameID: number;
   username: string = "";
@@ -187,15 +188,17 @@ export class LeaderboardsComponent implements OnInit {
       }
 
       this.tunnel.getLeaderboards(m)
-        .subscribe( (data) => {
-          console.log(data);
-          var that = this;
-          setTimeout(function() {
-            that.loader.stopLoadingAnimation();
-            that.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
-            that.leaderboards[m['Difficulty']].paginator = that.paginator;
-            that.leaderboards[m['Difficulty']].sort = that.sort;
-          }, 500);
+        .subscribe( (data: any) => {
+
+          if((data[data.length - 1])['position'] == 0) {
+            // TODO - this value should go in the footer
+            this.footer = data.pop();
+          }
+
+          this.loader.stopLoadingAnimation();
+          this.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
+          this.leaderboards[m['Difficulty']].paginator = this.paginator;
+          this.leaderboards[m['Difficulty']].sort = this.sort;
         });
     }
   }
