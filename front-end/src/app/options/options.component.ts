@@ -6,7 +6,7 @@ import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { OptionsService } from '../services/games/options.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
@@ -39,7 +39,8 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public game: Game;
 
   public selectedDifficulty: number;
-  public diffs: Difficulty[];
+  public diffs: Difficulty[] = [];
+
 
   public highscoresMinimized: boolean;
   public rulesMinimized: boolean;
@@ -61,7 +62,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private router: Router,
     private optionsService: OptionsService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    user.level
+      .subscribe( (data) => {
+        this.populateDifficulties();
+      });
+  }
 
   ngOnInit() {
     if (this.options !== undefined) {
