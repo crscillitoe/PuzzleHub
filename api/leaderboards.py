@@ -397,6 +397,7 @@ def get_leaderboards():
     to_return = []
 
     for d in data:
+        position = position + 1
         if len( str(d[1]).split(':')[2] ) != 2:
             model = {
                 "username":d[0],
@@ -419,8 +420,6 @@ def get_leaderboards():
                 "position":position
             }
             to_return.append(model)
-
-        position = position + 1
 
     if user_id != -1:
         cursor = db.cursor()

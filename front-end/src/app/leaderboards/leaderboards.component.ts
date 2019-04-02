@@ -178,6 +178,7 @@ export class LeaderboardsComponent implements OnInit {
   loadScores() {
     this.loader.startLoadingAnimation();
     this.leaderboards = [];
+    this.footer = [];
 
     for (let i = 1 ; i <= 4 ; i++) {
       const m = {
@@ -189,12 +190,15 @@ export class LeaderboardsComponent implements OnInit {
       this.tunnel.getLeaderboards(m)
         .subscribe( (data: any) => {
 
-          if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
-            // TODO - this value should go in the footer
-            this.footer[i] = data.pop();
-          }
+          console.log(data);
+          try {
+            if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
+              this.footer[i] = data.pop();
+            }
+          } catch { /* This is fine. There just aren't any times! */ }
 
           this.loader.stopLoadingAnimation();
+          console.log(data);
           this.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
           this.leaderboards[m['Difficulty']].paginator = this.paginator;
           this.leaderboards[m['Difficulty']].sort = this.sort;
