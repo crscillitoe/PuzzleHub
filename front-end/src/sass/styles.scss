@@ -10,8 +10,16 @@
 // Base stuff
 @import
   'base/base',
-  'base/fonts';
+  'base/fonts',
+  'base/material';
 
-// Layoutrs
+// Layouts
 @import
   'layout/grid';
+
+// Themes
+@import
+  'themes/palettes',
+  'themes/themes';
+
+@include angular-material-theme($ph-brand-theme);

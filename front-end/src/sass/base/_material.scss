@@ -1,0 +1,11 @@
+.leaderboard-tables {
+  table.mat-table {
+    tbody td {
+      background-color: rgba(0,0,0,0.10);
+    }
+
+    tfoot td {
+      border-bottom: none;
+    }
+  }
+}
