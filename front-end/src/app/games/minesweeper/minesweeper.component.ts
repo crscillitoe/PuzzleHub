@@ -105,6 +105,10 @@ export class MinesweeperComponent extends GameBoard {
     this.setupBoard();
     this.loader.startLoadingAnimation();
     this.lose = false;
+
+    var that = this;
+    GameStarterService.loadBestTimes(that);
+
     if (this.userService.isLoggedIn( )) {
       this.timer.startTimer(GameID.MINESWEEPER, this.difficulty)
         .subscribe( (data) => {
