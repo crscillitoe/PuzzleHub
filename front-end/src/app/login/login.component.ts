@@ -119,6 +119,10 @@ export class LoginComponent implements OnInit {
 
                 this.router.navigate(['/']);
               });
+            this.tunnel.getLevel()
+              .subscribe( (data2) => {
+                this.user.setXp(data2['xp']);
+              });
           } else {
               this.loader.stopLoadingAnimation();
           }
