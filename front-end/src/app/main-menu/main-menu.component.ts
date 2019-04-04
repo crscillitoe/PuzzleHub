@@ -14,6 +14,7 @@ import { GameListAllService } from '../services/games/game-list-all.service';
 export class MainMenuComponent implements OnInit {
 
   games: any = GameListAllService.games;
+  level = 0;
 
   constructor(
     private timerService: TimerService,
@@ -21,8 +22,7 @@ export class MainMenuComponent implements OnInit {
     private router: Router,
     private user: UserService,
     private loader: LoaderService
-  ) {
-  }
+  ) { }
 
   isLoggedIn() {
     return this.user.isLoggedIn();
@@ -41,5 +41,10 @@ export class MainMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user.level
+      .subscribe( (data) => {
+        this.level = data;
+        console.log(this.level + ' ' + data);
+      });
   }
 }
