@@ -138,7 +138,7 @@ $ph-brand-background: (
   card:             map-get($ph-brand-dark-bg, 600),
   dialog:           map-get($ph-brand-dark-bg, 600),
   disabled-button:  rgba(white, 0.12),
-  raised-button:    map-get($ph-brand-dark-bg, 800),
+  raised-button:    map-get($ph-brand-dark-bg, 300),
   focused-button:   rgba(white, 0.12),
   selected-button:  map-get($ph-brand-dark-bg, 800),
   selected-disabled-button: map-get($ph-brand-dark-bg, 700),
