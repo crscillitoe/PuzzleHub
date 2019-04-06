@@ -83,10 +83,10 @@ export class HashiComponent extends GameBoard implements OnInit {
     super.done();
   }
 
-  newGame() {
+  newGame(difficulty = this.difficulty) {
     this.coloredNode = null;
     this.hoveredNode = null;
-    super.newGame();
+    super.newGame(difficulty);
   }
 
   ngOnInit() {
