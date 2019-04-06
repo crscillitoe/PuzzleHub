@@ -200,6 +200,7 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public done() {
+    console.log('gettin called');
     const that = this;
     GameStarterService.done(that);
   }

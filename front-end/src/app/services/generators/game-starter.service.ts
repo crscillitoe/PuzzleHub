@@ -35,7 +35,7 @@ export class GameStarterService {
   }
 
   static done(that) {
-    if (that.userService.isLoggedIn() && !that.solved && this.customSeed === 0) {
+    if (that.userService.isLoggedIn() && this.customSeed === 0) {
       that.timer.stopTimer(that.seed, that.gameID, that.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
           that.userService.addXp(data['XPGain']);
