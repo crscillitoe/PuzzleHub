@@ -25,6 +25,13 @@ export class GameBoard implements OnInit, OnDestroy {
     this.optionsService.setGameID(gameID);
   }
 
+  checkIsSolved(board: any) {
+    if(!this.solved && board.isSolved()) {
+      this.solved = true;
+      this.done();
+    }
+  }
+
   private game: Game;
 
   private _seed: number;

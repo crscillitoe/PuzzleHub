@@ -44,15 +44,27 @@ export class Board {
   }
 
   isLabeled(x, y) {
-    return (this.markedVals[x][y] === 1 || this.boardVals[x][y] === 1)
+    try {
+      return (this.markedVals[x][y] === 1 || this.boardVals[x][y] === 1)
+    } catch {
+      return false;
+    }
   }
 
   isMarked(x, y) {
-    return (this.markedVals[x][y] === 1)
+    try {
+      return (this.markedVals[x][y] === 1)
+    } catch {
+      return false;
+    }
   }
 
   isClicked(x, y) {
-    return (this.boardVals[x][y] === 1)
+    try {
+      return (this.boardVals[x][y] === 1)
+    } catch {
+      return false;
+    }
   }
 
   mark(x, y) {

@@ -278,9 +278,7 @@ export class NonogramsComponent extends GameBoard {
 
       this.addingMode = (this.board.isLabeled(x - diff, y - diff));
 
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
       this.draw();
     }
   }
@@ -323,9 +321,7 @@ export class NonogramsComponent extends GameBoard {
           }
         }
 
-        if (this.board.isSolved()) {
-          this.done();
-        }
+        this.checkIsSolved(this.board);
         this.draw();
       }
     }

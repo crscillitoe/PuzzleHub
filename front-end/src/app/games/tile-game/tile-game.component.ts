@@ -677,9 +677,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
         );
       }
 
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
 
       if (this.up && repeat && !this.solved) {
         let that = this;
@@ -808,9 +806,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
         );
       }
 
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
 
       if (this.down && repeat && !this.solved) {
         let that = this;
@@ -852,9 +848,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
         );
       }
 
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
 
       if (this.left && repeat && !this.solved) {
         let that = this;
@@ -896,9 +890,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
         );
       }
 
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
 
       if (this.right && repeat && !this.solved) {
         let that = this;
@@ -951,9 +943,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
         y < this.board.height
       ) {
         this.moveTile(x, y);
-        if (this.board.isSolved()) {
-          this.done();
-        }
+        this.checkIsSolved(this.board);
       }
     }
   }
@@ -980,9 +970,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
           y < this.board.height
         ) {
           this.moveTile(x, y);
-          if (this.board.isSolved()) {
-            this.done();
-          }
+          this.checkIsSolved(this.board);
         }
       }
     }

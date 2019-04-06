@@ -377,9 +377,7 @@ export class TakuzuComponent extends GameBoard implements OnInit {
 
       this.draw();
 
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
     }
 
   }
