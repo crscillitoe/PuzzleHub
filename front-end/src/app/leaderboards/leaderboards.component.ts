@@ -54,8 +54,6 @@ export class LeaderboardsComponent implements OnInit {
   ) { }
 
   updateTitle() {
-    console.log('update-title');
-    console.log(this.gameID);
     this.titleService.setTitle(this.getGameName(this.gameID) + ' Leaderboards - Puzzle Hub');
   }
 

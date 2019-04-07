@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,10 +22,12 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private loader: LoaderService,
     private route: ActivatedRoute,
-    private tunnel: TunnelService
+    private tunnel: TunnelService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Password Recovery - Puzzle Hub');
     this.code = this.route.snapshot.paramMap.get('code');
   }
 

@@ -8,6 +8,7 @@ import { GameListAllService } from '../services/games/game-list-all.service';
 import { OptionsService } from '../services/games/options.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-options',
@@ -62,12 +63,17 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private user: UserService,
     private router: Router,
     private optionsService: OptionsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private titleService: Title
   ) {
     user.level
       .subscribe( (data) => {
         this.populateDifficulties();
       });
+  }
+
+  updateTitle() {
+    this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub');
   }
 
   ngOnInit() {
@@ -103,12 +109,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
     this.selectedDifficulty = this.difficulty;
     this.getDifficultyName();
+    this.updateTitle();
   }
 
   getDifficultyName() {
     for(var i = 0 ; i < this.diffs.length ; i++) {
       if(this.diffs[i].diff === this.selectedDifficulty) {
         this.difficultyName = this.diffs[i].name;
+        this.difficultyName = this.difficultyName.charAt(0).toUpperCase() + this.difficultyName.substr(1);
       }
     }
   }
@@ -227,6 +235,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
     };
     const route = this.game.name;
     this.getDifficultyName();
+    this.updateTitle();
 
     this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + newDiff + ')');

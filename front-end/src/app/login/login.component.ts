@@ -3,6 +3,7 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -31,10 +32,12 @@ export class LoginComponent implements OnInit {
     private loader: LoaderService,
     private tunnel: TunnelService,
     private router: Router,
-    private user: UserService
+    private user: UserService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Login - Puzzle Hub');
   }
 
   canForgetPassword() {
