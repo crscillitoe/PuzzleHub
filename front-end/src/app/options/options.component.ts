@@ -22,6 +22,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   public rules: string;
   public controls: string;
+  public difficultyName: string;
 
   @Input() hotkeys: any;
   @Input() options: any;
@@ -101,6 +102,15 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.populateDifficulties();
 
     this.selectedDifficulty = this.difficulty;
+    this.getDifficultyName();
+  }
+
+  getDifficultyName() {
+    for(var i = 0 ; i < this.diffs.length ; i++) {
+      if(this.diffs[i].diff === this.selectedDifficulty) {
+        this.difficultyName = this.diffs[i].name;
+      }
+    }
   }
 
   populateDifficulties() {
@@ -216,6 +226,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
       diff: newDiff
     };
     const route = this.game.name;
+    this.getDifficultyName();
 
     this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + newDiff + ')');
