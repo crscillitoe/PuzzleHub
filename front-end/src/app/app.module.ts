@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -30,7 +30,7 @@ import { EmailSuccessComponent } from './email-success/email-success.component';
 import { TodoComponent } from './todo/todo.component';
 import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
-import { KakuroComponent } from './games/kakuro/kakuro.component';
+//import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
 import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
@@ -68,10 +68,10 @@ const appRoutes: Routes = [
     path: 'Tile Game',
         component: TileGameComponent
   },
-  {
-    path: 'Kakuro',
-        component: KakuroComponent
-  },
+  //{
+    //path: 'Kakuro',
+    //component: KakuroComponent
+    //},
   {
     path: 'Thermometers',
         component: ThermometersComponent
@@ -102,7 +102,7 @@ const appRoutes: Routes = [
     TodoComponent,
     OptionsComponent,
     ProfileComponent,
-    KakuroComponent,
+    //KakuroComponent,
     ThermometersComponent,
     LevelProgressComponent,
     NonogramsComponent,
@@ -133,6 +133,7 @@ const appRoutes: Routes = [
     MatTabsModule
   ],
   providers: [
+    Title,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeaderInterceptorService,

@@ -6,6 +6,7 @@ import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { Subscription } from 'rxjs/Subscription';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-menu',
@@ -23,10 +24,13 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     private tunnelService: TunnelService,
     private router: Router,
     private user: UserService,
-    private loader: LoaderService
+    private loader: LoaderService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Puzzle Hub');
+
     this.level = this.getLevel();
     this.subscription = this.user.level
       .subscribe( (data) => {

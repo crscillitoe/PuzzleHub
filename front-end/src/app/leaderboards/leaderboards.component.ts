@@ -9,6 +9,7 @@ import { SettingsService } from '../services/persistence/settings.service';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-leaderboards',
@@ -48,8 +49,15 @@ export class LeaderboardsComponent implements OnInit {
     private loader: LoaderService,
     private router: Router,
     private tunnel: TunnelService,
-    private user: UserService
+    private user: UserService,
+    private titleService: Title
   ) { }
+
+  updateTitle() {
+    console.log('update-title');
+    console.log(this.gameID);
+    this.titleService.setTitle(this.getGameName(this.gameID) + ' Leaderboards - Puzzle Hub');
+  }
 
   getGameName(id) {
     for (let game of this.games) {
@@ -72,6 +80,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('ngoninit');
     this.username = this.user.user;
     this.user.username
       .subscribe( (data) => {
@@ -80,6 +89,8 @@ export class LeaderboardsComponent implements OnInit {
     this.gameID = SettingsService.getDataNum('selectedGameID');
     this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
     this.leaderboardDifficulty = SettingsService.getDataNum('selectedLeaderboardDifficulty');
+
+    this.updateTitle();
 
     this.countDownTimer();
 
@@ -212,6 +223,7 @@ export class LeaderboardsComponent implements OnInit {
 
   setGame(id) {
     this.gameID = id;
+    this.updateTitle();
     SettingsService.storeData('selectedGameID', id);
     this.loadScores();
   }

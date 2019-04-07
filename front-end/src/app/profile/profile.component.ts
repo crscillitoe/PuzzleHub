@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile',
@@ -31,7 +32,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private tunnel: TunnelService,
-    private user: UserService
+    private user: UserService,
+    private titleService: Title
   ) { }
 
   getLevel(xp) {
@@ -41,6 +43,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
+      this.titleService.setTitle(this.username + '\'s Profile - Puzzle Hub');
 
       const m = {
         'Username': this.username

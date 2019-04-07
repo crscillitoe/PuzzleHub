@@ -10,22 +10,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private username: string;
-  private password: string;
+  public username: string;
+  public password: string;
 
-  private registerUsername = '';
-  private registerPass1 = '';
-  private registerPass2 = '';
-  private email1 = '';
-  private email2 = '';
+  public registerUsername = '';
+  public registerPass1 = '';
+  public registerPass2 = '';
+  public email1 = '';
+  public email2 = '';
 
-  private forgotEmail = '';
+  public forgotEmail = '';
 
-  private errorMessage = 'Please enter a username';
-  private forgotEmailErrorMessage = 'Please enter a valid email';
-  private forgotSuccessMessage = '';
+  public errorMessage = 'Please enter a username';
+  public forgotEmailErrorMessage = 'Please enter a valid email';
+  public forgotSuccessMessage = '';
 
-  private selectedTab = 'login';
+  public selectedTab = 'login';
 
   constructor(
     private loader: LoaderService,
