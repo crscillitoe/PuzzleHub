@@ -211,7 +211,7 @@ def request_password_reset():
     post_data = request.json
 
     try:
-        email = post_data["Email"]
+        email_address = post_data["Email"]
     except:
         abort(500, "Email not found")
 
@@ -266,7 +266,7 @@ def request_password_reset():
 
     SENDER = "noreply@puzzle-hub.com"
     SENDERNAME = "No Reply"
-    RECIPIENT = str(email)
+    RECIPIENT = str(email_address)
 
     USERNAME_SMTP = json_data['email_username']
     PASSWORD_SMTP = json_data['email_password']
