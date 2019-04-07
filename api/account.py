@@ -274,7 +274,7 @@ def request_password_reset():
     HOST = "email-smtp.us-east-1.amazonaws.com"
     PORT = 587
 
-    SUBJECT = "Puzzle Hub Email Verification"
+    SUBJECT = "Reset Your Puzzle Hub Password"
     BODY_TEXT = '''
         Someone has requested a password reset for your account
         on puzzle-hub. If this was you, you can set a new password here:
