@@ -19,7 +19,10 @@ export class LoginComponent implements OnInit {
   private email1 = '';
   private email2 = '';
 
+  private forgotEmail = '';
+
   private errorMessage = 'Please enter a username';
+  private forgotEmailErrorMessage = 'Please enter a valid email';
 
   private selectedTab = 'login';
 
@@ -31,6 +34,17 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  canForgetPassword() {
+    const emailTest = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!emailTest.test(this.forgotEmail)) {
+      this.forgotEmailErrorMessage = 'Please enter a valid email';
+      return false;
+    }
+
+    this.forgotEmailErrorMessage = '';
+    return true;
   }
 
   canRegister() {
@@ -100,6 +114,12 @@ export class LoginComponent implements OnInit {
           this.errorMessage = data['message'];
         }
       });
+  }
+
+  forgotPasswordSubmit() {
+    const m = {
+      Email: this.forgotEmail
+    };
   }
 
   login() {

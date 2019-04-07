@@ -89,12 +89,35 @@
             <ng-container *ngIf="errorMessage != ''">
               <p style="color:red">* {{errorMessage}}</p>
             </ng-container>
-            <button mat-raised-button 
+            <button mat-raised-button *ngIf="errorMessage == ''"
               name="register-submit" 
-              [disabled]="errorMessage != ''" 
               (click)="register()"
               id="register-submit">
               Register
+            </button>
+          </form>
+    </mat-tab>
+    <mat-tab label="Forgot your password?">
+          <form name="loginform" id="loginform" action="#" method="get">
+            <mat-form-field>
+              <input matInput 
+              type="text" 
+              name="log" 
+              id="email" 
+              value="" 
+              size="20" 
+              placeholder="Email" 
+              [(ngModel)]="forgotEmail"
+              (ngModelChange)="canForgetPassword()">
+            </mat-form-field>
+            <ng-container *ngIf="forgotEmailErrorMessage != ''">
+              <p style="color:red">* {{forgotEmailErrorMessage}}</p>
+            </ng-container>
+            <button mat-raised-button *ngIf="forgotEmailErrorMessage == ''"
+              name="wp-submit" 
+              id="wp-submit" 
+              (click)="forgotPasswordSubmit()">
+              Submit
             </button>
           </form>
     </mat-tab>
