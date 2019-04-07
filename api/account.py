@@ -206,6 +206,10 @@ def register_user():
 @app.route('/api/requestPasswordReset', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def request_password_reset():
+
+    db = get_db()
+    post_data = request.json
+
     try:
         email = post_data["Email"]
     except:
