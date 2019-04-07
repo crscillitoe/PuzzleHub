@@ -36,6 +36,7 @@ import { LevelProgressComponent } from './visuals/level-progress/level-progress.
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'leaderboards', component: LeaderboardsComponent},
   { path: 'EmailVerify', component: VerifyEmailComponent},
+  { path: 'ResetPassword', component: ForgotPasswordComponent},
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
   { path: 'profile', component: ProfileComponent},
@@ -103,7 +105,8 @@ const appRoutes: Routes = [
     KakuroComponent,
     ThermometersComponent,
     LevelProgressComponent,
-    NonogramsComponent
+    NonogramsComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

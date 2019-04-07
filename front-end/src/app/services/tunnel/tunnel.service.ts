@@ -9,6 +9,10 @@ export class TunnelService {
 
   constructor(private http: HttpClient) { }
 
+  forgotPassword(model) {
+    return this.http.post(this.ipAddress + '/requestPasswordReset', model);
+  }
+
   getLevel() {
     return this.http.get(this.ipAddress + '/getLevel');
   }

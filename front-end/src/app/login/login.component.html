@@ -99,8 +99,8 @@
     </mat-tab>
     <mat-tab label="Forgot your password?">
           <form name="loginform" id="loginform" action="#" method="get">
-            <mat-form-field>
-              <input matInput 
+            <mat-form-field *ngIf="forgotSuccessMessage == ''">
+              <input matInput
               type="text" 
               name="log" 
               id="email" 
@@ -113,7 +113,11 @@
             <ng-container *ngIf="forgotEmailErrorMessage != ''">
               <p style="color:red">* {{forgotEmailErrorMessage}}</p>
             </ng-container>
-            <button mat-raised-button *ngIf="forgotEmailErrorMessage == ''"
+            <ng-container *ngIf="forgotSuccessMessage != ''">
+              <br>
+              <p>{{forgotSuccessMessage}}</p>
+            </ng-container>
+            <button mat-raised-button *ngIf="forgotEmailErrorMessage == '' && forgotSuccessMessage == ''"
               name="wp-submit" 
               id="wp-submit" 
               (click)="forgotPasswordSubmit()">

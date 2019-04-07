@@ -202,6 +202,70 @@ def register_user():
 
     return jsonify({"success":True})
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+@app.route('/api/changePasswordWithCode', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def change_password_with_code():
+    
+    db = get_db()
+    post_data = request.json
+
+    try:
+        code: post_data["Code"]
+        password: post_data["NewPassword"]
+    except:
+        abort(500, "Missing required post data")
+
+    repeat_char = re.compile(r'(.)\1\1\1\1\1')
+
+    # test that the password meets our guidelines
+    if len(password) < 8:
+        return jsonify({"success":False,"message":"Password length too short"})
+
+    if len(password) > 64:
+        return jsonify({"success":False,"message":"Password length too long"})
+
+    if repeat_char.match(password) is not None:
+        return jsonify({"success":False,"message":"Password has repeating characters"})
+
+    if check_digits(password):
+        return jsonify({"success":False,"message":"Password has incrementing numbers"})
+
+    if is_pwned_password(password):
+        return jsonify({"success":False,"message":"This password has been leaked in a known data breach. Please use a different password"})
+
+    password_hash = argon2.using(time_cost=160, memory_cost=10240, parallelism=8).hash(password)
+
+    cursor = db.cursor()
+
+    sql_query = '''
+        SELECT UserID
+        FROM passwordResets
+        WHERE ValidationID = %(Code)s
+    '''
+
+    cursor.execute(sql_query, post_data)
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        return jsonify({"success":True, "message":"Success! You can now log in"})
+
+    user_id = (data[0])[0]
+
+    sql_query = '''
+        UPDATE users
+        SET Password = %(hash)s
+        WHERE UserID = %(user_id)s
+    '''
+
+    query_model = {
+        "hash":str(password_hash),
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    db.commit()
+
+    return jsonify({"success":True, "message":"Success! You can now log in"})
     
 @app.route('/api/requestPasswordReset', methods=['POST'])
 @cross_origin(supports_credentials=True)

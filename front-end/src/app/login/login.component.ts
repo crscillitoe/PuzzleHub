@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
 
   private errorMessage = 'Please enter a username';
   private forgotEmailErrorMessage = 'Please enter a valid email';
+  private forgotSuccessMessage = '';
 
   private selectedTab = 'login';
 
@@ -117,9 +118,15 @@ export class LoginComponent implements OnInit {
   }
 
   forgotPasswordSubmit() {
+    this.loader.stopLoadingAnimation();
     const m = {
       Email: this.forgotEmail
     };
+    this.tunnel.forgotPassword(m)
+      .subscribe((data) => {
+        this.forgotSuccessMessage = 'Please check your email';
+        this.loader.stopLoadingAnimation();
+      });
   }
 
   login() {
