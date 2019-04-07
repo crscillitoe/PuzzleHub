@@ -219,12 +219,13 @@ def request_password_reset():
 
     sql_query = ''' 
         SELECT UserID FROM users
-        WHERE Username = %(Email)s
+        WHERE Email = %(Email)s
     ''' 
     cursor.execute(sql_query, post_data)
     data = cursor.fetchall()
 
     if len(data) == 0:
+        print('rejecting')
         return jsonify({"message": "Please check your email for a link to reset your password"})
 
     user_id = (data[0])[0]
