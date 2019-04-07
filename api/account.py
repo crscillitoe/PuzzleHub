@@ -210,8 +210,8 @@ def change_password_with_code():
     post_data = request.json
 
     try:
-        code: post_data["Code"]
-        password: post_data["NewPassword"]
+        code = post_data["Code"]
+        password = post_data["NewPassword"]
     except:
         abort(500, "Missing required post data")
 
