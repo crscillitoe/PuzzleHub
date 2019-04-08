@@ -11,13 +11,16 @@ import { Title } from '@angular/platform-browser';
 })
 export class ForgotPasswordComponent implements OnInit {
 
-  code: string = '';
+  code = '';
 
-  password1: string = '';
-  password2: string = '';
+  password1 = '';
+  password2 = '';
+  hide1 = true;
+  hide2 = true;
 
-  errorMessage: string = 'Please enter a new password';
-  successMessage: string = '';
+  errorMessage1 = '';
+  errorMessage2 = '';
+  successMessage = '';
 
   constructor(
     private loader: LoaderService,
@@ -33,10 +36,10 @@ export class ForgotPasswordComponent implements OnInit {
 
   submitNewPassword() {
     this.loader.startLoadingAnimation();
-    let m = {
+    const m = {
       Code: this.code,
       NewPassword: this.password1
-    }
+    };
 
     this.tunnel.changePasswordWithCode(m)
       .subscribe((data) => {
@@ -44,34 +47,45 @@ export class ForgotPasswordComponent implements OnInit {
         if (data['success']) {
           this.successMessage = 'Success! Your password has been updated. You can now log in.';
         } else {
-          this.errorMessage = data['message'];
+          this.errorMessage1 = data['message'];
         }
       });
   }
 
-  canSubmit() {
-    if(this.password1.length < 8) {
-      this.errorMessage = 'Password length must be at least 8 characters';
+  canSubmit1() {
+    if (this.password1.length < 8) {
+      this.errorMessage1 = 'Password length must be at least 8 characters';
+      console.log(this.errorMessage1);
       return false;
     }
 
-    if(this.password1.length > 64) {
-      this.errorMessage = 'Password length must be no longer than 64 characters';
+    if (this.password1.length > 64) {
+      this.errorMessage1 = 'Password length must be no longer than 64 characters';
+      console.log(this.errorMessage1);
       return false;
     }
 
     const repeatTest = /^(.)\1\1\1\1\1/;
     if (repeatTest.test(this.password1)) {
-      this.errorMessage = 'Password cannot contain repeating characters';
+      this.errorMessage1 = 'Password cannot contain repeating characters';
+      console.log(this.errorMessage1);
       return false;
     }
 
-    if(this.password1 !== this.password2) {
-      this.errorMessage = 'Passwords must match';
+    this.errorMessage1 = '';
+    console.log(this.errorMessage1);
+    return true;
+  }
+
+  canSubmit2() {
+    if (this.password1 !== this.password2) {
+      this.errorMessage2 = 'Passwords must match';
+      console.log(this.errorMessage2);
       return false;
     }
 
-    this.errorMessage = '';
+    this.errorMessage2 = '';
+    console.log(this.errorMessage2);
     return true;
   }
 
