@@ -545,7 +545,7 @@ def get_personal_best():
     monthly_time = "N/A"
 
     if len(data_1) != 0:
-        daily_time = convert_to_puzzle_hub_date((data_1[0])[0])[:-3]
+        daily_time = convert_to_puzzle_hub_date((data_1[0])[0])
 
     if len(data_2) != 0:
         weekly_time = convert_to_puzzle_hub_date((data_2[0])[0])
