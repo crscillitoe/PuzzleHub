@@ -18,8 +18,7 @@ export class ForgotPasswordComponent implements OnInit {
   hide1 = true;
   hide2 = true;
 
-  errorMessage1 = '';
-  errorMessage2 = '';
+  errorMessage = 'Please enter a new password.';
   successMessage = '';
 
   constructor(
@@ -47,46 +46,29 @@ export class ForgotPasswordComponent implements OnInit {
         if (data['success']) {
           this.successMessage = 'Success! Your password has been updated. You can now log in.';
         } else {
-          this.errorMessage1 = data['message'];
+          this.errorMessage = data['message'];
         }
       });
   }
 
-  canSubmit1() {
-    if (this.password1.length < 8) {
-      this.errorMessage1 = 'Password length must be at least 8 characters';
-      console.log(this.errorMessage1);
-      return false;
-    }
-
-    if (this.password1.length > 64) {
-      this.errorMessage1 = 'Password length must be no longer than 64 characters';
-      console.log(this.errorMessage1);
-      return false;
-    }
-
+  canSubmit() {
     const repeatTest = /^(.)\1\1\1\1\1/;
-    if (repeatTest.test(this.password1)) {
-      this.errorMessage1 = 'Password cannot contain repeating characters';
-      console.log(this.errorMessage1);
-      return false;
+
+    if (this.password1.length < 8) {
+      this.errorMessage = 'Password length must be at least 8 characters';
+    } else if (this.password1.length > 64) {
+      this.errorMessage = 'Password length must be no longer than 64 characters';
+    } else if (repeatTest.test(this.password1)) {
+      this.errorMessage = 'Password cannot contain repeating characters';
+    } else if (this.password1 !== this.password2) {
+      this.errorMessage = 'Passwords must match';
+    } else {
+      this.errorMessage = '';
+      return true;
     }
 
-    this.errorMessage1 = '';
-    console.log(this.errorMessage1);
-    return true;
-  }
-
-  canSubmit2() {
-    if (this.password1 !== this.password2) {
-      this.errorMessage2 = 'Passwords must match';
-      console.log(this.errorMessage2);
-      return false;
-    }
-
-    this.errorMessage2 = '';
-    console.log(this.errorMessage2);
-    return true;
+    console.log(this.errorMessage);
+    return false;
   }
 
   changePassword() {
