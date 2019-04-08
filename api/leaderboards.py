@@ -20,7 +20,7 @@ def convert_to_puzzle_hub_date(date):
     millis = int(1000 * (total_seconds - int(total_seconds)))
 
     if hours > 0:
-        return '{:02d}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, int(total_seconds), millis)
+        return '{}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, int(total_seconds), millis)
     else:
         return '{:02d}:{:02d}.{:03d}'.format(minutes, int(total_seconds), millis)
 
