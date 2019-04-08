@@ -11,20 +11,20 @@ from api.auth import get_user_id
 
 xstr = lambda s: s or ""
 def convert_to_puzzle_hub_date(date):
-    total_seconds = date.total_seconds()
-
-    hours = int(total_seconds / 3600)
-    total_seconds -= (hours * 3600)
-
-    minutes = int(total_seconds / 60)
-    total_seconds -= (minutes * 60)
-
-    millis = int(1000 * (total_seconds - int(total_seconds)))
-
-    if hours > 0:
-        return '{}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, int(total_seconds), millis)
-    else:
-        return '{:02d}:{:02d}.{:03d}'.format(minutes, int(total_seconds), millis)
+    return date.total_seconds()
+#
+#    hours = int(total_seconds / 3600)
+#    total_seconds -= (hours * 3600)
+#
+#    minutes = int(total_seconds / 60)
+#    total_seconds -= (minutes * 60)
+#
+#    millis = int(1000 * (total_seconds - int(total_seconds)))
+#
+#    if hours > 0:
+#        return '{}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, int(total_seconds), millis)
+#    else:
+#        return '{:02d}:{:02d}.{:03d}'.format(minutes, int(total_seconds), millis)
 
 # ============================================================ #
 # /startTimer
