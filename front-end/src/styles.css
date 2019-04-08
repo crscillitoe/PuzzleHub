@@ -5,6 +5,14 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
+/* 
+ * This is allowed by googles TOS as long as we provide a message 
+ * in the user flow notifying them that we are using reCAPTCHA
+ */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
+
 html {
   background-color: #2C2C2C;
 }

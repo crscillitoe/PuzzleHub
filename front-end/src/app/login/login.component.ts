@@ -5,6 +5,8 @@ import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
+declare const grecaptcha: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit {
   public forgotSuccessMessage = '';
 
   public selectedTab = 'login';
+  private captchaToken = '';
 
   constructor(
     private loader: LoaderService,
@@ -38,6 +41,14 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Login - Puzzle Hub');
+
+    var that = this;
+    grecaptcha.ready(() => {
+      grecaptcha.execute('6Ldx55wUAAAAAINcGTOjQDFatfUuCdZkrJKWZu8k', {action: 'register'})
+        .then((token) => {
+          that.captchaToken = token;
+        });
+    });
   }
 
   canForgetPassword() {
@@ -105,7 +116,8 @@ export class LoginComponent implements OnInit {
     const m = {
       Username: this.registerUsername,
       Password: this.registerPass1,
-      Email: this.email1
+      Email: this.email1,
+      Token: this.captchaToken
     };
 
     this.tunnel.registerUser(m)
