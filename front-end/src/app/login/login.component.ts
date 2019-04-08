@@ -68,8 +68,8 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    if (this.registerUsername.length > 16) {
-      this.errorMessage = 'Username length must be no greater than 16 characters';
+    if (this.registerUsername.length > 12) {
+      this.errorMessage = 'Username length must be no greater than 12 characters';
       return false;
     }
 
