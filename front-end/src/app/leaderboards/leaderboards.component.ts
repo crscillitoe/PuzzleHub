@@ -10,6 +10,7 @@ import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Title } from '@angular/platform-browser';
+import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 
 @Component({
   selector: 'app-leaderboards',
@@ -199,15 +200,18 @@ export class LeaderboardsComponent implements OnInit {
       this.tunnel.getLeaderboards(m)
         .subscribe( (data: any) => {
 
-          console.log(data);
+          for(var i = 0 ; i < data.length ; i++) {
+            (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+          }
+
           try {
             if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
               this.footer[i] = data.pop();
+              console.log(this.footer[i]);
             }
           } catch { /* This is fine. There just aren't any times! */ }
 
           this.loader.stopLoadingAnimation();
-          console.log(data);
           this.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
           this.leaderboards[m['Difficulty']].paginator = this.paginator;
           this.leaderboards[m['Difficulty']].sort = this.sort;

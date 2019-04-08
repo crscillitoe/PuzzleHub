@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
+import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -50,7 +51,10 @@ export class ProfileComponent implements OnInit {
       };
 
       this.tunnel.getProfileData(m)
-        .subscribe( (data) => {
+        .subscribe( (data: any) => {
+          for(var i = 0 ; i < data.MatchHistory.length ; i++) {
+            (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
+          }
           this.profileData = data;
         });
     });
@@ -75,7 +79,10 @@ export class ProfileComponent implements OnInit {
     };
 
     this.tunnel.getMoreMatchHistory(m)
-      .subscribe( (data) => {
+      .subscribe( (data: any) => {
+        for(var i = 0 ; i < data.length ; i++) {
+          (data[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data[i])['TimeElapsed']);
+        }
         this.profileData.MatchHistory = this.profileData.MatchHistory.concat(data);
       });
   }

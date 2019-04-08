@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameID } from '../../enums/game-id.enum';
 import { UserService } from '../user/user.service';
+import { SharedFunctionsService } from '../shared-functions/shared-functions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,19 +41,19 @@ export class GameStarterService {
         .subscribe( (data) => {
           that.userService.addXp(data['XPGain']);
           if (data['Daily']) {
-            that.personalBestDaily = data['TimeElapsed'];
+            that.personalBestDaily = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
           }
 
           if (data['Weekly']) {
-            that.personalBestWeekly = data['TimeElapsed'];
+            that.personalBestWeekly = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
           }
 
           if (data['Monthly']) {
-            that.personalBestMonthly = data['TimeElapsed'];
+            that.personalBestMonthly = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
           }
 
           const display = document.getElementById('timer');
-          display.textContent = data['TimeElapsed'];
+          display.textContent = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
         });
     } else {
       // Do nothing - we're not logged in
@@ -101,9 +102,9 @@ export class GameStarterService {
     };
     that.tunnel.getPersonalBest(m)
       .subscribe( (data) => {
-        that.personalBestDaily = data['daily'];
-        that.personalBestWeekly = data['weekly'];
-        that.personalBestMonthly = data['monthly'];
+        that.personalBestDaily = SharedFunctionsService.convertToDateString(data['daily']);
+        that.personalBestWeekly = SharedFunctionsService.convertToDateString(data['weekly']);
+        that.personalBestMonthly = SharedFunctionsService.convertToDateString(data['monthly']);
       });
   }
 
