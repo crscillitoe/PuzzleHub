@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule,
   MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatSelectModule,
-  MatSortModule, MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
+  MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
 
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -102,7 +102,7 @@ const appRoutes: Routes = [
     TodoComponent,
     OptionsComponent,
     ProfileComponent,
-    //KakuroComponent,
+    // KakuroComponent,
     ThermometersComponent,
     LevelProgressComponent,
     NonogramsComponent,
@@ -128,7 +128,6 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatSortModule,
     MatTableModule,
     MatTabsModule
   ],

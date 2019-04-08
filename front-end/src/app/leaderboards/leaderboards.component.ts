@@ -8,7 +8,7 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 
@@ -37,7 +37,6 @@ export class LeaderboardsComponent implements OnInit {
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   pageSize = 25;
   pageSizeOptions: number[] = [5, 10, 25];
@@ -200,21 +199,19 @@ export class LeaderboardsComponent implements OnInit {
       this.tunnel.getLeaderboards(m)
         .subscribe( (data: any) => {
 
-          for(var i = 0 ; i < data.length ; i++) {
-            (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+          for (let j = 0 ; j < data.length ; j++) {
+            (data[j])['time'] = SharedFunctionsService.convertToDateString((data[j])['time']);
           }
 
           try {
             if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
               this.footer[i] = data.pop();
-              console.log(this.footer[i]);
             }
           } catch { /* This is fine. There just aren't any times! */ }
 
           this.loader.stopLoadingAnimation();
           this.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
           this.leaderboards[m['Difficulty']].paginator = this.paginator;
-          this.leaderboards[m['Difficulty']].sort = this.sort;
         });
     }
   }
@@ -240,10 +237,6 @@ export class LeaderboardsComponent implements OnInit {
 
   getEnum(name) {
     return GameID[name];
-  }
-
-  logLeaderboards() {
-    console.log(this.leaderboards);
   }
 
 }
