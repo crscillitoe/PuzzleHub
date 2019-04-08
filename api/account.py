@@ -48,6 +48,22 @@ def register_user():
         email_address = post_data["Email"]
     except BadRequestKeyError:
         abort(400, "ERROR: malformed post request")
+
+    try:
+        token = post_data["Token"]
+    except:
+        return jsonify({"success":False,"message":"Failed to retrieve reCAPTCHA token, please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
+
+    captcha_model = {
+        "secret":"6Ldx55wUAAAAAMQyfKUezVAoZM7MpPq3UReBo4qp",
+        "response":str(token)
+    }
+
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify', captcha_model)
+    json_response = r.json()
+    if not json_response["success"]:
+        return jsonify({"success":False,"message":"reCAPTCHA verification failed. Please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
+
    
     # check that the username meets our guidelines 
     if len(username) > 12:
