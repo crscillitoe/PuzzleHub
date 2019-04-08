@@ -42,13 +42,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('Login - Puzzle Hub');
 
-    var that = this;
-    grecaptcha.ready(() => {
-      grecaptcha.execute('6Ldx55wUAAAAAINcGTOjQDFatfUuCdZkrJKWZu8k', {action: 'register'})
-        .then((token) => {
-          that.captchaToken = token;
-        });
-    });
   }
 
   canForgetPassword() {
@@ -113,23 +106,31 @@ export class LoginComponent implements OnInit {
 
   register() {
     this.loader.startLoadingAnimation();
-    const m = {
-      Username: this.registerUsername,
-      Password: this.registerPass1,
-      Email: this.email1,
-      Token: this.captchaToken
-    };
+    var that = this;
+    grecaptcha.ready(() => {
+      grecaptcha.execute('6Ldx55wUAAAAAINcGTOjQDFatfUuCdZkrJKWZu8k', {action: 'register'})
+        .then((token) => {
+          that.captchaToken = token;
 
-    this.tunnel.registerUser(m)
-      .subscribe( (data) => {
-        if (data['success']) {
-          this.loader.stopLoadingAnimation();
-          this.router.navigate(['EmailSuccess']);
-        } else {
-          this.loader.stopLoadingAnimation();
-          this.errorMessage = data['message'];
-        }
-      });
+          const m = {
+            Username: that.registerUsername,
+            Password: that.registerPass1,
+            Email: that.email1,
+            Token: that.captchaToken
+          };
+
+          that.tunnel.registerUser(m)
+            .subscribe( (data) => {
+              if (data['success']) {
+                that.loader.stopLoadingAnimation();
+                that.router.navigate(['EmailSuccess']);
+              } else {
+                that.loader.stopLoadingAnimation();
+                that.errorMessage = data['message'];
+              }
+            });
+        });
+    });
   }
 
   forgotPasswordSubmit() {
