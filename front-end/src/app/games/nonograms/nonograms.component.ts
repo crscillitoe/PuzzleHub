@@ -272,15 +272,12 @@ export class NonogramsComponent extends GameBoard {
 
       if (mouseEvent.button === 0) {
         this.board.click(x - diff, y - diff);
+        this.checkIsSolved(this.board);
       } else if (mouseEvent.button === 2) {
         this.board.mark(x - diff, y - diff);
       }
 
       this.addingMode = (this.board.isLabeled(x - diff, y - diff));
-
-      if (this.board.isSolved()) {
-        this.done();
-      }
       this.draw();
     }
   }
@@ -315,6 +312,7 @@ export class NonogramsComponent extends GameBoard {
           if ((this.addingMode && !this.board.isClicked(x - diff, y - diff)) ||
               (!this.addingMode && this.board.isClicked(x - diff, y - diff))) {
             this.board.click(x - diff, y - diff);
+            this.checkIsSolved(this.board);
           }
         } else if (this.mouseDown === 2) {
           if ((this.addingMode && !this.board.isMarked(x - diff, y - diff)) ||
@@ -323,9 +321,6 @@ export class NonogramsComponent extends GameBoard {
           }
         }
 
-        if (this.board.isSolved()) {
-          this.done();
-        }
         this.draw();
       }
     }

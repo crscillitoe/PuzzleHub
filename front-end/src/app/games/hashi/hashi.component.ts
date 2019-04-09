@@ -83,10 +83,10 @@ export class HashiComponent extends GameBoard implements OnInit {
     super.done();
   }
 
-  newGame() {
+  newGame(difficulty = this.difficulty) {
     this.coloredNode = null;
     this.hoveredNode = null;
-    super.newGame();
+    super.newGame(difficulty);
   }
 
   ngOnInit() {
@@ -961,10 +961,8 @@ export class HashiComponent extends GameBoard implements OnInit {
       this.coloredNode = undefined;
       this.draw();
     }
-
-    if(this.board.isSolved() && !this.solved) {
-      this.done();
-    }
+   
+    this.checkIsSolved(this.board);
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -1077,9 +1075,7 @@ export class HashiComponent extends GameBoard implements OnInit {
       }
     }
 
-    if(this.board.isSolved() && !this.solved) {
-      this.done();
-    }
+    this.checkIsSolved(this.board);
   }
 
   @HostListener('document:keyup', ['$event'])

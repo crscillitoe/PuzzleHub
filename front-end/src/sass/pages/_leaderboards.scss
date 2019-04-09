@@ -1,5 +1,5 @@
 #username-cell:hover {
-  color: red;
+  color: rgba(white, 0.75);
   cursor: pointer;
 }
 
@@ -52,7 +52,6 @@
   height: 43rem;
   max-height: 48rem;
   overflow-y: auto;
-  background: $cmp-color;
 
   table {
     width: 100%;
@@ -60,24 +59,8 @@
   }
 }
 
-.easy {
-  background-color: $diff-color-easy;
-}
-
-.medium {
-  background-color: $diff-color-medium;
-}
-
-.hard {
-  background-color: $diff-color-hard;
-}
-
-.extreme {
-  background-color: $diff-color-extreme;
-}
-
 .you {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(white, 0.1);
 }
 
 .medals {
@@ -90,4 +73,8 @@
   width: 0.95rem;
   height: 0.95rem;
   margin: 0.3rem 0;
+}
+
+.hide {
+  display: none;
 }

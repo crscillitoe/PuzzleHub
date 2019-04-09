@@ -434,9 +434,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
       y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
 
       this.board.click(x + 1, y + 1);
-      if (this.board.isSolved()) {
-        this.done();
-      }
+      this.checkIsSolved(this.board);
       this.draw();
     }
   }

@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
+import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile',
@@ -31,7 +33,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private tunnel: TunnelService,
-    private user: UserService
+    private user: UserService,
+    private titleService: Title
   ) { }
 
   getLevel(xp) {
@@ -41,13 +44,17 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
+      this.titleService.setTitle(this.username + '\'s Profile - Puzzle Hub');
 
       const m = {
         'Username': this.username
       };
 
       this.tunnel.getProfileData(m)
-        .subscribe( (data) => {
+        .subscribe( (data: any) => {
+          for(var i = 0 ; i < data.MatchHistory.length ; i++) {
+            (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
+          }
           this.profileData = data;
         });
     });
@@ -72,7 +79,10 @@ export class ProfileComponent implements OnInit {
     };
 
     this.tunnel.getMoreMatchHistory(m)
-      .subscribe( (data) => {
+      .subscribe( (data: any) => {
+        for(var i = 0 ; i < data.length ; i++) {
+          (data[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data[i])['TimeElapsed']);
+        }
         this.profileData.MatchHistory = this.profileData.MatchHistory.concat(data);
       });
   }

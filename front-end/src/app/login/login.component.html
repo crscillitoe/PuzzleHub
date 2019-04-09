@@ -89,27 +89,46 @@
             <ng-container *ngIf="errorMessage != ''">
               <p style="color:red">* {{errorMessage}}</p>
             </ng-container>
-            <button mat-raised-button 
+            <button mat-raised-button *ngIf="errorMessage == ''"
               name="register-submit" 
-              [disabled]="errorMessage != ''" 
               (click)="register()"
               id="register-submit">
               Register
+            </button>
+            <p>
+              This site is protected by reCAPTCHA and the Google
+              <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+              <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+            </p>
+          </form>
+    </mat-tab>
+    <mat-tab label="Forgot your password?">
+          <form name="loginform" id="loginform" action="#" method="get">
+            <mat-form-field *ngIf="forgotSuccessMessage == ''">
+              <input matInput
+              type="text" 
+              name="log" 
+              id="email" 
+              value="" 
+              size="20" 
+              placeholder="Email" 
+              [(ngModel)]="forgotEmail"
+              (ngModelChange)="canForgetPassword()">
+            </mat-form-field>
+            <ng-container *ngIf="forgotEmailErrorMessage != ''">
+              <p style="color:red">* {{forgotEmailErrorMessage}}</p>
+            </ng-container>
+            <ng-container *ngIf="forgotSuccessMessage != ''">
+              <br>
+              <p>{{forgotSuccessMessage}}</p>
+            </ng-container>
+            <button mat-raised-button *ngIf="forgotEmailErrorMessage == '' && forgotSuccessMessage == ''"
+              name="wp-submit" 
+              id="wp-submit" 
+              (click)="forgotPasswordSubmit()">
+              Submit
             </button>
           </form>
     </mat-tab>
   </mat-tab-group>
 </div>
-
-<!--<ng-container *ngIf="selectedTab=='forgot'">
-  <div id="profile-forgot" class="booked-tab-content fade tab-pane" role="tabpanel" aria-labelledby="profile-forgot-tab">
-  <div class="booked-form-wrap bookedClearFix">
-  <form method="get" action="#" class="wp-user-form">
-  <div class="form-group">
-  <input type="text" name="user_login_forgot" class="form-control" value="" size="20" id="user_login_forgot" tabindex="1001" placeholder="What is your email address?">
-  </div>
-  <input type="submit" name="user-submit" value="Reset my password" class="user-submit btn btn-lg btn-primary" tabindex="1002">
-  </form>
-  </div>
-  </div>
-  </ng-container>-->

@@ -8,6 +8,21 @@ from api.auth import get_user_id
 
 xstr = lambda s: s or ""
 
+def convert_to_puzzle_hub_date(date):
+    return date.total_seconds()
+#
+#    hours = int(total_seconds / 3600)
+#    total_seconds -= (hours * 3600)
+#
+#    minutes = int(total_seconds / 60)
+#    total_seconds -= (minutes * 60)
+#
+#    millis = int(1000 * (total_seconds - int(total_seconds)))
+#
+#    if hours > 0:
+#        return '{}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, int(total_seconds), millis)
+#    else:
+#        return '{:02d}:{:02d}.{:03d}'.format(minutes, int(total_seconds), millis)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getMoreMatchHistory
@@ -60,24 +75,14 @@ def get_more_match_history():
 
     match_history = []
     for d in data:
-        if len( str(d[3]).split(':')[2] ) != 2:
-            model = {
-                "GameID":d[0],
-                "Difficulty":d[1],
-                "TimeCompleted":str(d[2]),
-                "TimeElapsed": str(d[3])[:-3],
-                "Seed":d[4]
-            }
-            match_history.append(model)
-        else :
-            model = {
-                "GameID":d[0],
-                "Difficulty":d[1],
-                "TimeCompleted":str(d[2]),
-                "TimeElapsed": str(d[3]) + '.000',
-                "Seed":d[4]
-            }
-            match_history.append(model)
+        model = {
+            "GameID":d[0],
+            "Difficulty":d[1],
+            "TimeCompleted":str(d[2]),
+            "TimeElapsed": convert_to_puzzle_hub_date(d[3]),
+            "Seed":d[4]
+        }
+        match_history.append(model)
 
     cursor.close()
     return jsonify(match_history)
@@ -134,24 +139,14 @@ def get_profile_data():
 
     match_history = []
     for d in data:
-        if len( str(d[3]).split(':')[2] ) != 2:
-            model = {
-                "GameID":d[0],
-                "Difficulty":d[1],
-                "TimeCompleted":str(d[2]),
-                "TimeElapsed": str(d[3])[:-3],
-                "Seed":d[4]
-            }
-            match_history.append(model)
-        else :
-            model = {
-                "GameID":d[0],
-                "Difficulty":d[1],
-                "TimeCompleted":str(d[2]),
-                "TimeElapsed": str(d[3]) + '.000',
-                "Seed":d[4]
-            }
-            match_history.append(model)
+        model = {
+            "GameID":d[0],
+            "Difficulty":d[1],
+            "TimeCompleted":str(d[2]),
+            "TimeElapsed": convert_to_puzzle_hub_date(d[3]),
+            "Seed":d[4]
+        }
+        match_history.append(model)
 
     cursor.close()
 
@@ -397,30 +392,17 @@ def get_leaderboards():
     to_return = []
 
     for d in data:
-        if len( str(d[1]).split(':')[2] ) != 2:
-            model = {
-                "username":d[0],
-                "time":str(d[1])[:-3],
-                "role":str(d[2]),
-                "bronzeMedals":d[3],
-                "silverMedals":d[4],
-                "goldMedals":d[5],
-                "position":position
-            }
-            to_return.append(model)
-        else :
-            model = {
-                "username":d[0],
-                "time":str(d[1]) + '.000',
-                "role":str(d[2]),
-                "bronzeMedals":d[3],
-                "silverMedals":d[4],
-                "goldMedals":d[5],
-                "position":position
-            }
-            to_return.append(model)
-
         position = position + 1
+        model = {
+            "username":d[0],
+            "time":convert_to_puzzle_hub_date(d[1]),
+            "role":str(d[2]),
+            "bronzeMedals":d[3],
+            "silverMedals":d[4],
+            "goldMedals":d[5],
+            "position":position
+        }
+        to_return.append(model)
 
     if user_id != -1:
         cursor = db.cursor()
@@ -471,28 +453,16 @@ def get_leaderboards():
         data = cursor.fetchall()
 
         for d in data:
-            if len( str(d[1]).split(':')[2] ) != 2:
-                model = {
-                    "username":d[0],
-                    "time":str(d[1])[:-3],
-                    "role":str(d[2]),
-                    "bronzeMedals":d[3],
-                    "silverMedals":d[4],
-                    "goldMedals":d[5],
-                    "position":0
-                }
-                to_return.append(model)
-            else :
-                model = {
-                    "username":d[0],
-                    "time":str(d[1]) + '.000',
-                    "role":str(d[2]),
-                    "bronzeMedals":d[3],
-                    "silverMedals":d[4],
-                    "goldMedals":d[5],
-                    "position":0
-                }
-                to_return.append(model)
+            model = {
+                "username":d[0],
+                "time":convert_to_puzzle_hub_date(d[1]),
+                "role":str(d[2]),
+                "bronzeMedals":d[3],
+                "silverMedals":d[4],
+                "goldMedals":d[5],
+                "position":0
+            }
+            to_return.append(model)
 
     return jsonify(to_return)
 
@@ -575,22 +545,13 @@ def get_personal_best():
     monthly_time = "N/A"
 
     if len(data_1) != 0:
-        if len( str((data_1[0])[0]).split(':')[2] ) != 2:
-            daily_time = str((data_1[0])[0])[:-3]
-        else:
-            daily_time = str((data_1[0])[0]) + '.000'
+        daily_time = convert_to_puzzle_hub_date((data_1[0])[0])
 
     if len(data_2) != 0:
-        if len( str((data_2[0])[0]).split(':')[2] ) != 2:
-            weekly_time = str((data_2[0])[0])[:-3]
-        else:
-            weekly_time = str((data_2[0])[0]) + '.000'
+        weekly_time = convert_to_puzzle_hub_date((data_2[0])[0])
 
     if len(data_3) != 0:
-        if len( str((data_3[0])[0]).split(':')[2] ) != 2:
-            monthly_time = str((data_3[0])[0])[:-3]
-        else:
-            monthly_time = str((data_3[0])[0]) + '.000'
+        monthly_time = convert_to_puzzle_hub_date((data_3[0])[0])
 
     model = {
         "daily":daily_time,

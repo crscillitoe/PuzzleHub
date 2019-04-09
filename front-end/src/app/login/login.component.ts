@@ -3,6 +3,9 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+
+declare const grecaptcha: any;
 
 @Component({
   selector: 'app-login',
@@ -10,27 +13,46 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private username: string;
-  private password: string;
+  public username: string;
+  public password: string;
 
-  private registerUsername = '';
-  private registerPass1 = '';
-  private registerPass2 = '';
-  private email1 = '';
-  private email2 = '';
+  public registerUsername = '';
+  public registerPass1 = '';
+  public registerPass2 = '';
+  public email1 = '';
+  public email2 = '';
 
-  private errorMessage = 'Please enter a username';
+  public forgotEmail = '';
 
-  private selectedTab = 'login';
+  public errorMessage = 'Please enter a username';
+  public forgotEmailErrorMessage = 'Please enter a valid email';
+  public forgotSuccessMessage = '';
+
+  public selectedTab = 'login';
+  private captchaToken = '';
 
   constructor(
     private loader: LoaderService,
     private tunnel: TunnelService,
     private router: Router,
-    private user: UserService
+    private user: UserService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Login - Puzzle Hub');
+
+  }
+
+  canForgetPassword() {
+    const emailTest = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!emailTest.test(this.forgotEmail)) {
+      this.forgotEmailErrorMessage = 'Please enter a valid email';
+      return false;
+    }
+
+    this.forgotEmailErrorMessage = '';
+    return true;
   }
 
   canRegister() {
@@ -39,8 +61,8 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    if (this.registerUsername.length > 16) {
-      this.errorMessage = 'Username length must be no greater than 16 characters';
+    if (this.registerUsername.length > 12) {
+      this.errorMessage = 'Username length must be no greater than 12 characters';
       return false;
     }
 
@@ -84,21 +106,42 @@ export class LoginComponent implements OnInit {
 
   register() {
     this.loader.startLoadingAnimation();
-    const m = {
-      Username: this.registerUsername,
-      Password: this.registerPass1,
-      Email: this.email1
-    };
+    var that = this;
+    grecaptcha.ready(() => {
+      grecaptcha.execute('6Ldx55wUAAAAAINcGTOjQDFatfUuCdZkrJKWZu8k', {action: 'register'})
+        .then((token) => {
+          that.captchaToken = token;
 
-    this.tunnel.registerUser(m)
-      .subscribe( (data) => {
-        if (data['success']) {
-          this.loader.stopLoadingAnimation();
-          this.router.navigate(['EmailSuccess']);
-        } else {
-          this.loader.stopLoadingAnimation();
-          this.errorMessage = data['message'];
-        }
+          const m = {
+            Username: that.registerUsername,
+            Password: that.registerPass1,
+            Email: that.email1,
+            Token: that.captchaToken
+          };
+
+          that.tunnel.registerUser(m)
+            .subscribe( (data) => {
+              if (data['success']) {
+                that.loader.stopLoadingAnimation();
+                that.router.navigate(['EmailSuccess']);
+              } else {
+                that.loader.stopLoadingAnimation();
+                that.errorMessage = data['message'];
+              }
+            });
+        });
+    });
+  }
+
+  forgotPasswordSubmit() {
+    this.loader.stopLoadingAnimation();
+    const m = {
+      Email: this.forgotEmail
+    };
+    this.tunnel.forgotPassword(m)
+      .subscribe((data) => {
+        this.forgotSuccessMessage = 'Please check your email';
+        this.loader.stopLoadingAnimation();
       });
   }
 
@@ -118,6 +161,10 @@ export class LoginComponent implements OnInit {
                 this.loader.stopLoadingAnimation();
 
                 this.router.navigate(['/']);
+              });
+            this.tunnel.getLevel()
+              .subscribe( (data2) => {
+                this.user.setXp(data2['xp']);
               });
           } else {
               this.loader.stopLoadingAnimation();

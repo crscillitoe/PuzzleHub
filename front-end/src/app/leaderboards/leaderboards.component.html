@@ -52,7 +52,8 @@
             <table mat-table [dataSource]="leaderboards[i + 1]" matSort>
               <ng-container matColumnDef="rowIndex">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-                <td mat-cell *matCellDef="let k = index;">{{k + 1}}</td>
+                <td mat-cell *matCellDef="let element">{{element.position}}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="username">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -63,6 +64,7 @@
                             (click)="viewProfile(element.username)">
                   {{element.username}}
                 </td>
+                <td mat-footer-cell *matFooterCellDef>{{footer[i+1]?.username}}</td>
               </ng-container>
 
               <ng-container matColumnDef="goldMedals">
@@ -72,6 +74,12 @@
                             class="goldMedals medal"
                             src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
                   {{element.goldMedals}}
+                </td>
+                <td mat-footer-cell *matFooterCellDef>
+                  <img
+                            class="goldMedals medal"
+                            src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
+                  {{footer[i+1]?.goldMedals}}
                 </td>
               </ng-container>
 
@@ -83,6 +91,12 @@
                             src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
                   {{element.silverMedals}}
                 </td>
+                <td mat-footer-cell *matFooterCellDef>
+                  <img
+                            class="silverMedals medal"
+                            src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
+                  {{footer[i+1]?.silverMedals}}
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="bronzeMedals">
@@ -93,6 +107,12 @@
                             src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
                   {{element.bronzeMedals}}
                 </td>
+                <td mat-footer-cell *matFooterCellDef>
+                  <img
+                            class="bronzeMedals medal"
+                            src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
+                  {{footer[i+1]?.bronzeMedals}}
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="time">
@@ -100,6 +120,7 @@
                 <td mat-cell *matCellDef="let element">
                   {{element.time}}
                 </td>
+                <td mat-footer-cell *matFooterCellDef>{{footer[i+1]?.time}}</td>
               </ng-container>
 
               <tr
@@ -110,6 +131,11 @@
                             mat-row 
                             *matRowDef="let row; columns: leaderboardColumns; let k = index;"
                             [ngClass]="username == row.username ? 'you' : ''">
+              </tr>
+              <tr
+                mat-footer-row
+                *matFooterRowDef="leaderboardColumns; sticky: true"
+                [ngClass]="{'hide': footer[i+1] === undefined}">
               </tr>
             </table>
             <mat-paginator

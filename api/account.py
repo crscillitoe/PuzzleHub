@@ -33,52 +33,6 @@ with open(get_config_path()) as f:
 
 WHOIS_APIKEY = json_data['who_is_api_key']
 
-@app.route('/api/sendTestEmail', methods=['GET'])
-@cross_origin(supports_credentials=True)
-def send_test_email():
-
-    SENDER = "noreply@puzzle-hub.com"
-    SENDERNAME = "No Reply"
-    RECIPIENT = "joel@teknogeek.io"
-
-    USERNAME_SMTP = json_data['email_username']
-    PASSWORD_SMTP = json_data['email_password']
-
-    HOST = "email-smtp.us-east-1.amazonaws.com"
-    PORT = 587
-
-    SUBJECT = "AWS puzzle-hub test email"
-    BODY_TEXT = "This is a test email from puzzle-hub.com using aws SES"
-
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = SUBJECT
-    msg['From'] = email.utils.formataddr((SENDERNAME, SENDER))
-    msg['To'] = RECIPIENT
-
-    # Record the MIME types of both parts - text/plain and text/html.
-    part1 = MIMEText(BODY_TEXT, 'plain')
-
-    # Attach parts into message container.
-    # According to RFC 2046, the last part of a multipart message, in this case
-    # the HTML message, is best and preferred.
-    msg.attach(part1)
-
-    # Try to send the message.
-    try:  
-        server = smtplib.SMTP(HOST, PORT)
-        server.ehlo()
-        server.starttls()
-        #stmplib docs recommend calling ehlo() before & after starttls()
-        server.ehlo()
-        server.login(USERNAME_SMTP, PASSWORD_SMTP)
-        server.sendmail(SENDER, RECIPIENT, msg.as_string())
-        server.close()
-    except Exception as e:
-        print ("Error: ", e)
-    
-    return '1'
-
-
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # Registers a user account
 @app.route('/api/registerUser', methods=['POST'])
@@ -94,6 +48,22 @@ def register_user():
         email_address = post_data["Email"]
     except BadRequestKeyError:
         abort(400, "ERROR: malformed post request")
+
+    try:
+        token = post_data["Token"]
+    except:
+        return jsonify({"success":False,"message":"Failed to retrieve reCAPTCHA token, please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
+
+    captcha_model = {
+        "secret":"6Ldx55wUAAAAAMQyfKUezVAoZM7MpPq3UReBo4qp",
+        "response":str(token)
+    }
+
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify', captcha_model)
+    json_response = r.json()
+    if not json_response["success"]:
+        return jsonify({"success":False,"message":"reCAPTCHA verification failed. Please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
+
    
     # check that the username meets our guidelines 
     if len(username) > 12:
@@ -248,7 +218,185 @@ def register_user():
 
     return jsonify({"success":True})
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+@app.route('/api/changePasswordWithCode', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def change_password_with_code():
     
+    db = get_db()
+    post_data = request.json
+
+    try:
+        code = post_data["Code"]
+        password = post_data["NewPassword"]
+    except:
+        abort(500, "Missing required post data")
+
+    repeat_char = re.compile(r'(.)\1\1\1\1\1')
+
+    # test that the password meets our guidelines
+    if len(password) < 8:
+        return jsonify({"success":False,"message":"Password length too short"})
+
+    if len(password) > 64:
+        return jsonify({"success":False,"message":"Password length too long"})
+
+    if repeat_char.match(password) is not None:
+        return jsonify({"success":False,"message":"Password has repeating characters"})
+
+    if check_digits(password):
+        return jsonify({"success":False,"message":"Password has incrementing numbers"})
+
+    if is_pwned_password(password):
+        return jsonify({"success":False,"message":"This password has been leaked in a known data breach. Please use a different password"})
+
+    password_hash = argon2.using(time_cost=160, memory_cost=10240, parallelism=8).hash(password)
+
+    cursor = db.cursor()
+
+    sql_query = '''
+        SELECT UserID
+        FROM passwordResets
+        WHERE ValidationID = %(Code)s
+    '''
+
+    cursor.execute(sql_query, post_data)
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        return jsonify({"success":True, "message":"Success! You can now log in"})
+
+    user_id = (data[0])[0]
+
+    sql_query = '''
+        UPDATE users
+        SET Password = %(hash)s
+        WHERE UserID = %(user_id)s
+    '''
+
+    query_model = {
+        "hash":str(password_hash),
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    db.commit()
+
+    return jsonify({"success":True, "message":"Success! You can now log in"})
+    
+@app.route('/api/requestPasswordReset', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def request_password_reset():
+
+    db = get_db()
+    post_data = request.json
+
+    try:
+        email_address = post_data["Email"]
+    except:
+        abort(500, "Email not found")
+
+    cursor = db.cursor()
+
+    sql_query = ''' 
+        SELECT UserID FROM users
+        WHERE Email = %(Email)s
+    ''' 
+    cursor.execute(sql_query, post_data)
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        print('rejecting')
+        return jsonify({"message": "Please check your email for a link to reset your password"})
+
+    user_id = (data[0])[0]
+    reset_id = uuid.uuid4()
+
+    reset_entry = {
+        "user_id":str(user_id),
+        "reset_id":str(reset_id)
+    }
+
+    sql_query = '''
+        SELECT * FROM passwordResets
+        WHERE UserID = %(user_id)s
+    '''
+    cursor.execute(sql_query, reset_entry)
+    data = cursor.fetchall()
+
+
+    if len(data) == 0:
+        sql_query = '''
+            INSERT INTO passwordResets(UserID, ValidationID)
+            VALUES (%(user_id)s, %(reset_id)s)
+        '''
+
+        cursor.execute(sql_query, reset_entry)
+        db.commit()
+    else:
+        sql_query = '''
+            UPDATE passwordResets
+            SET ValidationID = %(reset_id)s
+            WHERE UserID = %(user_id)s
+        '''
+
+        cursor.execute(sql_query, reset_entry)
+        db.commit()
+
+    reset_url = "https://puzzle-hub.com/ResetPassword;code="+str(reset_id)
+
+    SENDER = "noreply@puzzle-hub.com"
+    SENDERNAME = "No Reply"
+    RECIPIENT = str(email_address)
+
+    USERNAME_SMTP = json_data['email_username']
+    PASSWORD_SMTP = json_data['email_password']
+
+    HOST = "email-smtp.us-east-1.amazonaws.com"
+    PORT = 587
+
+    SUBJECT = "Reset Your Puzzle Hub Password"
+    BODY_TEXT = '''
+        Someone has requested a password reset for your account
+        on puzzle-hub. If this was you, you can set a new password here:
+        \n\n
+        ''' + reset_url + '''\n\n
+        If you don't want to change your password or didn't request this,
+        just ignore and delete this message.
+
+        To keep your account secure, please don't forward this email
+        to anyone.
+
+        Happy Puzzling!
+        '''
+
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = SUBJECT
+    msg['From'] = email.utils.formataddr((SENDERNAME, SENDER))
+    msg['To'] = RECIPIENT
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(BODY_TEXT, 'plain')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+
+    # Try to send the message.
+    try:  
+        server = smtplib.SMTP(HOST, PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(USERNAME_SMTP, PASSWORD_SMTP)
+        server.sendmail(SENDER, RECIPIENT, msg.as_string())
+        server.close()
+    except Exception as e:
+        print ("Error: ", e)
+
+    return jsonify({"message": "Please check your email for a link to reset your password"})
+
 @app.route('/api/validateUser/<validation_id>')
 @cross_origin(supports_credentials=True)
 def validate_user(validation_id):

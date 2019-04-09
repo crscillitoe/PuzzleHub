@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit {
 
   signOut() {
     this.user.setUserName('');
+    this.user.setXp(0);
     document.cookie = 'PuzzleHubToken=; Max-Age=0';
   }
 

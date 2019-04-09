@@ -289,9 +289,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
                 this.board.sudokuPuzzle[this.selectedX][this.selectedY] = pressed;
               }
 
-              if (this.board.isSolved()) {
-                this.done();
-              }
+              this.checkIsSolved(this.board);
             }
           } else {
             if (this.notes['' + this.selectedX + '' + this.selectedY + ''] === undefined) {

@@ -10,7 +10,6 @@ import { Game } from './game';
 import { ColorService } from '../services/colors/color.service';
 import { GameStarterService } from '../services/generators/game-starter.service';
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { Options } from '../interfaces/options';
 import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -145,6 +144,13 @@ export class GameBoard implements OnInit, OnDestroy {
     const that = this;
     GameStarterService.startGame(that);
     this.initializeOptions();
+  }
+
+  public checkIsSolved(board: any) {
+    if (!this.solved && board.isSolved()) {
+      this.solved = true;
+      this.done();
+    }
   }
 
   public setupBoard() {

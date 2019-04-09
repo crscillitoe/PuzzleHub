@@ -6,8 +6,9 @@ import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { OptionsService } from '../services/games/options.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-options',
@@ -22,6 +23,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   public rules: string;
   public controls: string;
+  public difficultyName: string;
 
   @Input() hotkeys: any;
   @Input() options: any;
@@ -39,7 +41,8 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public game: Game;
 
   public selectedDifficulty: number;
-  public diffs: Difficulty[];
+  public diffs: Difficulty[] = [];
+
 
   public highscoresMinimized: boolean;
   public rulesMinimized: boolean;
@@ -60,8 +63,18 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private user: UserService,
     private router: Router,
     private optionsService: OptionsService,
-    private snackBar: MatSnackBar
-  ) { }
+    private snackBar: MatSnackBar,
+    private titleService: Title
+  ) {
+    user.level
+      .subscribe( (data) => {
+        this.populateDifficulties();
+      });
+  }
+
+  updateTitle() {
+    this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub');
+  }
 
   ngOnInit() {
     if (this.options !== undefined) {
@@ -95,6 +108,17 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.populateDifficulties();
 
     this.selectedDifficulty = this.difficulty;
+    this.getDifficultyName();
+    this.updateTitle();
+  }
+
+  getDifficultyName() {
+    for(var i = 0 ; i < this.diffs.length ; i++) {
+      if(this.diffs[i].diff === this.selectedDifficulty) {
+        this.difficultyName = this.diffs[i].name;
+        this.difficultyName = this.difficultyName.charAt(0).toUpperCase() + this.difficultyName.substr(1);
+      }
+    }
   }
 
   populateDifficulties() {
@@ -210,6 +234,8 @@ export class OptionsComponent implements OnInit, OnDestroy {
       diff: newDiff
     };
     const route = this.game.name;
+    this.getDifficultyName();
+    this.updateTitle();
 
     this.router.navigate([route, m]);
     this.optionSelected.emit('this.newGame(' + newDiff + ')');

@@ -258,6 +258,9 @@ export class TemplateComponent implements OnInit {
     }
   }
 
+  handleOption(eventName) {
+  }
+
   /* EVENT LISTENERS */
 
   // UNCOMMENT HostListener to track given event

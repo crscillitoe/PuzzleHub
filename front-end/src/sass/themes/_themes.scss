@@ -1,0 +1,33 @@
+@import '~@angular/material/theming';
+@include mat-core;
+
+// the color variable names are hella unfortunate
+$ph-brand-theme-primary: mat-palette($ph-brand-primary);
+$ph-brand-theme-accent: mat-palette($ph-brand-accent);
+$ph-brand-theme-warn: mat-palette($ph-brand-warn);
+
+@function ph-dark-theme($primary, $accent, $warn: mat-palette($mat-orange)) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: true,
+    foreground: $ph-brand-foreground,
+    background: $ph-brand-background
+  );
+}
+
+$ph-brand-theme: ph-dark-theme(
+  $ph-brand-theme-primary,
+  $ph-brand-theme-accent
+);
+
+/*$ph-brand-theme: mat-dark-theme(
+  $ph-brand-theme-primary,
+  $ph-brand-theme-accent,
+  $ph-brand-theme-warn
+);
+
+$bg: map-get($ph-brand-theme, background);
+$bg: map-merge($bg, (background: $cmp-color));
+$ph-brand-theme: map-merge($ph-brand-theme, (background: $bg));*/
