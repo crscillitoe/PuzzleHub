@@ -1,0 +1,197 @@
+#medals {
+  background: #2C2C2C;
+  color: white;
+  position: absolute;
+  width:calc(100% - 400px);
+  height: calc(100% - 3.5rem - 80px);
+  top:calc(3.5rem + 80px);
+  left: 0px;
+  text-align: center;
+  font-size: 62px;
+  display: flex;
+}
+
+#username {
+  background: #202020;
+  color: white;
+  position: absolute;
+  width:calc(100% - 400px);
+  height: 80px;
+  top:3.5rem;
+  left: 0px;
+  text-align: center;
+  font-size: 50px;
+}
+
+#matchHistory {
+  background: #2C2C2C;
+  color: white;
+  position: absolute;
+  width:400px;
+  height:calc(100% - 3.5rem);
+  top:3.5rem;
+  right: 0px;
+  text-align: left;
+
+  .easy {
+    color: $diff-color-easy;
+  }
+
+  .medium {
+    color: $diff-color-medium;
+  }
+
+  .hard {
+    color: $diff-color-hard;
+  }
+
+  .extreme {
+    color: $diff-color-extreme;
+  }
+}
+
+p {
+  background: #2C2C2C;
+  color: white;
+  font-size: 24px;
+  position: absolute;
+  width:50%;
+  height:300px;
+  top:5rem;
+  left:10%;
+  text-align: left;
+}
+
+.image {
+  float: right;
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+  margin-top: 18px;
+}
+
+.data {
+  position: relative;
+  display: inline-block;
+  height: 50%;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.smalldata {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-top: 3px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.scrollable {
+  background: #2C2C2C;
+  color: white;
+  position: absolute;
+  width:400px;
+  height:calc(100% - 40px);
+  top:40px;
+  right: 0px;
+  text-align: left;
+  overflow-y: scroll;
+}
+
+.load {
+  background: #007baa;
+}
+
+.load:hover {
+  background: #006aaa;
+}
+
+.even {
+  background: #333333;
+}
+
+.odd {
+  background: #202020;
+}
+
+.entry {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  height: 140px;
+}
+
+.smallentry {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 40px;
+  margin-bottom: -5px;
+}
+
+.row {
+  margin-left: 1px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 0px;
+  line-height: 1;
+}
+
+.gamename {
+  font-size: 24px;
+}
+
+.easy, .medium, .hard, .extreme {
+  margin-right: 5px;
+}
+
+.col {
+  display: inline-block;
+}
+
+.medalContainer {
+  height: 100%;
+  width:50%;
+  position: relative;
+  left: 25%;
+}
+
+.medalImage {
+  width: 15vh;
+  height: 15vh;
+  float:left;
+}
+
+.medalNumber {
+  float: right;
+  font-size: 28px;
+}
+
+.medals {
+  flex-direction: column;
+  display: flex;
+  position: relative;
+  top: 50px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 100px);
+}
+
+.col1 {
+  background: #2c2c2c;
+}
+
+.col2 {
+  background: #4b4b4b;
+}
+
+.col3 {
+  background: #303030;
+}
+
+.colTitle {
+  font-size: 30px;
+}
