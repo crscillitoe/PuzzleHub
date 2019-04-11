@@ -560,3 +560,169 @@ def get_personal_best():
     }
 
     return jsonify(model)
+
+@app.route('/api/getLeaderboardsSiege', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_leaderboards():
+    try:
+        user_id = 13
+    except:
+        user_id = -1
+
+    try:
+        position = 0
+    except:
+        position = 0
+
+    try:
+        num_entries = 25
+    except:
+        num_entries = 25
+
+    try:
+        game_id = 5
+    except:
+        abort(500, "GameID not found")
+
+    try:
+        difficulty = 1
+    except:
+        abort(500, "Difficulty not found")
+
+    try:
+        leaderboard = 2
+    except:
+        abort(500, "Leaderboard not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+    if leaderboard == 0:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM dailyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 0
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
+        '''
+    elif leaderboard == 1:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM weeklyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 1
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
+        '''
+    elif leaderboard == 2:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM monthlyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 2
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
+        '''
+
+    query_model = {
+        "game_id": game_id,
+        "difficulty": difficulty,
+        "num_entries": num_entries,
+        "position": position
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    to_return = []
+
+    for d in data:
+        position = position + 1
+        model = {
+            "username":d[0],
+            "time":convert_to_puzzle_hub_date(d[1]),
+            "role":str(d[2]),
+            "bronzeMedals":d[3],
+            "silverMedals":d[4],
+            "goldMedals":d[5],
+            "position":position
+        }
+        to_return.append(model)
+
+    if user_id != -1:
+        cursor = db.cursor()
+        if leaderboard == 0:
+            sql_query = '''
+                SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+                FROM dailyLeaderboards AS L
+                INNER JOIN users AS U ON
+                U.UserID = L.UserID
+                INNER JOIN userMedals AS UM ON
+                UM.UserID = L.UserID AND
+                UM.Type = 0
+                WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                    AND U.UserID = %(user_id)s
+            '''
+        elif leaderboard == 1:
+            sql_query = '''
+                SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+                FROM weeklyLeaderboards AS L
+                INNER JOIN users AS U ON
+                U.UserID = L.UserID
+                INNER JOIN userMedals AS UM ON
+                UM.UserID = L.UserID AND
+                UM.Type = 1
+                WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                    AND U.UserID = %(user_id)s
+            '''
+        elif leaderboard == 2:
+            sql_query = '''
+                SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+                FROM monthlyLeaderboards AS L
+                INNER JOIN users AS U ON
+                U.UserID = L.UserID
+                INNER JOIN userMedals AS UM ON
+                UM.UserID = L.UserID AND
+                UM.Type = 2
+                WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                    AND U.UserID = %(user_id)s
+            '''
+
+        query_model = {
+            "game_id": game_id,
+            "difficulty": difficulty,
+            "user_id": user_id
+        }
+
+        cursor.execute(sql_query, query_model)
+        data = cursor.fetchall()
+
+        for d in data:
+            model = {
+                "username":d[0],
+                "time":convert_to_puzzle_hub_date(d[1]),
+                "role":str(d[2]),
+                "bronzeMedals":d[3],
+                "silverMedals":d[4],
+                "goldMedals":d[5],
+                "position":0
+            }
+            to_return.append(model)
+
+    return jsonify(to_return)
