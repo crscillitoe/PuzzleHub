@@ -563,7 +563,7 @@ def get_personal_best():
 
 @app.route('/api/getLeaderboardsSiege', methods=['GET'])
 @cross_origin(supports_credentials=True)
-def get_leaderboards():
+def get_leaderboards_siege():
     try:
         user_id = 13
     except:

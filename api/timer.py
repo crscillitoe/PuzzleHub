@@ -301,7 +301,7 @@ def calculate_xp_gain(diff, time_elapsed_seconds):
     if diff == 1:
         diff_multiplier = 0.81
     elif diff == 2:
-        diff_multiplier = 2.72
+        diff_multiplier = 2.32
     elif diff == 3:
         diff_multiplier = 3.3
     elif diff == 4:
