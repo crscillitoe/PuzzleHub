@@ -31,6 +31,8 @@ export class LoginComponent implements OnInit {
   public selectedTab = 'login';
   private captchaToken = '';
 
+  public loginError = '';
+
   constructor(
     private loader: LoaderService,
     private tunnel: TunnelService,
@@ -40,8 +42,11 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Login - Puzzle Hub');
+    grecaptcha.ready(() => {
+      console.log('reCAPTCHA loaded');
+    });
 
+    this.titleService.setTitle('Login - Puzzle Hub');
   }
 
   canForgetPassword() {
@@ -107,7 +112,6 @@ export class LoginComponent implements OnInit {
   register() {
     this.loader.startLoadingAnimation();
     var that = this;
-    grecaptcha.ready(() => {
       grecaptcha.execute('6Ldx55wUAAAAAINcGTOjQDFatfUuCdZkrJKWZu8k', {action: 'register'})
         .then((token) => {
           that.captchaToken = token;
@@ -130,7 +134,6 @@ export class LoginComponent implements OnInit {
               }
             });
         });
-    });
   }
 
   forgotPasswordSubmit() {
@@ -167,7 +170,8 @@ export class LoginComponent implements OnInit {
                 this.user.setXp(data2['xp']);
               });
           } else {
-              this.loader.stopLoadingAnimation();
+            this.loginError = 'Invalid login credentials, please try again.'; 
+            this.loader.stopLoadingAnimation();
           }
 
         });
