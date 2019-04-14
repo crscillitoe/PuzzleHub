@@ -75,7 +75,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   updateTitle() {
-    this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub');
+    this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub - ' + 'Play ' + this.game.name + ' Online');
   }
 
   ngOnInit() {
