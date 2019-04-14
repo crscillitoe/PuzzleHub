@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
@@ -25,6 +25,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
   notes: any = {};
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -35,6 +36,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
     optionsService: OptionsService
   ) {
     super(
+      platform,
       route,
       colorService,
       router,

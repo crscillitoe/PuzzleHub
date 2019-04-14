@@ -109,7 +109,7 @@ const appRoutes: Routes = [
     ForgotPasswordComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     FormsModule,
     DragDropModule,
     HttpClientModule,

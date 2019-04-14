@@ -307,3 +307,5 @@ export class Board {
       return x - Math.floor(x);
   }
 }
+
+export class BoardService {}

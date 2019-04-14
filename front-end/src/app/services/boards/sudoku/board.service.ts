@@ -180,3 +180,6 @@ export class Board {
       return true;
   }
 }
+
+export class BoardService {}
+

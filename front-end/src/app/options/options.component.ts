@@ -1,4 +1,4 @@
-import { HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { OptionsService } from '../services/games/options.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { Title } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-options',
@@ -60,6 +61,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private user: UserService,
     private router: Router,
     private optionsService: OptionsService,
@@ -143,8 +145,10 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   setCopyButtonText(text) {
-    const button = document.getElementById('shareButtonText');
-    button.textContent = text;
+    if(isPlatformBrowser(this.platformId)) {
+      const button = document.getElementById('shareButtonText');
+      button.textContent = text;
+    }
   }
 
   copyGameLink() {
@@ -165,22 +169,26 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   copyMessage(val: string) {
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = val;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
+    if(isPlatformBrowser(this.platformId)) {
+      const selBox = document.createElement('textarea');
+      selBox.style.position = 'fixed';
+      selBox.style.left = '0';
+      selBox.style.top = '0';
+      selBox.style.opacity = '0';
+      selBox.value = val;
+      document.body.appendChild(selBox);
+      selBox.focus();
+      selBox.select();
+      document.execCommand('copy');
+      document.body.removeChild(selBox);
+    }
   }
 
   callback(func: string) {
-    document.getElementById('focusMe').focus();
-    this.optionSelected.emit(func);
+    if(isPlatformBrowser(this.platformId)) {
+      document.getElementById('focusMe').focus();
+      this.optionSelected.emit(func);
+    }
   }
 
   editHotkey(index) {

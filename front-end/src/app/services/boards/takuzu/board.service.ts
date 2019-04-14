@@ -911,3 +911,6 @@ export class Board
 
   /* ------------------------------------------------------ */
 }
+
+export class BoardService {}
+

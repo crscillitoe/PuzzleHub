@@ -12,6 +12,7 @@ import { GameStarterService } from '../services/generators/game-starter.service'
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
+import { isPlatformBrowser } from '@angular/common';
 
 export class GameBoard implements OnInit, OnDestroy {
   private _gameID: number;
@@ -125,6 +126,7 @@ export class GameBoard implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
   constructor(
+    private platformId: Object,
     protected route: ActivatedRoute,
     protected colorService: ColorService,
     protected router: Router,
@@ -154,8 +156,10 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public setupBoard() {
-    this.canvas = document.getElementById('myCanvas');
-    this.context = this.canvas.getContext('2d');
+    if(isPlatformBrowser(this.platformId)) {
+      this.canvas = document.getElementById('myCanvas');
+      this.context = this.canvas.getContext('2d');
+    }
   }
 
   public newGame(difficulty = this.difficulty) {
@@ -167,27 +171,29 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public add(that) {
-    const display = document.getElementById('timer');
-    const now = +new Date();
+    if(isPlatformBrowser(this.platformId)) {
+      const display = document.getElementById('timer');
+      const now = +new Date();
 
-    const diff = ((now - that.startDate));
+      const diff = ((now - that.startDate));
 
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
-    const millis  = diff % 1000;
+      const hours   = Math.trunc(diff / (60 * 60 * 1000));
+      const minutes = Math.trunc(diff / (60 * 1000)) % 60;
+      const seconds = Math.trunc(diff / (1000)) % 60;
+      const millis  = diff % 1000;
 
-    try {
-      if (!that.solved) {
-        display.textContent =
-          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-          (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
+      try {
+        if (!that.solved) {
+          display.textContent =
+            (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+            (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
+            (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
 
-        that.displayTimer();
+          that.displayTimer();
+        }
+      } catch {
+        // Do nothing - page probably re-routed
       }
-    } catch {
-      // Do nothing - page probably re-routed
     }
   }
 

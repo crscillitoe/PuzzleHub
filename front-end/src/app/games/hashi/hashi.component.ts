@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service';
@@ -54,6 +54,7 @@ export class HashiComponent extends GameBoard implements OnInit {
 
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -64,6 +65,7 @@ export class HashiComponent extends GameBoard implements OnInit {
     optionsService: OptionsService
   ) {
     super(
+      platform,
       route,
       colorService,
       router,

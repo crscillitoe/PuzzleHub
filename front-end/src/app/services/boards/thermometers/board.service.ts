@@ -335,3 +335,6 @@ export class Thermometer {
     return this.filledAmount >= diff + 1;
   }
 }
+
+export class BoardService {}
+

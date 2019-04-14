@@ -1,4 +1,4 @@
-import { HostListener, Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -30,6 +30,7 @@ export class MinesweeperComponent extends GameBoard {
   private imgTile = new Image();
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -40,6 +41,7 @@ export class MinesweeperComponent extends GameBoard {
     optionsService: OptionsService
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
