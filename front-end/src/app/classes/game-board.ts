@@ -140,7 +140,11 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
+    try {
+      this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
+    } catch {
+      this.difficulty = 1;
+    }
 
     this.setupBoard();
     const that = this;

@@ -109,10 +109,16 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.controls = this.game.controls;
     this.populateDifficulties();
 
-    this.selectedDifficulty = this.difficulty;
+    if(this.difficulty == undefined) {
+      this.selectedDifficulty = this.difficulty;
+    } else {
+      this.selectedDifficulty = 1;
+    }
+
     this.getDifficultyName();
     this.updateTitle();
   }
+
 
   getDifficultyName() {
     for(var i = 0 ; i < this.diffs.length ; i++) {
