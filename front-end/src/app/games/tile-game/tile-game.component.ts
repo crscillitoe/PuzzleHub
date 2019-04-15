@@ -205,6 +205,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
       }
     }
 
+
     // Uncomment these to add event listeners
     // this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
     // this.canvas.addEventListener('mousemove', (e) => this.mouseMove(e),     false);
