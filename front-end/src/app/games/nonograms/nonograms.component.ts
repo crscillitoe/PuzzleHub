@@ -11,6 +11,7 @@ import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-nonograms',
@@ -33,7 +34,8 @@ export class NonogramsComponent extends GameBoard {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
       platform,
@@ -46,6 +48,11 @@ export class NonogramsComponent extends GameBoard {
       loader,
       optionsService
     );
+
+    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Easy Nonograms - Puzzle Hub - Play Nonograms Online');
+    }
+
     this.gameID = GameID.NONOGRAMS;
 
     this.selectedX = -1;

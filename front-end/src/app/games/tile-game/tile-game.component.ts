@@ -12,6 +12,7 @@ import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tile-game',
@@ -68,7 +69,8 @@ export class TileGameComponent extends GameBoard implements OnInit {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
       platform,
@@ -81,6 +83,10 @@ export class TileGameComponent extends GameBoard implements OnInit {
       loader,
       optionsService
     );
+
+    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Easy Tile Game - Puzzle Hub - Play Tile Game Online');
+    }
 
     this.gameID = GameID.TILE_GAME;
     this.options = [
