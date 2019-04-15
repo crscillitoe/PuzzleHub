@@ -30,13 +30,14 @@ import { EmailSuccessComponent } from './email-success/email-success.component';
 import { TodoComponent } from './todo/todo.component';
 import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
-//import { KakuroComponent } from './games/kakuro/kakuro.component';
+// import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
 import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { AngularFittextModule } from 'angular-fittext';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -109,6 +110,7 @@ const appRoutes: Routes = [
     ForgotPasswordComponent
   ],
   imports: [
+    AngularFittextModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     FormsModule,
     DragDropModule,
