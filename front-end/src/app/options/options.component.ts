@@ -68,10 +68,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private titleService: Title
   ) {
-    user.level
-      .subscribe( (data) => {
-        this.populateDifficulties();
-      });
+    if(isPlatformBrowser(platformId)) {
+      user.level
+        .subscribe( (data) => {
+          this.populateDifficulties();
+        });
+    }
   }
 
   updateTitle() {
@@ -79,44 +81,46 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.options !== undefined) {
-      for (const option of this.options) {
-        if (option['type'] === 'checkbox') {
-          this.optionVals.push(SettingsService.getDataBool(option['storedName']));
-        } else if (option['type'] === 'dropdown') {
-          this.optionVals.push(SettingsService.getDataStr(option['storedName']));
+    if(isPlatformBrowser(this.platformId)) {
+      if (this.options !== undefined) {
+        for (const option of this.options) {
+          if (option['type'] === 'checkbox') {
+            this.optionVals.push(SettingsService.getDataBool(option['storedName']));
+          } else if (option['type'] === 'dropdown') {
+            this.optionVals.push(SettingsService.getDataStr(option['storedName']));
+          }
         }
       }
-    }
 
-    if (this.hotkeys !== undefined) {
-      for (const hotkey of this.hotkeys) {
-        this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
+      if (this.hotkeys !== undefined) {
+        for (const hotkey of this.hotkeys) {
+          this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
+        }
       }
+
+      this.editingHotkey = false;
+      this.editIndex = -1;
+      this.highscoresMinimized = SettingsService.getDataBool('highscoresMinimized');
+      this.rulesMinimized = SettingsService.getDataBool('rulesMinimized');
+      this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
+      this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
+      this.timerMinimized = SettingsService.getDataBool('timerMinimized');
+      this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
+
+      this.game = GameListAllService.getGameById(this.gameID);
+      this.rules = this.game.rules;
+      this.controls = this.game.controls;
+      this.populateDifficulties();
+
+      if(this.difficulty != undefined) {
+        this.selectedDifficulty = this.difficulty;
+      } else {
+        this.selectedDifficulty = 1;
+      }
+
+      this.getDifficultyName();
+      this.updateTitle();
     }
-
-    this.editingHotkey = false;
-    this.editIndex = -1;
-    this.highscoresMinimized = SettingsService.getDataBool('highscoresMinimized');
-    this.rulesMinimized = SettingsService.getDataBool('rulesMinimized');
-    this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
-    this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
-    this.timerMinimized = SettingsService.getDataBool('timerMinimized');
-    this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
-
-    this.game = GameListAllService.getGameById(this.gameID);
-    this.rules = this.game.rules;
-    this.controls = this.game.controls;
-    this.populateDifficulties();
-
-    if(this.difficulty == undefined) {
-      this.selectedDifficulty = this.difficulty;
-    } else {
-      this.selectedDifficulty = 1;
-    }
-
-    this.getDifficultyName();
-    this.updateTitle();
   }
 
 
