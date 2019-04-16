@@ -20,13 +20,14 @@ import { SharedFunctionsService } from '../services/shared-functions/shared-func
 export class LeaderboardsComponent implements OnInit {
   games: Game[] = GameListAllService.games;
 
-  footer: any = [];
   resetDate: any;
-  leaderboards: MatTableDataSource<any>[];
 
-  leaderboard = 0;
+  leaderboardData: MatTableDataSource<any> = new MatTableDataSource();
+  footerData: any;
+
+  private _leaderboard = 0;
   leaderboardName = 'Daily';
-  leaderboardDifficulty = 0;
+  private _leaderboardDifficulty = 1;
   leaderboardColumns: string[] = [
     'rowIndex',
     'username',
@@ -40,9 +41,44 @@ export class LeaderboardsComponent implements OnInit {
 
   pageSize = 25;
   pageSizeOptions: number[] = [5, 10, 25];
-
-  gameID: number;
   username = '';
+
+  private _gameID: number;
+
+  get gameID(): number {
+    return this._gameID;
+  }
+  set gameID(id: number) {
+    this._gameID = id;
+    this.updateTitle();
+    SettingsService.storeData('selectedGameID', id);
+    this.loadLeaderboard();
+  }
+
+  get leaderboardDifficulty(): number {
+    return this._leaderboardDifficulty;
+  }
+  set leaderboardDifficulty(n: number) {
+    this._leaderboardDifficulty = n;
+    SettingsService.storeData('selectedLeaderboardDifficulty', n);
+    this.loadLeaderboard();
+  }
+
+  get leaderboard(): number {
+    return this._leaderboard;
+  }
+  set leaderboard(num: number) {
+    this._leaderboard = num;
+    SettingsService.storeData('selectedLeaderboard', num);
+    if (num === 0) {
+      this.leaderboardName = 'Daily';
+    } else if (num === 1) {
+      this.leaderboardName = 'Weekly';
+    } else if (num === 2) {
+      this.leaderboardName = 'Monthly';
+    }
+    this.loadLeaderboard();
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +94,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   getGameName(id) {
-    for (let game of this.games) {
+    for (const game of this.games) {
       if (game.id === id) {
         return game.name;
       }
@@ -68,7 +104,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   getGameDiffs(id) {
-    for (let game of this.games) {
+    for (const game of this.games) {
       if (game.id === id) {
         return game.diffs;
       }
@@ -99,7 +135,7 @@ export class LeaderboardsComponent implements OnInit {
     } else if (this.leaderboard === 2) {
       this.leaderboardName = 'Monthly';
     }
-    this.loadScores();
+    this.loadLeaderboard();
   }
 
   decrementTimer(that) {
@@ -166,65 +202,96 @@ export class LeaderboardsComponent implements OnInit {
     );
   }
 
-  changeLeaderboard(num) {
-    this.leaderboard = num;
-    SettingsService.storeData('selectedLeaderboard', num);
-    if (num === 0) {
-      this.leaderboardName = 'Daily';
-    } else if (num === 1) {
-      this.leaderboardName = 'Weekly';
-    } else if (num === 2) {
-      this.leaderboardName = 'Monthly';
-    }
-    this.loadScores();
-  }
+  loadLeaderboard() {
+    const m = {
+      'Position': 0,
+      'NumEntries': (this.paginator.pageSize !== undefined ? this.paginator.pageSize : this.pageSize),
+      'GameID': this.gameID,
+      'Difficulty': this.leaderboardDifficulty,
+      'Leaderboard': this.leaderboard
+    };
+    this.paginator.pageIndex = 0;
 
-  setLeaderboardDifficulty(n) {
-    this.leaderboardDifficulty = n;
-    SettingsService.storeData('selectedLeaderboardDifficulty', n);
-  }
-
-  loadScores() {
     this.loader.startLoadingAnimation();
-    this.leaderboards = [];
-    this.footer = [];
 
-    for (let i = 1 ; i <= 4 ; i++) {
-      const m = {
-        'GameID': this.gameID,
-        'Difficulty': i,
-        'Leaderboard': this.leaderboard
-      };
+    this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
+      for (let i = 0 ; i < data.length ; i++) {
+        (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+      }
 
-      this.tunnel.getLeaderboards(m)
-        .subscribe( (data: any) => {
+      try {
+        if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
+          this.footerData = data.pop();
+        }
+      } catch { /* This is fine. There just aren't any times! */ }
 
-          for (let j = 0 ; j < data.length ; j++) {
-            (data[j])['time'] = SharedFunctionsService.convertToDateString((data[j])['time']);
-          }
+      const tmpData = data;
 
-          try {
-            if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
-              this.footer[i] = data.pop();
+      this.tunnel.getNumEntries(m).subscribe( (data2: any) => {
+        try {
+          if (data2.NumEntries > 0) {
+            const totalLen = data2.NumEntries;
+
+            /* Filling the array with dummy data accomplishes 2 things:
+             * 1. The paginator's length can be set once instead of any time the page changes.
+             * 2. The paginator's range values (x-y of z) are accurate when using the last page
+             * or first page buttons.
+             */
+            while (tmpData.length < totalLen) {
+              tmpData.push('');
             }
-          } catch { /* This is fine. There just aren't any times! */ }
 
-          this.loader.stopLoadingAnimation();
-          this.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
-          this.leaderboards[m['Difficulty']].paginator = this.paginator;
-        });
-    }
+            this.leaderboardData = new MatTableDataSource(tmpData as any);
+            this.leaderboardData.paginator = this.paginator;
+          }
+        } catch { /* This try/catch is might be pointless */ }
+      });
+    }).add(() => { this.loader.stopLoadingAnimation(); });
+    // .add() runs when subscribe has finished
+  }
+
+  // Called when the number of pages changes, or when the page changes
+  pageEvent(event) {
+    const idx = event.pageIndex;
+    const sz = event.pageSize;
+
+    const m = {
+      'Position': idx * sz,
+      'NumEntries': sz,
+      'GameID': this.gameID,
+      'Difficulty': this.leaderboardDifficulty,
+      'Leaderboard': this.leaderboard
+    };
+
+    this.pushData(m);
+  }
+
+  pushData(m) {
+    this.loader.startLoadingAnimation();
+    this.tunnel.getLeaderboards(m).subscribe(
+      (data: any) => {
+        for (let i = 0 ; i < data.length ; i++) {
+          (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+        }
+
+        try {
+          if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
+            this.footerData = data.pop();
+          }
+        } catch { /* This is fine. There just aren't any times! */ }
+
+        for (let i = 0 ; i < data.length ; i++) {
+          // Adding values to their "expected" positions in the array for the paginator
+          this.leaderboardData.data[m['Position'] + i] = data[i];
+        }
+        this.leaderboardData.data = this.leaderboardData.data.slice();
+      }
+    ).add (() => { this.loader.stopLoadingAnimation(); } );
+    // .add() runs when subscribe has finished
   }
 
   hasMedals(user) {
     return user.bronzeMedals > 0 || user.silverMedals > 0 || user.goldMedals > 0;
-  }
-
-  setGame(id) {
-    this.gameID = id;
-    this.updateTitle();
-    SettingsService.storeData('selectedGameID', id);
-    this.loadScores();
   }
 
   viewProfile(name) {

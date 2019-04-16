@@ -16,17 +16,17 @@
         <mat-button-toggle-group>
           <mat-button-toggle
            [checked]="leaderboard == 0"
-           (click)="changeLeaderboard(0)">
+           (click)="leaderboard = 0">
             Daily
           </mat-button-toggle>
           <mat-button-toggle
            [checked]="leaderboard == 1"
-           (click)="changeLeaderboard(1)">
+           (click)="leaderboard = 1">
             Weekly
           </mat-button-toggle>
           <mat-button-toggle
            [checked]="leaderboard == 2"
-           (click)="changeLeaderboard(2)">
+           (click)="leaderboard = 2">
             Monthly
           </mat-button-toggle>
         </mat-button-toggle-group>
@@ -35,7 +35,7 @@
         <mat-button-toggle-group>
           <ng-container *ngFor="let game of games">
             <mat-button-toggle 
-                         (click)="setGame(game.id)" 
+                         (click)="gameID = game.id" 
                          [checked]="gameID == game.id"> 
               <mat-icon svgIcon="{{game.cleanName}}Icon"></mat-icon>
             </mat-button-toggle>
@@ -44,108 +44,111 @@
       </div>
     </div>
     <div class="col-12 leaderboard-tables">
-      <mat-tab-group
-         [selectedIndex]="leaderboardDifficulty"
-         (selectedIndexChange)="setLeaderboardDifficulty($event)">
+      <mat-button-toggle-group>
         <ng-container *ngFor="let diff of getGameDiffs(gameID);let i=index">
-          <mat-tab label="{{diff.name | titlecase}}">
-            <table mat-table [dataSource]="leaderboards[i + 1]" matSort>
-              <ng-container matColumnDef="rowIndex">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-                <td mat-cell *matCellDef="let element">{{element.position}}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="username">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                <td
-                            id="username-cell"
-                            mat-cell
-                            *matCellDef="let element"
-                            (click)="viewProfile(element.username)">
-                  {{element.username}}
-                </td>
-                <td mat-footer-cell *matFooterCellDef>{{footer[i+1]?.username}}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="goldMedals">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gold Medals</th>
-                <td mat-cell *matCellDef="let element">
-                  <img
-                            class="goldMedals medal"
-                            src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
-                  {{element.goldMedals}}
-                </td>
-                <td mat-footer-cell *matFooterCellDef>
-                  <img
-                            class="goldMedals medal"
-                            src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
-                  {{footer[i+1]?.goldMedals}}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="silverMedals">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Silver Medals</th>
-                <td mat-cell *matCellDef="let element">
-                  <img
-                            class="goldMedals medal"
-                            src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
-                  {{element.silverMedals}}
-                </td>
-                <td mat-footer-cell *matFooterCellDef>
-                  <img
-                            class="silverMedals medal"
-                            src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
-                  {{footer[i+1]?.silverMedals}}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="bronzeMedals">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Bronze Medals</th>
-                <td mat-cell *matCellDef="let element">
-                  <img
-                            class="goldMedals medal"
-                            src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
-                  {{element.bronzeMedals}}
-                </td>
-                <td mat-footer-cell *matFooterCellDef>
-                  <img
-                            class="bronzeMedals medal"
-                            src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
-                  {{footer[i+1]?.bronzeMedals}}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="time">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
-                <td mat-cell *matCellDef="let element">
-                  {{element.time}}
-                </td>
-                <td mat-footer-cell *matFooterCellDef>{{footer[i+1]?.time}}</td>
-              </ng-container>
-
-              <tr
-                            mat-header-row
-                            *matHeaderRowDef="leaderboardColumns; sticky: true">
-              </tr>
-              <tr
-                            mat-row 
-                            *matRowDef="let row; columns: leaderboardColumns; let k = index;"
-                            [ngClass]="username == row.username ? 'you' : ''">
-              </tr>
-              <tr
-                mat-footer-row
-                *matFooterRowDef="leaderboardColumns; sticky: true"
-                [ngClass]="{'hide': footer[i+1] === undefined}">
-              </tr>
-            </table>
-            <mat-paginator
-              [pageSizeOptions]="pageSizeOptions"
-              [pageSize]="pageSize"
-              showFirstLastButtons>
-            </mat-paginator>
-          </mat-tab>
+          <mat-button-toggle 
+                       (click)="leaderboardDifficulty = diff.diff" 
+                       [checked]="leaderboardDifficulty == diff.diff"> 
+            {{diff.name | titlecase}}
+          </mat-button-toggle>
         </ng-container>
-      </mat-tab-group>
+      </mat-button-toggle-group>
+
+      <table mat-table [dataSource]="leaderboardData" matSort>
+        <ng-container matColumnDef="rowIndex">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+          <td mat-cell *matCellDef="let element">{{element.position}}</td>
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td
+                      id="username-cell"
+                      mat-cell
+                      *matCellDef="let element"
+                      (click)="viewProfile(element.username)">
+            {{element.username}}
+          </td>
+          <td mat-footer-cell *matFooterCellDef>{{footerData?.username}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="goldMedals">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Gold Medals</th>
+          <td mat-cell *matCellDef="let element">
+            <img
+                      class="goldMedals medal"
+                      src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
+            {{element.goldMedals}}
+          </td>
+          <td mat-footer-cell *matFooterCellDef>
+            <img
+                      class="goldMedals medal"
+                      src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
+            {{footerData?.goldMedals}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="silverMedals">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Silver Medals</th>
+          <td mat-cell *matCellDef="let element">
+            <img
+                      class="goldMedals medal"
+                      src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
+            {{element.silverMedals}}
+          </td>
+          <td mat-footer-cell *matFooterCellDef>
+            <img
+                      class="silverMedals medal"
+                      src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
+            {{footerData?.silverMedals}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bronzeMedals">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Bronze Medals</th>
+          <td mat-cell *matCellDef="let element">
+            <img
+                      class="goldMedals medal"
+                      src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
+            {{element.bronzeMedals}}
+          </td>
+          <td mat-footer-cell *matFooterCellDef>
+            <img
+                      class="bronzeMedals medal"
+                      src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
+            {{footerData?.bronzeMedals}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
+          <td mat-cell *matCellDef="let element">
+            {{element.time}}
+          </td>
+          <td mat-footer-cell *matFooterCellDef>{{footerData?.time}}</td>
+        </ng-container>
+
+        <tr
+                      mat-header-row
+                      *matHeaderRowDef="leaderboardColumns; sticky: true">
+        </tr>
+        <tr
+                      mat-row 
+                      *matRowDef="let row; columns: leaderboardColumns; let k = index;"
+                      [ngClass]="username == row.username ? 'you' : ''">
+        </tr>
+        <tr
+                      mat-footer-row
+                      *matFooterRowDef="leaderboardColumns; sticky: true"
+                      [ngClass]="{'hide': footerData === undefined}">
+        </tr>
+      </table>
+      <mat-paginator
+                      [pageSizeOptions]="pageSizeOptions"
+                      [pageSize]="pageSize"
+                      (page)="pageEvent($event)"
+                      showFirstLastButtons>
+      </mat-paginator>
     </div>
   </div><!-- container-stretch -->
 </div>
