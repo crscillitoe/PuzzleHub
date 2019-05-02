@@ -113,25 +113,26 @@
       <ng-container *ngFor="let option of options; let i=index">
         <ng-container *ngIf="option.type == 'checkbox'">
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" id="{{option.bindTo}}" class="custom-control-input clickable" 
-                                                          [(ngModel)]="optionVals[i]" 
-                                                          (click)="callback(option.callback)">
-            <label class="clickable descriptionText custom-control-label" for="{{option.bindTo}}">{{option.name}}</label>
+            <mat-checkbox
+              id="{{option.bindTo}}"
+              [(ngModel)]="optionVals[i]"
+              (click)="callback(option.callback)">
+              {{option.name}}
+            </mat-checkbox>
           </div>
         </ng-container>
 
         <ng-container *ngIf="option.type == 'dropdown'">
           <div class="custom-control custom-dropdown">
-            <label style="margin-bottom:0" class="descriptionText" for="{{option.bindTo}}">
-              {{option.name}}
-            </label>
-            <select id="{{option.bindTo}}"
-                    [(ngModel)]="optionVals[i]" 
-                    (ngModelChange)="updateAndCallback(option.callback, option.storedName, $event)">
-              <ng-container *ngFor="let o of option.options">
-                <option>{{o}}</option>
-              </ng-container>
-            </select>
+            <mat-label>Color Scheme</mat-label>
+            <mat-select
+              id="{{option.bindTo}}"
+              [(ngModel)]="optionVals[i]"
+              (ngModelChange)="updateAndCallback(option.callback, option.storedName, $event)">
+              <mat-option *ngFor="let o of option.options" [value]="o">
+                {{o}}
+              </mat-option>
+            </mat-select>
           </div>
         </ng-container>
       </ng-container>
@@ -153,16 +154,24 @@
     </a>
     <ng-container *ngIf="!hotkeysMinimized">
       <ng-container *ngFor="let hotkey of hotkeys; let i=index">
-        <div class="descriptionText">
-          {{hotkey.name}} - 
-          <button (click)="editHotkey(i)">
-            <ng-container *ngIf="editIndex != i">
-              {{convertCodeToStr(hotkeyVals[i])}} ({{hotkeyVals[i]}})
-            </ng-container>
-            <ng-container *ngIf="editIndex == i">
-              Press...
-            </ng-container>
-          </button>
+        <div class="container-flex-row">
+          <div class="col-6 hotkey-label">
+            {{hotkey.name}}
+          </div>
+          <div class="col-6">
+            <div 
+              class="key"
+              (click)="editHotkey(i)">
+              <span>
+                <ng-container *ngIf="editIndex != i">
+                  {{convertCodeToStr(hotkeyVals[i])}}
+                </ng-container>
+                <ng-container *ngIf="editIndex == i">
+                  ...
+                </ng-container>
+              </span>
+            </div>
+          </div>
         </div>
       </ng-container>
     </ng-container>
