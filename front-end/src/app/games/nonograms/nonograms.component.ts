@@ -50,7 +50,7 @@ export class NonogramsComponent extends GameBoard {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Nonograms - Puzzle Hub - Play Nonograms Online');
+      titleService.setTitle('Play Nonograms - Puzzle Hub');
     }
 
     this.gameID = GameID.NONOGRAMS;

@@ -56,7 +56,7 @@ export class MinesweeperComponent extends GameBoard {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Minesweeper - Puzzle Hub - Play Minesweeper Online');
+      titleService.setTitle('Play Minesweeper - Puzzle Hub');
     }
 
     this.gameID = GameID.MINESWEEPER;

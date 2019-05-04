@@ -79,7 +79,7 @@ export class HashiComponent extends GameBoard implements OnInit {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Hashi - Puzzle Hub - Play Hashi Online');
+      titleService.setTitle('Play Hashi - Puzzle Hub');
     }
 
     this.gameID = GameID.HASHI;

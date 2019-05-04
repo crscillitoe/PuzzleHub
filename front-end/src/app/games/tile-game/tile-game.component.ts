@@ -85,7 +85,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Tile Game - Puzzle Hub - Play Tile Game Online');
+      titleService.setTitle('Play Tile Game - Puzzle Hub');
     }
 
     this.gameID = GameID.TILE_GAME;

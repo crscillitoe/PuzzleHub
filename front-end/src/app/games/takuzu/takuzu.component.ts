@@ -53,7 +53,7 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Takuzu - Puzzle Hub - Play Takuzu Online');
+      titleService.setTitle('Play Takuzu - Puzzle Hub');
     }
 
     this.gameID = GameID.TAKUZU;

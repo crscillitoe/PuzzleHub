@@ -47,7 +47,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Thermometers - Puzzle Hub - Play Thermometers Online');
+      titleService.setTitle('Play Thermometers - Puzzle Hub');
     }
 
     this.gameID = GameID.THERMOMETERS;

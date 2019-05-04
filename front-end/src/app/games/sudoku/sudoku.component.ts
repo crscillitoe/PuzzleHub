@@ -50,7 +50,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
     );
 
     if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Easy Sudoku - Puzzle Hub - Play Sudoku Online');
+      titleService.setTitle('Play Sudoku - Puzzle Hub');
     }
 
     this.gameID = GameID.SUDOKU;
