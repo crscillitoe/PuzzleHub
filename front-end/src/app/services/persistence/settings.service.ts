@@ -12,7 +12,7 @@ export class SettingsService {
     "selectedGameID":5,
     "selectedLeaderboard":0,
     "selectedLeaderboardDifficulty": 0,
-    "rulesMinimized":true,
+    "rulesMinimized":false,
     "optionsMinimized":true,
     "controlsMinimized":true,
     "highscoresMinimized":false,

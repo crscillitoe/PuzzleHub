@@ -23,7 +23,7 @@
       </b>
     </a>
 
-    <a id="timer" 
+    <a id="timer"
        [ngClass]="timerMinimized ? 'hidden' : 'none'"
        class="monospace time">00:00.000</a>
   </div>
@@ -89,9 +89,9 @@
       </b>
     </a>
     <ng-container *ngIf="!rulesMinimized">
-      <a class="descriptionText">
+      <h1 class="descriptionText">
         {{rules}}
-      </a>
+      </h1>
     </ng-container>
   </div>
 
