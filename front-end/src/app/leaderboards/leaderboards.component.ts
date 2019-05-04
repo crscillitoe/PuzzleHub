@@ -22,19 +22,20 @@ export class LeaderboardsComponent implements OnInit {
 
   resetDate: any;
 
-  leaderboardData: MatTableDataSource<any> = new MatTableDataSource();
+  // leaderboardData: MatTableDataSource<any> = new MatTableDataSource();
+  leaderboardData: any[] = [];
   footerData: any;
 
   private _leaderboard = 0;
   leaderboardName = 'Daily';
   private _leaderboardDifficulty = 1;
   leaderboardColumns: string[] = [
-    'rowIndex',
-    'username',
-    'goldMedals',
-    'silverMedals',
-    'bronzeMedals',
-    'time'
+    '#',
+    'Username',
+    'Gold',
+    'Silver',
+    'Bronze',
+    'Time'
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -203,91 +204,45 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   loadLeaderboard() {
-    const m = {
-      'Position': 0,
-      'NumEntries': (this.paginator.pageSize !== undefined ? this.paginator.pageSize : this.pageSize),
-      'GameID': this.gameID,
-      'Difficulty': this.leaderboardDifficulty,
-      'Leaderboard': this.leaderboard
-    };
-    this.paginator.pageIndex = 0;
 
     this.loader.startLoadingAnimation();
 
-    this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
-      for (let i = 0 ; i < data.length ; i++) {
-        (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
-      }
-
-      try {
-        if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
-          this.footerData = data.pop();
-        }
-      } catch { /* This is fine. There just aren't any times! */ }
-
-      const tmpData = data;
-
-      this.tunnel.getNumEntries(m).subscribe( (data2: any) => {
-        try {
-          if (data2.NumEntries > 0) {
-            const totalLen = data2.NumEntries;
-
-            /* Filling the array with dummy data accomplishes 2 things:
-             * 1. The paginator's length can be set once instead of any time the page changes.
-             * 2. The paginator's range values (x-y of z) are accurate when using the last page
-             * or first page buttons.
-             */
-            while (tmpData.length < totalLen) {
-              tmpData.push('');
-            }
-
-            this.leaderboardData = new MatTableDataSource(tmpData as any);
-            this.leaderboardData.paginator = this.paginator;
-          }
-        } catch { /* This try/catch is might be pointless */ }
-      });
-    }).add(() => { this.loader.stopLoadingAnimation(); });
-    // .add() runs when subscribe has finished
-  }
-
-  // Called when the number of pages changes, or when the page changes
-  pageEvent(event) {
-    const idx = event.pageIndex;
-    const sz = event.pageSize;
-
-    const m = {
-      'Position': idx * sz,
-      'NumEntries': sz,
-      'GameID': this.gameID,
-      'Difficulty': this.leaderboardDifficulty,
-      'Leaderboard': this.leaderboard
-    };
-
-    this.pushData(m);
-  }
-
-  pushData(m) {
-    this.loader.startLoadingAnimation();
-    this.tunnel.getLeaderboards(m).subscribe(
-      (data: any) => {
-        for (let i = 0 ; i < data.length ; i++) {
+    for (const diff of this.getGameDiffs(this.gameID)) {
+      const m = {
+        'Position': 0,
+        'NumEntries': (this.pageSize),
+        'GameID': this.gameID,
+        'Difficulty': diff['diff'],
+        'Leaderboard': this.leaderboard
+      };
+      this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
+        for (let i = 0; i < data.length; i++) {
           (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
         }
 
-        try {
-          if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
-            this.footerData = data.pop();
-          }
-        } catch { /* This is fine. There just aren't any times! */ }
+        const tmpData = data;
 
-        for (let i = 0 ; i < data.length ; i++) {
-          // Adding values to their "expected" positions in the array for the paginator
-          this.leaderboardData.data[m['Position'] + i] = data[i];
-        }
-        this.leaderboardData.data = this.leaderboardData.data.slice();
-      }
-    ).add (() => { this.loader.stopLoadingAnimation(); } );
-    // .add() runs when subscribe has finished
+        this.tunnel.getNumEntries(m).subscribe( (data2: any) => {
+          try {
+            if (data2.NumEntries > 0) {
+              const totalLen = data2.NumEntries;
+
+              /* Filling the array with dummy data accomplishes 2 things:
+               * 1. The paginator's length can be set once instead of any time the page changes.
+               * 2. The paginator's range values (x-y of z) are accurate when using the last page
+               * or first page buttons.
+               */
+              while (tmpData.length < totalLen) {
+                tmpData.push('');
+              }
+
+              this.leaderboardData[diff['diff']] = tmpData;
+            }
+          } catch { /* This try/catch is might be pointless */ }
+        });
+      }).add(() => { this.loader.stopLoadingAnimation(); });
+      // .add() runs when subscribe has finished
+    }
   }
 
   hasMedals(user) {
