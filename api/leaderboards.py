@@ -694,6 +694,7 @@ def get_footer():
     except:
         abort(500, "Leaderboard not found")
 
+    db = get_db()
     cursor = db.cursor()
     if leaderboard == 0:
         sql_query = '''
