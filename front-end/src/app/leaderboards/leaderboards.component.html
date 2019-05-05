@@ -36,7 +36,7 @@
           <mat-button-toggle 
                        (click)="gameID = game.id" 
                        [checked]="gameID == game.id"> 
-            <mat-icon svgIcon="{{game.cleanName}}Icon"></mat-icon>
+            <img src={{game.image}} alt="{{game.name}} logo" class="game-icon" />
           </mat-button-toggle>
         </ng-container>
       </mat-button-toggle-group>
