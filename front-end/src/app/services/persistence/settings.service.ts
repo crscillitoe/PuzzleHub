@@ -19,6 +19,8 @@ export class SettingsService {
     "timerMinimized":false,
     "hotkeysMinimized":true,
     "HoverTileGame":false,
+    "Takuzu1":90,
+    "Takuzu0":88,
     "TileGameUP":83,
     "TileGameDOWN":87,
     "TileGameLEFT":68,

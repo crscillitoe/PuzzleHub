@@ -26,6 +26,9 @@ export class TakuzuComponent extends GameBoard implements OnInit {
   displayGrid: boolean;
   invertedControls: boolean;
 
+  Takuzu1Key: number;
+  Takuzu0Key: number;
+
   board: Board;
 
   constructor(
@@ -75,6 +78,19 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       }
     ];
 
+    this.hotkeys = [
+      {
+        'name': '1',
+        'bindTo': 'Takuzu1',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': '0',
+        'bindTo': 'Takuzu0',
+        'callback': 'this.configureHotkeys()'
+      }
+    ]
+
 
     this.oColor = this.colors.FOREGROUND;
     this.cColor = '#66CCFF';
@@ -83,9 +99,16 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     this.selectedY = -1;
   }
 
+  configureHotkeys() {
+    this.Takuzu1Key = SettingsService.getDataNum('Takuzu1');
+    this.Takuzu0Key = SettingsService.getDataNum('Takuzu0');
+  }
+
   ngOnInit() {
     this.displayGrid = SettingsService.getDataBool('takuzuGrid');
     this.invertedControls = SettingsService.getDataBool('takuzuInvert');
+
+    this.configureHotkeys();
     super.ngOnInit();
   }
 
@@ -404,6 +427,30 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       this.selectedX = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
       this.draw();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  keyPressed(keyEvent) {
+    const code = keyEvent.keyCode;
+
+    if (code === 32) {
+      this.newGame();
+      return;
+    }
+
+    if (!this.solved) {
+      switch (code) {
+        case (this.Takuzu0Key):
+          this.board.setValue(this.selectedX, this.selectedY, 0);
+          break;
+        case (this.Takuzu1Key):
+          this.board.setValue(this.selectedX, this.selectedY, 1);
+          break;
+      }
+
+      this.draw();
+      this.checkIsSolved(this.board);
     }
   }
 }

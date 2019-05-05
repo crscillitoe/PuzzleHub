@@ -15,7 +15,6 @@ export class Board {
     this.seed = seed;
   }
 
-  
   generateBoard() {
     this.thermometers = [];
     this.bottomLegends = [];
@@ -30,7 +29,7 @@ export class Board {
     // 3 - Right
     //
     var numSkips = 0;
-    
+
     //while(!this.isFull()) {
     while(numSkips < 200 && !this.isFull()) {
       var tile = this.getRandomEmptyTile();
@@ -126,6 +125,10 @@ export class Board {
         }
       }
 
+      if (count == 0) {
+        this.generateBoard();
+        return;
+      }
       this.bottomLegends.push(count);
     }
 
@@ -137,12 +140,17 @@ export class Board {
         }
       }
 
+      if (count == 0) {
+        this.generateBoard();
+        return;
+      }
       this.sideLegends.push(count);
     }
 
-    if(this.bottomLegends.reduce(this.add) < (this.width * 1.5) || 
+    if(this.bottomLegends.reduce(this.add) < (this.width * 1.5) ||
        this.sideLegends.reduce(this.add)   < (this.height * 1.5)) {
       this.generateBoard();
+      return;
     }
 
     // Empty thermometers

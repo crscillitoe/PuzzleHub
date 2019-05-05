@@ -198,6 +198,15 @@ export class Board
     }
   }
 
+  setValue(x, y, value)
+  {
+    if (x >= this.size || y >= this.size || this.isOriginal(x, y)) {
+      return;
+    }
+
+    this.takuzuPuzzle[y][x] = value;
+  }
+
   /* ------------------------------------------------------ */
 
   rotateValue(x, y, forward)
