@@ -204,7 +204,6 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   loadLeaderboard() {
-
     this.loader.startLoadingAnimation();
 
     for (const diff of this.getGameDiffs(this.gameID)) {
@@ -215,6 +214,9 @@ export class LeaderboardsComponent implements OnInit {
         'Difficulty': diff['diff'],
         'Leaderboard': this.leaderboard
       };
+
+      this.leaderboardData[diff['diff']] = [];
+
       this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
         for (let i = 0; i < data.length; i++) {
           (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
