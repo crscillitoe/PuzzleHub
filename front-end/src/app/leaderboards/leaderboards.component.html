@@ -1,154 +1,94 @@
 <div class="container-static-stretch container-scroll-y">
-  <div class="container-static">
-    <div class="container-flex-row leaderboard-header">
-      <div class="game-title col-12">
-        <h2 class="gameName">{{getGameName(gameID)}}</h2>
-      </div>
-    </div><!-- leaderboard-header -->
-    <div class="container-flex-row">
-      <div class="countdown col-12">
-        <span class="timerTitle monospace">RESET IN:&nbsp;</span>
-        <span id="leaderboardstimer" class="timer monospace">000:00:00</span>
-      </div>
+  <div class="container-flex-row leaderboard-header">
+    <div class="game-title col-12">
+      <h2 class="gameName">{{getGameName(gameID)}}</h2>
     </div>
-    <div class="container-flex-row">
-      <div class="col-6">
-        <mat-button-toggle-group>
-          <mat-button-toggle
-           [checked]="leaderboard == 0"
-           (click)="leaderboard = 0">
-            Daily
-          </mat-button-toggle>
-          <mat-button-toggle
-           [checked]="leaderboard == 1"
-           (click)="leaderboard = 1">
-            Weekly
-          </mat-button-toggle>
-          <mat-button-toggle
-           [checked]="leaderboard == 2"
-           (click)="leaderboard = 2">
-            Monthly
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <div class="col-6" style="text-align: right">
-        <mat-button-toggle-group>
-          <ng-container *ngFor="let game of games">
-            <mat-button-toggle 
-                         (click)="gameID = game.id" 
-                         [checked]="gameID == game.id"> 
-              <mat-icon svgIcon="{{game.cleanName}}Icon"></mat-icon>
-            </mat-button-toggle>
-          </ng-container>
-        </mat-button-toggle-group>
-      </div>
+  </div><!-- leaderboard-header -->
+  <div class="container-flex-row leaderboard-ui">
+    <div class="countdown col-12">
+      <span class="timerTitle monospace">RESET IN:&nbsp;</span>
+      <span id="leaderboardstimer" class="timer monospace">000:00:00</span>
     </div>
-    <div class="col-12 leaderboard-tables">
+  </div>
+  <div class="container-flex-row leaderboard-ui">
+    <div class="col-6">
       <mat-button-toggle-group>
-        <ng-container *ngFor="let diff of getGameDiffs(gameID);let i=index">
+        <mat-button-toggle
+         [checked]="leaderboard == 0"
+         (click)="leaderboard = 0">
+          Daily
+        </mat-button-toggle>
+        <mat-button-toggle
+         [checked]="leaderboard == 1"
+         (click)="leaderboard = 1">
+          Weekly
+        </mat-button-toggle>
+        <mat-button-toggle
+         [checked]="leaderboard == 2"
+         (click)="leaderboard = 2">
+          Monthly
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="col-6" style="text-align: right">
+      <mat-button-toggle-group>
+        <ng-container *ngFor="let game of games">
           <mat-button-toggle 
-                       (click)="leaderboardDifficulty = diff.diff" 
-                       [checked]="leaderboardDifficulty == diff.diff"> 
-            {{diff.name | titlecase}}
+                       (click)="gameID = game.id" 
+                       [checked]="gameID == game.id"> 
+            <mat-icon svgIcon="{{game.cleanName}}Icon"></mat-icon>
           </mat-button-toggle>
         </ng-container>
       </mat-button-toggle-group>
-
-      <table mat-table [dataSource]="leaderboardData" matSort>
-        <ng-container matColumnDef="rowIndex">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-          <td mat-cell *matCellDef="let element">{{element.position}}</td>
-          <td mat-footer-cell *matFooterCellDef></td>
-        </ng-container>
-        <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-          <td
-                      id="username-cell"
-                      mat-cell
-                      *matCellDef="let element"
-                      (click)="viewProfile(element.username)">
-            {{element.username}}
-          </td>
-          <td mat-footer-cell *matFooterCellDef>{{footerData?.username}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="goldMedals">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Gold Medals</th>
-          <td mat-cell *matCellDef="let element">
-            <img
-                      class="goldMedals medal"
-                      src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
-            {{element.goldMedals}}
-          </td>
-          <td mat-footer-cell *matFooterCellDef>
-            <img
-                      class="goldMedals medal"
-                      src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
-            {{footerData?.goldMedals}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="silverMedals">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Silver Medals</th>
-          <td mat-cell *matCellDef="let element">
-            <img
-                      class="goldMedals medal"
-                      src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
-            {{element.silverMedals}}
-          </td>
-          <td mat-footer-cell *matFooterCellDef>
-            <img
-                      class="silverMedals medal"
-                      src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
-            {{footerData?.silverMedals}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="bronzeMedals">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Bronze Medals</th>
-          <td mat-cell *matCellDef="let element">
-            <img
-                      class="goldMedals medal"
-                      src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
-            {{element.bronzeMedals}}
-          </td>
-          <td mat-footer-cell *matFooterCellDef>
-            <img
-                      class="bronzeMedals medal"
-                      src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
-            {{footerData?.bronzeMedals}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="time">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
-          <td mat-cell *matCellDef="let element">
-            {{element.time}}
-          </td>
-          <td mat-footer-cell *matFooterCellDef>{{footerData?.time}}</td>
-        </ng-container>
-
-        <tr
-                      mat-header-row
-                      *matHeaderRowDef="leaderboardColumns; sticky: true">
-        </tr>
-        <tr
-                      mat-row 
-                      *matRowDef="let row; columns: leaderboardColumns; let k = index;"
-                      [ngClass]="username == row.username ? 'you' : ''">
-        </tr>
-        <tr
-                      mat-footer-row
-                      *matFooterRowDef="leaderboardColumns; sticky: true"
-                      [ngClass]="{'hide': footerData === undefined}">
-        </tr>
-      </table>
-      <mat-paginator
-                      [pageSizeOptions]="pageSizeOptions"
-                      [pageSize]="pageSize"
-                      (page)="pageEvent($event)"
-                      showFirstLastButtons>
-      </mat-paginator>
     </div>
-  </div><!-- container-stretch -->
+  </div>
+  <div class="col-12 container-flex-row leaderboard-tables">
+    <ng-container *ngFor="let diff of getGameDiffs(gameID); let i=index">
+      <mat-card class="col leaderboard-card">
+        <mat-card-header>
+          <mat-card-title>{{diff.name | titlecase}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table>
+            <thead>
+              <th></th>
+              <th>Username</th>
+              <th>
+                <img
+                class="goldMedals medal"
+                src="/assets/images/medals/{{leaderboardName}}_Gold.svg">
+              </th>
+              <th>
+                <img
+                class="silverMedals medal"
+                src="/assets/images/medals/{{leaderboardName}}_Silver.svg">
+              </th>
+              <th>
+                <img
+                class="bronzeMedals medal"
+                src="/assets/images/medals/{{leaderboardName}}_Bronze.svg">
+              </th>
+              <th>Time</th>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let row of leaderboardData[diff.diff]; let j=index">
+                <tr>
+                  <td>{{j+1}}</td>
+                  <td>{{row.username}}</td>
+                  <td>{{row.goldMedals}}</td>
+                  <td>{{row.silverMedals}}</td>
+                  <td>{{row.bronzeMedals}}</td>
+                  <td>{{row.time}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </mat-card-content>
+        <mat-card-actions>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container> 
+  </div>
 </div>
