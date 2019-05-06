@@ -55,7 +55,7 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       optionsService
     );
 
-    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+    if (Number(this.route.snapshot.paramMap.get('diff')) === 0) {
       titleService.setTitle('Play Takuzu - Puzzle Hub');
     }
 
@@ -89,7 +89,7 @@ export class TakuzuComponent extends GameBoard implements OnInit {
         'bindTo': 'Takuzu0',
         'callback': 'this.configureHotkeys()'
       }
-    ]
+    ];
 
 
     this.oColor = this.colors.FOREGROUND;
