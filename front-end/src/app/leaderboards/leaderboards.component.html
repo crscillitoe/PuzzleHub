@@ -74,7 +74,7 @@
               <ng-container *ngFor="let row of leaderboardData[diff.diff]; let j=index">
                 <tr [ngClass]="{'you': row.username == username}">
                   <td>{{j+((leaderboardCurrentPage[diff.diff] - 1) * pageSize)+1}}</td>
-                  <td>{{row.username}}</td>
+                  <td><a href="http://167.99.14.36:4200/profile?user={{row.username}}">{{row.username}}</a></td>
                   <td>{{row.goldMedals}}</td>
                   <td>{{row.silverMedals}}</td>
                   <td>{{row.bronzeMedals}}</td>
