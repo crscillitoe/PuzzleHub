@@ -35,7 +35,7 @@ export class LeaderboardsComponent implements OnInit {
   leaderboardName = 'Daily';
   private _leaderboardDifficulty = 1;
 
-  pageSize = 2;
+  pageSize = 25;
   pageSizeOptions: number[] = [5, 10, 25];
   username = '';
 
