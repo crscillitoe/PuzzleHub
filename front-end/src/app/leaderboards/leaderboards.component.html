@@ -72,9 +72,9 @@
             </thead>
             <tbody>
               <ng-container *ngFor="let row of leaderboardData[diff.diff]; let j=index">
-                <tr>
-                  <td>{{j+1}}</td>
-                  <td>{{row.username}}</td>
+                <tr [ngClass]="{'you': row.username == username}">
+                  <td>{{j+((leaderboardCurrentPage[diff.diff] - 1) * pageSize)+1}}</td>
+                  <td><a href="http://167.99.14.36:4200/profile?user={{row.username}}">{{row.username}}</a></td>
                   <td>{{row.goldMedals}}</td>
                   <td>{{row.silverMedals}}</td>
                   <td>{{row.bronzeMedals}}</td>
@@ -82,11 +82,46 @@
                 </tr>
               </ng-container>
             </tbody>
-            <tfoot>
+            <tfoot *ngIf="footerData[diff.diff] != null && footerData[diff.diff].length > 0">
+              <tr>
+                <td>You</td>
+                <td>{{footerData[diff.diff][0].username}}</td>
+                <td>{{footerData[diff.diff][0].goldMedals}}</td>
+                <td>{{footerData[diff.diff][0].silverMedals}}</td>
+                <td>{{footerData[diff.diff][0].bronzeMedals}}</td>
+                <td>{{footerData[diff.diff][0].time}}</td>
+              </tr>
             </tfoot>
           </table>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions *ngIf="leaderboardEntries[diff.diff] > pageSize">
+          <span
+                (click)="pageChange(diff.diff, 1)"
+                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === 1}">
+            &lt;&lt;
+          </span>
+          <span
+                (click)="pageChange(diff.diff, leaderboardCurrentPage[diff.diff]-1)"
+                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === 1}">
+            &lt;
+          </span>
+          <ng-container *ngFor="let page of leaderboardPageGroup[diff.diff]">
+            <span
+                (click)="pageChange(diff.diff, page)"
+                [ngClass]="{'current': leaderboardCurrentPage[diff.diff] === page}">
+            {{page}}
+            </span>
+          </ng-container>
+          <span
+                (click)="pageChange(diff.diff, leaderboardCurrentPage[diff.diff]+1)"
+                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === leaderboardPages[diff.diff]}">
+            &gt;
+          </span>
+          <span
+                (click)="pageChange(diff.diff, leaderboardPages[diff.diff])"
+                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === leaderboardPages[diff.diff]}">
+            &gt;&gt;
+          </span>
         </mat-card-actions>
       </mat-card>
     </ng-container> 
