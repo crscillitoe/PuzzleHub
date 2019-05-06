@@ -8,7 +8,6 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 
@@ -22,25 +21,21 @@ export class LeaderboardsComponent implements OnInit {
 
   resetDate: any;
 
-  // leaderboardData: MatTableDataSource<any> = new MatTableDataSource();
   leaderboardData: any[] = [];
-  footerData: any;
+  leaderboardEntries: number[] = [];
+  leaderboardCurrentPage: number[] = [];
+  leaderboardPages: number[] = [];
+
+  private _leaderboardPageGroupSize = 5;
+  leaderboardPageGroup: number[][] = [];
+
+  footerData: any[] = [];
 
   private _leaderboard = 0;
   leaderboardName = 'Daily';
   private _leaderboardDifficulty = 1;
-  leaderboardColumns: string[] = [
-    '#',
-    'Username',
-    'Gold',
-    'Silver',
-    'Bronze',
-    'Time'
-  ];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  pageSize = 25;
+  pageSize = 2;
   pageSizeOptions: number[] = [5, 10, 25];
   username = '';
 
@@ -206,6 +201,9 @@ export class LeaderboardsComponent implements OnInit {
   loadLeaderboard() {
     this.loader.startLoadingAnimation();
 
+    this.leaderboardData = [];
+    this.leaderboardEntries = [];
+    this.leaderboardCurrentPage = [];
     for (const diff of this.getGameDiffs(this.gameID)) {
       const m = {
         'Position': 0,
@@ -214,37 +212,67 @@ export class LeaderboardsComponent implements OnInit {
         'Difficulty': diff['diff'],
         'Leaderboard': this.leaderboard
       };
-
-      this.leaderboardData[diff['diff']] = [];
+      this.leaderboardCurrentPage[diff['diff']] = 1;
 
       this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
         for (let i = 0; i < data.length; i++) {
           (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
         }
 
-        const tmpData = data;
-
-        this.tunnel.getNumEntries(m).subscribe( (data2: any) => {
-          try {
-            if (data2.NumEntries > 0) {
-              const totalLen = data2.NumEntries;
-
-              /* Filling the array with dummy data accomplishes 2 things:
-               * 1. The paginator's length can be set once instead of any time the page changes.
-               * 2. The paginator's range values (x-y of z) are accurate when using the last page
-               * or first page buttons.
-               */
-              while (tmpData.length < totalLen) {
-                tmpData.push('');
-              }
-
-              this.leaderboardData[diff['diff']] = tmpData;
-            }
-          } catch { /* This try/catch is might be pointless */ }
-        });
+        this.leaderboardData[diff['diff']] = data;
       }).add(() => { this.loader.stopLoadingAnimation(); });
       // .add() runs when subscribe has finished
+
+      this.tunnel.getNumEntries(m).subscribe( (data: any) => {
+        try {
+          if (data.NumEntries > 0) {
+            this.leaderboardEntries[diff['diff']] = data.NumEntries;
+            this.leaderboardPages[diff['diff']] = Math.ceil(data.NumEntries / this.pageSize);
+            this.fillPageGroup(diff['diff'], 1);
+          }
+        } catch { /* This try/catch is might be pointless */ }
+      });
+
+      const m2 = {
+        'GameID': this.gameID,
+        'Difficulty': diff['diff'],
+        'Leaderboard': this.leaderboard
+      };
+
+      this.tunnel.getFooter(m2).subscribe( (data: any) => {
+        this.footerData[diff['diff']] = data;
+      });
     }
+  }
+
+  fillPageGroup(diff: any, seed: number) {
+    const len = this._leaderboardPageGroupSize;
+    const offset = Math.floor(len / 2);
+    const start = (seed - offset > 0) ? seed - offset : 1;
+    const end = Math.min(start + len, this.leaderboardPages[diff]);
+    const groupLen = end - start + 1;
+    this.leaderboardPageGroup[diff] = Array(groupLen).fill(0, 0, groupLen).map((x, i) => i + start);
+  }
+
+  pageChange(diff: any, page: number) {
+    const m = {
+      'Position': (page - 1) * this.pageSize,
+      'NumEntries': (this.pageSize),
+      'GameID': this.gameID,
+      'Difficulty': diff,
+      'Leaderboard': this.leaderboard
+    };
+
+    this.leaderboardCurrentPage[diff] = page;
+
+    this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
+      for (let i = 0; i < data.length; i++) {
+        (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+      }
+
+      this.leaderboardData[diff] = data;
+    });
+    this.fillPageGroup(diff, page);
   }
 
   hasMedals(user) {
