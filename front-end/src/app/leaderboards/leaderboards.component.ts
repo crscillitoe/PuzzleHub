@@ -240,6 +240,11 @@ export class LeaderboardsComponent implements OnInit {
       };
 
       this.tunnel.getFooter(m2).subscribe( (data: any) => {
+        try {
+          if (data[0]) {
+            (data[0])['time'] = SharedFunctionsService.convertToDateString((data[0])['time']);
+          }
+        } catch { }
         this.footerData[diff['diff']] = data;
       });
     }
