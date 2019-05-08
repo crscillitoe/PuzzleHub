@@ -48,7 +48,7 @@
         <mat-card-header>
           <mat-card-title>{{diff.name | titlecase}}</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content [ngClass]="diff.name">
           <table>
             <thead>
               <th></th>
@@ -74,7 +74,14 @@
               <ng-container *ngFor="let row of leaderboardData[diff.diff]; let j=index">
                 <tr [ngClass]="{'you': row.username == username}">
                   <td>{{j+((leaderboardCurrentPage[diff.diff] - 1) * pageSize)+1}}</td>
-                  <td><a href="http://167.99.14.36:4200/profile?user={{row.username}}">{{row.username}}</a></td>
+                  <td>
+                    <a [routerLink]="['/profile']"
+                       [queryParams]="{user: row.username}"
+                       routerLinkActive="active"
+                       class="leaderboard-profile-link">
+                      {{row.username}}
+                    </a>
+                  </td>
                   <td>{{row.goldMedals}}</td>
                   <td>{{row.silverMedals}}</td>
                   <td>{{row.bronzeMedals}}</td>

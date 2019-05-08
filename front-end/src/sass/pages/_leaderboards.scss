@@ -51,6 +51,25 @@
 
   .mat-card-content {
     flex-grow: 1;
+    border: 0.2rem solid $white;
+    border-left: none;
+    border-right: none;
+
+    &.easy {
+      border-color: $diff-color-easy;
+    }
+
+    &.medium {
+      border-color: $diff-color-medium;
+    }
+
+    &.hard {
+      border-color: $diff-color-hard;
+    }
+
+    &.extreme {
+      border-color: $diff-color-extreme;
+    }
   }
 
   .mat-card-actions {
@@ -74,7 +93,7 @@
       }
 
       &.current {
-        color: white;
+        color: $text-color;
         cursor: default;
         pointer-events: none;
       }
@@ -98,6 +117,14 @@
 
 .you {
   background-color: rgba(white, 0.1);
+}
+
+.leaderboard-profile-link {
+  color: $text-color; 
+
+  &:hover {
+    color: $puz-blue;
+  }
 }
 
 .medals {
