@@ -16,6 +16,13 @@
   @extend %stretch;
 }
 
+.container-main-static {
+  width: 100%;
+  max-width: $container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 %flex-row {
   display: flex;
   flex-flow: row wrap;

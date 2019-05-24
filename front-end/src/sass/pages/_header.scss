@@ -149,14 +149,15 @@
 }
 
 .user-box {
+  width: 28rem;
   color: rgba($white,0.5);
   align-items: center;
 }
 
 .puzzler-icon {
-  width: 3rem;
-  max-width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  max-width: 2.5rem;
+  height: 2.5rem;
   padding: 0;
 
   img {
@@ -169,5 +170,48 @@
 .user-info {
   display: flex;
   flex-flow: column nowrap;
+  flex-grow: 3;
+  flex-shrink: 1;
+}
+
+.username {
+  height: 1.2rem;
+  line-height: 1.2rem;
+  flex-shrink: 0;
+}
+
+.xp-row {
+  height: 0.65rem;
+  display: flex;
+  flex: row wrap;
+  flex-grow: 0;
+  font-size: 0.65rem;
+  line-height: 0.65rem;
+}
+
+.xp-bar {
+  height: 0.65rem;
   flex-grow: 1;
+}
+
+.lvl-tag {
+  flex-grow: 0;
+  padding-left: 0.2rem;
+}
+
+.lvl {
+  font-size: 0.5rem;
+}
+
+.level-xp {
+  flex-shrink: 0;
+  font-size: 0.55rem;
+  line-height: 0.55rem;
+}
+
+.sign-out {
+  display: flex;
+  flex-basis: content;
+  align-items: center;
+  line-height: 1rem;
 }
