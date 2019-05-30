@@ -95,6 +95,9 @@ $container-max-widths: (
   xl: 1140px
 ) !default;
 
+// Not integrating this into the grid just yet
+$container-max-width: 1920px;
+
 /// Nav
 $nav-font-size: 1rem;
 $nav-line-height: 1.5rem;
