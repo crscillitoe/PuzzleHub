@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, Input, Component, OnInit, OnChanges } from '@angular/core';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { UserService } from '../services/user/user.service';
 import { LoaderService } from '../services/loading-service/loader.service';
@@ -10,9 +10,19 @@ import { isPlatformBrowser } from '@angular/common';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnChanges {
+
+  @Input() level;
+  @Input() currVal;
+  @Input() maxVal;
 
   username: any = '';
+
+  first = true;
+
+  displayXpGain = false;
+  xpGain = '';
+  progress = 0;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -41,7 +51,7 @@ export class HeaderComponent implements OnInit {
   }
 
   signOut() {
-    if(isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       this.user.setUserName('');
       this.user.setXp(0);
       document.cookie = 'PuzzleHubToken=; Max-Age=0';
@@ -61,17 +71,50 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.progress = this.getProgress();
+  }
+
+  ngOnChanges(changes) {
+    let xpGain = changes.currVal.currentValue - changes.currVal.previousValue;
+    let levelup = false;
+    if (xpGain < 0) {
+      levelup = true;
+      xpGain = xpGain + UserService.xpPerLevel;
+    }
+
+    if ('' + xpGain !== 'NaN' && ! this.first) {
+      if (!levelup) {
+        this.xpGain = '+ ' + xpGain;
+      } else {
+        this.xpGain = 'Level up!';
+      }
+      this.displayXpGain = true;
+      const that = this;
+      setTimeout(function() { that.displayXpGain = false; } , 1500);
+    } else if ('' + xpGain !== 'NaN') {
+      this.first = false;
+    }
+
+    this.progress = this.getProgress();
+  }
+
+  getProgress() {
+    return Math.floor((this.currVal / this.maxVal) * 100);
   }
 
   isElectron() {
-    if(isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       // Renderer process
       if (typeof window !== 'undefined' && typeof window['process'] === 'object' && window['process'].type === 'renderer') {
           return true;
       }
 
       // Main process
-      if (typeof window['process'] !== 'undefined' && typeof window['process'].versions === 'object' && !!window['process'].versions.electron) {
+      if (
+        typeof window['process'] !== 'undefined' &&
+        typeof window['process'].versions === 'object' &&
+        !!window['process'].versions.electron
+      ) {
           return true;
       }
 
