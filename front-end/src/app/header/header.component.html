@@ -23,6 +23,7 @@
     <ng-container *ngIf="username==''">
       <a 
        [ngClass]="isElectron() ? 'leftMore' : 'not-electron'"
+       style="color: rgba(255, 255, 255, 0.5);"
        routerLink="/login" routerLinkActive="active" class="nav-item nav-link clickable">
         <i style="margin-right:5px" class="fa fa-lock clickable"></i> Sign In
       </a>

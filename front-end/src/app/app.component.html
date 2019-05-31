@@ -2,14 +2,6 @@
   <img id="img" src="/assets/images/animations/loading.svg">
 </div>
 
-<ng-container *ngIf="isLoggedIn()">
-  <app-level-progress
-    [level]="getLevel()"
-    [currVal]="xpToNextLevel()"
-    [maxVal]="nextLevelThreshold()"
-  ></app-level-progress>
-</ng-container>
-
 <div id="header">
   <app-header
     [level]="getLevel()"
