@@ -81,6 +81,7 @@ export class PuzzleRelayPopupComponent implements OnInit {
     RelayTrackerService.playingQueue = true;
     RelayTrackerService.queue = gameStack;
     RelayTrackerService.index = 0;
+    RelayTrackerService.timeElapsed = 0;
     RelayTrackerService.queueTimes = [];
 
     const route = gameStack[0].name;
