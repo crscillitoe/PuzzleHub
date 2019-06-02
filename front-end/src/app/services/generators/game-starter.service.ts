@@ -65,7 +65,11 @@ export class GameStarterService {
                 diff: RelayTrackerService.queue[RelayTrackerService.index].difficulty
               }
 
-              that.router.navigate([route, m]);
+              if (that.router.url.includes(route)) {
+                that.newGame(m.diff);
+              } else {
+                that.router.navigate([route, m]);
+              }
             } else {
               const display = document.getElementById('timer');
               display.textContent = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
