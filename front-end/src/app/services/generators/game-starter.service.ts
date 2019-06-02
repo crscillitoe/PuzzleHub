@@ -62,7 +62,7 @@ export class GameStarterService {
             if (RelayTrackerService.index < RelayTrackerService.queue.length) {
               const route = RelayTrackerService.queue[RelayTrackerService.index].name;
               const m = {
-                diff: RelayTrackerService.queue[RelayTrackerService.index].difficulty;
+                diff: RelayTrackerService.queue[RelayTrackerService.index].difficulty
               }
 
               that.router.navigate([route, m]);
