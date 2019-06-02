@@ -65,7 +65,9 @@ export class GameStarterService {
                 diff: RelayTrackerService.queue[RelayTrackerService.index].difficulty
               }
 
-              if (that.router.url.includes(route)) {
+              console.log(that.router.url);
+              if (that.router.url.includes(route) ||
+                  (that.router.url.includes('Tile%20Game') && route == 'Tile Game')) {
                 that.newGame(m.diff);
               } else {
                 that.router.navigate([route, m]);
