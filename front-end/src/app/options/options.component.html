@@ -15,7 +15,6 @@
       </b>
   
       <a id="relay-timer"
-         [ngClass]="timerMinimized ? 'hidden' : 'none'"
          class="monospace time">{{getRelayTime()}}</a>
   </div>
 
@@ -39,33 +38,64 @@
        class="monospace time">00:00.000</a>
   </div>
 
-  <div class="descriptionBlock" *ngIf="isLoggedIn()">
-    <a class="descriptionHeader clickable"
-       (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
-      <ng-container *ngIf="highscoresMinimized">
-        [+]
-      </ng-container>
-      <ng-container *ngIf="!highscoresMinimized">
-        [-]
-      </ng-container>
-      <b class="clickable">
-        HIGH SCORES
-      </b>
-    </a>
+  <ng-container *ngIf="playingQueue()">
+    <div class="descriptionBlock">
+      <a class="descriptionHeader">
+        <b>
+          RELAY HISTORY
+        </b>
+      </a>
 
-    <ng-container *ngIf="!highscoresMinimized">
-      <a class="descriptionText topPad">Monthly</a>
-      <a class="monospace timeSave">{{personalBestMonthly}}</a>
-
-      <a class="descriptionText topPad">Weekly</a>
-      <a class="monospace timeSave">{{personalBestWeekly}}</a>
-
-      <a class="descriptionText topPad">Daily</a>
-      <a class="monospace timeSave">{{personalBestDaily}}</a>
-    </ng-container>
-  </div>
+      <a class="descriptionText">
+        <ng-container *ngFor="let item of getRelayHistory() ; let i = index">
+          <div class="relay-block">
+            <ng-container *ngIf="item.diff == 1">
+              <a class="easy">Easy</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 2">
+              <a class="medium">Medium</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 3">
+              <a class="hard">Hard</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 4">
+              <a class="extreme">Extreme</a>
+            </ng-container>
+            
+            {{item.name}} <br> {{item.time}}
+          </div>
+        </ng-container>
+      </a>
+    </div>
+  </ng-container>
 
   <ng-container *ngIf="!playingQueue()">
+    <div class="descriptionBlock" *ngIf="isLoggedIn()">
+      <a class="descriptionHeader clickable"
+        (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
+        <ng-container *ngIf="highscoresMinimized">
+          [+]
+        </ng-container>
+        <ng-container *ngIf="!highscoresMinimized">
+          [-]
+        </ng-container>
+        <b class="clickable">
+          HIGH SCORES
+        </b>
+      </a>
+
+      <ng-container *ngIf="!highscoresMinimized">
+        <a class="descriptionText topPad">Monthly</a>
+        <a class="monospace timeSave">{{personalBestMonthly}}</a>
+
+        <a class="descriptionText topPad">Weekly</a>
+        <a class="monospace timeSave">{{personalBestWeekly}}</a>
+
+        <a class="descriptionText topPad">Daily</a>
+        <a class="monospace timeSave">{{personalBestDaily}}</a>
+      </ng-container>
+    </div>
+
     <div class="descriptionBlock" *ngIf="controls != undefined">
       <a class="descriptionHeader clickable"
         (click)="controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)">

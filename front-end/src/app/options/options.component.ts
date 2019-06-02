@@ -237,6 +237,25 @@ export class OptionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  getRelayHistory() {
+    let toReturn = [];
+    for (var i = 0 ; i < RelayTrackerService.queueTimes.length ; i++) {
+      let m = {
+        name: RelayTrackerService.queue[i].name,
+        diff: RelayTrackerService.queue[i].difficulty,
+        time: SharedFunctionsService.convertToDateString(RelayTrackerService.queueTimes[i])
+      }
+
+      toReturn.push(m);
+    }
+
+    return toReturn;
+  }
+
+  isRelayHistory() {
+    return RelayTrackerService.queueTimes.length > 0;
+  }
+
   isLoggedIn() {
     return this.user.isLoggedIn();
   }

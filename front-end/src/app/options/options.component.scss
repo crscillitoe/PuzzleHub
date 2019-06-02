@@ -6,3 +6,28 @@
 // Page-specific
 @import
   '../../sass/pages/options';
+
+.relay-block {
+  margin-top: 5px;
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid white;
+}
+
+.easy {
+  color: #1e7e34 !important;
+}
+
+.medium {
+  color: #007bff !important;
+}
+
+.hard {
+  color: #f28c32 !important;
+}
+
+.extreme {
+  color: #dc3545 !important;
+}
