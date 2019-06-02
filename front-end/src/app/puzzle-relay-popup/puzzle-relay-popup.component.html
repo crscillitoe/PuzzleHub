@@ -16,8 +16,29 @@
   </ng-container>
 </mat-button-toggle-group>
 
+<mat-button-toggle-group class="multiplier-selection"
+  name="multiplier"
+  value="1"
+  aria-label="Multiplier">
+    <mat-button-toggle
+      value="1"
+      (click)="setMultiplier(1)">
+        1x
+    </mat-button-toggle>
+    <mat-button-toggle
+      value="5"
+      (click)="setMultiplier(5)">
+        5x
+    </mat-button-toggle>
+    <mat-button-toggle
+      value="10"
+      (click)="setMultiplier(10)">
+        10x
+    </mat-button-toggle>
+</mat-button-toggle-group>
+
 <div class="col-container" cdkDropListGroup>
-  <div class="dropdown-container">
+  <div class="dropdown-container games">
     <div
       cdkDropList
       #puzzleList="cdkDropList"
@@ -28,6 +49,7 @@
       <div class="puzzle-box" *ngFor="let item of gameList" cdkDragLockAxis="x" cdkDrag>
           <img src={{item.image}} alt="{{item.name}} logo" class="game-icon" />
         <p>
+          <ng-container *ngIf="multiplier > 1">{{multiplier}}x</ng-container>
           <a [ngClass]="{'easy': difficulty.color=='green', 
                           'medium': difficulty.color=='cyan', 
                           'hard': difficulty.color=='blue', 
@@ -40,16 +62,18 @@
     </div>
   </div>
 
-  <div class="dropdown-container match">
+  <div class="dropdown-container queue">
     <div
       cdkDropList
       #queueList="cdkDropList"
       [cdkDropListData]="gameQueue"
       [cdkDropListConnectedTo]="[puzzleList]"
       class="puzzle-list"
+      style="overflow-y: auto;"
       (cdkDropListDropped)="moveToQueue($event)">
       <div class="puzzle-box" *ngFor="let item of gameQueue; let i = index" cdkDragLockAxis="y" cdkDrag>
         <p class="left">
+            <ng-container *ngIf="item.multiplier > 1">{{item.multiplier}}x</ng-container>
             <a [ngClass]="{'easy': item.difficulty.color=='green', 
                             'medium': item.difficulty.color=='cyan', 
                             'hard': item.difficulty.color=='blue', 
@@ -65,4 +89,13 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="button-container">
+  <button mat-raised-button
+    class="btn-easy"
+    (click)="playRelay()"
+    [disabled]="gameQueue.length == 0">
+      Play Relay
+  </button>
 </div>

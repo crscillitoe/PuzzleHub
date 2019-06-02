@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { Game } from '../classes/game';
-import {CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
 import { cloneDeep } from 'lodash';
 
 @Component({
@@ -15,12 +15,14 @@ export class PuzzleRelayPopupComponent implements OnInit {
   gameQueue: any;
   diffs: any;
   difficulty: any;
+  multiplier: number;
 
   constructor() { }
 
   ngOnInit() {
     this.diffs = GameListAllService.games[0].diffs;
     this.difficulty = this.diffs[0];
+    this.multiplier = 1;
 
     this.gameList = [];
     for (var i = 0 ; i < GameListAllService.games.length ; i++) {
@@ -28,7 +30,8 @@ export class PuzzleRelayPopupComponent implements OnInit {
         image: GameListAllService.games[i].image,
         name:  GameListAllService.games[i].name,
         id:    GameListAllService.games[i].id,
-        difficulty: null
+        difficulty: null,
+        multiplier: 1
       }
 
       this.gameList.push(m);
@@ -39,6 +42,10 @@ export class PuzzleRelayPopupComponent implements OnInit {
 
   setDifficulty(diff) {
     this.difficulty = diff;
+  }
+
+  setMultiplier(mult) {
+    this.multiplier = mult;
   }
 
   removeQueueItem(index) {
@@ -61,6 +68,7 @@ export class PuzzleRelayPopupComponent implements OnInit {
     } else {
       let clone = cloneDeep(event.previousContainer.data[event.previousIndex]);
       clone.difficulty = this.difficulty;
+      clone.multiplier = this.multiplier;
 
       event.container.data.splice(this.gameQueue.length, 0, clone);
     }

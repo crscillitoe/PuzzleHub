@@ -1,9 +1,17 @@
 .dropdown-container {
-    width: 250px;
+    width: 300px;
     max-width: 100%;
-    margin: 0 25px 25px 0;
     display: inline-block;
     vertical-align: top;
+    margin-top: 20px;
+}
+
+.queue {
+    float: right;
+}
+
+.multiplier-selection {
+    float: right;
 }
 
 .easy {
@@ -20,6 +28,18 @@
 
 .extreme {
     color: #dc3545 !important;
+}
+
+.btn-easy {
+    background-color: #1e7e34;
+    display: inline-block;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    width: 100%;
 }
 
 .diff-easy.mat-button-toggle-checked {
@@ -44,7 +64,7 @@
 
 .puzzle-list {
     border: solid 1px #ccc;
-    min-height: 500px;
+    height: 498px;
     background: #2c2c2c;
     border-radius: 4px;
     overflow: hidden;

@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   openPuzzleRelay() {
     const dialogRef = this.dialog.open(PuzzleRelayPopupComponent, {
       width: '800px',
-      height: '80%'
+      height: '700px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
