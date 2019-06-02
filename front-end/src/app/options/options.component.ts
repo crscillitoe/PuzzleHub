@@ -1,7 +1,7 @@
 import { Inject, PLATFORM_ID, HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
 import { UserService } from '../services/user/user.service';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
@@ -10,6 +10,8 @@ import { Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser } from '@angular/common';
+import { RelayTrackerService } from '../services/relay/relay-tracker.service';
+import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 
 @Component({
   selector: 'app-options',
@@ -44,7 +46,6 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public selectedDifficulty: number;
   public diffs: Difficulty[] = [];
 
-
   public highscoresMinimized: boolean;
   public rulesMinimized: boolean;
   public optionsMinimized: boolean;
@@ -59,6 +60,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public hotkeyVals: any = [];
 
   private subscription = new Subscription();
+  private routeSub: any;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -80,6 +82,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub - ' + 'Play ' + this.game.name + ' Online');
   }
 
+  playingQueue() {
+    return RelayTrackerService.playingQueue;
+  }
+
+  getRelayTime() {
+    return SharedFunctionsService.convertToDateString(RelayTrackerService.timeElapsed);
+  }
+
   ngOnInit() {
     if(isPlatformBrowser(this.platformId)) {
       if (this.options !== undefined) {
@@ -90,7 +100,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
             this.optionVals.push(SettingsService.getDataStr(option['storedName']));
           }
         }
-      }
+      }   
 
       if (this.hotkeys !== undefined) {
         for (const hotkey of this.hotkeys) {

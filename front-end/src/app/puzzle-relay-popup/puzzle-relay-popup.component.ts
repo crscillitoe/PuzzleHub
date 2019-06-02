@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { GameListAllService } from '../services/games/game-list-all.service';
+import { RelayTrackerService } from '../services/relay/relay-tracker.service';
 import { Game } from '../classes/game';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
 import { cloneDeep } from 'lodash';
+import { Router } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-puzzle-relay-popup',
@@ -17,7 +20,8 @@ export class PuzzleRelayPopupComponent implements OnInit {
   difficulty: any;
   multiplier: number;
 
-  constructor() { }
+  constructor(private router: Router,
+              public dialogRef: MatDialogRef<PuzzleRelayPopupComponent>) { }
 
   ngOnInit() {
     this.diffs = GameListAllService.games[0].diffs;
@@ -26,18 +30,24 @@ export class PuzzleRelayPopupComponent implements OnInit {
 
     this.gameList = [];
     for (var i = 0 ; i < GameListAllService.games.length ; i++) {
-      let m = {
-        image: GameListAllService.games[i].image,
-        name:  GameListAllService.games[i].name,
-        id:    GameListAllService.games[i].id,
-        difficulty: null,
-        multiplier: 1
-      }
+      if (GameListAllService.games[i].name !== 'Minesweeper') {
+        let m = {
+          image: GameListAllService.games[i].image,
+          name:  GameListAllService.games[i].name,
+          id:    GameListAllService.games[i].id,
+          difficulty: null,
+          multiplier: 1
+        }
 
-      this.gameList.push(m);
+        this.gameList.push(m);
+      }
     }
 
     this.gameQueue = [];
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
   setDifficulty(diff) {
@@ -50,6 +60,36 @@ export class PuzzleRelayPopupComponent implements OnInit {
 
   removeQueueItem(index) {
     this.gameQueue.splice(index, 1);
+  }
+
+  playRelay() {
+    // Convert relay into stack
+    let gameStack = [];
+    for (var i = 0 ; i < this.gameQueue.length ; i++) {
+      let entry = this.gameQueue[i];
+      for (var j = 0 ; j < entry.multiplier ; j++) {
+        let m = {
+          name: entry.name,
+          id: entry.id,
+          difficulty: entry.difficulty.diff
+        }
+
+        gameStack.push(m);
+      }
+    }
+
+    RelayTrackerService.playingQueue = true;
+    RelayTrackerService.queue = gameStack;
+    RelayTrackerService.index = 0;
+    RelayTrackerService.queueTimes = [];
+
+    const route = gameStack[0].name;
+    const m = {
+      diff: gameStack[0].difficulty
+    }
+
+    this.router.navigate([route, m]);
+    this.close();
   }
 
   drop(event: CdkDragDrop<string[]>) {

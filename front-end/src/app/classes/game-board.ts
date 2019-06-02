@@ -13,6 +13,7 @@ import { GameListAllService } from '../services/games/game-list-all.service';
 import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser } from '@angular/common';
+import { RelayTrackerService } from '../services/relay/relay-tracker.service';
 
 export class GameBoard implements OnInit, OnDestroy {
   private _gameID: number;
@@ -222,7 +223,7 @@ export class GameBoard implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public keyPressed(keyEvent) {
-    if (keyEvent.keyCode === 32) {
+    if (keyEvent.keyCode === 32 && !RelayTrackerService.playingQueue) {
       this.newGame();
       return;
     }

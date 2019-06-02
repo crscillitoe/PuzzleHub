@@ -990,10 +990,7 @@ export class HashiComponent extends GameBoard implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    if (keyEvent.keyCode == 32) {
-      this.newGame();
-      return;
-    }
+    super.keyPressed(keyEvent);
 
     if (!this.solved) {
       if (keyEvent.code == "ShiftLeft") {
