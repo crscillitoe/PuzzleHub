@@ -1,0 +1,68 @@
+<mat-button-toggle-group class="difficulty-selection"
+  name="difficulty"
+  value="easy"
+  aria-label="Difficulty">
+  <ng-container *ngFor="let diff of diffs">
+    <mat-button-toggle
+      (click)="setDifficulty(diff)"
+      class="diff"
+      value="{{diff.name}}"
+      [ngClass]="{'diff-easy': diff.color=='green', 
+                  'diff-medium': diff.color=='cyan', 
+                  'diff-hard': diff.color=='blue', 
+                  'diff-extreme': diff.color=='red'}">
+                  {{diff.name | titlecase}}
+    </mat-button-toggle>
+  </ng-container>
+</mat-button-toggle-group>
+
+<div class="col-container" cdkDropListGroup>
+  <div class="dropdown-container">
+    <div
+      cdkDropList
+      #puzzleList="cdkDropList"
+      [cdkDropListData]="gameList"
+      [cdkDropListConnectedTo]="[queueList]"
+      class="puzzle-list"
+      (cdkDropListDropped)="drop($event)">
+      <div class="puzzle-box" *ngFor="let item of gameList" cdkDragLockAxis="x" cdkDrag>
+          <img src={{item.image}} alt="{{item.name}} logo" class="game-icon" />
+        <p>
+          <a [ngClass]="{'easy': difficulty.color=='green', 
+                          'medium': difficulty.color=='cyan', 
+                          'hard': difficulty.color=='blue', 
+                          'extreme': difficulty.color=='red'}">
+                          {{difficulty.name | titlecase}}
+          </a>
+          {{item.name}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dropdown-container match">
+    <div
+      cdkDropList
+      #queueList="cdkDropList"
+      [cdkDropListData]="gameQueue"
+      [cdkDropListConnectedTo]="[puzzleList]"
+      class="puzzle-list"
+      (cdkDropListDropped)="moveToQueue($event)">
+      <div class="puzzle-box" *ngFor="let item of gameQueue; let i = index" cdkDragLockAxis="y" cdkDrag>
+        <p class="left">
+            <a [ngClass]="{'easy': item.difficulty.color=='green', 
+                            'medium': item.difficulty.color=='cyan', 
+                            'hard': item.difficulty.color=='blue', 
+                            'extreme': item.difficulty.color=='red'}">
+              {{item.difficulty.name | titlecase}}
+            </a>
+            
+            {{item.name}}
+        </p>
+        <div (click)="removeQueueItem(i)" class="right clickable">
+          [-]
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

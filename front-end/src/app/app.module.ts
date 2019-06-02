@@ -8,6 +8,8 @@ import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModul
   MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatSelectModule,
   MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
 
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -38,6 +40,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { AngularFittextModule } from 'angular-fittext';
+import { PuzzleRelayPopupComponent } from './puzzle-relay-popup/puzzle-relay-popup.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -107,7 +110,8 @@ const appRoutes: Routes = [
     ThermometersComponent,
     LevelProgressComponent,
     NonogramsComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    PuzzleRelayPopupComponent
   ],
   imports: [
     AngularFittextModule,
@@ -131,6 +135,7 @@ const appRoutes: Routes = [
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,
+    MatDialogModule,
     MatTabsModule
   ],
   providers: [
@@ -140,6 +145,9 @@ const appRoutes: Routes = [
       useClass: HeaderInterceptorService,
       multi: true
     }
+  ],
+  entryComponents: [
+    PuzzleRelayPopupComponent
   ],
   bootstrap: [AppComponent]
 })

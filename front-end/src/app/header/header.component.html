@@ -10,6 +10,7 @@
       <ng-container *ngIf="username != ''">
         <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
       </ng-container>
+      <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
     </div>
   </div>
   <div class="navbar-expand mr-auto">

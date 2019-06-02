@@ -4,6 +4,8 @@ import { UserService } from '../services/user/user.service';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { GameID } from '../enums/game-id.enum';
 import { isPlatformBrowser } from '@angular/common';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PuzzleRelayPopupComponent } from '../puzzle-relay-popup/puzzle-relay-popup.component';
 
 @Component({
   selector: 'app-header',
@@ -28,7 +30,8 @@ export class HeaderComponent implements OnInit, OnChanges {
     @Inject(PLATFORM_ID) private platformId: Object,
     private tunnelService: TunnelService,
     private loader: LoaderService,
-    private user: UserService
+    private user: UserService,
+    public dialog: MatDialog
   ) {
     user.username
       .subscribe( (data) => {
@@ -44,6 +47,17 @@ export class HeaderComponent implements OnInit, OnChanges {
       .subscribe( (data) => {
         user.setXp(data['xp']);
       });
+  }
+
+  openPuzzleRelay() {
+    const dialogRef = this.dialog.open(PuzzleRelayPopupComponent, {
+      width: '800px',
+      height: '80%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
   }
 
   getEnum(name) {
