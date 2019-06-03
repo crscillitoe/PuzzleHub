@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 declare const grecaptcha: any;
 
@@ -31,7 +32,10 @@ export class LoginComponent implements OnInit {
   public selectedTab = 'login';
   private captchaToken = '';
 
+  public loginError = '';
+
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private loader: LoaderService,
     private tunnel: TunnelService,
     private router: Router,
@@ -40,8 +44,11 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Login - Puzzle Hub');
+    grecaptcha.ready(() => {
+      console.log('reCAPTCHA loaded');
+    });
 
+    this.titleService.setTitle('Login - Puzzle Hub');
   }
 
   canForgetPassword() {
@@ -107,7 +114,6 @@ export class LoginComponent implements OnInit {
   register() {
     this.loader.startLoadingAnimation();
     var that = this;
-    grecaptcha.ready(() => {
       grecaptcha.execute('6Ldx55wUAAAAAINcGTOjQDFatfUuCdZkrJKWZu8k', {action: 'register'})
         .then((token) => {
           that.captchaToken = token;
@@ -130,7 +136,6 @@ export class LoginComponent implements OnInit {
               }
             });
         });
-    });
   }
 
   forgotPasswordSubmit() {
@@ -146,30 +151,33 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.loader.startLoadingAnimation();
-    const m = {
-      Username: this.username,
-      Password: this.password
-    };
-    this.tunnel.login(m)
-      .subscribe((data) => {
-          if (data['Accept']) {
-            document.cookie = 'PuzzleHubToken=' + data['Token'] + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
-            this.tunnel.getUsername()
-              .subscribe( (name) => {
-                this.user.setUserName(name['username']);
-                this.loader.stopLoadingAnimation();
+    if(isPlatformBrowser(this.platformId)) {
+      this.loader.startLoadingAnimation();
+      const m = {
+        Username: this.username,
+        Password: this.password
+      };
+      this.tunnel.login(m)
+        .subscribe((data) => {
+            if (data['Accept']) {
+              document.cookie = 'PuzzleHubToken=' + data['Token'] + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+              this.tunnel.getUsername()
+                .subscribe( (name) => {
+                  this.user.setUserName(name['username']);
+                  this.loader.stopLoadingAnimation();
 
-                this.router.navigate(['/']);
-              });
-            this.tunnel.getLevel()
-              .subscribe( (data2) => {
-                this.user.setXp(data2['xp']);
-              });
-          } else {
+                  this.router.navigate(['/']);
+                });
+              this.tunnel.getLevel()
+                .subscribe( (data2) => {
+                  this.user.setXp(data2['xp']);
+                });
+            } else {
+              this.loginError = 'Invalid login credentials, please try again.'; 
               this.loader.stopLoadingAnimation();
-          }
+            }
 
-        });
+          });
+    }
   }
 }

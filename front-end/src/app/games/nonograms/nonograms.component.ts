@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -11,6 +11,7 @@ import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-nonograms',
@@ -25,6 +26,7 @@ export class NonogramsComponent extends GameBoard {
   addingMode: boolean;
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -32,9 +34,11 @@ export class NonogramsComponent extends GameBoard {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
@@ -44,6 +48,11 @@ export class NonogramsComponent extends GameBoard {
       loader,
       optionsService
     );
+
+    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Play Nonograms - Puzzle Hub');
+    }
+
     this.gameID = GameID.NONOGRAMS;
 
     this.selectedX = -1;

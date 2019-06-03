@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
@@ -11,6 +11,7 @@ import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-sudoku',
@@ -25,6 +26,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
   notes: any = {};
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -32,9 +34,11 @@ export class SudokuComponent extends GameBoard implements OnInit {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
@@ -44,6 +48,10 @@ export class SudokuComponent extends GameBoard implements OnInit {
       loader,
       optionsService
     );
+
+    if (Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Play Sudoku - Puzzle Hub');
+    }
 
     this.gameID = GameID.SUDOKU;
 
@@ -123,7 +131,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
   }
 
   drawNotes() {
-    for (let key of Object.keys(this.notes)) {
+    for (const key of Object.keys(this.notes)) {
       const x = Math.trunc(Number(key) / 10);
       const y = Number(key) - (x * 10);
 
@@ -132,7 +140,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
         this.context.textAlign = 'center';
         this.context.fillStyle = this.colors.COLOR_3_ALT;
 
-        for (let num of this.notes[key]) {
+        for (const num of this.notes[key]) {
           if (num !== 0) {
             const row = Math.trunc(num / 3.1);
             const col = (num + 2) % 3;
@@ -264,10 +272,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     const numPressed = keyEvent.keyCode;
-    if (numPressed === 32) {
-      this.newGame();
-      return;
-    }
+    super.keyPressed(keyEvent);
 
     if (!this.solved) {
       let pressed = -1;

@@ -68,4 +68,12 @@ export class TunnelService {
   getPersonalBest(m) {
     return this.http.post(this.ipAddress + '/getPersonalBest', m);
   }
+
+  getNumEntries(m) {
+    return this.http.post(this.ipAddress + '/getNumEntries', m);
+  }
+
+  getFooter(m) {
+    return this.http.post(this.ipAddress + '/getFooter', m);
+  }
 }

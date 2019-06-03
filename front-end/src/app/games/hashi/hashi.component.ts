@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Board, MyNode, Bridge } from '../../services/boards/hashi/board.service';
@@ -12,6 +12,7 @@ import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-hashi',
@@ -54,6 +55,7 @@ export class HashiComponent extends GameBoard implements OnInit {
 
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -61,9 +63,11 @@ export class HashiComponent extends GameBoard implements OnInit {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
@@ -73,6 +77,10 @@ export class HashiComponent extends GameBoard implements OnInit {
       loader,
       optionsService
     );
+
+    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Play Hashi - Puzzle Hub');
+    }
 
     this.gameID = GameID.HASHI;
   }
@@ -982,10 +990,7 @@ export class HashiComponent extends GameBoard implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
-    if (keyEvent.keyCode == 32) {
-      this.newGame();
-      return;
-    }
+    super.keyPressed(keyEvent);
 
     if (!this.solved) {
       if (keyEvent.code == "ShiftLeft") {

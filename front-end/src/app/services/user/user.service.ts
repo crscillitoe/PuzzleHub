@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { PLATFORM_ID, Injectable, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class UserService {
     return UserService.xpPerLevel;
   }
 
-  constructor() { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   setUserName(name) {
     if (name !== '') {
@@ -47,7 +49,11 @@ export class UserService {
   }
 
   isLoggedIn() {
-    return this.getCookie('PuzzleHubToken') !== '';
+    if(isPlatformBrowser(this.platformId)) {
+      return this.getCookie('PuzzleHubToken') !== '';
+    } else {
+      return false;
+    }
   }
 
   calculateLevel() {

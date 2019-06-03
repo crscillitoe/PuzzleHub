@@ -8,6 +8,8 @@ import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModul
   MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatSelectModule,
   MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
 
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -30,13 +32,15 @@ import { EmailSuccessComponent } from './email-success/email-success.component';
 import { TodoComponent } from './todo/todo.component';
 import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
-//import { KakuroComponent } from './games/kakuro/kakuro.component';
+// import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
 import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { AngularFittextModule } from 'angular-fittext';
+import { PuzzleRelayPopupComponent } from './puzzle-relay-popup/puzzle-relay-popup.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -106,10 +110,12 @@ const appRoutes: Routes = [
     ThermometersComponent,
     LevelProgressComponent,
     NonogramsComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    PuzzleRelayPopupComponent
   ],
   imports: [
-    BrowserModule,
+    AngularFittextModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     FormsModule,
     DragDropModule,
     HttpClientModule,
@@ -129,6 +135,7 @@ const appRoutes: Routes = [
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,
+    MatDialogModule,
     MatTabsModule
   ],
   providers: [
@@ -138,6 +145,9 @@ const appRoutes: Routes = [
       useClass: HeaderInterceptorService,
       multi: true
     }
+  ],
+  entryComponents: [
+    PuzzleRelayPopupComponent
   ],
   bootstrap: [AppComponent]
 })

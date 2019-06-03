@@ -1,7 +1,7 @@
-import { HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from '../services/persistence/settings.service';
 import { UserService } from '../services/user/user.service';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { Difficulty } from '../interfaces/difficulty';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
@@ -9,11 +9,14 @@ import { OptionsService } from '../services/games/options.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { Title } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
+import { RelayTrackerService } from '../services/relay/relay-tracker.service';
+import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 
 @Component({
   selector: 'app-options',
   templateUrl: './options.component.html',
-  styleUrls: ['./options.component.css']
+  styleUrls: ['./options.component.scss']
 })
 export class OptionsComponent implements OnInit, OnDestroy {
 
@@ -43,7 +46,6 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public selectedDifficulty: number;
   public diffs: Difficulty[] = [];
 
-
   public highscoresMinimized: boolean;
   public rulesMinimized: boolean;
   public optionsMinimized: boolean;
@@ -58,59 +60,79 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public hotkeyVals: any = [];
 
   private subscription = new Subscription();
+  private routeSub: any;
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private user: UserService,
     private router: Router,
     private optionsService: OptionsService,
     private snackBar: MatSnackBar,
     private titleService: Title
   ) {
-    user.level
-      .subscribe( (data) => {
-        this.populateDifficulties();
-      });
+    if(isPlatformBrowser(platformId)) {
+      user.level
+        .subscribe( (data) => {
+          this.populateDifficulties();
+        });
+    }
   }
 
   updateTitle() {
-    this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub');
+    this.titleService.setTitle(this.difficultyName + ' ' + this.game.name + ' - Puzzle Hub - ' + 'Play ' + this.game.name + ' Online');
+  }
+
+  playingQueue() {
+    return RelayTrackerService.playingQueue;
+  }
+
+  getRelayTime() {
+    return SharedFunctionsService.convertToDateString(RelayTrackerService.timeElapsed);
   }
 
   ngOnInit() {
-    if (this.options !== undefined) {
-      for (const option of this.options) {
-        if (option['type'] === 'checkbox') {
-          this.optionVals.push(SettingsService.getDataBool(option['storedName']));
-        } else if (option['type'] === 'dropdown') {
-          this.optionVals.push(SettingsService.getDataStr(option['storedName']));
+    if(isPlatformBrowser(this.platformId)) {
+      if (this.options !== undefined) {
+        for (const option of this.options) {
+          if (option['type'] === 'checkbox') {
+            this.optionVals.push(SettingsService.getDataBool(option['storedName']));
+          } else if (option['type'] === 'dropdown') {
+            this.optionVals.push(SettingsService.getDataStr(option['storedName']));
+          }
+        }
+      }   
+
+      if (this.hotkeys !== undefined) {
+        for (const hotkey of this.hotkeys) {
+          this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
         }
       }
-    }
 
-    if (this.hotkeys !== undefined) {
-      for (const hotkey of this.hotkeys) {
-        this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
+      this.editingHotkey = false;
+      this.editIndex = -1;
+      this.highscoresMinimized = SettingsService.getDataBool('highscoresMinimized');
+      this.rulesMinimized = SettingsService.getDataBool('rulesMinimized');
+      this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
+      this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
+      this.timerMinimized = SettingsService.getDataBool('timerMinimized');
+      this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
+
+      this.game = GameListAllService.getGameById(this.gameID);
+      this.rules = this.game.rules;
+      this.controls = this.game.controls;
+      this.populateDifficulties();
+
+      if(this.difficulty != undefined) {
+        this.selectedDifficulty = this.difficulty;
+      } else {
+        this.selectedDifficulty = 1;
       }
+
+      this.getDifficultyName();
+      this.updateTitle();
     }
-
-    this.editingHotkey = false;
-    this.editIndex = -1;
-    this.highscoresMinimized = SettingsService.getDataBool('highscoresMinimized');
-    this.rulesMinimized = SettingsService.getDataBool('rulesMinimized');
-    this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
-    this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
-    this.timerMinimized = SettingsService.getDataBool('timerMinimized');
-    this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
-
-    this.game = GameListAllService.getGameById(this.gameID);
-    this.rules = this.game.rules;
-    this.controls = this.game.controls;
-    this.populateDifficulties();
-
-    this.selectedDifficulty = this.difficulty;
-    this.getDifficultyName();
-    this.updateTitle();
   }
+
 
   getDifficultyName() {
     for(var i = 0 ; i < this.diffs.length ; i++) {
@@ -143,8 +165,10 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   setCopyButtonText(text) {
-    const button = document.getElementById('shareButtonText');
-    button.textContent = text;
+    if(isPlatformBrowser(this.platformId)) {
+      const button = document.getElementById('shareButtonText');
+      button.textContent = text;
+    }
   }
 
   copyGameLink() {
@@ -165,22 +189,26 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   copyMessage(val: string) {
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = val;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
+    if(isPlatformBrowser(this.platformId)) {
+      const selBox = document.createElement('textarea');
+      selBox.style.position = 'fixed';
+      selBox.style.left = '0';
+      selBox.style.top = '0';
+      selBox.style.opacity = '0';
+      selBox.value = val;
+      document.body.appendChild(selBox);
+      selBox.focus();
+      selBox.select();
+      document.execCommand('copy');
+      document.body.removeChild(selBox);
+    }
   }
 
   callback(func: string) {
-    document.getElementById('focusMe').focus();
-    this.optionSelected.emit(func);
+    if(isPlatformBrowser(this.platformId)) {
+      document.getElementById('focusMe').focus();
+      this.optionSelected.emit(func);
+    }
   }
 
   editHotkey(index) {
@@ -207,6 +235,25 @@ export class OptionsComponent implements OnInit, OnDestroy {
       this.editingHotkey = false;
       this.editIndex = -1;
     }
+  }
+
+  getRelayHistory() {
+    let toReturn = [];
+    for (var i = 0 ; i < RelayTrackerService.queueTimes.length ; i++) {
+      let m = {
+        name: RelayTrackerService.queue[i].name,
+        diff: RelayTrackerService.queue[i].difficulty,
+        time: SharedFunctionsService.convertToDateString(RelayTrackerService.queueTimes[i])
+      }
+
+      toReturn.push(m);
+    }
+
+    return toReturn;
+  }
+
+  isRelayHistory() {
+    return RelayTrackerService.queueTimes.length > 0;
   }
 
   isLoggedIn() {

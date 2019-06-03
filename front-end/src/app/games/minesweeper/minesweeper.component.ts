@@ -1,4 +1,4 @@
-import { HostListener, Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -11,6 +11,8 @@ import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-minesweeper',
@@ -25,11 +27,12 @@ export class MinesweeperComponent extends GameBoard {
 
   public board: Board;
 
-  private imgBomb = new Image();
-  private imgFlag = new Image();
-  private imgTile = new Image();
+  private imgBomb: any;
+  private imgFlag: any;
+  private imgTile: any;
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -37,9 +40,11 @@ export class MinesweeperComponent extends GameBoard {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
@@ -49,13 +54,23 @@ export class MinesweeperComponent extends GameBoard {
       loader,
       optionsService
     );
+
+    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Play Minesweeper - Puzzle Hub');
+    }
+
     this.gameID = GameID.MINESWEEPER;
     this.gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes
     this.gridOffsetY = 56;
 
-    this.imgBomb.src = '/assets/images/minesweeper/bomb.svg';
-    this.imgFlag.src = '/assets/images/minesweeper/flag.svg';
-    this.imgTile.src = '/assets/images/minesweeper/minesweeper_tile.svg';
+    if(isPlatformBrowser(platform)) {
+      this.imgBomb = new Image();
+      this.imgFlag = new Image();
+      this.imgTile = new Image();
+      this.imgBomb.src = '/assets/images/minesweeper/bomb.svg';
+      this.imgFlag.src = '/assets/images/minesweeper/flag.svg';
+      this.imgTile.src = '/assets/images/minesweeper/minesweeper_tile.svg';
+    }
   }
 
   public setupBoard() {

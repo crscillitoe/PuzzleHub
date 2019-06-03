@@ -14,6 +14,10 @@
   }
 }
 
+.leaderboard-ui {
+  padding: 0 0.25rem;
+}
+
 .game-title {
   font-family: $alt-font-stack;
 }
@@ -29,38 +33,98 @@
   }
 }
 
-.leaderboard-tables {
-  table {
-    width: 100%;
-  }
+.game-icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .leaderboard-card {
-  width: 26rem;
+  display: flex;
+  flex-direction: column;
   max-width: 26rem;
-  height: 48rem;
-  max-height: 48rem;
-  padding: 0.5rem 0.25rem 1.5rem;
+  margin: 0.25rem;
   text-align: center;
 
-  h3 {
-    font-weight: bold;
+  .mat-card-header {
+    flex-shrink: 0;
+  }
+
+  .mat-card-content {
+    flex-grow: 1;
+    border: 0.2rem solid $white;
+    border-left: none;
+    border-right: none;
+
+    &.easy {
+      border-color: $diff-color-easy;
+    }
+
+    &.medium {
+      border-color: $diff-color-medium;
+    }
+
+    &.hard {
+      border-color: $diff-color-hard;
+    }
+
+    &.extreme {
+      border-color: $diff-color-extreme;
+    }
+  }
+
+  .mat-card-actions {
+    font-size: 0.75rem;
+    text-align: right;
+
+    span {
+      color: $puz-blue;
+      display: inline-block;
+      padding: 0.4rem;
+
+      &:not(.disabled):hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      &.disabled {
+        color: gray;
+        cursor: default;
+        pointer-events: none;
+      }
+
+      &.current {
+        color: $text-color;
+        cursor: default;
+        pointer-events: none;
+      }
+    }
   }
 }
 
-.leaderboard-table {
-  height: 43rem;
-  max-height: 48rem;
-  overflow-y: auto;
+.leaderboard-tables {
+  padding-top: 1rem;
+  justify-content: space-between;
 
   table {
     width: 100%;
-    padding: 0.25rem;
+    border-collapse: collapse;
+
+    & tfoot {
+      border-top: 0.5rem solid rgba(0,0,0,0);
+    }
   }
 }
 
 .you {
   background-color: rgba(white, 0.1);
+}
+
+.leaderboard-profile-link {
+  color: $text-color; 
+
+  &:hover {
+    color: $puz-blue;
+  }
 }
 
 .medals {

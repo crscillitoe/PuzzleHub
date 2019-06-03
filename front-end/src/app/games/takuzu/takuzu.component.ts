@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -12,6 +12,7 @@ import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-takuzu',
@@ -25,9 +26,13 @@ export class TakuzuComponent extends GameBoard implements OnInit {
   displayGrid: boolean;
   invertedControls: boolean;
 
+  Takuzu1Key: number;
+  Takuzu0Key: number;
+
   board: Board;
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -35,9 +40,11 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
@@ -47,6 +54,10 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       loader,
       optionsService
     );
+
+    if (Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Play Takuzu - Puzzle Hub');
+    }
 
     this.gameID = GameID.TAKUZU;
 
@@ -67,6 +78,19 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       }
     ];
 
+    this.hotkeys = [
+      {
+        'name': '1',
+        'bindTo': 'Takuzu1',
+        'callback': 'this.configureHotkeys()'
+      },
+      {
+        'name': '0',
+        'bindTo': 'Takuzu0',
+        'callback': 'this.configureHotkeys()'
+      }
+    ];
+
 
     this.oColor = this.colors.FOREGROUND;
     this.cColor = '#66CCFF';
@@ -75,9 +99,16 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     this.selectedY = -1;
   }
 
+  configureHotkeys() {
+    this.Takuzu1Key = SettingsService.getDataNum('Takuzu1');
+    this.Takuzu0Key = SettingsService.getDataNum('Takuzu0');
+  }
+
   ngOnInit() {
     this.displayGrid = SettingsService.getDataBool('takuzuGrid');
     this.invertedControls = SettingsService.getDataBool('takuzuInvert');
+
+    this.configureHotkeys();
     super.ngOnInit();
   }
 
@@ -396,6 +427,26 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       this.selectedX = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
       this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
       this.draw();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  keyPressed(keyEvent) {
+    const code = keyEvent.keyCode;
+    super.keyPressed(keyEvent);
+    
+    if (!this.solved) {
+      switch (code) {
+        case (this.Takuzu0Key):
+          this.board.setValue(this.selectedX, this.selectedY, 0);
+          break;
+        case (this.Takuzu1Key):
+          this.board.setValue(this.selectedX, this.selectedY, 1);
+          break;
+      }
+
+      this.draw();
+      this.checkIsSolved(this.board);
     }
   }
 }

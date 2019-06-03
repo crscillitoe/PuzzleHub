@@ -212,7 +212,10 @@ export class Board {
   }
 
   random() {
-      var x = Math.sin(++this.seed) * 10000;
-      return x - Math.floor(x);
+    var x = Math.sin(++this.seed) * 10000;
+    return x - Math.floor(x);
   }
 }
+
+export class BoardService {}
+

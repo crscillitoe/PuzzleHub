@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -12,6 +12,7 @@ import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tile-game',
@@ -60,6 +61,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   board: Board;
 
   constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
     route: ActivatedRoute,
     colorService: ColorService,
     router: Router,
@@ -67,9 +69,11 @@ export class TileGameComponent extends GameBoard implements OnInit {
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
-    optionsService: OptionsService
+    optionsService: OptionsService,
+    private titleService: Title
   ) {
     super(
+      platform,
       route,
       colorService,
       router,
@@ -79,6 +83,10 @@ export class TileGameComponent extends GameBoard implements OnInit {
       loader,
       optionsService
     );
+
+    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
+      titleService.setTitle('Play Tile Game - Puzzle Hub');
+    }
 
     this.gameID = GameID.TILE_GAME;
     this.options = [
@@ -202,6 +210,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
         break;
       }
     }
+
 
     // Uncomment these to add event listeners
     // this.canvas.addEventListener('mouseup',   (e) => this.mouseReleased(e), false);
@@ -979,10 +988,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     const code = keyEvent.keyCode;
-    if (code === 32) {
-      this.newGame();
-      return;
-    }
+    super.keyPressed(keyEvent);
 
     if (!this.solved) {
       switch (code) {

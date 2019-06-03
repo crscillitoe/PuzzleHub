@@ -1,5 +1,6 @@
-import { Input, Component, OnInit, OnChanges } from '@angular/core';
+import { Inject, PLATFORM_ID, Input, Component, OnInit, OnChanges } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-level-progress',
@@ -17,20 +18,24 @@ export class LevelProgressComponent implements OnInit, OnChanges {
   displayXpGain = false;
   xpGain = '';
 
-  constructor() { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit() {
   }
 
   isVisible() {
-    const canvas = document.getElementById('myCanvas');
-    if (canvas != null) {
-      const bar = document.getElementById('levelProgressBar');
-      try {
-        bar.setAttribute('data-progress', '' + this.getProgress());
-      } catch {}
+    if(isPlatformBrowser(this.platformId)) {
+      const canvas = document.getElementById('myCanvas');
+      if (canvas != null) {
+        const bar = document.getElementById('levelProgressBar');
+        try {
+          bar.setAttribute('data-progress', '' + this.getProgress());
+        } catch {}
+      }
+      return canvas != null;
+    } else {
+      return false;
     }
-    return canvas != null;
   }
 
   ngOnChanges(changes) {
@@ -54,10 +59,12 @@ export class LevelProgressComponent implements OnInit, OnChanges {
       this.first = false;
     }
 
-    const bar = document.getElementById('levelProgressBar');
-    try {
-      bar.setAttribute('data-progress', '' + this.getProgress());
-    } catch {
+    if(isPlatformBrowser(this.platformId)) {
+      const bar = document.getElementById('levelProgressBar');
+      try {
+        bar.setAttribute('data-progress', '' + this.getProgress());
+      } catch {
+      }
     }
   }
 

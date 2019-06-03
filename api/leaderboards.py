@@ -300,11 +300,6 @@ def get_num_entries():
 @cross_origin(supports_credentials=True)
 def get_leaderboards():
     try:
-        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
-    except:
-        user_id = -1
-
-    try:
         position = request.json["Position"]
     except:
         position = 0
@@ -330,6 +325,207 @@ def get_leaderboards():
 
     try:
         leaderboard = request.json["Leaderboard"]
+    except:
+        abort(500, "Leaderboard not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+    if leaderboard == 0:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM dailyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 0
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
+        '''
+    elif leaderboard == 1:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM weeklyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 1
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
+        '''
+    elif leaderboard == 2:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM monthlyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 2
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+            ORDER BY TimeElapsed
+            LIMIT %(num_entries)s
+            OFFSET %(position)s
+        '''
+
+    query_model = {
+        "game_id": game_id,
+        "difficulty": difficulty,
+        "num_entries": num_entries,
+        "position": position
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    to_return = []
+
+    for d in data:
+        position = position + 1
+        model = {
+            "username":d[0],
+            "time":convert_to_puzzle_hub_date(d[1]),
+            "role":str(d[2]),
+            "bronzeMedals":d[3],
+            "silverMedals":d[4],
+            "goldMedals":d[5],
+            "position":position
+        }
+        to_return.append(model)
+
+    return jsonify(to_return)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getPersonalBest
+# Required POST parameters:
+#   GameID
+#   Difficulty
+# Returns on success:
+#   PersonalBest: TimeString (return 'N/A' if no time on record)
+# Returns on failure:
+#   No return, throw error on failure.
+@app.route('/api/getPersonalBest', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_personal_best():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            return '-1'
+    except:
+        return '-1'
+
+    try:
+        game_id = request.json["GameID"]
+    except:
+        abort(500, "GameID not found")
+
+    try:
+        difficulty = request.json["Difficulty"]
+    except:
+        abort(500, "difficulty not found")
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query_1 = '''
+        SELECT TimeElapsed 
+        FROM dailyLeaderboards
+        WHERE GameID = %(game_id)s AND 
+              Difficulty = %(difficulty)s AND
+              UserID = %(user_id)s
+    '''
+    sql_query_2 = '''
+        SELECT TimeElapsed 
+        FROM weeklyLeaderboards
+        WHERE GameID = %(game_id)s AND 
+              Difficulty = %(difficulty)s AND
+              UserID = %(user_id)s
+    '''
+    sql_query_3 = '''
+        SELECT TimeElapsed 
+        FROM monthlyLeaderboards
+        WHERE GameID = %(game_id)s AND 
+              Difficulty = %(difficulty)s AND
+              UserID = %(user_id)s
+    '''
+
+    query_model = {
+        "game_id": game_id,
+        "difficulty": difficulty,
+        "user_id": user_id
+    }
+
+    cursor.execute(sql_query_1, query_model)
+    data_1 = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute(sql_query_2, query_model)
+    data_2 = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute(sql_query_3, query_model)
+    data_3 = cursor.fetchall()
+    cursor.close()
+
+    daily_time = "N/A"
+    weekly_time = "N/A"
+    monthly_time = "N/A"
+
+    if len(data_1) != 0:
+        daily_time = convert_to_puzzle_hub_date((data_1[0])[0])
+
+    if len(data_2) != 0:
+        weekly_time = convert_to_puzzle_hub_date((data_2[0])[0])
+
+    if len(data_3) != 0:
+        monthly_time = convert_to_puzzle_hub_date((data_3[0])[0])
+
+    model = {
+        "daily":daily_time,
+        "weekly":weekly_time,
+        "monthly":monthly_time
+    }
+
+    return jsonify(model)
+
+@app.route('/api/getLeaderboardsSiege', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_leaderboards_siege():
+    try:
+        user_id = 13
+    except:
+        user_id = -1
+
+    try:
+        position = 0
+    except:
+        position = 0
+
+    try:
+        num_entries = 25
+    except:
+        num_entries = 25
+
+    try:
+        game_id = 5
+    except:
+        abort(500, "GameID not found")
+
+    try:
+        difficulty = 1
+    except:
+        abort(500, "Difficulty not found")
+
+    try:
+        leaderboard = 2
     except:
         abort(500, "Leaderboard not found")
 
@@ -467,23 +663,21 @@ def get_leaderboards():
     return jsonify(to_return)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-# /getPersonalBest
+# /getFooter
 # Required POST parameters:
-#   GameID
-#   Difficulty
-# Returns on success:
-#   PersonalBest: TimeString (return 'N/A' if no time on record)
+#   GameID: int
+#   Difficulty: int
+#                     D   W   M
+#   Leaderboard: int (0 - 1 - 2)
 # Returns on failure:
 #   No return, throw error on failure.
-@app.route('/api/getPersonalBest', methods=['POST'])
+@app.route('/api/getFooter', methods=['POST'])
 @cross_origin(supports_credentials=True)
-def get_personal_best():
+def get_footer():
     try:
         user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
-        if user_id == -1:
-            return '-1'
     except:
-        return '-1'
+        return jsonify([])
 
     try:
         game_id = request.json["GameID"]
@@ -493,32 +687,51 @@ def get_personal_best():
     try:
         difficulty = request.json["Difficulty"]
     except:
-        abort(500, "difficulty not found")
+        abort(500, "Difficulty not found")
+
+    try:
+        leaderboard = request.json["Leaderboard"]
+    except:
+        abort(500, "Leaderboard not found")
 
     db = get_db()
-
     cursor = db.cursor()
-    sql_query_1 = '''
-        SELECT TimeElapsed 
-        FROM dailyLeaderboards
-        WHERE GameID = %(game_id)s AND 
-              Difficulty = %(difficulty)s AND
-              UserID = %(user_id)s
-    '''
-    sql_query_2 = '''
-        SELECT TimeElapsed 
-        FROM weeklyLeaderboards
-        WHERE GameID = %(game_id)s AND 
-              Difficulty = %(difficulty)s AND
-              UserID = %(user_id)s
-    '''
-    sql_query_3 = '''
-        SELECT TimeElapsed 
-        FROM monthlyLeaderboards
-        WHERE GameID = %(game_id)s AND 
-              Difficulty = %(difficulty)s AND
-              UserID = %(user_id)s
-    '''
+    if leaderboard == 0:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM dailyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 0
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                AND U.UserID = %(user_id)s
+        '''
+    elif leaderboard == 1:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM weeklyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 1
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                AND U.UserID = %(user_id)s
+        '''
+    elif leaderboard == 2:
+        sql_query = '''
+            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            FROM monthlyLeaderboards AS L
+            INNER JOIN users AS U ON
+            U.UserID = L.UserID
+            INNER JOIN userMedals AS UM ON
+            UM.UserID = L.UserID AND
+            UM.Type = 2
+            WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
+                AND U.UserID = %(user_id)s
+        '''
 
     query_model = {
         "game_id": game_id,
@@ -526,37 +739,21 @@ def get_personal_best():
         "user_id": user_id
     }
 
-    cursor.execute(sql_query_1, query_model)
-    data_1 = cursor.fetchall()
-    cursor.close()
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
 
-    cursor = db.cursor()
-    cursor.execute(sql_query_2, query_model)
-    data_2 = cursor.fetchall()
-    cursor.close()
+    to_return = []
 
-    cursor = db.cursor()
-    cursor.execute(sql_query_3, query_model)
-    data_3 = cursor.fetchall()
-    cursor.close()
+    for d in data:
+        model = {
+            "username":d[0],
+            "time":convert_to_puzzle_hub_date(d[1]),
+            "role":str(d[2]),
+            "bronzeMedals":d[3],
+            "silverMedals":d[4],
+            "goldMedals":d[5],
+            "position":0
+        }
+        to_return.append(model)
 
-    daily_time = "N/A"
-    weekly_time = "N/A"
-    monthly_time = "N/A"
-
-    if len(data_1) != 0:
-        daily_time = convert_to_puzzle_hub_date((data_1[0])[0])
-
-    if len(data_2) != 0:
-        weekly_time = convert_to_puzzle_hub_date((data_2[0])[0])
-
-    if len(data_3) != 0:
-        monthly_time = convert_to_puzzle_hub_date((data_3[0])[0])
-
-    model = {
-        "daily":daily_time,
-        "weekly":weekly_time,
-        "monthly":monthly_time
-    }
-
-    return jsonify(model)
+    return jsonify(to_return)

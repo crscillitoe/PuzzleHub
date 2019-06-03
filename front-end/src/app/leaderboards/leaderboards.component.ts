@@ -8,7 +8,6 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 
@@ -20,29 +19,62 @@ import { SharedFunctionsService } from '../services/shared-functions/shared-func
 export class LeaderboardsComponent implements OnInit {
   games: Game[] = GameListAllService.games;
 
-  footer: any = [];
   resetDate: any;
-  leaderboards: MatTableDataSource<any>[];
 
-  leaderboard = 0;
+  leaderboardData: any[] = [];
+  leaderboardEntries: number[] = [];
+  leaderboardCurrentPage: number[] = [];
+  leaderboardPages: number[] = [];
+
+  private _leaderboardPageGroupSize = 5;
+  leaderboardPageGroup: number[][] = [];
+
+  footerData: any[] = [];
+
+  private _leaderboard = 0;
   leaderboardName = 'Daily';
-  leaderboardDifficulty = 0;
-  leaderboardColumns: string[] = [
-    'rowIndex',
-    'username',
-    'goldMedals',
-    'silverMedals',
-    'bronzeMedals',
-    'time'
-  ];
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  private _leaderboardDifficulty = 1;
 
   pageSize = 25;
   pageSizeOptions: number[] = [5, 10, 25];
-
-  gameID: number;
   username = '';
+
+  private _gameID: number;
+
+  get gameID(): number {
+    return this._gameID;
+  }
+  set gameID(id: number) {
+    this._gameID = id;
+    this.updateTitle();
+    SettingsService.storeData('selectedGameID', id);
+    this.loadLeaderboard();
+  }
+
+  get leaderboardDifficulty(): number {
+    return this._leaderboardDifficulty;
+  }
+  set leaderboardDifficulty(n: number) {
+    this._leaderboardDifficulty = n;
+    SettingsService.storeData('selectedLeaderboardDifficulty', n);
+    this.loadLeaderboard();
+  }
+
+  get leaderboard(): number {
+    return this._leaderboard;
+  }
+  set leaderboard(num: number) {
+    this._leaderboard = num;
+    SettingsService.storeData('selectedLeaderboard', num);
+    if (num === 0) {
+      this.leaderboardName = 'Daily';
+    } else if (num === 1) {
+      this.leaderboardName = 'Weekly';
+    } else if (num === 2) {
+      this.leaderboardName = 'Monthly';
+    }
+    this.loadLeaderboard();
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +90,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   getGameName(id) {
-    for (let game of this.games) {
+    for (const game of this.games) {
       if (game.id === id) {
         return game.name;
       }
@@ -68,7 +100,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   getGameDiffs(id) {
-    for (let game of this.games) {
+    for (const game of this.games) {
       if (game.id === id) {
         return game.diffs;
       }
@@ -99,7 +131,7 @@ export class LeaderboardsComponent implements OnInit {
     } else if (this.leaderboard === 2) {
       this.leaderboardName = 'Monthly';
     }
-    this.loadScores();
+    this.loadLeaderboard();
   }
 
   decrementTimer(that) {
@@ -166,65 +198,90 @@ export class LeaderboardsComponent implements OnInit {
     );
   }
 
-  changeLeaderboard(num) {
-    this.leaderboard = num;
-    SettingsService.storeData('selectedLeaderboard', num);
-    if (num === 0) {
-      this.leaderboardName = 'Daily';
-    } else if (num === 1) {
-      this.leaderboardName = 'Weekly';
-    } else if (num === 2) {
-      this.leaderboardName = 'Monthly';
-    }
-    this.loadScores();
-  }
-
-  setLeaderboardDifficulty(n) {
-    this.leaderboardDifficulty = n;
-    SettingsService.storeData('selectedLeaderboardDifficulty', n);
-  }
-
-  loadScores() {
+  loadLeaderboard() {
     this.loader.startLoadingAnimation();
-    this.leaderboards = [];
-    this.footer = [];
 
-    for (let i = 1 ; i <= 4 ; i++) {
+    this.leaderboardData = [];
+    this.leaderboardEntries = [];
+    this.leaderboardCurrentPage = [];
+    for (const diff of this.getGameDiffs(this.gameID)) {
       const m = {
+        'Position': 0,
+        'NumEntries': (this.pageSize),
         'GameID': this.gameID,
-        'Difficulty': i,
+        'Difficulty': diff['diff'],
+        'Leaderboard': this.leaderboard
+      };
+      this.leaderboardCurrentPage[diff['diff']] = 1;
+
+      this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
+        for (let i = 0; i < data.length; i++) {
+          (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+        }
+
+        this.leaderboardData[diff['diff']] = data;
+      }).add(() => { this.loader.stopLoadingAnimation(); });
+      // .add() runs when subscribe has finished
+
+      this.tunnel.getNumEntries(m).subscribe( (data: any) => {
+        try {
+          if (data.NumEntries > 0) {
+            this.leaderboardEntries[diff['diff']] = data.NumEntries;
+            this.leaderboardPages[diff['diff']] = Math.ceil(data.NumEntries / this.pageSize);
+            this.fillPageGroup(diff['diff'], 1);
+          }
+        } catch { /* This try/catch is might be pointless */ }
+      });
+
+      const m2 = {
+        'GameID': this.gameID,
+        'Difficulty': diff['diff'],
         'Leaderboard': this.leaderboard
       };
 
-      this.tunnel.getLeaderboards(m)
-        .subscribe( (data: any) => {
-
-          for (let j = 0 ; j < data.length ; j++) {
-            (data[j])['time'] = SharedFunctionsService.convertToDateString((data[j])['time']);
+      this.tunnel.getFooter(m2).subscribe( (data: any) => {
+        try {
+          if (data[0]) {
+            (data[0])['time'] = SharedFunctionsService.convertToDateString((data[0])['time']);
           }
-
-          try {
-            if (data.length > 0 && (data[data.length - 1])['position'] === 0) {
-              this.footer[i] = data.pop();
-            }
-          } catch { /* This is fine. There just aren't any times! */ }
-
-          this.loader.stopLoadingAnimation();
-          this.leaderboards[m['Difficulty']] = new MatTableDataSource(data as any);
-          this.leaderboards[m['Difficulty']].paginator = this.paginator;
-        });
+        } catch { }
+        this.footerData[diff['diff']] = data;
+      });
     }
+  }
+
+  fillPageGroup(diff: any, seed: number) {
+    const len = this._leaderboardPageGroupSize;
+    const offset = Math.floor(len / 2);
+    const start = (seed - offset > 0) ? seed - offset : 1;
+    const end = Math.min(start + len, this.leaderboardPages[diff]);
+    const groupLen = end - start + 1;
+    this.leaderboardPageGroup[diff] = Array(groupLen).fill(0, 0, groupLen).map((x, i) => i + start);
+  }
+
+  pageChange(diff: any, page: number) {
+    const m = {
+      'Position': (page - 1) * this.pageSize,
+      'NumEntries': (this.pageSize),
+      'GameID': this.gameID,
+      'Difficulty': diff,
+      'Leaderboard': this.leaderboard
+    };
+
+    this.leaderboardCurrentPage[diff] = page;
+
+    this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
+      for (let i = 0; i < data.length; i++) {
+        (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+      }
+
+      this.leaderboardData[diff] = data;
+    });
+    this.fillPageGroup(diff, page);
   }
 
   hasMedals(user) {
     return user.bronzeMedals > 0 || user.silverMedals > 0 || user.goldMedals > 0;
-  }
-
-  setGame(id) {
-    this.gameID = id;
-    this.updateTitle();
-    SettingsService.storeData('selectedGameID', id);
-    this.loadScores();
   }
 
   viewProfile(name) {

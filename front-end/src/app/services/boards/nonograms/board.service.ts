@@ -275,3 +275,6 @@ export class Label {
     this.num = num;
   }
 }
+
+export class BoardService {}
+
