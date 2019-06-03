@@ -988,11 +988,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     const code = keyEvent.keyCode;
-
-    if (code === 32) {
-      this.newGame();
-      return;
-    }
+    super.keyPressed(keyEvent);
 
     if (!this.solved) {
       switch (code) {

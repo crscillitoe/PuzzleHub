@@ -272,10 +272,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
   @HostListener('document:keydown', ['$event'])
   keyPressed(keyEvent) {
     const numPressed = keyEvent.keyCode;
-    if (numPressed === 32) {
-      this.newGame();
-      return;
-    }
+    super.keyPressed(keyEvent);
 
     if (!this.solved) {
       let pressed = -1;

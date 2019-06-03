@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameID } from '../../enums/game-id.enum';
 import { UserService } from '../user/user.service';
 import { SharedFunctionsService } from '../shared-functions/shared-functions.service';
+import { RelayTrackerService } from '../relay/relay-tracker.service';
 
 @Injectable({
   providedIn: 'root'
@@ -52,8 +53,33 @@ export class GameStarterService {
             that.personalBestMonthly = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
           }
 
-          const display = document.getElementById('timer');
-          display.textContent = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
+          if (RelayTrackerService.playingQueue) {
+            RelayTrackerService.timeElapsed += data['TimeElapsed'];
+            RelayTrackerService.index += 1;
+
+            RelayTrackerService.queueTimes.push(data['TimeElapsed']);
+
+            if (RelayTrackerService.index < RelayTrackerService.queue.length) {
+              const route = RelayTrackerService.queue[RelayTrackerService.index].name;
+              const m = {
+                diff: RelayTrackerService.queue[RelayTrackerService.index].difficulty
+              }
+
+              console.log(that.router.url);
+              if (that.router.url.includes(route) ||
+                  (that.router.url.includes('Tile%20Game') && route == 'Tile Game')) {
+                that.newGame(m.diff);
+              } else {
+                that.router.navigate([route, m]);
+              }
+            } else {
+              const display = document.getElementById('timer');
+              display.textContent = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
+            }
+          } else {
+            const display = document.getElementById('timer');
+            display.textContent = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
+          }
         });
     } else {
       // Do nothing - we're not logged in

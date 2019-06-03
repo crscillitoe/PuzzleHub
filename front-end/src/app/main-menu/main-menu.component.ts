@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Title } from '@angular/platform-browser';
+import { RelayTrackerService } from '../services/relay/relay-tracker.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -50,6 +51,8 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     const m = {
       diff: diff
     };
+
+    RelayTrackerService.playingQueue = false;
 
     this.router.navigate([route, m]);
   }
