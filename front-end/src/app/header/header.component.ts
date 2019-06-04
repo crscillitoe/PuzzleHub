@@ -6,6 +6,7 @@ import { GameID } from '../enums/game-id.enum';
 import { isPlatformBrowser } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PuzzleRelayPopupComponent } from '../puzzle-relay-popup/puzzle-relay-popup.component';
+import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-picker.component';
 
 @Component({
   selector: 'app-header',
@@ -47,6 +48,13 @@ export class HeaderComponent implements OnInit, OnChanges {
       .subscribe( (data) => {
         user.setXp(data['xp']);
       });
+  }
+
+  openIconPicker() {
+    return; // Feature not ready, deployed code for hashi bug fix
+    const dialogRed = this.dialog.open(ProfileIconPickerComponent, {
+      width: '800px'
+    });
   }
 
   openPuzzleRelay() {

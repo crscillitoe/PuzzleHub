@@ -41,6 +41,7 @@ import { NonogramsComponent } from './games/nonograms/nonograms.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { AngularFittextModule } from 'angular-fittext';
 import { PuzzleRelayPopupComponent } from './puzzle-relay-popup/puzzle-relay-popup.component';
+import { ProfileIconPickerComponent } from './profile-icon-picker/profile-icon-picker.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -111,7 +112,8 @@ const appRoutes: Routes = [
     LevelProgressComponent,
     NonogramsComponent,
     ForgotPasswordComponent,
-    PuzzleRelayPopupComponent
+    PuzzleRelayPopupComponent,
+    ProfileIconPickerComponent
   ],
   imports: [
     AngularFittextModule,
@@ -147,7 +149,8 @@ const appRoutes: Routes = [
     }
   ],
   entryComponents: [
-    PuzzleRelayPopupComponent
+    PuzzleRelayPopupComponent,
+    ProfileIconPickerComponent
   ],
   bootstrap: [AppComponent]
 })

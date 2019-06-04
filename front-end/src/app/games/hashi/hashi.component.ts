@@ -1006,6 +1006,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.bridgeUp();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "W") {
         let pointX = this.mouseX;
@@ -1016,6 +1018,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.specialBridgeUp();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "s") {
         let pointX = this.mouseX;
@@ -1026,6 +1030,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.bridgeDown();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "S") {
         let pointX = this.mouseX;
@@ -1036,6 +1042,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.specialBridgeDown();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "a") {
         let pointX = this.mouseX;
@@ -1046,6 +1054,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.bridgeLeft();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "A") {
         let pointX = this.mouseX;
@@ -1056,6 +1066,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.specialBridgeLeft();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "d") {
         let pointX = this.mouseX;
@@ -1066,6 +1078,8 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.bridgeRight();
           this.draw();
           this.coloredNode = undefined;
+
+          this.checkIsSolved(this.board);
         }
       } else if (keyEvent.key == "D") {
         let pointX = this.mouseX;
@@ -1076,11 +1090,11 @@ export class HashiComponent extends GameBoard implements OnInit {
           this.specialBridgeRight();
           this.draw();
           this.coloredNode = undefined;
+          
+          this.checkIsSolved(this.board);
         }
       }
     }
-
-    this.checkIsSolved(this.board);
   }
 
   @HostListener('document:keyup', ['$event'])
