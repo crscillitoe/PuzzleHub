@@ -51,6 +51,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   }
 
   openIconPicker() {
+    return; // Feature not ready, deployed code for hashi bug fix
     const dialogRed = this.dialog.open(ProfileIconPickerComponent, {
       width: '800px'
     });
