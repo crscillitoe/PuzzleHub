@@ -61,6 +61,9 @@
             <ng-container *ngIf="item.diff == 4">
               <a class="extreme">Extreme</a>
             </ng-container>
+            <ng-container *ngIf="item.diff == 99">
+              <a class="random">Random</a>
+            </ng-container>
             
             {{item.name}} <br> {{item.time}}
           </div>

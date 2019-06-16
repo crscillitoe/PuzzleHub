@@ -3,6 +3,7 @@ import { GameID } from '../../enums/game-id.enum';
 import { UserService } from '../user/user.service';
 import { SharedFunctionsService } from '../shared-functions/shared-functions.service';
 import { RelayTrackerService } from '../relay/relay-tracker.service';
+import { GameListAllService } from '../games/game-list-all.service';
 
 @Injectable({
   providedIn: 'root'
@@ -60,12 +61,22 @@ export class GameStarterService {
             RelayTrackerService.queueTimes.push(data['TimeElapsed']);
 
             if (RelayTrackerService.index < RelayTrackerService.queue.length) {
-              const route = RelayTrackerService.queue[RelayTrackerService.index].name;
-              const m = {
-                diff: RelayTrackerService.queue[RelayTrackerService.index].difficulty
+              let route = RelayTrackerService.queue[RelayTrackerService.index].name;
+              if (route == 'Random') {
+                route = GameListAllService.getRandomGameName();
               }
 
-              console.log(that.router.url);
+              let diffToAdd = 0;
+              if (RelayTrackerService.queue[RelayTrackerService.index].difficulty == 99) {
+                diffToAdd = GameListAllService.getRandomDifficulty();
+              } else {
+                diffToAdd = RelayTrackerService.queue[RelayTrackerService.index].difficulty;
+              }
+
+              const m = {
+                diff: diffToAdd
+              }
+
               if (that.router.url.includes(route) ||
                   (that.router.url.includes('Tile%20Game') && route == 'Tile Game')) {
                 that.newGame(m.diff);
