@@ -181,20 +181,13 @@
 }
 
 .xp-row {
-  height: 0.65rem;
+  height: 0.3rem;
   display: flex;
   flex: row wrap;
   flex-grow: 0;
-  font-size: 0.65rem;
-  line-height: 0.65rem;
-}
 
-.xp-bar {
-  height: 0.65rem;
-  flex-grow: 1;
-
-  svg rect {
-    transition: width 0.75s ease-in-out;
+  .mat-progress-bar {
+    height: 0.3rem;
   }
 }
 
@@ -209,8 +202,8 @@
 
 .level-xp {
   flex-shrink: 0;
-  font-size: 0.55rem;
-  line-height: 0.55rem;
+  font-size: 0.8rem;
+  line-height: 0.85rem;
 }
 
 .sign-out {

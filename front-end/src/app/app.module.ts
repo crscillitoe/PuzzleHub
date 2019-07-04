@@ -5,8 +5,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule,
-  MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatSelectModule,
-  MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
+  MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule,
+  MatSelectModule, MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
 
 import { MatDialogModule } from '@angular/material/dialog';
 
@@ -134,6 +134,7 @@ const appRoutes: Routes = [
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,
