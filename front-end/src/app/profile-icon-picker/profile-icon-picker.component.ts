@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user/user.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { TunnelService } from '../services/tunnel/tunnel.service';
+import { LoaderService } from '../services/loading-service/loader.service';
 
 @Component({
   selector: 'app-profile-icon-picker',
@@ -17,6 +19,8 @@ export class ProfileIconPickerComponent implements OnInit {
   public iconPaths = [];
 
   constructor(private userService: UserService,
+              private loader: LoaderService,
+              private dialogRef: MatDialogRef<ProfileIconPickerComponent>,
               private tunnelService: TunnelService) { }
 
   ngOnInit() {
@@ -37,6 +41,7 @@ export class ProfileIconPickerComponent implements OnInit {
 
     this.tunnelService.setProfileIcon(m)
       .subscribe((data) => {
+        this.dialogRef.close();
         this.userService.reloadAccountData();
       });
   }
