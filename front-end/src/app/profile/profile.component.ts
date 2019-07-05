@@ -32,6 +32,7 @@ export class ProfileComponent implements OnInit {
     'Bronze'
   ];
 
+  userPuzzlerIconPath = '/assets/images/puzzler-icons/puzzle-hub-profile-';
   medalPath = '/assets/images/medals/';
 
   constructor(
@@ -71,7 +72,9 @@ export class ProfileComponent implements OnInit {
           for (let i = 0 ; i < data.MatchHistory.length ; i++) {
             (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
           }
+
           this.profileData = data;
+          this.userPuzzlerIconPath += data.PuzzlerIcon + '.png';
           this.level = this.getLevel(this.profileData.XP);
           this.currVal = this.xpToNextLevel();
           this.maxVal = this.nextLevelThreshold();

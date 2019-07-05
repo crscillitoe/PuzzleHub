@@ -9,17 +9,22 @@
       <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">Leaderboards</a>
       <ng-container *ngIf="username != ''">
         <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
-        <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
+        <ng-container *ngIf="isMainMenu()">
+          <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
+        </ng-container>
       </ng-container>
     </div>
   </div>
-  <div class="navbar-expand mr-auto">
-    <a class="imagecontainer">
-      <a class="clickable imageholder" href="https://discord.gg/VHBsvMw" target="_blank">
-        <img class="clickable image" src="/assets/images/logos/discord.png">
+  <!-- Killing Discord Logo
+       TODO - implement contact/feature request screen
+    <div class="navbar-expand mr-auto">
+      <a class="imagecontainer">
+        <a class="clickable imageholder" href="https://discord.gg/VHBsvMw" target="_blank">
+          <img class="clickable image" src="/assets/images/logos/discord.png">
+        </a>
       </a>
-    </a>
-  </div>
+    </div>
+  -->
   <div class="container-flex col-account">
     <ng-container *ngIf="username==''">
       <a 
@@ -32,8 +37,8 @@
     <ng-container *ngIf="username!=''">
       <div class="container-flex-row user-box">
         <div class="col puzzler-icon">
-          <img class="" (click)="openIconPicker()"
-             src="/assets/images/puzzler-icons/puzzle-hub-profile-0.png">
+          <img class="clickable" (click)="openIconPicker()"
+               src="{{puzzlerIcon}}">
         </div>
         <div class="col user-info">
           <div class="username">
@@ -45,7 +50,7 @@
               </mat-progress-bar>
           </div>
           <div class="level-xp">
-            {{currVal}}/{{maxVal}}
+            {{xpToNextLevel}}/2000
           </div>
         </div>
         <div class="col sign-out">

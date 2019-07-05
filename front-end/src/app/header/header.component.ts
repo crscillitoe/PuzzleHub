@@ -15,17 +15,18 @@ import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-
 })
 export class HeaderComponent implements OnInit, OnChanges {
 
-  @Input() level;
-  @Input() currVal;
-  @Input() maxVal;
-
+  level: number;
   username: any = '';
 
   first = true;
+  xpToNextLevel: number = 0;
 
   displayXpGain = false;
   xpGain = '';
   progress = 0;
+  puzzlerIcon = '';
+
+  basePuzzleIconDir = '/assets/images/puzzler-icons/puzzle-hub-profile-';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -34,24 +35,23 @@ export class HeaderComponent implements OnInit, OnChanges {
     private user: UserService,
     public dialog: MatDialog
   ) {
-    user.username
-      .subscribe( (data) => {
-        this.username = data;
-      });
+    user.accountData.subscribe(data => {
+      console.log(data);
+      if (data) {
+        this.username = data.username;
+        this.level = data.level;
+        this.xpToNextLevel = data.xpToNextLevel;
+        this.puzzlerIcon = this.basePuzzleIconDir + data.puzzlerIcon + '.png';
+        this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
+      }
+    });
+  }
 
-    tunnelService.getUsername()
-      .subscribe( (data) => {
-        user.setUserName(data['username']);
-      });
-
-    tunnelService.getLevel()
-      .subscribe( (data) => {
-        user.setXp(data['xp']);
-      });
+  isMainMenu() {
+    return document.getElementById('mainmenu') != null;
   }
 
   openIconPicker() {
-    return; // Feature not ready, deployed code for hashi bug fix
     const dialogRed = this.dialog.open(ProfileIconPickerComponent, {
       width: '800px'
     });
@@ -74,22 +74,9 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   signOut() {
     if (isPlatformBrowser(this.platformId)) {
-      this.user.setUserName('');
-      this.user.setXp(0);
+      this.user.logOut();
       document.cookie = 'PuzzleHubToken=; Max-Age=0';
     }
-  }
-
-  getLevel() {
-    return this.user.calculateLevel();
-  }
-
-  xpToNextLevel() {
-    return this.user.xpToNextLevel();
-  }
-
-  nextLevelThreshold() {
-    return UserService.nextLevelThreshold();
   }
 
   ngOnInit() {
@@ -101,7 +88,7 @@ export class HeaderComponent implements OnInit, OnChanges {
     let levelup = false;
     if (xpGain < 0) {
       levelup = true;
-      xpGain = xpGain + UserService.xpPerLevel;
+      xpGain = xpGain + this.user.xpPerLevel;
     }
 
     if ('' + xpGain !== 'NaN' && ! this.first) {

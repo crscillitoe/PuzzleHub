@@ -21,6 +21,10 @@ export class TunnelService {
     return this.http.get(this.ipAddress + '/getLevel');
   }
 
+  getUserData() {
+    return this.http.get(this.ipAddress + '/getUserData');
+  }
+
   getMoreMatchHistory(model) {
     return this.http.post(this.ipAddress + '/getMoreMatchHistory', model);
   }

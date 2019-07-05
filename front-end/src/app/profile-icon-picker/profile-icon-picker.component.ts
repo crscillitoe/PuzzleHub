@@ -18,7 +18,16 @@ export class ProfileIconPickerComponent implements OnInit {
 
   ngOnInit() {
     for (var i = 0 ; i < this.numIcons ; i++) {
-      this.iconPaths.push(this.dirString + this.picturePrefix + i + '.png');
+      this.iconPaths.push(
+        {
+          path: this.dirString + this.picturePrefix + i + '.png',
+          iconNumber: i
+        }
+      );
     }
+  }
+
+  selectIcon(num) {
+    console.log(num);
   }
 }
