@@ -24,13 +24,14 @@ export class UserService {
   }
 
   reloadAccountData() {
-    this.tunnelService.getUserData()
-      .subscribe((data: AccountData) => {
-        data.level = this.calculateLevelFromXp(data.xp);
-        data.xpToNextLevel = data.xp % this.xpPerLevel;
-        console.log(data);
-        this._accountData.next(data);
-      });
+    if (this.isLoggedIn()) {
+      this.tunnelService.getUserData()
+        .subscribe((data: AccountData) => {
+          data.level = this.calculateLevelFromXp(data.xp);
+          data.xpToNextLevel = data.xp % this.xpPerLevel;
+          this._accountData.next(data);
+        });
+    }
   }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private tunnelService: TunnelService) { 

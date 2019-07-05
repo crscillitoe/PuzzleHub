@@ -32,7 +32,8 @@ export class ProfileComponent implements OnInit {
     'Bronze'
   ];
 
-  userPuzzlerIconPath = '/assets/images/puzzler-icons/puzzle-hub-profile-';
+  userPuzzlerIconPath = '';
+  baseUserPuzzlerIconPath = '/assets/images/puzzler-icons/puzzle-hub-profile-';
   medalPath = '/assets/images/medals/';
 
   constructor(
@@ -47,11 +48,11 @@ export class ProfileComponent implements OnInit {
   }
 
   xpToNextLevel() {
-    return this.user.xpToNextLevel();
+    return this.profileData.XP % this.user.xpPerLevel;
   }
 
   nextLevelThreshold() {
-    return UserService.nextLevelThreshold();
+    return this.user.xpPerLevel;
   }
 
   getProgress() {
@@ -74,7 +75,7 @@ export class ProfileComponent implements OnInit {
           }
 
           this.profileData = data;
-          this.userPuzzlerIconPath += data.PuzzlerIcon + '.png';
+          this.userPuzzlerIconPath = this.baseUserPuzzlerIconPath + data.PuzzlerIcon + '.png';
           this.level = this.getLevel(this.profileData.XP);
           this.currVal = this.xpToNextLevel();
           this.maxVal = this.nextLevelThreshold();

@@ -110,12 +110,13 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ngoninit');
-    this.username = this.user.user;
-    this.user.username
+    this.user.accountData
       .subscribe( (data) => {
-        this.username = data;
+        if (data) {
+          this.username = data.username;
+        }
       });
+
     this.gameID = SettingsService.getDataNum('selectedGameID');
     this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
     this.leaderboardDifficulty = SettingsService.getDataNum('selectedLeaderboardDifficulty');

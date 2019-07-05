@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../services/user/user.service';
+import { TunnelService } from '../services/tunnel/tunnel.service';
 
 @Component({
   selector: 'app-profile-icon-picker',
@@ -14,7 +16,8 @@ export class ProfileIconPickerComponent implements OnInit {
 
   public iconPaths = [];
 
-  constructor() { }
+  constructor(private userService: UserService,
+              private tunnelService: TunnelService) { }
 
   ngOnInit() {
     for (var i = 0 ; i < this.numIcons ; i++) {
@@ -28,6 +31,13 @@ export class ProfileIconPickerComponent implements OnInit {
   }
 
   selectIcon(num) {
-    console.log(num);
+    let m = {
+      PuzzlerIconID: num
+    }
+
+    this.tunnelService.setProfileIcon(m)
+      .subscribe((data) => {
+        this.userService.reloadAccountData();
+      });
   }
 }

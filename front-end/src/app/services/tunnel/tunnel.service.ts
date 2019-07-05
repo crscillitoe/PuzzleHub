@@ -9,11 +9,11 @@ export class TunnelService {
 
   constructor(private http: HttpClient) { }
 
-  changePasswordWithCode(model) {
+  changePasswordWithCode(model: {Code: string, NewPassword: string}) {
     return this.http.post(this.ipAddress + '/changePasswordWithCode', model);
   }
 
-  forgotPassword(model) {
+  forgotPassword(model: {Email: string}) {
     return this.http.post(this.ipAddress + '/requestPasswordReset', model);
   }
 
@@ -21,15 +21,19 @@ export class TunnelService {
     return this.http.get(this.ipAddress + '/getLevel');
   }
 
+  setProfileIcon(model: {PuzzlerIconID: number}) {
+    return this.http.post(this.ipAddress + '/setPuzzlerIcon', model);
+  }
+
   getUserData() {
     return this.http.get(this.ipAddress + '/getUserData');
   }
 
-  getMoreMatchHistory(model) {
+  getMoreMatchHistory(model: {Username: string, Offset: number}) {
     return this.http.post(this.ipAddress + '/getMoreMatchHistory', model);
   }
 
-  getProfileData(model) {
+  getProfileData(model: {Username: string}) {
     return this.http.post(this.ipAddress + '/getProfileData', model);
   }
 
@@ -37,47 +41,43 @@ export class TunnelService {
     return this.http.get(this.ipAddress + '/getUsername');
   }
 
-  addNumbers(model) {
-    return this.http.post(this.ipAddress + '/addNumbers', model);
-  }
-
-  startTimer(model) {
+  startTimer(model: {GameID: number, Difficulty: number}) {
     return this.http.post(this.ipAddress + '/startTimer', model);
   }
 
-  stopTimer(model) {
+  stopTimer(model: {GameID: number, Difficulty: number}) {
     return this.http.post(this.ipAddress + '/stopTimer', model);
   }
 
-  registerUser(model) {
+  registerUser(model: {Username: string, Password: string, Email: string, Token: string}) {
     return this.http.post(this.ipAddress + '/registerUser', model);
   }
 
-  verifyEmail(path) {
+  verifyEmail(path: string) {
     return this.http.get(this.ipAddress + '/validateUser/' + path);
   }
 
-  login(model) {
+  login(model: {Username: string, Password: string}) {
     return this.http.post(this.ipAddress + '/login', model);
   }
 
-  sampleGetRequest() {
-    return this.http.get(this.ipAddress + '/endpoint');
-  }
-
-  getLeaderboards(m) {
+  getLeaderboards(m: {Position: number,
+                      NumEntries: number,
+                      GameID: number,
+                      Difficulty: number,
+                      Leaderboard: number}) {
     return this.http.post(this.ipAddress + '/getLeaderboards', m);
   }
 
-  getPersonalBest(m) {
+  getPersonalBest(m: {GameID: number, Difficulty: number}) {
     return this.http.post(this.ipAddress + '/getPersonalBest', m);
   }
 
-  getNumEntries(m) {
+  getNumEntries(m: {GameID: number, Difficulty: number, Leaderboard: number}) {
     return this.http.post(this.ipAddress + '/getNumEntries', m);
   }
 
-  getFooter(m) {
+  getFooter(m: {GameID: number, Difficulty: number, Leaderboard: number}) {
     return this.http.post(this.ipAddress + '/getFooter', m);
   }
 }

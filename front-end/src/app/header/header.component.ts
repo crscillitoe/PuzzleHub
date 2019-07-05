@@ -13,7 +13,7 @@ import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnChanges {
+export class HeaderComponent implements OnInit {
 
   level: number;
   username: any = '';
@@ -36,13 +36,14 @@ export class HeaderComponent implements OnInit, OnChanges {
     public dialog: MatDialog
   ) {
     user.accountData.subscribe(data => {
-      console.log(data);
       if (data) {
         this.username = data.username;
         this.level = data.level;
         this.xpToNextLevel = data.xpToNextLevel;
         this.puzzlerIcon = this.basePuzzleIconDir + data.puzzlerIcon + '.png';
         this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
+      } else {
+        this.username = '';
       }
     });
   }
@@ -80,35 +81,6 @@ export class HeaderComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.progress = this.getProgress();
-  }
-
-  ngOnChanges(changes) {
-    let xpGain = changes.currVal.currentValue - changes.currVal.previousValue;
-    let levelup = false;
-    if (xpGain < 0) {
-      levelup = true;
-      xpGain = xpGain + this.user.xpPerLevel;
-    }
-
-    if ('' + xpGain !== 'NaN' && ! this.first) {
-      if (!levelup) {
-        this.xpGain = '+ ' + xpGain;
-      } else {
-        this.xpGain = 'Level up!';
-      }
-      this.displayXpGain = true;
-      const that = this;
-      setTimeout(function() { that.displayXpGain = false; } , 1500);
-    } else if ('' + xpGain !== 'NaN') {
-      this.first = false;
-    }
-
-    this.progress = this.getProgress();
-  }
-
-  getProgress() {
-    return Math.floor((this.currVal / this.maxVal) * 100);
   }
 
   isElectron() {

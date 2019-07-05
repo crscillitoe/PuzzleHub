@@ -182,7 +182,7 @@ def get_profile_data():
 
     cursor = db.cursor()
     sql_query = '''
-    SELECT AD.XP, AD.PuzzlerIcon
+    SELECT AD.XP, AD.PuzzlerIcon, U.Role
         FROM accountData AS AD
         INNER JOIN users AS U
             ON U.UserID = AD.UserID
@@ -205,6 +205,7 @@ def get_profile_data():
         "MonthlyBronzeMedals":d[2],
         "XP":ad[0],
         "PuzzlerIcon":ad[1],
+        "Role":ad[2],
         "MatchHistory":match_history
     }
 
