@@ -16,6 +16,10 @@ export class ProfileComponent implements OnInit {
   username: string;
   profileData: any;
   games: any = GameDataService.games;
+  level: number;
+  currVal: number;
+  maxVal: number;
+  progress: number;
 
   medalTypes = [
     'Daily',
@@ -41,6 +45,18 @@ export class ProfileComponent implements OnInit {
     return this.user.calculateLevelFromXp(xp);
   }
 
+  xpToNextLevel() {
+    return this.user.xpToNextLevel();
+  }
+
+  nextLevelThreshold() {
+    return UserService.nextLevelThreshold();
+  }
+
+  getProgress() {
+    return Math.floor((this.currVal / this.maxVal) * 100);
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
@@ -56,6 +72,10 @@ export class ProfileComponent implements OnInit {
             (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
           }
           this.profileData = data;
+          this.level = this.getLevel(this.profileData.XP);
+          this.currVal = this.xpToNextLevel();
+          this.maxVal = this.nextLevelThreshold();
+          this.progress = this.getProgress();
         });
     });
   }
