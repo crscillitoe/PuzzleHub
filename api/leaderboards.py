@@ -101,6 +101,7 @@ def get_more_match_history():
 #   MonthlyGoldMedals: int
 #   MonthlySilverMedals: int
 #   MonthlyBronzeMedals: int
+#   PuzzlerIcon: int
 #   MatchHistory: List(length 10) <
 #       GameID: int
 #       Difficulty: int

@@ -7,6 +7,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PuzzleRelayPopupComponent } from '../puzzle-relay-popup/puzzle-relay-popup.component';
 import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-picker.component';
+import { IconService } from '../services/icons/icon.service';
 
 @Component({
   selector: 'app-header',
@@ -41,6 +42,7 @@ export class HeaderComponent implements OnInit {
         this.level = data.level;
         this.xpToNextLevel = data.xpToNextLevel;
         this.puzzlerIcon = this.basePuzzleIconDir + data.puzzlerIcon + '.png';
+        IconService.configureHeaderBarColors(data.puzzlerIcon);
         this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
       } else {
         this.username = '';

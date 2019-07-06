@@ -5,6 +5,7 @@ import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { Title } from '@angular/platform-browser';
+import { IconService } from '../services/icons/icon.service';
 
 @Component({
   selector: 'app-profile',
@@ -75,7 +76,9 @@ export class ProfileComponent implements OnInit {
           }
 
           this.profileData = data;
+
           this.userPuzzlerIconPath = this.baseUserPuzzlerIconPath + data.PuzzlerIcon + '.png';
+          IconService.configureProfileBarColors(data.PuzzlerIcon);
           this.level = this.getLevel(this.profileData.XP);
           this.currVal = this.xpToNextLevel();
           this.maxVal = this.nextLevelThreshold();
