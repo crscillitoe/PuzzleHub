@@ -5,6 +5,7 @@ import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { Title } from '@angular/platform-browser';
+import { IconService } from '../services/icons/icon.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,6 +17,10 @@ export class ProfileComponent implements OnInit {
   username: string;
   profileData: any;
   games: any = GameDataService.games;
+  level: number;
+  currVal: number;
+  maxVal: number;
+  progress: number;
 
   medalTypes = [
     'Daily',
@@ -28,6 +33,8 @@ export class ProfileComponent implements OnInit {
     'Bronze'
   ];
 
+  userPuzzlerIconPath = '';
+  baseUserPuzzlerIconPath = '/assets/images/puzzler-icons/puzzle-hub-profile-';
   medalPath = '/assets/images/medals/';
 
   constructor(
@@ -39,6 +46,18 @@ export class ProfileComponent implements OnInit {
 
   getLevel(xp) {
     return this.user.calculateLevelFromXp(xp);
+  }
+
+  xpToNextLevel() {
+    return this.profileData.XP % this.user.xpPerLevel;
+  }
+
+  nextLevelThreshold() {
+    return this.user.xpPerLevel;
+  }
+
+  getProgress() {
+    return Math.floor((this.currVal / this.maxVal) * 100);
   }
 
   ngOnInit() {
@@ -55,7 +74,15 @@ export class ProfileComponent implements OnInit {
           for (let i = 0 ; i < data.MatchHistory.length ; i++) {
             (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
           }
+
           this.profileData = data;
+
+          this.userPuzzlerIconPath = this.baseUserPuzzlerIconPath + data.PuzzlerIcon + '.png';
+          IconService.configureProfileBarColors(data.PuzzlerIcon);
+          this.level = this.getLevel(this.profileData.XP);
+          this.currVal = this.xpToNextLevel();
+          this.maxVal = this.nextLevelThreshold();
+          this.progress = this.getProgress();
         });
     });
   }

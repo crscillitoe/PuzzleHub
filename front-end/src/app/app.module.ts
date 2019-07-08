@@ -5,8 +5,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule,
-  MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatSelectModule,
-  MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
+  MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule,
+  MatSelectModule, MatSnackBarModule, MatTableModule, MatTabsModule } from '@angular/material';
 
 import { MatDialogModule } from '@angular/material/dialog';
 
@@ -34,7 +34,6 @@ import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
 // import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
-import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
@@ -109,7 +108,6 @@ const appRoutes: Routes = [
     ProfileComponent,
     // KakuroComponent,
     ThermometersComponent,
-    LevelProgressComponent,
     NonogramsComponent,
     ForgotPasswordComponent,
     PuzzleRelayPopupComponent,
@@ -134,6 +132,7 @@ const appRoutes: Routes = [
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,

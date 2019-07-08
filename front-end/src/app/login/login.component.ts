@@ -161,17 +161,9 @@ export class LoginComponent implements OnInit {
         .subscribe((data) => {
             if (data['Accept']) {
               document.cookie = 'PuzzleHubToken=' + data['Token'] + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
-              this.tunnel.getUsername()
-                .subscribe( (name) => {
-                  this.user.setUserName(name['username']);
-                  this.loader.stopLoadingAnimation();
-
-                  this.router.navigate(['/']);
-                });
-              this.tunnel.getLevel()
-                .subscribe( (data2) => {
-                  this.user.setXp(data2['xp']);
-                });
+              this.user.reloadAccountData();
+              this.loader.stopLoadingAnimation();
+              this.router.navigate(['/']);
             } else {
               this.loginError = 'Invalid login credentials, please try again.'; 
               this.loader.stopLoadingAnimation();

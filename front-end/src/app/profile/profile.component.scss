@@ -1,6 +1,11 @@
 // Configuration and helpers
 @import
-  '../../sass/abstracts/variables';
+  '../../sass/abstracts/variables',
+  '../../sass/abstracts/mixins';
+
+// Components
+@import
+  '../../sass/components/button';
 
 // Page-specific
 @import

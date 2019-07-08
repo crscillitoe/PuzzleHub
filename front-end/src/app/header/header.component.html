@@ -9,17 +9,22 @@
       <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">Leaderboards</a>
       <ng-container *ngIf="username != ''">
         <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
-        <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
+        <ng-container *ngIf="isMainMenu()">
+          <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
+        </ng-container>
       </ng-container>
     </div>
   </div>
-  <div class="navbar-expand mr-auto">
-    <a class="imagecontainer">
-      <a class="clickable imageholder" href="https://discord.gg/VHBsvMw" target="_blank">
-        <img class="clickable image" src="/assets/images/logos/discord.png">
+  <!-- Killing Discord Logo
+       TODO - implement contact/feature request screen
+    <div class="navbar-expand mr-auto">
+      <a class="imagecontainer">
+        <a class="clickable imageholder" href="https://discord.gg/VHBsvMw" target="_blank">
+          <img class="clickable image" src="/assets/images/logos/discord.png">
+        </a>
       </a>
-    </a>
-  </div>
+    </div>
+  -->
   <div class="container-flex col-account">
     <ng-container *ngIf="username==''">
       <a 
@@ -32,26 +37,21 @@
     <ng-container *ngIf="username!=''">
       <div class="container-flex-row user-box">
         <div class="col puzzler-icon">
-          <img class="" (click)="openIconPicker()"
-             src="/assets/images/game-splashes/hashi.svg">
+          <img class="clickable puzzle-image" (click)="openIconPicker()"
+               src="{{puzzlerIcon}}">
         </div>
         <div class="col user-info">
           <div class="username">
-          {{username}}
+            {{username}} - Level {{level}}
           </div>
           <div class="xp-row">
-            <div class="xp-bar">
-              <svg viewBox="0, 0, 100, 3">
-                <rect [attr.width]="100" height="3" fill="rgba(0, 123, 255, 0.5)"></rect>
-                <rect [attr.width]="progress" height="3" fill="rgba(0, 123, 255, 1)"></rect>
-              </svg>
-            </div>
-            <div class="lvl-tag">
-              <span class="lvl">Lv</span>{{level}}
-            </div>
+              <mat-progress-bar
+                id="header-progress"
+                [value]="progress">
+              </mat-progress-bar>
           </div>
           <div class="level-xp">
-            {{currVal}}/{{maxVal}}
+            {{xpToNextLevel}}/2000
           </div>
         </div>
         <div class="col sign-out">

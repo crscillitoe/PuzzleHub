@@ -440,6 +440,50 @@ def validate_user(validation_id):
 
     return jsonify({"validated":True})
 
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /setPuzzlerIcon
+# Required POST parameters:
+#   PuzzlerIconID: int
+# Returns on success:
+#   200
+# Returns on failure:
+#   500
+@app.route('/api/setPuzzlerIcon', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def set_puzzler_icon():
+    try:
+        puzzler_icon_id = request.json["PuzzlerIconID"]
+    except:
+        abort(500)
+
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            abort(500)
+    except:
+        abort(500)
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        UPDATE accountData
+        SET PuzzlerIcon = %(puzzler_icon_id)s
+        WHERE UserID = %(user_id)s
+    '''
+
+    query_model = {
+        "user_id": user_id,
+        "puzzler_icon_id": puzzler_icon_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    db.commit()
+    cursor.close()
+
+    return jsonify({})
+
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /login
 # Required POST parameters:
@@ -520,6 +564,50 @@ def get_username():
     data = cursor.fetchall()
 
     return jsonify({'username':(data[0])[0]})
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getUserData
+# Returns all important data on the user
+@app.route('/api/getUserData', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_user_data():
+    try:
+        user_id = get_user_id(xstr(request.headers.get('PuzzleHubToken')))
+        if user_id == -1:
+            return jsonify({})
+    except:
+        return jsonify({})
+
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        SELECT U.UserID, U.Username, U.Role, AD.XP, AD.PuzzlerIcon
+        FROM users AS U
+        INNER JOIN accountData AS AD
+            ON AD.UserID = U.UserID
+        WHERE U.UserID=%(user_id)s
+    '''
+    query_model = {
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+
+    row = data[0]
+
+    to_return = {
+        'userId': row[0],
+        'username': row[1],
+        'role': row[2],
+        'xp': row[3],
+        'puzzlerIcon': row[4]
+    }
+
+    return jsonify(to_return)
+
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /getLevel
