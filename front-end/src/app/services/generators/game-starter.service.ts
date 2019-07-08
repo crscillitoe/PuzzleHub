@@ -41,7 +41,7 @@ export class GameStarterService {
     if (that.userService.isLoggedIn() && this.customSeed === 0) {
       that.timer.stopTimer(that.seed, that.gameID, that.difficulty, 'TODO - Board Solution String')
         .subscribe( (data) => {
-          that.userService.addXp(data['XPGain']);
+          that.userService.reloadAccountData();
           if (data['Daily']) {
             that.personalBestDaily = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
           }

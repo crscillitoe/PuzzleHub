@@ -1,5 +1,7 @@
 import { PLATFORM_ID, Injectable, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { TunnelService } from '../tunnel/tunnel.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { isPlatformBrowser } from '@angular/common';
 
@@ -7,46 +9,35 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root'
 })
 export class UserService {
-  public static xpPerLevel = 2000;
+  public xpPerLevel = 2000;
 
   private loggedIn = false;
   private xp = 0;
   private _level = 0;
   public user: string;
-  public username: any = new Subject();
-  public level: any = new Subject();
 
-  static nextLevelThreshold() {
-    return UserService.xpPerLevel;
+  private _accountData: BehaviorSubject<AccountData> = new BehaviorSubject<AccountData>(null);
+  public accountData = this._accountData.asObservable();
+
+  logOut() {
+    this._accountData.next(null);
   }
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
-
-  setUserName(name) {
-    if (name !== '') {
-      this.loggedIn = true;
-    } else {
-      this.loggedIn = false;
+  reloadAccountData() {
+    if (this.isLoggedIn()) {
+      this.tunnelService.getUserData()
+        .subscribe((data: AccountData) => {
+          data.level = this.calculateLevelFromXp(data.xp);
+          data.xpToNextLevel = data.xp % this.xpPerLevel;
+          this._accountData.next(data);
+        });
     }
-
-    this.user = name;
-    this.username.next(name);
   }
 
-  setXp(xp) {
-    this.xp = xp;
-    this.setLevel();
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private tunnelService: TunnelService) { 
+    this.reloadAccountData();
   }
 
-  addXp(xp) {
-    this.xp += xp;
-    this.setLevel();
-  }
-
-  setLevel() {
-    this._level = this.calculateLevel();
-    this.level.next(this._level);
-  }
 
   isLoggedIn() {
     if(isPlatformBrowser(this.platformId)) {
@@ -56,16 +47,8 @@ export class UserService {
     }
   }
 
-  calculateLevel() {
-    return Math.floor(this.xp / UserService.xpPerLevel) + 1;
-  }
-
   calculateLevelFromXp(xp) {
-    return Math.floor(xp / UserService.xpPerLevel) + 1;
-  }
-
-  xpToNextLevel() {
-    return this.xp % UserService.xpPerLevel;
+    return Math.floor(xp / this.xpPerLevel) + 1;
   }
 
   getCookie(cookieName) {
@@ -84,4 +67,14 @@ export class UserService {
 
     return '';
   }
+}
+
+export class AccountData {
+  public userId: number;
+  public puzzlerIcon: number;
+  public role: string;
+  public username: string;
+  public xp: number;
+  public level: number;
+  public xpToNextLevel: number;
 }
