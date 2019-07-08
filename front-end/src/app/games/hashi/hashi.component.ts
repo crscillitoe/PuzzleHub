@@ -173,8 +173,8 @@ export class HashiComponent extends GameBoard implements OnInit {
       }
       // Extreme
       case 4: {
-        width = 29;
-        height = 29;
+        width = 100;
+        height = 100;
         numNodes = 500000;
         extreme = true;
         break;
