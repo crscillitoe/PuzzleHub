@@ -24,7 +24,24 @@ export class PuzzleRelayPopupComponent implements OnInit {
               public dialogRef: MatDialogRef<PuzzleRelayPopupComponent>) { }
 
   ngOnInit() {
-    this.diffs = GameListAllService.games[0].diffs;
+    this.diffs = [];
+    for (var i = 0 ; i < GameListAllService.games[0].diffs.length ; i++) {
+      this.diffs.push({
+        diff: GameListAllService.games[0].diffs[i].diff,
+        name: GameListAllService.games[0].diffs[i].name,
+        color: GameListAllService.games[0].diffs[i].color,
+        requiresLogin: GameListAllService.games[0].diffs[i].requiresLogin,
+        minLevel: GameListAllService.games[0].diffs[i].minLevel,
+      })
+    }
+    this.diffs.push({
+      diff: 99,
+      name: 'random',
+      color: 'purple',
+      requiresLogin: false,
+      minLevel: 0
+    });
+
     this.difficulty = this.diffs[0];
     this.multiplier = 1;
 
@@ -42,6 +59,16 @@ export class PuzzleRelayPopupComponent implements OnInit {
         this.gameList.push(m);
       }
     }
+
+    this.gameList.push({
+      image: 'assets/images/game-splashes/random_game.svg',
+      name: 'Random',
+      id: 99,
+      difficulty: null,
+      multiplier: 1
+    });
+
+    console.log(this.gameList);
 
     this.gameQueue = [];
   }
@@ -84,9 +111,20 @@ export class PuzzleRelayPopupComponent implements OnInit {
     RelayTrackerService.timeElapsed = 0;
     RelayTrackerService.queueTimes = [];
 
-    const route = gameStack[0].name;
+    let route = gameStack[0].name;
+    if (route == 'Random') {
+      route = GameListAllService.getRandomGameName();
+    }
+
+    let diffToAdd = 0;
+    if (gameStack[0].difficulty == 99) {
+      diffToAdd = GameListAllService.getRandomDifficulty();
+    } else {
+      diffToAdd = gameStack[0].difficulty;
+    }
+
     const m = {
-      diff: gameStack[0].difficulty
+      diff: diffToAdd
     }
 
     this.router.navigate([route, m]);

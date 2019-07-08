@@ -34,7 +34,6 @@ import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
 // import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
-import { LevelProgressComponent } from './visuals/level-progress/level-progress.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
@@ -110,7 +109,6 @@ const appRoutes: Routes = [
     ProfileComponent,
     // KakuroComponent,
     ThermometersComponent,
-    LevelProgressComponent,
     NonogramsComponent,
     ForgotPasswordComponent,
     PuzzleRelayPopupComponent,

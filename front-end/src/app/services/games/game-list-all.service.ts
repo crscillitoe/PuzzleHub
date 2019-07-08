@@ -108,4 +108,18 @@ export class GameListAllService extends GameList {
     }
     return null;
   }
+
+  public static getRandomDifficulty() {
+    return Math.floor(Math.random() * 4) + 1;
+  }
+
+  public static getRandomGameName() {
+    let gameName = this.games[Math.floor(Math.random() * this.games.length)].name;
+
+    while (gameName == 'Minesweeper') {
+      gameName = this.games[Math.floor(Math.random() * this.games.length)].name;
+    }
+
+    return gameName;
+  }
 }

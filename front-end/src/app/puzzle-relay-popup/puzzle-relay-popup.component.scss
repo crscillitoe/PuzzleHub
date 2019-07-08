@@ -14,6 +14,14 @@
     float: right;
 }
 
+.random {
+    color: #f142f4 !important;
+}
+
+.diff-random.mat-button-toggle-checked {
+    background-color: #f142f4 !important;
+}
+
 .easy {
     color: #1e7e34 !important;
 }
@@ -64,7 +72,7 @@
 
 .puzzle-list {
     border: solid 1px #ccc;
-    height: 428px;
+    height: 498px;
     background: #2c2c2c;
     border-radius: 4px;
     overflow: hidden;
