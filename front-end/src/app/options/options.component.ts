@@ -56,6 +56,8 @@ export class OptionsComponent implements OnInit, OnDestroy {
   public editingHotkey: boolean;
   public editIndex: number;
 
+  public level: number;
+
   public optionVals: any = [];
   public hotkeyVals: any = [];
 
@@ -71,8 +73,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private titleService: Title
   ) {
     if(isPlatformBrowser(platformId)) {
-      user.level
+      user.accountData
         .subscribe( (data) => {
+          if (data) {
+            this.level = data.level;
+          }
+
           this.populateDifficulties();
         });
     }
@@ -147,7 +153,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
     this.diffs = this.game.diffs.filter(
       d => (
         d.minLevel === 0 ||
-        (this.user.isLoggedIn && this.getLevel() >= d.minLevel)
+        (this.user.isLoggedIn() && this.getLevel() >= d.minLevel)
       ) &&
       (
         ! d.requiresLogin || this.isLoggedIn()
@@ -261,7 +267,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   getLevel() {
-    return this.user.calculateLevel();
+    return this.level;
   }
 
   playGame(route, diff) {

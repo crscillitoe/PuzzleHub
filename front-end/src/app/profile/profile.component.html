@@ -4,14 +4,19 @@
       <div class="col-12">
         <h1>Profile</h1>
       </div>
-      <div class="col-6 container-flex-row user-panel"><!-- Info -->
+      <div class="col-9 container-flex-row user-panel"><!-- Info -->
         <div class="puzzler-icon">
-          <img src="assets/images/puzzler-icons/puzzle-hub-profile-0.png">
+          <img class="puzzle-image" src="{{userPuzzlerIconPath}}">
         </div>
         <div class="col user-info">
-          <h2>{{username}}</h2>
+          <h2>{{username}}
+            <ng-container *ngIf="profileData.Role">
+              - {{profileData.Role}}
+            </ng-container>
+          </h2>
           <div>Level {{level}}</div>
           <mat-progress-bar
+            id="profile-progress"
             class="profile-xp-bar"
             mode="determinate"
             [value]="progress">
@@ -19,7 +24,7 @@
           <span>{{currVal}}/{{maxVal}}</span>
         </div>
       </div><!-- Info -->
-      <div class="col-6 accolade-panel"><!-- Medals -->
+      <div class="col-3 accolade-panel"><!-- Medals -->
         <h2>Medals</h2>
         <table class="medal-table">
           <ng-container *ngFor="let medalType of medalTypes; let i = index">

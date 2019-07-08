@@ -32,19 +32,16 @@ export class MainMenuComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.titleService.setTitle('Puzzle Hub');
 
-    this.level = this.getLevel();
-    this.subscription = this.user.level
-      .subscribe( (data) => {
-        this.level = data;
+    this.subscription = this.user.accountData
+      .subscribe ( (data) => {
+        if (data) {
+          this.level = data.level;
+        }
       });
   }
 
   isLoggedIn() {
     return this.user.isLoggedIn();
-  }
-
-  getLevel() {
-    return this.user.calculateLevel();
   }
 
   playGame(route, diff) {

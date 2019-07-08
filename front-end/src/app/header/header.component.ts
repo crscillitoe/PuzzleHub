@@ -7,25 +7,27 @@ import { isPlatformBrowser } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PuzzleRelayPopupComponent } from '../puzzle-relay-popup/puzzle-relay-popup.component';
 import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-picker.component';
+import { IconService } from '../services/icons/icon.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnChanges {
+export class HeaderComponent implements OnInit {
 
-  @Input() level;
-  @Input() currVal;
-  @Input() maxVal;
-
+  level: number;
   username: any = '';
 
   first = true;
+  xpToNextLevel: number = 0;
 
   displayXpGain = false;
   xpGain = '';
   progress = 0;
+  puzzlerIcon = '';
+
+  basePuzzleIconDir = '/assets/images/puzzler-icons/puzzle-hub-profile-';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -34,24 +36,25 @@ export class HeaderComponent implements OnInit, OnChanges {
     private user: UserService,
     public dialog: MatDialog
   ) {
-    user.username
-      .subscribe( (data) => {
-        this.username = data;
-      });
+    user.accountData.subscribe(data => {
+      if (data) {
+        this.username = data.username;
+        this.level = data.level;
+        this.xpToNextLevel = data.xpToNextLevel;
+        this.puzzlerIcon = this.basePuzzleIconDir + data.puzzlerIcon + '.png';
+        IconService.configureHeaderBarColors(data.puzzlerIcon);
+        this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
+      } else {
+        this.username = '';
+      }
+    });
+  }
 
-    tunnelService.getUsername()
-      .subscribe( (data) => {
-        user.setUserName(data['username']);
-      });
-
-    tunnelService.getLevel()
-      .subscribe( (data) => {
-        user.setXp(data['xp']);
-      });
+  isMainMenu() {
+    return document.getElementById('mainmenu') != null;
   }
 
   openIconPicker() {
-    return; // Feature not ready, deployed code for hashi bug fix
     const dialogRed = this.dialog.open(ProfileIconPickerComponent, {
       width: '800px'
     });
@@ -60,7 +63,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   openPuzzleRelay() {
     const dialogRef = this.dialog.open(PuzzleRelayPopupComponent, {
       width: '800px',
-      height: '630px'
+      height: '700px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -74,54 +77,12 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   signOut() {
     if (isPlatformBrowser(this.platformId)) {
-      this.user.setUserName('');
-      this.user.setXp(0);
+      this.user.logOut();
       document.cookie = 'PuzzleHubToken=; Max-Age=0';
     }
   }
 
-  getLevel() {
-    return this.user.calculateLevel();
-  }
-
-  xpToNextLevel() {
-    return this.user.xpToNextLevel();
-  }
-
-  nextLevelThreshold() {
-    return UserService.nextLevelThreshold();
-  }
-
   ngOnInit() {
-    this.progress = this.getProgress();
-  }
-
-  ngOnChanges(changes) {
-    let xpGain = changes.currVal.currentValue - changes.currVal.previousValue;
-    let levelup = false;
-    if (xpGain < 0) {
-      levelup = true;
-      xpGain = xpGain + UserService.xpPerLevel;
-    }
-
-    if ('' + xpGain !== 'NaN' && ! this.first) {
-      if (!levelup) {
-        this.xpGain = '+ ' + xpGain;
-      } else {
-        this.xpGain = 'Level up!';
-      }
-      this.displayXpGain = true;
-      const that = this;
-      setTimeout(function() { that.displayXpGain = false; } , 1500);
-    } else if ('' + xpGain !== 'NaN') {
-      this.first = false;
-    }
-
-    this.progress = this.getProgress();
-  }
-
-  getProgress() {
-    return Math.floor((this.currVal / this.maxVal) * 100);
   }
 
   isElectron() {

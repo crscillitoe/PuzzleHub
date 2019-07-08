@@ -98,17 +98,4 @@ export class AppComponent {
         this.loader.stopLoadingAnimation();
       }*/
     }
-
-  getLevel() {
-    return this.user.calculateLevel();
-  }
-
-  xpToNextLevel() {
-    return this.user.xpToNextLevel();
-  }
-
-  nextLevelThreshold() {
-    return UserService.nextLevelThreshold();
-  }
-
 }

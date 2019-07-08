@@ -5,6 +5,7 @@ import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { Title } from '@angular/platform-browser';
+import { IconService } from '../services/icons/icon.service';
 
 @Component({
   selector: 'app-profile',
@@ -32,6 +33,8 @@ export class ProfileComponent implements OnInit {
     'Bronze'
   ];
 
+  userPuzzlerIconPath = '';
+  baseUserPuzzlerIconPath = '/assets/images/puzzler-icons/puzzle-hub-profile-';
   medalPath = '/assets/images/medals/';
 
   constructor(
@@ -46,11 +49,11 @@ export class ProfileComponent implements OnInit {
   }
 
   xpToNextLevel() {
-    return this.user.xpToNextLevel();
+    return this.profileData.XP % this.user.xpPerLevel;
   }
 
   nextLevelThreshold() {
-    return UserService.nextLevelThreshold();
+    return this.user.xpPerLevel;
   }
 
   getProgress() {
@@ -71,7 +74,11 @@ export class ProfileComponent implements OnInit {
           for (let i = 0 ; i < data.MatchHistory.length ; i++) {
             (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
           }
+
           this.profileData = data;
+
+          this.userPuzzlerIconPath = this.baseUserPuzzlerIconPath + data.PuzzlerIcon + '.png';
+          IconService.configureProfileBarColors(data.PuzzlerIcon);
           this.level = this.getLevel(this.profileData.XP);
           this.currVal = this.xpToNextLevel();
           this.maxVal = this.nextLevelThreshold();
