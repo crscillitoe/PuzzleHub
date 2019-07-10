@@ -13,3 +13,4 @@ import api.test_queries
 import api.account
 import api.test_encryption
 import api.leaderboards
+import api.daily_challenges
