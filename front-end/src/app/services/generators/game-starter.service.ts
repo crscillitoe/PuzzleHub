@@ -86,6 +86,14 @@ export class GameStarterService {
             } else {
               const display = document.getElementById('timer');
               display.textContent = SharedFunctionsService.convertToDateString(data['TimeElapsed']);
+              if (RelayTrackerService.challengeMode > 0) {
+                let m = {
+                  Difficulty: RelayTrackerService.challengeMode
+                }
+                that.tunnel.completeDailyChallenge(m).subscribe(data => {
+                  that.userService.reloadAccountData();
+                });
+              }
             }
           } else {
             const display = document.getElementById('timer');

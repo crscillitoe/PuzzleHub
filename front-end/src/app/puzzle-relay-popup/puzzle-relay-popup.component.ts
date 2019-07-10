@@ -110,6 +110,7 @@ export class PuzzleRelayPopupComponent implements OnInit {
     RelayTrackerService.index = 0;
     RelayTrackerService.timeElapsed = 0;
     RelayTrackerService.queueTimes = [];
+    RelayTrackerService.challengeMode = 0;
 
     let route = gameStack[0].name;
     if (route == 'Random') {

@@ -41,6 +41,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { AngularFittextModule } from 'angular-fittext';
 import { PuzzleRelayPopupComponent } from './puzzle-relay-popup/puzzle-relay-popup.component';
 import { ProfileIconPickerComponent } from './profile-icon-picker/profile-icon-picker.component';
+import { DailyChallengesComponent } from './daily-challenges/daily-challenges.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -111,7 +112,8 @@ const appRoutes: Routes = [
     NonogramsComponent,
     ForgotPasswordComponent,
     PuzzleRelayPopupComponent,
-    ProfileIconPickerComponent
+    ProfileIconPickerComponent,
+    DailyChallengesComponent
   ],
   imports: [
     AngularFittextModule,
@@ -149,7 +151,8 @@ const appRoutes: Routes = [
   ],
   entryComponents: [
     PuzzleRelayPopupComponent,
-    ProfileIconPickerComponent
+    ProfileIconPickerComponent,
+    DailyChallengesComponent
   ],
   bootstrap: [AppComponent]
 })

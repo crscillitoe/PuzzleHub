@@ -6,6 +6,7 @@ import { GameID } from '../enums/game-id.enum';
 import { isPlatformBrowser } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PuzzleRelayPopupComponent } from '../puzzle-relay-popup/puzzle-relay-popup.component';
+import { DailyChallengesComponent } from '../daily-challenges/daily-challenges.component';
 import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-picker.component';
 import { IconService } from '../services/icons/icon.service';
 
@@ -55,7 +56,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openIconPicker() {
-    const dialogRed = this.dialog.open(ProfileIconPickerComponent, {
+    const dialogRef = this.dialog.open(ProfileIconPickerComponent, {
       width: '800px'
     });
   }
@@ -68,6 +69,13 @@ export class HeaderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
+    });
+  }
+
+  openDailyChallenges() {
+    const dialogRef = this.dialog.open(DailyChallengesComponent, {
+      width: '800px',
+      height: '700px'
     });
   }
 
