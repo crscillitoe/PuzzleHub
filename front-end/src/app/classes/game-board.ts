@@ -226,9 +226,6 @@ export class GameBoard implements OnInit, OnDestroy {
     if (keyEvent.keyCode === 32 && !RelayTrackerService.playingQueue) {
       this.newGame();
       return;
-    } else if(keyEvent.keyCode === 32 && RelayTrackerService.playingQueue) {
-      this.done();
-      return;
     }
   }
 
