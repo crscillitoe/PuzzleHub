@@ -10,6 +10,7 @@ export class RelayTrackerService {
   public static index: any;
   public static timeElapsed: number = 0;
   public static queueTimes: any;
+  public static challengeMode: number = 0;
 
   constructor() {}
 }

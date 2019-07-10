@@ -25,6 +25,23 @@ export class TunnelService {
     return this.http.post(this.ipAddress + '/setPuzzlerIcon', model);
   }
 
+  completeDailyChallenge(model: {Difficulty: number}) {
+    return this.http.post(this.ipAddress + '/completeDailyChallenge', model);
+  }
+
+  getCompletedDailyChallenges() {
+    return this.http.get<number[]>(this.ipAddress + '/getCompletedDailyChallenges');
+  }
+
+  getDailyChallenges() {
+    return this.http.get<{
+      Difficulty: number,
+      Length: number,
+      Relay: string,
+      XPReward: number
+    }[]>(this.ipAddress + '/getDailyChallenges');
+  }
+
   getUserData() {
     return this.http.get(this.ipAddress + '/getUserData');
   }

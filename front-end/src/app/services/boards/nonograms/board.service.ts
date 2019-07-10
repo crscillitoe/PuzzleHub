@@ -181,7 +181,26 @@ export class Board {
     for(var i = 0 ; i < this.width ; i++) {
       var row = [];
       for(var j = 0 ; j < this.height ; j++) {
-        row.push(Math.floor(this.random() * 2));
+        const randomVal = this.random();
+        if (this.width === 20) {
+          if (randomVal < 0.8) {
+            row.push(1);
+          } else {
+            row.push(0);
+          }
+        } else if(this.width === 15) {
+          if (randomVal < 0.7) {
+            row.push(1);
+          } else {
+            row.push(0);
+          }
+        } else {
+          if (randomVal < 0.5) {
+            row.push(1);
+          } else {
+            row.push(0);
+          }
+        }
       }
 
       board.push(row);

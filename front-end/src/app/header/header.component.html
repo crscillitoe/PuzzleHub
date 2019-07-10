@@ -12,19 +12,12 @@
         <ng-container *ngIf="isMainMenu()">
           <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
         </ng-container>
+        <ng-container *ngIf="isMainMenu()">
+          <a (click)="openDailyChallenges()" routerLinkActive="active" class="nav-item nav-link clickable">Daily Challenges</a>
+        </ng-container>
       </ng-container>
     </div>
   </div>
-  <!-- Killing Discord Logo
-       TODO - implement contact/feature request screen
-    <div class="navbar-expand mr-auto">
-      <a class="imagecontainer">
-        <a class="clickable imageholder" href="https://discord.gg/VHBsvMw" target="_blank">
-          <img class="clickable image" src="/assets/images/logos/discord.png">
-        </a>
-      </a>
-    </div>
-  -->
   <div class="container-flex col-account">
     <ng-container *ngIf="username==''">
       <a 

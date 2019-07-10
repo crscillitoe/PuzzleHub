@@ -1,0 +1,93 @@
+.relay {
+    display: inline-block;
+    flex-direction: row;
+    justify-content: left;
+    width: 90%;
+}
+
+.challenge-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.challenge {
+    border-radius: 10px;
+    border: solid;
+    padding: 5px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.play {
+    display: inline-block;
+}
+
+.game-icon {
+  margin-right: 20px;
+  display: inline-block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  max-width: 5.25rem;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+
+  img {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+}
+
+.easy {
+    color: #1e7e34 !important;
+}
+
+.medium {
+    color: #007bff !important;
+}
+
+.hard {
+    color: #f28c32 !important;
+}
+
+.extreme {
+    color: #dc3545 !important;
+}
+
+.icon-easy {
+    background-color: #1e7e34;
+    display: inline-block;
+}
+
+.icon-medium {
+    background-color: #007bff !important;
+}
+
+.icon-hard {
+    background-color: #f28c32 !important;
+}
+
+.icon-extreme {
+    background-color: #dc3545 !important;
+}
+
+.btn-easy {
+    background-color: #1e7e34;
+    display: inline-block;
+}
+
+.btn-medium {
+    background-color: #007bff !important;
+}
+
+.btn-hard {
+    background-color: #f28c32 !important;
+}
+
+.btn-extreme {
+    background-color: #dc3545 !important;
+}

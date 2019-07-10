@@ -183,7 +183,8 @@ def get_profile_data():
 
     cursor = db.cursor()
     sql_query = '''
-    SELECT AD.XP, AD.PuzzlerIcon, U.Role
+    SELECT AD.XP, AD.PuzzlerIcon, U.Role, AD.EasyDailiesCompleted,
+        AD.MediumDailiesCompleted, AD.HardDailiesCompleted, AD.ExtremeDailiesCompleted
         FROM accountData AS AD
         INNER JOIN users AS U
             ON U.UserID = AD.UserID
@@ -207,6 +208,10 @@ def get_profile_data():
         "XP":ad[0],
         "PuzzlerIcon":ad[1],
         "Role":ad[2],
+        "EasyDailies":ad[3],
+        "MediumDailies":ad[4],
+        "HardDailies":ad[5],
+        "ExtremeDailies":ad[6],
         "MatchHistory":match_history
     }
 
@@ -335,13 +340,15 @@ def get_leaderboards():
     cursor = db.cursor()
     if leaderboard == 0:
         sql_query = '''
-            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            SELECT Username, XP, PuzzlerIcon, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
             FROM dailyLeaderboards AS L
             INNER JOIN users AS U ON
             U.UserID = L.UserID
             INNER JOIN userMedals AS UM ON
             UM.UserID = L.UserID AND
             UM.Type = 0
+            INNER JOIN accountData AS AD ON
+            AD.UserID = L.UserID
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
             LIMIT %(num_entries)s
@@ -349,13 +356,15 @@ def get_leaderboards():
         '''
     elif leaderboard == 1:
         sql_query = '''
-            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            SELECT Username, XP, PuzzlerIcon, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
             FROM weeklyLeaderboards AS L
             INNER JOIN users AS U ON
             U.UserID = L.UserID
             INNER JOIN userMedals AS UM ON
             UM.UserID = L.UserID AND
             UM.Type = 1
+            INNER JOIN accountData AS AD ON
+            AD.UserID = L.UserID
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
             LIMIT %(num_entries)s
@@ -363,13 +372,15 @@ def get_leaderboards():
         '''
     elif leaderboard == 2:
         sql_query = '''
-            SELECT Username, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
+            SELECT Username, XP, PuzzlerIcon, TimeElapsed, Role, BronzeMedals, SilverMedals, GoldMedals
             FROM monthlyLeaderboards AS L
             INNER JOIN users AS U ON
             U.UserID = L.UserID
             INNER JOIN userMedals AS UM ON
             UM.UserID = L.UserID AND
             UM.Type = 2
+            INNER JOIN accountData AS AD ON
+            AD.UserID = L.UserID
             WHERE GameID = %(game_id)s AND Difficulty = %(difficulty)s
             ORDER BY TimeElapsed
             LIMIT %(num_entries)s
@@ -392,11 +403,13 @@ def get_leaderboards():
         position = position + 1
         model = {
             "username":d[0],
-            "time":convert_to_puzzle_hub_date(d[1]),
-            "role":str(d[2]),
-            "bronzeMedals":d[3],
-            "silverMedals":d[4],
-            "goldMedals":d[5],
+            "XP":d[1],
+            "puzzlerIcon":d[2],
+            "time":convert_to_puzzle_hub_date(d[3]),
+            "role":str(d[4]),
+            "bronzeMedals":d[5],
+            "silverMedals":d[6],
+            "goldMedals":d[7],
             "position":position
         }
         to_return.append(model)
