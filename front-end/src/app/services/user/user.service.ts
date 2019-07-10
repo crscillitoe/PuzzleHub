@@ -30,15 +30,15 @@ export class UserService {
           data.level = this.calculateLevelFromXp(data.xp);
           data.xpToNextLevel = data.xp % this.xpPerLevel;
 
-          if (data.username.toLowerCase() == 'arco') {
-            let audio = new Audio();
-            audio.src = '../../../assets/arco/jam.mp3';
-            audio.loop = true;
-            audio.load();
-            audio.play();
-            console.log(audio);
-          }
-
+//          if (data.username.toLowerCase() == 'arco') {
+//            let audio = new Audio();
+//            audio.src = '../../../assets/arco/jam.mp3';
+//            audio.loop = true;
+//            audio.load();
+//            audio.play();
+//            console.log(audio);
+//          }
+//
           this._accountData.next(data);
         });
     }

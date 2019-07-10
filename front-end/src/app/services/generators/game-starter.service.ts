@@ -90,6 +90,7 @@ export class GameStarterService {
                 let m = {
                   Difficulty: RelayTrackerService.challengeMode
                 }
+
                 that.tunnel.completeDailyChallenge(m).subscribe(data => {
                   that.userService.reloadAccountData();
                 });

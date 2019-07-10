@@ -26,7 +26,7 @@ export class TunnelService {
   }
 
   completeDailyChallenge(model: {Difficulty: number}) {
-    return this.http.post(this.ipAddress + 'completeDailyChallenge', model);
+    return this.http.post(this.ipAddress + '/completeDailyChallenge', model);
   }
 
   getCompletedDailyChallenges() {
