@@ -33,8 +33,7 @@ export class ProfileComponent implements OnInit {
     'Bronze'
   ];
 
-  userPuzzlerIconPath = '';
-  baseUserPuzzlerIconPath = '/assets/images/puzzler-icons/puzzle-hub-profile-';
+  puzzlerIconID: number;
   medalPath = '/assets/images/medals/';
 
   constructor(
@@ -77,7 +76,7 @@ export class ProfileComponent implements OnInit {
 
           this.profileData = data;
 
-          this.userPuzzlerIconPath = this.baseUserPuzzlerIconPath + data.PuzzlerIcon + '.png';
+          this.puzzlerIconID = data.PuzzlerIcon;
           IconService.configureProfileBarColors(data.PuzzlerIcon);
           this.level = this.getLevel(this.profileData.XP);
           this.currVal = this.xpToNextLevel();

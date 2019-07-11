@@ -29,10 +29,11 @@
     </ng-container>
     <ng-container *ngIf="username!=''">
       <div class="container-flex-row user-box">
-        <div class="col puzzler-icon">
-          <img class="clickable puzzle-image" (click)="openIconPicker()"
-               src="{{puzzlerIcon}}">
-        </div>
+        <app-puzzler-icon
+          class="col puzzler-icon"
+          [puzzlerIconID]="puzzlerIconID"
+        >
+        </app-puzzler-icon>
         <div class="col user-info">
           <div class="username">
             {{username}} - Level {{level}}

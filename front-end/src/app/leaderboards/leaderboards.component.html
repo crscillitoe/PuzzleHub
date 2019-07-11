@@ -52,6 +52,7 @@
           <table>
             <thead>
               <th></th>
+              <th></th>
               <th>Username</th>
               <th>
                 <img
@@ -75,6 +76,13 @@
                 <tr [ngClass]="{'you': row.username == username}">
                   <td>{{j+((leaderboardCurrentPage[diff.diff] - 1) * pageSize)+1}}</td>
                   <td>
+                      <app-puzzler-icon
+                        class="leaderboard-puzzler-icon"
+                        [puzzlerIconID]="row.puzzlerIcon"
+                      >
+                      </app-puzzler-icon>
+                  </td>
+                  <td>
                     <a [routerLink]="['/profile']"
                        [queryParams]="{user: row.username}"
                        routerLinkActive="active"
@@ -92,6 +100,13 @@
             <tfoot *ngIf="footerData[diff.diff] != null && footerData[diff.diff].length > 0">
               <tr>
                 <td>You</td>
+                <td>
+                  <!--<app-puzzler-icon-->
+                    <!--class="leaderboard-puzzler-icon"-->
+                    <!--[puzzlerIconID]="footerData[diff.diff][0].puzzlerIcon"-->
+                  <!-->-->
+                  <!--</app-puzzler-icon>-->
+                </td>
                 <td>{{footerData[diff.diff][0].username}}</td>
                 <td>{{footerData[diff.diff][0].goldMedals}}</td>
                 <td>{{footerData[diff.diff][0].silverMedals}}</td>

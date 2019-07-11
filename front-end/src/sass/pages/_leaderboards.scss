@@ -51,6 +51,7 @@
 
   .mat-card-content {
     flex-grow: 1;
+    padding: 0.25rem 0;
     border: 0.2rem solid $white;
     border-left: none;
     border-right: none;
@@ -109,6 +110,10 @@
     width: 100%;
     border-collapse: collapse;
 
+    th:nth-of-type(3), td:nth-of-type(3) {
+      text-align: left;
+    }
+
     & tfoot {
       border-top: 0.5rem solid rgba(0,0,0,0);
     }
@@ -119,10 +124,16 @@
   background-color: rgba(white, 0.1);
 }
 
+.leaderboard-puzzler-icon {
+  width: 2rem;
+  display: inline-block; // icon width won't render properly with just inline
+}
+
 .leaderboard-profile-link {
   color: $text-color; 
 
   &:hover {
+    text-decoration: none;
     color: $puz-blue;
   }
 }

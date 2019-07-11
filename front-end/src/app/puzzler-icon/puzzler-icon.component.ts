@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-puzzler-icon',
@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PuzzlerIconComponent implements OnInit {
 
+  static basePuzzleIconDir = '/assets/images/puzzler-icons/puzzle-hub-profile-';
+  @Input() puzzlerIconID: number;
+  puzzlerIcon: string;
+
+
   constructor() { }
 
   ngOnInit() {
+    this.puzzlerIcon = PuzzlerIconComponent.basePuzzleIconDir + this.puzzlerIconID + '.png';
   }
 
 }

@@ -21,14 +21,13 @@ export class HeaderComponent implements OnInit {
   username: any = '';
 
   first = true;
-  xpToNextLevel: number = 0;
+  xpToNextLevel = 0;
 
   displayXpGain = false;
   xpGain = '';
   progress = 0;
-  puzzlerIcon = '';
 
-  basePuzzleIconDir = '/assets/images/puzzler-icons/puzzle-hub-profile-';
+  puzzlerIconID: number;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -42,7 +41,7 @@ export class HeaderComponent implements OnInit {
         this.username = data.username;
         this.level = data.level;
         this.xpToNextLevel = data.xpToNextLevel;
-        this.puzzlerIcon = this.basePuzzleIconDir + data.puzzlerIcon + '.png';
+        this.puzzlerIconID = data.puzzlerIcon;
         IconService.configureHeaderBarColors(data.puzzlerIcon);
         this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
       } else {

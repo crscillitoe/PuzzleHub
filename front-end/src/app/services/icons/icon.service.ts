@@ -13,7 +13,7 @@ export class IconService {
     ['#ffba53', '#ffe3b9'],
     ['#4bb5ac', '#b6e0dd'],
     ['#4ab93b', '#bee8b7']
-  ]
+  ];
 
   private static styleElement = document.createElement('style');
   private static profileStyleElement = document.createElement('style');
@@ -28,7 +28,7 @@ export class IconService {
       #profile-progress .mat-progress-bar-buffer {
         background-color: ${this.iconColors[iconNum][1]} !important;
       }
-    `
+    `;
 
     this.profileStyleElement.innerHTML = '';
     this.profileStyleElement.type = 'text/css';
@@ -46,7 +46,7 @@ export class IconService {
       #header-progress .mat-progress-bar-buffer {
         background-color: ${this.iconColors[iconNum][1]} !important;
       }
-    `
+    `;
 
     this.styleElement.innerHTML = '';
     this.styleElement.type = 'text/css';

@@ -1,10 +1,3 @@
-.puzzle-image {
-  padding: 3%;
-  border-radius: 100%;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-  background-color: #3f474e;
-}
-
 .profile {
   overflow-x: hidden;
   overflow-y: auto;
@@ -15,14 +8,9 @@
 }
 
 .puzzler-icon {
+  max-width: 10rem;
   flex-grow: 0;
   flex-shrink: 1;
-
-  img {
-    max-width: 100%;
-    width: 10rem;
-    height: 100%;
-  }
 }
 
 .accolade-panel {

@@ -5,9 +5,11 @@
         <h1>Profile</h1>
       </div>
       <div class="col-9 container-flex-row user-panel"><!-- Info -->
-        <div class="puzzler-icon">
-          <img class="puzzle-image" src="{{userPuzzlerIconPath}}">
-        </div>
+        <app-puzzler-icon
+          class="puzzler-icon"
+          [puzzlerIconID]="puzzlerIconID"
+        >
+        </app-puzzler-icon>
         <div class="col user-info">
           <h2>{{username}}
             <ng-container *ngIf="profileData.Role">
