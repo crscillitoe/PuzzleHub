@@ -30,8 +30,10 @@
     <ng-container *ngIf="username!=''">
       <div class="container-flex-row user-box">
         <app-puzzler-icon
-          class="col puzzler-icon"
+          id ="header-icon"
+          (click)="openIconPicker()"
           [puzzlerIconID]="puzzlerIconID"
+          class="col puzzler-icon clickable"
         >
         </app-puzzler-icon>
         <div class="col user-info">

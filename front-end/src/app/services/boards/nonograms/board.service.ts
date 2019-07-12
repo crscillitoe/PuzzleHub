@@ -13,10 +13,13 @@ export class Board {
   maxWidth: number = 0;
   maxHeight: number = 0;
 
-  constructor(width, height, seed) { 
+  predefinedRandom: number = 0;
+
+  constructor(width, height, seed, predefinedRandom) { 
     this.width = width;
     this.height = height;
     this.seed = seed;
+    this.predefinedRandom = predefinedRandom;
   }
 
   getLegendLength() {
@@ -159,7 +162,7 @@ export class Board {
     return a + b;
   }
 
-  generateBoard() {
+  generateBoard(predefinedRandom: number = this.predefinedRandom) {
     this.boardVals = [];
     this.markedVals = [];
     for(var i = 0 ; i < this.width ; i++) {
@@ -182,20 +185,29 @@ export class Board {
       var row = [];
       for(var j = 0 ; j < this.height ; j++) {
         const randomVal = this.random();
-        if (this.width === 20) {
-          if (randomVal < 0.8) {
-            row.push(1);
+
+        if (predefinedRandom == 0) {
+          if (this.width === 20) {
+            if (randomVal < 0.8) {
+              row.push(1);
+            } else {
+              row.push(0);
+            }
+          } else if(this.width === 15) {
+            if (randomVal < 0.7) {
+              row.push(1);
+            } else {
+              row.push(0);
+            }
           } else {
-            row.push(0);
-          }
-        } else if(this.width === 15) {
-          if (randomVal < 0.7) {
-            row.push(1);
-          } else {
-            row.push(0);
+            if (randomVal < 0.5) {
+              row.push(1);
+            } else {
+              row.push(0);
+            }
           }
         } else {
-          if (randomVal < 0.5) {
+          if (randomVal < predefinedRandom / 100) {
             row.push(1);
           } else {
             row.push(0);

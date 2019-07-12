@@ -39,6 +39,8 @@ export class LeaderboardsComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 25];
   username = '';
 
+  userPuzzlerIcon: number;
+
   private _gameID: number;
 
   get gameID(): number {
@@ -83,7 +85,13 @@ export class LeaderboardsComponent implements OnInit {
     private tunnel: TunnelService,
     private user: UserService,
     private titleService: Title
-  ) { }
+  ) { 
+    user.accountData.subscribe(accountData => {
+      if (accountData) {
+        this.userPuzzlerIcon = accountData.puzzlerIcon;
+      }
+    });
+  }
 
   updateTitle() {
     this.titleService.setTitle(this.getGameName(this.gameID) + ' Leaderboards - Puzzle Hub');
@@ -107,6 +115,41 @@ export class LeaderboardsComponent implements OnInit {
     }
 
     return '';
+  }
+
+  getLongestLength() {
+    let toReturn = 0;
+    for (let i = 0 ; i < this.leaderboardData.length ; i++) {
+      if (this.leaderboardData[i]) {
+        if (this.leaderboardData[i].length > toReturn) {
+          if (this.footerData[i] != null && this.footerData[i].length > 0) {
+            toReturn = this.leaderboardData[i].length;
+          } else {
+            toReturn = this.leaderboardData[i].length - 1;
+          }
+        }
+      }
+    }
+
+    return toReturn;
+  }
+
+  getLeftoverBlankRows(diff) {
+    if (this.leaderboardData[diff]) {
+      const maxLen = this.getLongestLength();
+      if (this.leaderboardData[diff].length >= maxLen) {
+        return [];
+      } else {
+        let toReturn = [];
+        for (let i = 0 ; i < maxLen - this.leaderboardData[diff].length ; i++) {
+          toReturn.push(1);
+        }
+
+        return toReturn;
+      }
+    }
+
+    return [];
   }
 
   ngOnInit() {

@@ -78,7 +78,9 @@
                   <td>
                       <app-puzzler-icon
                         class="leaderboard-puzzler-icon"
-                        [puzzlerIconID]="row.puzzlerIcon"
+                        [puzzlerIconID]="
+                         row.username != username ? row.puzzlerIcon : userPuzzlerIcon
+                        "
                       >
                       </app-puzzler-icon>
                   </td>
@@ -96,18 +98,37 @@
                   <td>{{row.time}}</td>
                 </tr>
               </ng-container>
+
+              <ng-container *ngFor="let i of getLeftoverBlankRows(diff.diff)">
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </ng-container>
             </tbody>
             <tfoot *ngIf="footerData[diff.diff] != null && footerData[diff.diff].length > 0">
               <tr>
                 <td>You</td>
                 <td>
-                  <!--<app-puzzler-icon-->
-                    <!--class="leaderboard-puzzler-icon"-->
-                    <!--[puzzlerIconID]="footerData[diff.diff][0].puzzlerIcon"-->
-                  <!-->-->
-                  <!--</app-puzzler-icon>-->
+                  <app-puzzler-icon
+                    class="leaderboard-puzzler-icon"
+                    [puzzlerIconID]="userPuzzlerIcon"
+                  >
+                  </app-puzzler-icon>
                 </td>
-                <td>{{footerData[diff.diff][0].username}}</td>
+                <td>
+                  <a [routerLink]="['/profile']"
+                     [queryParams]="{user: footerData[diff.diff][0].username}"
+                     routerLinkActive="active"
+                     class="leaderboard-profile-link">
+                    {{footerData[diff.diff][0].username}}
+                  </a>
+                </td>
                 <td>{{footerData[diff.diff][0].goldMedals}}</td>
                 <td>{{footerData[diff.diff][0].silverMedals}}</td>
                 <td>{{footerData[diff.diff][0].bronzeMedals}}</td>

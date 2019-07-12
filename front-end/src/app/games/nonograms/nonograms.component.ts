@@ -93,7 +93,11 @@ export class NonogramsComponent extends GameBoard {
       }
     }
 
-    this.board = new Board(width, height, 0);
+    let predefinedRandom = 0;
+    if (this.route.snapshot.paramMap.get('nonogramsCustom')) {
+      predefinedRandom = Number(this.route.snapshot.paramMap.get('nonogramsCustom'));
+    }
+    this.board = new Board(width, height, 0, predefinedRandom);
   }
 
   draw() {
