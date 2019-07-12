@@ -10,6 +10,7 @@ import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { Title } from '@angular/platform-browser';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-leaderboards',
@@ -248,6 +249,10 @@ export class LeaderboardsComponent implements OnInit {
     this.leaderboardData = [];
     this.leaderboardEntries = [];
     this.leaderboardCurrentPage = [];
+    this.footerData = [];
+
+    let httpRequests = [];
+
     for (const diff of this.getGameDiffs(this.gameID)) {
       const m = {
         'Position': 0,
@@ -256,26 +261,6 @@ export class LeaderboardsComponent implements OnInit {
         'Difficulty': diff['diff'],
         'Leaderboard': this.leaderboard
       };
-      this.leaderboardCurrentPage[diff['diff']] = 1;
-
-      this.tunnel.getLeaderboards(m).subscribe( (data: any) => {
-        for (let i = 0; i < data.length; i++) {
-          (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
-        }
-
-        this.leaderboardData[diff['diff']] = data;
-      }).add(() => { this.loader.stopLoadingAnimation(); });
-      // .add() runs when subscribe has finished
-
-      this.tunnel.getNumEntries(m).subscribe( (data: any) => {
-        try {
-          if (data.NumEntries > 0) {
-            this.leaderboardEntries[diff['diff']] = data.NumEntries;
-            this.leaderboardPages[diff['diff']] = Math.ceil(data.NumEntries / this.pageSize);
-            this.fillPageGroup(diff['diff'], 1);
-          }
-        } catch { /* This try/catch is might be pointless */ }
-      });
 
       const m2 = {
         'GameID': this.gameID,
@@ -283,15 +268,49 @@ export class LeaderboardsComponent implements OnInit {
         'Leaderboard': this.leaderboard
       };
 
-      this.tunnel.getFooter(m2).subscribe( (data: any) => {
-        try {
-          if (data[0]) {
-            (data[0])['time'] = SharedFunctionsService.convertToDateString((data[0])['time']);
-          }
-        } catch { }
-        this.footerData[diff['diff']] = data;
-      });
+      this.leaderboardCurrentPage[diff['diff']] = 1;
+      httpRequests.push(this.tunnel.getLeaderboards(m));
+      httpRequests.push(this.tunnel.getNumEntries(m));
+      httpRequests.push(this.tunnel.getFooter(m2));
     }
+
+    forkJoin(httpRequests)
+      .subscribe(responses => {
+        for (var count = 0 ; count < responses.length ; count++) {
+          let data = responses[count];
+
+          if ( count % 3 === 0 ) {
+            // get leaderboards
+            const diff = this.getGameDiffs(this.gameID)[count/3];
+            for (let i = 0; i < data.length; i++) {
+              (data[i])['time'] = SharedFunctionsService.convertToDateString((data[i])['time']);
+            }
+
+            this.leaderboardData[diff['diff']] = data;
+          } else if ( count % 3 === 1 ) {
+            // get num entries
+            const diff = this.getGameDiffs(this.gameID)[(count - 1)/3];
+            try {
+              if (data.NumEntries > 0) {
+                this.leaderboardEntries[diff['diff']] = data.NumEntries;
+                this.leaderboardPages[diff['diff']] = Math.ceil(data.NumEntries / this.pageSize);
+                this.fillPageGroup(diff['diff'], 1);
+              }
+            } catch (e) { /* This try/catch is might be pointless */ }
+          } else if ( count % 3 === 2) {
+            // get footer
+            const diff = this.getGameDiffs(this.gameID)[(count - 2)/3];
+            try {
+              if (data[0]) {
+                (data[0])['time'] = SharedFunctionsService.convertToDateString((data[0])['time']);
+              }
+            } catch { }
+            this.footerData[diff['diff']] = data;
+          }
+        } 
+
+        this.loader.stopLoadingAnimation();
+      })
   }
 
   fillPageGroup(diff: any, seed: number) {

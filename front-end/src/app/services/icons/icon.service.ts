@@ -46,10 +46,6 @@ export class IconService {
       #header-progress .mat-progress-bar-buffer {
         background-color: ${this.iconColors[iconNum][1]} !important;
       }
-
-      #header-icon .puzzle-image {
-        box-shadow: 0px 0px 10px ${this.iconColors[iconNum][0]} !important;
-      }
     `;
 
     this.styleElement.innerHTML = '';
