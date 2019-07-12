@@ -186,15 +186,15 @@ export class Board {
       for(var j = 0 ; j < this.height ; j++) {
         const randomVal = this.random();
 
-        if (predefinedRandom == 0) {
+        if (true) {
           if (this.width === 20) {
-            if (randomVal < 0.8) {
+            if (randomVal < 0.72) {
               row.push(1);
             } else {
               row.push(0);
             }
           } else if(this.width === 15) {
-            if (randomVal < 0.7) {
+            if (randomVal < 0.60) {
               row.push(1);
             } else {
               row.push(0);
