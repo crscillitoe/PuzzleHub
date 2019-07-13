@@ -54,6 +54,11 @@ def register_user():
     except:
         return jsonify({"success":False,"message":"Failed to retrieve reCAPTCHA token, please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
 
+    try:
+        refer = post_data["Refer"]
+    except:
+        refer = ''
+
     captcha_model = {
         "secret":"6Ldx55wUAAAAAMQyfKUezVAoZM7MpPq3UReBo4qp",
         "response":str(token)
@@ -126,14 +131,15 @@ def register_user():
 
     #add to table
     sql_query = '''
-        INSERT INTO users (Username, Email, Password)
-        VALUES (%(username)s, %(email)s, %(password)s)
+        INSERT INTO users (Username, Email, Password, Refer)
+        VALUES (%(username)s, %(email)s, %(password)s, %(refer)s)
     '''
 
     user_entry = {
         "username":str(username),
         "email":str(email_address),
         "password":str(password_hash),
+        "refer":str(refer)
     }
 
     cursor.execute(sql_query, user_entry)

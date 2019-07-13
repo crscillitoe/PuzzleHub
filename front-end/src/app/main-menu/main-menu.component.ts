@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TimerService } from '../services/timer/timer.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { LoaderService } from '../services/loading-service/loader.service';
+import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user/user.service';
 import { Router } from '@angular/router';
 import { GameListAllService } from '../services/games/game-list-all.service';
@@ -24,12 +25,18 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     private timerService: TimerService,
     private tunnelService: TunnelService,
     private router: Router,
+    private route: ActivatedRoute,
     private user: UserService,
     private loader: LoaderService,
     private titleService: Title
   ) { }
 
   ngOnInit() {
+    const index = window.location.href.indexOf('?refer=');
+    if (index !== -1) {
+      document.cookie = 'Referral=' + window.location.href.substr(index) + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+    }
+
     this.titleService.setTitle('Puzzle Hub');
 
     this.subscription = this.user.accountData
