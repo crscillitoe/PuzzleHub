@@ -78,6 +78,8 @@ export class Board {
     }
   }
 
+  clearBoard() { /* This isn't really needed by tile game lol */}
+
   convertXYToVal(x, y) {
     return (y * this.width) + (x + 1);
   }

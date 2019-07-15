@@ -78,21 +78,6 @@ export class GameListAllService extends GameList {
         'the correct order.',
         'Order the numbers in sequential order from left to right, top to bottom',
         'Arrow Keys or WASD',
-      ),
-      new Game(
-        GameID.MINESWEEPER,
-        'Minesweeper',
-        'minesweeper',
-        'minesweeper.svg',
-        'Minesweeper is a single-player puzzle video game. The objective of the game is to ' +
-        'clear a rectangular board containing hidden mines.',
-        'The objective of the game is to clear a rectangular board containing hidden mines ' +
-        'without detonating any of them. Left-clicking a tile will reveal a number or a mine. ' +
-        'If a mine is revealed it will detonate. If a number is revealed, that number ' +
-        'represents the number of mines in the tiles adjacent to that number (diagonals are ' +
-        'adjacent). Right-clicking a tile will flag it as a mine. You win when all non-mines ' +
-        'are revealed.',
-        'Left-click to reveal a tile, right-click to flag a tile as a mine.'
       )
     ];
 

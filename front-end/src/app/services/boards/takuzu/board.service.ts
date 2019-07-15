@@ -22,6 +22,10 @@ export class Board
   /*                  BOARD GENERATION                      */
   /* ------------------------------------------------------ */
 
+  clearBoard() {
+    this.takuzuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
+  }
+
   generateBoard()
   {
     var board = [];

@@ -11,6 +11,10 @@ export class Board {
     this.numCarved = numCarved;
   }
 
+  clearBoard() {
+    this.sudokuPuzzle = JSON.parse(JSON.stringify(this.originalPuzzle));
+  }
+
   generateBoard() { 
     var grid = SudokuSolver.generate();
     var grid2 = SudokuSolver.carve(grid, this.numCarved);

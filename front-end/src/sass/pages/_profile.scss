@@ -79,6 +79,11 @@
   background-color: $diff-color-hard;
 }
 
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
 .extreme {
   background-color: $diff-color-extreme;
 }

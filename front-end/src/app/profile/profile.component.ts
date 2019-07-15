@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
+import { Router } from '@angular/router';
 import { GameDataService } from '../services/games/game-data.service';
 import { UserService } from '../services/user/user.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { Title } from '@angular/platform-browser';
 import { IconService } from '../services/icons/icon.service';
+import { pipe, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -14,6 +17,8 @@ import { IconService } from '../services/icons/icon.service';
 })
 export class ProfileComponent implements OnInit {
 
+  searchUsername: string = '';
+  profileFound: boolean;
   username: string;
   profileData: any;
   games: any = GameDataService.games;
@@ -37,6 +42,7 @@ export class ProfileComponent implements OnInit {
   medalPath = '/assets/images/medals/';
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private tunnel: TunnelService,
     private user: UserService,
@@ -59,6 +65,14 @@ export class ProfileComponent implements OnInit {
     return Math.floor((this.currVal / this.maxVal) * 100);
   }
 
+  searchUser(username: string = this.searchUsername) {
+    const m = {
+      user: username
+    };
+
+    this.router.navigate(['profile'], {queryParams: m});
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
@@ -69,19 +83,30 @@ export class ProfileComponent implements OnInit {
       };
 
       this.tunnel.getProfileData(m)
+        .pipe(
+          catchError(err => of(1))
+        )
         .subscribe( (data: any) => {
-          for (let i = 0 ; i < data.MatchHistory.length ; i++) {
-            (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
+          try {
+            this.profileFound = data.length !== 0;
+          } catch (e) {
+            this.profileFound = true;
           }
 
-          this.profileData = data;
+          if (this.profileFound) {
+            for (let i = 0 ; i < data.MatchHistory.length ; i++) {
+              (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
+            }
 
-          this.puzzlerIconID = data.PuzzlerIcon;
-          IconService.configureProfileBarColors(data.PuzzlerIcon);
-          this.level = this.getLevel(this.profileData.XP);
-          this.currVal = this.xpToNextLevel();
-          this.maxVal = this.nextLevelThreshold();
-          this.progress = this.getProgress();
+            this.profileData = data;
+
+            this.puzzlerIconID = data.PuzzlerIcon;
+            IconService.configureProfileBarColors(data.PuzzlerIcon);
+            this.level = this.getLevel(this.profileData.XP);
+            this.currVal = this.xpToNextLevel();
+            this.maxVal = this.nextLevelThreshold();
+            this.progress = this.getProgress();
+          }
         });
     });
   }
@@ -131,6 +156,15 @@ export class ProfileComponent implements OnInit {
         return 'Hard';
       case 4:
         return 'Extreme';
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  keyPressed(keyEvent) {
+    if (keyEvent.keyCode === 13 && this.searchUsername !== '') {
+      this.searchUser(this.searchUsername.trim());
+      this.searchUsername = '';
+      document.getElementById("findAccount").blur();
     }
   }
 }

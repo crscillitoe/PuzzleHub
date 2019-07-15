@@ -248,5 +248,14 @@
     <br>
     <span class="buttonSubtext clickable">spacebar</span>
   </button>
+  <button *ngIf="playingQueue()"
+        mat-raised-button
+        color="primary"
+        class="game-button"
+        (click)="callback('this.clearBoard()')">
+    <b class="clickable">CLEAR BOARD</b>
+    <br>
+    <span class="buttonSubtext clickable">spacebar</span>
+  </button>
 </div>
 <button id="focusMe" style="background-color:#2c2c2c;border:none"></button>

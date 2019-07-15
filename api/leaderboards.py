@@ -177,7 +177,11 @@ def get_profile_data():
 
     cursor.execute(sql_query, query_model)
     data = cursor.fetchall()
-    d = data[0]
+
+    try:
+        d = data[0]
+    except:
+        return jsonify([])
 
     cursor.close()
 

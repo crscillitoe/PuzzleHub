@@ -15,6 +15,12 @@ export class Board {
     this.seed = seed;
   }
 
+  clearBoard() {
+    for (let thermometer of this.thermometers) {
+      thermometer.filledAmount = 0;
+    }
+  }
+
   generateBoard() {
     this.thermometers = [];
     this.bottomLegends = [];

@@ -1,6 +1,9 @@
 <div class="icon-container">
   <ng-container *ngFor="let icon of iconPaths">
-    <img class="clickable puzzle-icon" (click)="selectIcon(icon.iconNumber)"
-      src="{{icon.path}}">
+    <app-puzzler-icon
+      [puzzlerIconID]="icon.iconNumber"
+      (click)="selectIcon(icon.iconNumber)"
+      class="clickable puzzle-icon">
+    </app-puzzler-icon>
   </ng-container>
 </div>

@@ -288,6 +288,7 @@ export class NonogramsComponent extends GameBoard {
         this.checkIsSolved(this.board);
       } else if (mouseEvent.button === 2) {
         this.board.mark(x - diff, y - diff);
+        this.checkIsSolved(this.board);
       }
 
       this.addingMode = (this.board.isLabeled(x - diff, y - diff));

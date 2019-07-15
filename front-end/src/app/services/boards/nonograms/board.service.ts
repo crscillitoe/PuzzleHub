@@ -22,6 +22,22 @@ export class Board {
     this.predefinedRandom = predefinedRandom;
   }
 
+  clearBoard() {
+    this.boardVals = [];
+    this.markedVals = [];
+    for(var i = 0 ; i < this.width ; i++) {
+      var toAdd = [];
+      var toAdd2 = [];
+      for(var j = 0 ; j < this.height ; j++) {
+        toAdd.push(0);
+        toAdd2.push(0);
+      }
+
+      this.markedVals.push(toAdd2);
+      this.boardVals.push(toAdd);
+    }
+  }
+
   getLegendLength() {
     return this.maxWidth - this.width;
   }

@@ -107,6 +107,11 @@ export class GameStarterService {
     that.solved = true;
   }
 
+  static clearBoard(that) {
+    that.board.clearBoard();
+    that.draw();
+  }
+
   static loadGame(that, seed) {
     that.seed = seed;
 

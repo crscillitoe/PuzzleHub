@@ -26,6 +26,14 @@ export class Board {
       this.nodes = new Array<MyNode>();
     }
 
+    clearBoard() {
+      for (let n of this.getNodes()) {
+        for (let b of n.bridges) {
+            b.num = 0;
+        }
+      }
+    }
+
     isSolved() {
       for(let n of this.getNodes()) {
         let total = 0;
