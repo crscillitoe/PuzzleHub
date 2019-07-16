@@ -5,5 +5,7 @@ front-end/node_modules
 api/tests
 env/
 api/api/config.json
+api/__pycache__
 aws
 *.ignore
+.vscode/settings.json
