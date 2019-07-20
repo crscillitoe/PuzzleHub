@@ -16,6 +16,8 @@ export class UserService {
   private _level = 0;
   public user: string;
 
+  private previousXP: number = -1;
+
   private _accountData: BehaviorSubject<AccountData> = new BehaviorSubject<AccountData>(null);
   public accountData = this._accountData.asObservable();
 
@@ -27,6 +29,14 @@ export class UserService {
     if (this.isLoggedIn()) {
       this.tunnelService.getUserData()
         .subscribe((data: AccountData) => {
+          if (this.previousXP === -1) {
+            this.previousXP = data.xp;
+            data.xpGain = 0;
+          } else {
+            data.xpGain = data.xp - this.previousXP;
+            this.previousXP = data.xp;
+          }
+
           data.level = this.calculateLevelFromXp(data.xp);
           data.xpToNextLevel = data.xp % this.xpPerLevel;
 
@@ -85,6 +95,7 @@ export class AccountData {
   public role: string;
   public username: string;
   public xp: number;
+  public xpGain: number;
   public level: number;
   public xpToNextLevel: number;
 }

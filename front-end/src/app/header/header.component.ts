@@ -9,6 +9,7 @@ import { PuzzleRelayPopupComponent } from '../puzzle-relay-popup/puzzle-relay-po
 import { DailyChallengesComponent } from '../daily-challenges/daily-challenges.component';
 import { ProfileIconPickerComponent } from '../profile-icon-picker/profile-icon-picker.component';
 import { IconService } from '../services/icons/icon.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-header',
@@ -33,6 +34,7 @@ export class HeaderComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private tunnelService: TunnelService,
     private loader: LoaderService,
+    private snackBar: MatSnackBar,
     private user: UserService,
     public dialog: MatDialog
   ) {
@@ -44,6 +46,12 @@ export class HeaderComponent implements OnInit {
         this.puzzlerIconID = data.puzzlerIcon;
         IconService.configureHeaderBarColors(data.puzzlerIcon);
         this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
+
+        if (data.xpGain > 0) {
+          this.snackBar.open('+' + data.xpGain + ' XP', 'Close', {
+            duration: 4000
+          });
+        }
       } else {
         this.username = '';
       }

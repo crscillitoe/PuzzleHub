@@ -203,7 +203,13 @@ export class Board {
         const randomVal = this.random();
 
         if (true) {
-          if (this.width === 20) {
+          if (this.width === 30) {
+            if (randomVal < 0.72) {
+              row.push(1);
+            } else {
+              row.push(0);
+            }
+          } else if (this.width === 20) {
             if (randomVal < 0.72) {
               row.push(1);
             } else {
