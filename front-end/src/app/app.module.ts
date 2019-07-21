@@ -67,10 +67,6 @@ const appRoutes: Routes = [
         component: TakuzuComponent
   },
   {
-    path: 'Minesweeper',
-        component: MinesweeperComponent
-  },
-  {
     path: 'Tile Game',
         component: TileGameComponent
   },
