@@ -36,7 +36,8 @@ export class HeaderComponent implements OnInit {
     private loader: LoaderService,
     private snackBar: MatSnackBar,
     private user: UserService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private iconService: IconService
   ) {
     user.accountData.subscribe(data => {
       if (data) {
@@ -44,7 +45,9 @@ export class HeaderComponent implements OnInit {
         this.level = data.level;
         this.xpToNextLevel = data.xpToNextLevel;
         this.puzzlerIconID = data.puzzlerIcon;
-        IconService.configureHeaderBarColors(data.puzzlerIcon);
+
+        iconService.configureHeaderBarColors(data.puzzlerIcon);
+
         this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
 
         if (data.xpGain > 0) {

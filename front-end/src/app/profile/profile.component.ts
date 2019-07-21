@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { PLATFORM_ID, Inject, Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { Title } from '@angular/platform-browser';
 import { IconService } from '../services/icons/icon.service';
 import { pipe, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -42,11 +43,13 @@ export class ProfileComponent implements OnInit {
   medalPath = '/assets/images/medals/';
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
     private route: ActivatedRoute,
     private tunnel: TunnelService,
     private user: UserService,
-    private titleService: Title
+    private titleService: Title,
+    private iconService: IconService
   ) { }
 
   getLevel(xp) {
@@ -101,7 +104,9 @@ export class ProfileComponent implements OnInit {
             this.profileData = data;
 
             this.puzzlerIconID = data.PuzzlerIcon;
-            IconService.configureProfileBarColors(data.PuzzlerIcon);
+
+            this.iconService.configureProfileBarColors(data.PuzzlerIcon);
+
             this.level = this.getLevel(this.profileData.XP);
             this.currVal = this.xpToNextLevel();
             this.maxVal = this.nextLevelThreshold();

@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject, Component, OnInit, HostListener } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IconService {
-  private static iconColors = [
+  private iconColors = [
     ['#f24b3e', '#fbc9c5'],
     ['#ffba53', '#ffe3b9'],
     ['#4bb5ac', '#b6e0dd'],
@@ -15,10 +16,17 @@ export class IconService {
     ['#4ab93b', '#bee8b7']
   ];
 
-  private static styleElement = document.createElement('style');
-  private static profileStyleElement = document.createElement('style');
+  private styleElement: HTMLStyleElement = null;
+  private profileStyleElement: HTMLStyleElement = null;
 
-  public static configureProfileBarColors(iconNum: number) {
+  /**
+   * Updates the selected profile level up bar color based on the color of the profile icon
+   * @param iconNum The icon number to grab the main color from
+   */
+  public configureProfileBarColors(iconNum: number) {
+    // This is because SSR can't access the document object
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const head = document.getElementsByTagName('head')[0];
     const css = `
       #profile-progress .mat-progress-bar-fill::after {
@@ -36,7 +44,14 @@ export class IconService {
     head.appendChild(this.profileStyleElement);
   }
 
-  public static configureHeaderBarColors(iconNum: number) {
+  /**
+   * Updates the header level up bar color based on the color of the profile icon
+   * @param iconNum The icon number to grab the main color from
+   */
+  public configureHeaderBarColors(iconNum: number) {
+    // This is because SSR can't access the document object
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const head = document.getElementsByTagName('head')[0];
     const css = `
       #header-progress .mat-progress-bar-fill::after {
@@ -54,5 +69,12 @@ export class IconService {
     head.appendChild(this.styleElement);
   }
 
-  constructor() { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { 
+    if (isPlatformBrowser(this.platformId)) {
+      this.styleElement = document.createElement('style');
+      this.profileStyleElement = document.createElement('style');
+    }
+  }
 }
