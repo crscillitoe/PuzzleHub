@@ -52,7 +52,7 @@ def register_user():
     try:
         token = post_data["Token"]
     except:
-        return jsonify({"success":False,"message":"Failed to retrieve reCAPTCHA token, please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
+        return jsonify({"success":False,"message":"Failed to retrieve reCAPTCHA token, please refresh and try again. If this issue persists, please email support@puzzlehub.io"})
 
     try:
         refer = post_data["Refer"]
@@ -67,7 +67,7 @@ def register_user():
     r = requests.post('https://www.google.com/recaptcha/api/siteverify', captcha_model)
     json_response = r.json()
     if not json_response["success"]:
-        return jsonify({"success":False,"message":"reCAPTCHA verification failed. Please refresh and try again. If this issue persists, please email support@puzzle-hub.com"})
+        return jsonify({"success":False,"message":"reCAPTCHA verification failed. Please refresh and try again. If this issue persists, please email support@puzzlehub.io"})
 
    
     # check that the username meets our guidelines 
@@ -191,7 +191,7 @@ def register_user():
 
     SUBJECT = "Puzzle Hub Email Verification"
     BODY_TEXT = '''
-        Thank you for registering for an account on puzzle-hub.com! 
+        Thank you for registering for an account on puzzlehub.io! 
         Please click the following link to verify your account
         \n\n
         ''' + validation_url
@@ -348,9 +348,9 @@ def request_password_reset():
         cursor.execute(sql_query, reset_entry)
         db.commit()
 
-    reset_url = "https://puzzle-hub.com/ResetPassword;code="+str(reset_id)
+    reset_url = "https://puzzlehub.io/ResetPassword;code="+str(reset_id)
 
-    SENDER = "noreply@puzzle-hub.com"
+    SENDER = "noreply@puzzlehub.io"
     SENDERNAME = "No Reply"
     RECIPIENT = str(email_address)
 
@@ -363,7 +363,7 @@ def request_password_reset():
     SUBJECT = "Reset Your Puzzle Hub Password"
     BODY_TEXT = '''
         Someone has requested a password reset for your account
-        on puzzle-hub. If this was you, you can set a new password here:
+        on Puzzle Hub. If this was you, you can set a new password here:
         \n\n
         ''' + reset_url + '''\n\n
         If you don't want to change your password or didn't request this,
@@ -859,7 +859,7 @@ def check_blacklisted_email(email):
 
 #sends a validation email to validate a new account
 def send_validation_email(vid_url, email):
-    sender_email = 'noreply@puzzle-hub.com'
+    sender_email = 'noreply@puzzlehub.io'
     msg = MIMEText("Please click on the link to verify:\n" + str(vid_url))
     msg['Subject'] = 'PuzzleHub Validation Email'
     msg['From'] = sender_email
