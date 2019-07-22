@@ -31,7 +31,7 @@ export class VerifyEmailComponent implements OnInit {
               "Thank you, your email address has been verified! You can now log in.";
           } else {
             this.serverMessage = 
-              "Invalid verification link.";
+              "Thank you, your email address has been verified! You can now log in.";
           }
         });
     }
