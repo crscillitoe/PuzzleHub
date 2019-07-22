@@ -4,37 +4,37 @@
   -->
   <url>
     <loc>https://puzzlehub.io/</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>1.00</priority>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://puzzlehub.io/games/Hashi</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>0.90</priority>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://puzzlehub.io/games/Sudoku</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>0.90</priority>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://puzzlehub.io/games/Tile%20Game</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>0.90</priority>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://puzzlehub.io/games/Thermometers</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>0.90</priority>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://puzzlehub.io/games/Nonograms</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>0.90</priority>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://puzzlehub.io/games/Takuzu</loc>
-    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
     <priority>0.90</priority>
+    <changefreq>daily</changefreq>
   </url>
 </urlset>
