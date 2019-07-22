@@ -176,10 +176,10 @@ def register_user():
     cursor.execute(sql_query, validation_entry)
     db.commit()
  
-    validation_url = "https://puzzle-hub.com/EmailVerify;code="+str(validation_id)
+    validation_url = "https://puzzlehub.io/EmailVerify;code="+str(validation_id)
 
     # Send validation url
-    SENDER = "noreply@puzzle-hub.com"
+    SENDER = "noreply@puzzlehub.io"
     SENDERNAME = "No Reply"
     RECIPIENT = str(email_address)
 
