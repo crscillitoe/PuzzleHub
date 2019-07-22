@@ -51,7 +51,36 @@ export class TunnelService {
   }
 
   getProfileData(model: {Username: string}) {
-    return this.http.post(this.ipAddress + '/getProfileData', model);
+    return this.http.post<{
+      DailyBronzeMedals: number,
+      DailyGoldMedals: number,
+      DailySilverMedals: number,
+      EasyDailies: number,
+      ExtremeDailies: number,
+      GamesPlayed: {
+        Difficulty: number,
+        GameID: number,
+        GamesPlayed: number
+      }[],
+      HardDailies: number,
+      MatchHistory: {
+        Difficulty: number,
+        GameID: number,
+        Seed: number,
+        TimeCompleted: string,
+        TimeElapsed: any
+      }[],
+      MediumDailies: number,
+      MonthlyBronzeMedals: number,
+      MonthlyGoldMedals: number,
+      MonthlySilverMedals: number,
+      PuzzlerIcon: number,
+      Role: string,
+      WeeklyBronzeMedals: number,
+      WeeklyGoldMedals: number,
+      WeeklySilverMedals: number,
+      XP: number
+    }>(this.ipAddress + '/getProfileData', model);
   }
 
   getUsername() {

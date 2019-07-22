@@ -263,6 +263,18 @@ def stop_timer():
     db.commit()
     cursor.close()
 
+    cursor = db.cursor()
+    sql_query = '''
+        INSERT INTO puzzleDatabase.gamesPlayed
+        (UserID, GameID, Difficulty, GamesPlayed) VALUES
+        (%(user_id)s, %(game_id)s, %(difficulty)s, 1)
+        ON DUPLICATE KEY UPDATE
+        GamesPlayed = GamesPlayed + 1
+    '''
+    cursor.execute(sql_query, query_model)
+    db.commit()
+    cursor.close()
+
     seconds_elapsed = math.ceil(time_elapsed.total_seconds())
     xp_gain = calculate_xp_gain(difficulty, seconds_elapsed)
 

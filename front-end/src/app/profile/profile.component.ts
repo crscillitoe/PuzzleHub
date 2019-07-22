@@ -86,19 +86,16 @@ export class ProfileComponent implements OnInit {
       };
 
       this.tunnel.getProfileData(m)
-        .pipe(
-          catchError(err => of(1))
-        )
-        .subscribe( (data: any) => {
+        .subscribe(data => {
           try {
-            this.profileFound = data.length !== 0;
+            this.profileFound = (<any>data).length !== 0;
           } catch (e) {
             this.profileFound = true;
           }
 
           if (this.profileFound) {
             for (let i = 0 ; i < data.MatchHistory.length ; i++) {
-              (data.MatchHistory[i])['TimeElapsed'] = SharedFunctionsService.convertToDateString((data.MatchHistory[i])['TimeElapsed']);
+              (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
             }
 
             this.profileData = data;

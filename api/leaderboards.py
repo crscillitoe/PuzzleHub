@@ -199,6 +199,28 @@ def get_profile_data():
     data = cursor.fetchall()
     ad = data[0]
 
+    cursor.close()
+
+    cursor = db.cursor()
+    sql_query = '''
+    SELECT GP.GameID, GP.Difficulty, GP.GamesPlayed
+        FROM gamesPlayed AS GP
+        INNER JOIN users AS U
+            ON U.UserID = GP.UserID
+        WHERE U.Username = %(username)s
+    '''
+
+    cursor.execute(sql_query, query_model)
+    data = cursor.fetchall()
+    games_played = []
+    for entry in data:
+        to_append = {
+            "GameID":entry[0],
+            "Difficulty":entry[1],
+            "GamesPlayed":entry[2]
+        }
+        games_played.append(to_append)
+
     to_return = {
         "DailyGoldMedals":d[6],
         "DailySilverMedals":d[3],
@@ -216,7 +238,8 @@ def get_profile_data():
         "MediumDailies":ad[4],
         "HardDailies":ad[5],
         "ExtremeDailies":ad[6],
-        "MatchHistory":match_history
+        "MatchHistory":match_history,
+        "GamesPlayed":games_played
     }
 
     return jsonify(to_return)
