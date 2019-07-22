@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TunnelService {
-  private ipAddress = 'https://puzzle-hub.com/api';
+  private ipAddress = 'https://puzzlehub.io/api';
 
   constructor(private http: HttpClient) { }
 

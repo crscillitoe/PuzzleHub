@@ -186,7 +186,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   generatePuzzleLink() {
-    const link = 'https://puzzle-hub.com/' +
+    const link = 'https://puzzlehub.io/' +
       this.game.name + ';diff=' +
       this.difficulty + ';seed=' +
       this.seed;
