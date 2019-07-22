@@ -1,0 +1,40 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!--
+  created with Free Online Sitemap Generator www.xml-sitemaps.com
+  -->
+  <url>
+    <loc>https://puzzlehub.io/</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://puzzlehub.io/games/Hashi</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://puzzlehub.io/games/Sudoku</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://puzzlehub.io/games/Tile%20Game</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://puzzlehub.io/games/Thermometers</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://puzzlehub.io/games/Nonograms</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://puzzlehub.io/games/Takuzu</loc>
+    <lastmod>2019-04-15T04:20:57+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+</urlset>
