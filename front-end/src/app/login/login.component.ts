@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, Component, OnInit, Directive, Output, EventEmitter, HostListener } from '@angular/core';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { UserService } from '../services/user/user.service';
@@ -14,6 +14,8 @@ declare const grecaptcha: any;
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  public capsLock: boolean;
+
   public username: string;
   public password: string;
 
@@ -41,7 +43,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private user: UserService,
     private titleService: Title
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     grecaptcha.ready(() => {
@@ -65,6 +68,11 @@ export class LoginComponent implements OnInit {
   canRegister() {
     if (this.registerUsername === '') {
       this.errorMessage = 'Please enter a username';
+      return false;
+    }
+
+    if (!/^[a-z0-9]+$/i.test(this.registerUsername)) {
+      this.errorMessage = 'Username cannot contain non alpha-numeric characters';
       return false;
     }
 
@@ -191,5 +199,16 @@ export class LoginComponent implements OnInit {
 
           });
     }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    const capsOn = event.getModifierState && event.getModifierState('CapsLock');
+    this.capsLock = capsOn;
+  }
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
+    const capsOn = event.getModifierState && event.getModifierState('CapsLock');
+    this.capsLock = capsOn;
   }
 }

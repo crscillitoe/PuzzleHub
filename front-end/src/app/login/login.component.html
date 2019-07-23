@@ -13,6 +13,11 @@
               autocomplete="username"
               [(ngModel)]="username">
             </mat-form-field>
+            <label
+            style="color:red;font-size:13px;"
+            *ngIf="capsLock">
+              * Warning - Caps Lock is enabled.
+            </label>
             <mat-form-field>
               <input matInput
               type="password"
@@ -69,6 +74,11 @@
               value="" size="20"
               placeholder="Confirm Email">
             </mat-form-field>
+            <label
+            style="color:red;font-size:13px;"
+            *ngIf="capsLock">
+              * Warning - Caps Lock is enabled.
+            </label>
             <mat-form-field>
               <input matInput
               type="password"

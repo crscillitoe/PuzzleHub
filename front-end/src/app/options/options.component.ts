@@ -258,6 +258,15 @@ export class OptionsComponent implements OnInit, OnDestroy {
     return toReturn;
   }
 
+  getRelayAverage() {
+    let total = 0;
+    for (let i = 0 ; i < RelayTrackerService.queueTimes.length ; i++) {
+      total += RelayTrackerService.queueTimes[i];
+    }
+
+    return SharedFunctionsService.convertToDateString(total/RelayTrackerService.queueTimes.length);
+  }
+
   isRelayHistory() {
     return RelayTrackerService.queueTimes.length > 0;
   }

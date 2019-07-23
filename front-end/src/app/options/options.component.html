@@ -18,6 +18,15 @@
          class="monospace time">{{getRelayTime()}}</a>
   </div>
 
+  <div class="descriptionBlock" *ngIf="playingQueue()">
+      <b>
+        RELAY AVERAGE
+      </b>
+  
+      <a id="relay-timer"
+         class="monospace time">{{getRelayAverage()}}</a>
+  </div>
+
   
   <div class="descriptionBlock">
     <a class="descriptionHeader clickable"
@@ -38,39 +47,6 @@
        class="monospace time">00:00.000</a>
   </div>
 
-  <ng-container *ngIf="playingQueue()">
-    <div class="descriptionBlock">
-      <a class="descriptionHeader">
-        <b>
-          RELAY HISTORY
-        </b>
-      </a>
-
-      <a class="descriptionText">
-        <ng-container *ngFor="let item of getRelayHistory() ; let i = index">
-          <div class="relay-block">
-            <ng-container *ngIf="item.diff == 1">
-              <a class="easy">Easy</a>
-            </ng-container>
-            <ng-container *ngIf="item.diff == 2">
-              <a class="medium">Medium</a>
-            </ng-container>
-            <ng-container *ngIf="item.diff == 3">
-              <a class="hard">Hard</a>
-            </ng-container>
-            <ng-container *ngIf="item.diff == 4">
-              <a class="extreme">Extreme</a>
-            </ng-container>
-            <ng-container *ngIf="item.diff == 99">
-              <a class="random">Random</a>
-            </ng-container>
-            
-            {{item.name}} <br> {{item.time}}
-          </div>
-        </ng-container>
-      </a>
-    </div>
-  </ng-container>
 
   <ng-container *ngIf="!playingQueue()">
     <div class="descriptionBlock" *ngIf="isLoggedIn()">
@@ -139,6 +115,7 @@
         </h1>
       </ng-container>
     </div>
+  </ng-container>
 
     <div class="descriptionBlock" *ngIf="options != undefined">
       <a class="descriptionHeader clickable"
@@ -184,6 +161,7 @@
       </ng-container>
     </div>
 
+  <ng-container *ngIf="!playingQueue()">
     <div class="descriptionBlock" *ngIf="hotkeys != undefined">
       <a class="descriptionHeader clickable"
         (click)="hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)">
@@ -220,6 +198,40 @@
           </div>
         </ng-container>
       </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="playingQueue()">
+    <div class="descriptionBlock">
+      <a class="descriptionHeader">
+        <b>
+          RELAY HISTORY
+        </b>
+      </a>
+
+      <a class="descriptionText">
+        <ng-container *ngFor="let item of getRelayHistory() ; let i = index">
+          <div class="relay-block">
+            <ng-container *ngIf="item.diff == 1">
+              <a class="easy">Easy</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 2">
+              <a class="medium">Medium</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 3">
+              <a class="hard">Hard</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 4">
+              <a class="extreme">Extreme</a>
+            </ng-container>
+            <ng-container *ngIf="item.diff == 99">
+              <a class="random">Random</a>
+            </ng-container>
+            
+            {{item.name}} <br> {{item.time}}
+          </div>
+        </ng-container>
+      </a>
     </div>
   </ng-container>
 </div>

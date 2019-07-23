@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
@@ -10,6 +10,8 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./forgot-password.component.scss']
 })
 export class ForgotPasswordComponent implements OnInit {
+
+  public capsLock: boolean;
 
   code = '';
 
@@ -71,5 +73,16 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   changePassword() {
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    const capsOn = event.getModifierState && event.getModifierState('CapsLock');
+    this.capsLock = capsOn;
+  }
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
+    const capsOn = event.getModifierState && event.getModifierState('CapsLock');
+    this.capsLock = capsOn;
   }
 }

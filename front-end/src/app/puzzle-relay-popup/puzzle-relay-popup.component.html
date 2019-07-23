@@ -89,7 +89,7 @@
             <a [ngClass]="{'easy': item.difficulty.color=='green', 
                             'medium': item.difficulty.color=='cyan', 
                             'hard': item.difficulty.color=='blue', 
-                            'random': difficulty.color=='purple', 
+                            'random': item.difficulty.color=='purple', 
                             'extreme': item.difficulty.color=='red'}">
               {{item.difficulty.name | titlecase}}
             </a>
