@@ -99,10 +99,7 @@ export class ProfileComponent implements OnInit {
             }
 
             this.profileData = data;
-
             this.puzzlerIconID = data.PuzzlerIcon;
-
-            this.iconService.configureProfileBarColors(data.PuzzlerIcon);
 
             this.level = this.getLevel(this.profileData.XP);
             this.currVal = this.xpToNextLevel();
@@ -111,6 +108,14 @@ export class ProfileComponent implements OnInit {
           }
         });
     });
+  }
+
+  getColor() {
+    return this.iconService.getIconColor(this.puzzlerIconID);
+  }
+
+  getAccentColor() {
+    return this.iconService.getIconAccentColor(this.puzzlerIconID);
   }
 
   convertDate(dateStr) {

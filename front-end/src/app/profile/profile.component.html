@@ -40,12 +40,13 @@
             </ng-container>
           </h2>
           <div>Level {{level}}</div>
-          <mat-progress-bar
-            id="profile-progress"
+          <app-xp-bar
             class="profile-xp-bar"
-            mode="determinate"
-            [value]="progress">
-          </mat-progress-bar>
+            [color]="getColor()"
+            [accentColor]="getAccentColor()"
+            [className]="'profile-xp-bar'"
+            [progress]="progress">
+          </app-xp-bar>
           <span>{{currVal}}/{{maxVal}}</span>
         </div>
       </div><!-- Info -->

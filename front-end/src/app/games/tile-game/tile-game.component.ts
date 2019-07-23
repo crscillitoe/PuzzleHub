@@ -88,34 +88,50 @@ export class TileGameComponent extends GameBoard implements OnInit {
       titleService.setTitle('Play Tile Game - Puzzle Hub');
     }
 
+    const toggleAnimations = () => {
+      this.toggleAnimations();
+    };
+
+    const toggleMouseHover = () => {
+      this.toggleMouseHover();
+    };
+
+    const toggleStaticSizes = () => {
+      this.toggleStaticSizes();
+    };
+
+    const updateColorScheme = () => {
+      this.updateColorScheme();
+    };
+
     this.gameID = GameID.TILE_GAME;
     this.options = [
       {
         'type': 'checkbox',
         'bindTo': 'showAnimations',
         'name': 'Show Animations',
-        'callback': 'this.toggleAnimations()',
+        'callback': toggleAnimations,
         'storedName': 'tileAnimations'
       },
       {
         'type': 'checkbox',
         'bindTo': 'mouseHover',
         'name': 'Mouse Hover',
-        'callback': 'this.toggleMouseHover()',
+        'callback': toggleMouseHover,
         'storedName': 'HoverTileGame'
       },
       {
         'type': 'checkbox',
         'bindTo': 'staticTileSize',
         'name': 'Fixed Tile Size',
-        'callback': 'this.toggleStaticSizes()',
+        'callback': toggleStaticSizes,
         'storedName': 'StaticTileSize',
       },
       {
         'type': 'dropdown',
         'bindTo': 'colorScheme',
         'name': 'Color Scheme',
-        'callback': 'this.updateColorScheme()',
+        'callback': updateColorScheme,
         'storedName': 'TileGameColorScheme',
         'options': [
           'Fringe',
@@ -126,26 +142,30 @@ export class TileGameComponent extends GameBoard implements OnInit {
       }
     ];
 
+    const configureHotkeys = () => {
+      this.configureHotkeys();
+    };
+
     this.hotkeys = [
       {
         'name': 'UP',
         'bindTo': 'TileGameDOWN',
-        'callback': 'this.configureHotkeys()'
+        'callback': configureHotkeys
       },
       {
         'name': 'DOWN',
         'bindTo': 'TileGameUP',
-        'callback': 'this.configureHotkeys()'
+        'callback': configureHotkeys
       },
       {
         'name': 'LEFT',
         'bindTo': 'TileGameRIGHT',
-        'callback': 'this.configureHotkeys()'
+        'callback': configureHotkeys
       },
       {
         'name': 'RIGHT',
         'bindTo': 'TileGameLEFT',
-        'callback': 'this.configureHotkeys()'
+        'callback': configureHotkeys
       }
     ];
   }

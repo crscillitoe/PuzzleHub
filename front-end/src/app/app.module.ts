@@ -43,6 +43,7 @@ import { PuzzleRelayPopupComponent } from './puzzle-relay-popup/puzzle-relay-pop
 import { ProfileIconPickerComponent } from './profile-icon-picker/profile-icon-picker.component';
 import { DailyChallengesComponent } from './daily-challenges/daily-challenges.component';
 import { PuzzlerIconComponent } from './puzzler-icon/puzzler-icon.component';
+import { XpBarComponent } from './xp-bar/xp-bar.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -111,7 +112,8 @@ const appRoutes: Routes = [
     PuzzleRelayPopupComponent,
     ProfileIconPickerComponent,
     DailyChallengesComponent,
-    PuzzlerIconComponent
+    PuzzlerIconComponent,
+    XpBarComponent
   ],
   imports: [
     AngularFittextModule,

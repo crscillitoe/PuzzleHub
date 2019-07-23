@@ -61,19 +61,31 @@ export class TakuzuComponent extends GameBoard implements OnInit {
 
     this.gameID = GameID.TAKUZU;
 
+    const toggleGrid = () => {
+      this.toggleGrid();
+    };
+
+    const invertControls = () => {
+      this.invertControls();
+    };
+
+    const configureHotkeys = () => {
+      this.configureHotkeys();
+    };
+
     this.options = [
       {
         'type': 'checkbox',
         'bindTo': 'toggleGrid',
         'name': 'Display Grid',
-        'callback': 'this.toggleGrid()',
+        'callback': toggleGrid,
         'storedName': 'takuzuGrid'
       },
       {
         'type': 'checkbox',
         'bindTo': 'invertControls',
         'name': 'Invert Controls',
-        'callback': 'this.invertControls()',
+        'callback': invertControls,
         'storedName': 'takuzuInvert'
       }
     ];
@@ -82,12 +94,12 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       {
         'name': '1',
         'bindTo': 'Takuzu1',
-        'callback': 'this.configureHotkeys()'
+        'callback': configureHotkeys
       },
       {
         'name': '0',
         'bindTo': 'Takuzu0',
-        'callback': 'this.configureHotkeys()'
+        'callback': configureHotkeys
       }
     ];
 

@@ -42,6 +42,17 @@ export class TunnelService {
     }[]>(this.ipAddress + '/getDailyChallenges');
   }
 
+  getPuzzlerIcons() {
+    return this.http.get<{
+      AccentColor: string,
+      Color: string,
+      Default: number,
+      IconDescription: string,
+      IconID: number,
+      IconPath: string
+    }[]>(this.ipAddress + '/getPuzzlerIcons');
+  }  
+
   getUserData() {
     return this.http.get(this.ipAddress + '/getUserData');
   }

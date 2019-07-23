@@ -41,10 +41,13 @@
             {{username}} - Level {{level}}
           </div>
           <div class="xp-row">
-              <mat-progress-bar
-                id="header-progress"
-                [value]="progress">
-              </mat-progress-bar>
+              <app-xp-bar
+                class="xp-bar"
+                [color]="getColor()"
+                [accentColor]="getAccentColor()"
+                [className]="'header-xp-bar'"
+                [progress]="progress">
+              </app-xp-bar>
           </div>
           <div class="level-xp">
             {{xpToNextLevel}}/2000

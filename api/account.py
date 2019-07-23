@@ -449,6 +449,48 @@ def validate_user(validation_id):
 
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# /getPuzzlerIcons
+# Returns on success:
+#   List<
+#       IconID: int
+#       IconPath: string
+#       IconDescription: string?
+#       Default: bool
+#       Color: string
+#       AccentColor: string
+#   >
+@app.route('/api/getPuzzlerIcons', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_puzzler_icons():
+    db = get_db()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+        SELECT I.IconID, I.IconPath, I.IconDescription, I.Default,
+               I.Color, I.AccentColor
+        FROM icons AS I
+    '''
+
+    cursor.execute(sql_query)
+    data = cursor.fetchall()
+
+    to_return = []
+    for d in data:
+        to_add = {
+            'IconID':d[0],
+            'IconPath':d[1],
+            'IconDescription':d[2],
+            'Default':d[3],
+            'Color':d[4],
+            'AccentColor':d[5]
+        }
+        to_return.append(to_add)
+
+    cursor.close()
+
+    return jsonify(to_return)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 # /setPuzzlerIcon
 # Required POST parameters:
 #   PuzzlerIconID: int
@@ -472,6 +514,32 @@ def set_puzzler_icon():
         abort(500)
 
     db = get_db()
+
+    # This query returns all icons the user has permission to use
+    cursor = db.cursor()
+    sql_query = ''' 
+    SELECT IconID FROM icons I
+    WHERE I.Default
+    UNION
+    SELECT IconID FROM userIcons UI
+    WHERE UI.UserID = %(user_id)s
+    '''
+    query_model = {
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    data2 = cursor.fetchall()
+    found = False
+    for d2 in data2:
+        if d2[0] == puzzler_icon_id:
+            found = True
+
+    cursor.close()
+    
+    # The user does not have access to this puzzler icon
+    if not found:
+        return jsonify({})
 
     cursor = db.cursor()
     sql_query = ''' 
@@ -604,13 +672,34 @@ def get_user_data():
     data = cursor.fetchall()
 
     row = data[0]
+    cursor.close()
+
+    cursor = db.cursor()
+    sql_query = ''' 
+    SELECT IconID FROM icons I
+    WHERE I.Default
+    UNION
+    SELECT IconID FROM userIcons UI
+    WHERE UI.UserID = %(user_id)s
+    '''
+    query_model = {
+        "user_id":user_id
+    }
+
+    cursor.execute(sql_query, query_model)
+    data2 = cursor.fetchall()
+
+    unlocked_icons = []
+    for d2 in data2:
+        unlocked_icons.append(d2[0])
 
     to_return = {
         'userId': row[0],
         'username': row[1],
         'role': row[2],
         'xp': row[3],
-        'puzzlerIcon': row[4]
+        'puzzlerIcon': row[4],
+        'unlockedIcons': unlocked_icons
     }
 
     return jsonify(to_return)

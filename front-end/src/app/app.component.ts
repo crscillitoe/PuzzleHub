@@ -10,6 +10,7 @@ import { Router, Event as RouterEvent,
 } from '@angular/router';
 import { NgZone, Renderer, ElementRef, ViewChild } from '@angular/core';
 import { LoaderService } from './services/loading-service/loader.service';
+import { IconService } from './services/icons/icon.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent {
     private ngZone: NgZone,
     private renderer: Renderer,
     private user: UserService,
+    private icon: IconService,
     private domSanitizer: DomSanitizer,
     public matIconRegistry: MatIconRegistry
   ) {

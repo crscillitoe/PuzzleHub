@@ -21,6 +21,9 @@ export class HeaderComponent implements OnInit {
   level: number;
   username: any = '';
 
+  color: string;
+  accentColor: string;
+
   first = true;
   xpToNextLevel = 0;
 
@@ -46,8 +49,6 @@ export class HeaderComponent implements OnInit {
         this.xpToNextLevel = data.xpToNextLevel;
         this.puzzlerIconID = data.puzzlerIcon;
 
-        iconService.configureHeaderBarColors(data.puzzlerIcon);
-
         this.progress = (data.xpToNextLevel / user.xpPerLevel) * 100;
 
         if (data.xpGain > 0) {
@@ -59,6 +60,14 @@ export class HeaderComponent implements OnInit {
         this.username = '';
       }
     });
+  }
+
+  getColor() {
+    return this.iconService.getIconColor(this.puzzlerIconID);
+  }
+
+  getAccentColor() {
+    return this.iconService.getIconAccentColor(this.puzzlerIconID);
   }
 
   isMainMenu() {

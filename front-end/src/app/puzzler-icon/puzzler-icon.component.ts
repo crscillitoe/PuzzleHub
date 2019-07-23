@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { IconService } from '../services/icons/icon.service';
 
 @Component({
   selector: 'app-puzzler-icon',
@@ -7,23 +8,19 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 })
 export class PuzzlerIconComponent implements OnInit, OnChanges {
 
-  static basePuzzleIconDir = '/assets/images/puzzler-icons/puzzle-hub-profile-';
+  static basePuzzleIconDir = '/assets/images/puzzler-icons/';
   @Input() puzzlerIconID: number;
-  puzzlerIcon: string;
 
-
-  constructor() { }
-
-  ngOnInit() {
-    this.updatePuzzlerIcon();
+  constructor(
+    private iconService: IconService
+  ) {
   }
 
-  ngOnChanges() {
-    this.updatePuzzlerIcon();
-  }
+  ngOnInit() {}
+
+  ngOnChanges() {}
 
   updatePuzzlerIcon() {
-    this.puzzlerIcon = PuzzlerIconComponent.basePuzzleIconDir + this.puzzlerIconID + '.png';
+    return PuzzlerIconComponent.basePuzzleIconDir + this.iconService.getIconImagePath(this.puzzlerIconID);
   }
-
 }

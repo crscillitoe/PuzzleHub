@@ -247,8 +247,8 @@ export class GameBoard implements OnInit, OnDestroy {
     this.subscription.add(subscription);
   }
 
-  public handleOption(callback) {
-    eval(callback);
+  public handleOption(callback: () => void) {
+    callback();
   }
 
   public notesHandler($event: any) { }
