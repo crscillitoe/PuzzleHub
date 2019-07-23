@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Inject, PLATFORM_ID, Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user/user.service';
+import { isPlatformBrowser } from '@angular/common';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { GameID } from '../enums/game-id.enum';
 import { Router } from '@angular/router';
@@ -50,7 +51,9 @@ export class LeaderboardsComponent implements OnInit {
   set gameID(id: number) {
     this._gameID = id;
     this.updateTitle();
-    SettingsService.storeData('selectedGameID', id);
+    if(isPlatformBrowser(this.platformId)) {
+      SettingsService.storeData('selectedGameID', id);
+    }
     this.loadLeaderboard();
   }
 
@@ -59,7 +62,9 @@ export class LeaderboardsComponent implements OnInit {
   }
   set leaderboardDifficulty(n: number) {
     this._leaderboardDifficulty = n;
-    SettingsService.storeData('selectedLeaderboardDifficulty', n);
+    if(isPlatformBrowser(this.platformId)) {
+      SettingsService.storeData('selectedLeaderboardDifficulty', n);
+    }
     this.loadLeaderboard();
   }
 
@@ -68,7 +73,9 @@ export class LeaderboardsComponent implements OnInit {
   }
   set leaderboard(num: number) {
     this._leaderboard = num;
-    SettingsService.storeData('selectedLeaderboard', num);
+    if(isPlatformBrowser(this.platformId)) {
+      SettingsService.storeData('selectedLeaderboard', num);
+    }
     if (num === 0) {
       this.leaderboardName = 'Daily';
     } else if (num === 1) {
@@ -80,6 +87,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private loader: LoaderService,
     private router: Router,
@@ -161,9 +169,15 @@ export class LeaderboardsComponent implements OnInit {
         }
       });
 
-    this.gameID = SettingsService.getDataNum('selectedGameID');
-    this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
-    this.leaderboardDifficulty = SettingsService.getDataNum('selectedLeaderboardDifficulty');
+    if(isPlatformBrowser(this.platformId)) {
+      this.gameID = SettingsService.getDataNum('selectedGameID');
+      this.leaderboard = SettingsService.getDataNum('selectedLeaderboard');
+      this.leaderboardDifficulty = SettingsService.getDataNum('selectedLeaderboardDifficulty');
+    } else {
+      this.gameID = 1;
+      this.leaderboard = 1;
+      this.leaderboardDifficulty = 1;
+    }
 
     this.updateTitle();
 
@@ -180,23 +194,25 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   decrementTimer(that) {
-    const display = document.getElementById('leaderboardstimer');
-    const now = +new Date();
+    if(isPlatformBrowser(this.platformId)) {
+      const display = document.getElementById('leaderboardstimer');
+      const now = +new Date();
 
-    const diff = ((that.resetDate - now));
-    const hours   = Math.trunc(diff / (60 * 60 * 1000));
-    const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-    const seconds = Math.trunc(diff / (1000)) % 60;
+      const diff = ((that.resetDate - now));
+      const hours   = Math.trunc(diff / (60 * 60 * 1000));
+      const minutes = Math.trunc(diff / (60 * 1000)) % 60;
+      const seconds = Math.trunc(diff / (1000)) % 60;
 
-    try {
-      display.textContent =
-        hours + ':' +
-        (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-        (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00');
+      try {
+        display.textContent =
+          hours + ':' +
+          (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
+          (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00');
 
-      that.countDownTimer();
-    } catch {
-      // Do nothing - page probably re-routed
+        that.countDownTimer();
+      } catch {
+        // Do nothing - page probably re-routed
+      }
     }
   }
 

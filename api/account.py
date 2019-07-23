@@ -93,8 +93,9 @@ def register_user():
     if check_digits(password):
         return jsonify({"success":False,"message":"Password has incrementing numbers"})
 
-    if is_pwned_password(password):
-        return jsonify({"success":False,"message":"This password has been leaked in a known data breach. Please use a different password"})
+    # Uncomment this if we're gonna store sensitive data
+    # if is_pwned_password(password):
+    #   return jsonify({"success":False,"message":"This password has been leaked in a known data breach. Please use a different password. For more info see https://haveibeenpwned.com/Passwords"})
     
     # test that the email is valid 
     if check_valid_email(email_address) is False:
