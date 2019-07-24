@@ -98,4 +98,5 @@ export class AccountData {
   public xpGain: number;
   public level: number;
   public xpToNextLevel: number;
+  public unlockedIcons: number[];
 }

@@ -14,9 +14,7 @@ export class ProfileIconPickerComponent implements OnInit {
   private dirString: string = "/assets/images/puzzler-icons/";
   private picturePrefix: string = 'puzzle-hub-profile-';
 
-  private numIcons: number = 8;
-
-  public iconPaths = [];
+  public icons = [];
 
   constructor(private userService: UserService,
               private loader: LoaderService,
@@ -24,14 +22,9 @@ export class ProfileIconPickerComponent implements OnInit {
               private tunnelService: TunnelService) { }
 
   ngOnInit() {
-    for (var i = 0 ; i < this.numIcons ; i++) {
-      this.iconPaths.push(
-        {
-          path: this.dirString + this.picturePrefix + i + '.png',
-          iconNumber: i
-        }
-      );
-    }
+    this.userService.accountData.subscribe(accountData => {
+      this.icons = accountData.unlockedIcons;
+    });
   }
 
   selectIcon(num) {

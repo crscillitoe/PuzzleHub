@@ -1,8 +1,8 @@
 <div class="icon-container">
-  <ng-container *ngFor="let icon of iconPaths">
+  <ng-container *ngFor="let icon of icons">
     <app-puzzler-icon
-      [puzzlerIconID]="icon.iconNumber"
-      (click)="selectIcon(icon.iconNumber)"
+      [puzzlerIconID]="icon"
+      (click)="selectIcon(icon)"
       class="clickable puzzle-icon">
     </app-puzzler-icon>
   </ng-container>
