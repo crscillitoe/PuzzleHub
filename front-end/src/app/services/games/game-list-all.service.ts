@@ -15,6 +15,10 @@ export class GameListAllService extends GameList {
         'sudoku',
         'sudoku.svg',
         'Sudoku is a classic puzzle game where you must fill out the board with numbers 1-9.',
+        [
+          'Sudoku is a classic puzzle game where you must fill out the board with numbers 1-9.',
+          'Each of the nine blocks must contain numbers 1-9 in its squares. Each number can only appear once in a row, column, or box.'
+        ],
         'Each of the nine blocks must contain the numbers 1-9 in its squares. ' +
         'Each number can only appear once in a row, column, or box.',
         'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box. Pressing "t" ' +
@@ -27,6 +31,13 @@ export class GameListAllService extends GameList {
         'takuzu.svg',
         'Takuzu is a logic-based number placement puzzle. The objective is to fill a ' +
         '(usually 10×10) grid with 1s and 0s.',
+        [
+          'Takuzu is a logic-based number placement puzzle. The objective is to fill a ' +
+          '(usually 10×10) grid with 1s and 0s.',
+          'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
+          '1s and 0s in each row and column and no more than two of either number adjacent to ' +
+          'each other. Additionally, there can be no identical rows or columns.',
+        ],
         'The objective is to fill a grid with 1s and 0s, where there is an equal number of ' +
         '1s and 0s in each row and column and no more than two of either number adjacent to ' +
         'each other. Additionally, there can be no identical rows or columns.',
@@ -39,6 +50,14 @@ export class GameListAllService extends GameList {
         'nonograms.svg',
         'Nonograms is a picture logic puzzles in which tiles in a grid must be colored ' +
         'according to numbers at the side of the grid to reveal a hidden picture.',
+        [
+          'Nonograms is a picture logic puzzles in which tiles in a grid must be colored ' +
+          'according to numbers at the side of the grid to reveal a hidden picture.',
+          'The object is to color in tiles based on the numbers on the outside of the rows and ' +
+          'columns. The numbers represent the number of consecutive tiles that need to be ' +
+          'colored in in the row or column. There must be at least one blank tile between each ' +
+          'group.',
+        ],
         'The object is to color in tiles based on the numbers on the outside of the rows and ' +
         'columns. The numbers represent the number of consecutive tiles that need to be ' +
         'colored in in the row or column. There must be at least one blank tile between each ' +
@@ -52,6 +71,12 @@ export class GameListAllService extends GameList {
         'thermometers.svg',
         'Thermometers is a New York Times classic where you must fill up thermometers to a ' +
         'certain amount.',
+        [
+          'Thermometers is a New York Times classic where you must fill up thermometers to a ' +
+          'certain amount.',
+          'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
+          'that given row/column.',
+        ],
         'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
         'that given row/column.',
         'Click anywhere on the thermometer to insert fluid.'
@@ -64,6 +89,14 @@ export class GameListAllService extends GameList {
         'Hashi (Hashiwokakero), also known as Bridges, is a logic puzzle with simple rules and ' +
         'challenging solutions where all islands must be connected by drawing a series of ' +
         'bridges.',
+        [
+          'Hashi (Hashiwokakero), also known as Bridges, is a logic puzzle with simple rules and ' +
+          'challenging solutions where all islands must be connected by drawing a series of ' +
+          'bridges.',
+          'The goal is to connect all of the islands into a single connected group by ' +
+          'drawing a series of bridges between the islands. The number of bridges coming off of ' +
+          'an island must match the number written on that island.',
+        ],
         'The goal is to connect all of the islands into a single connected group by ' +
         'drawing a series of bridges between the islands. The number of bridges coming off of ' +
         'an island must match the number written on that island.',
@@ -76,6 +109,11 @@ export class GameListAllService extends GameList {
         'tilegame.svg',
         'Tile Game, also know as 15-puzzle, is a common puzzle where the user slides tiles into ' +
         'the correct order.',
+        [
+          'Tile Game, also know as 15-puzzle, is a common puzzle where the user slides tiles into ' +
+          'the correct order.',
+          'Order the numbers in sequential order from left to right, top to bottom',
+        ],
         'Order the numbers in sequential order from left to right, top to bottom',
         'Arrow Keys or WASD',
       )
@@ -88,6 +126,15 @@ export class GameListAllService extends GameList {
   public static getGameById(id: number): Game {
     for (const g of GameListAllService.games) {
       if (g.id === id) {
+        return g;
+      }
+    }
+    return null;
+  }
+
+  public static getGameByName(name: string): Game {
+    for (const g of GameListAllService.games) {
+      if (g.cleanName === name) {
         return g;
       }
     }
