@@ -44,6 +44,7 @@ import { ProfileIconPickerComponent } from './profile-icon-picker/profile-icon-p
 import { DailyChallengesComponent } from './daily-challenges/daily-challenges.component';
 import { PuzzlerIconComponent } from './puzzler-icon/puzzler-icon.component';
 import { XpBarComponent } from './xp-bar/xp-bar.component';
+import { GameDescriptionComponent } from './game-description/game-description.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
   { path: 'profile', component: ProfileComponent},
+  { path: 'games/:gameName', component: GameDescriptionComponent },
   {
     path: 'Hashi',
         component: HashiComponent
@@ -113,7 +115,8 @@ const appRoutes: Routes = [
     ProfileIconPickerComponent,
     DailyChallengesComponent,
     PuzzlerIconComponent,
-    XpBarComponent
+    XpBarComponent,
+    GameDescriptionComponent
   ],
   imports: [
     AngularFittextModule,

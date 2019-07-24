@@ -40,6 +40,7 @@ export class Game {
   private _imagePath = 'assets/images/game-splashes/';
   private _imageBase: string;
   private _desc: string;
+  private _longDesc: string[];
   private _rules: string;
   private _controls: string;
   private _diffs: Difficulty[];
@@ -68,6 +69,10 @@ export class Game {
     return this._desc;
   }
 
+  get longDesc(): string[] {
+    return this._longDesc;
+  }
+
   get rules(): string {
     return this._rules;
   }
@@ -86,6 +91,7 @@ export class Game {
     cleanName: string,
     image: string,
     desc: string,
+    longDesc: string[],
     rules: string,
     controls: string,
     diffs?: Difficulty[]) {
@@ -94,6 +100,7 @@ export class Game {
     this._cleanName = cleanName;
     this._imageBase = image;
     this._desc = desc;
+    this._longDesc = longDesc;
     this._rules = rules;
     this._controls = controls;
     this._diffs = diffs || Game._default_diffs;

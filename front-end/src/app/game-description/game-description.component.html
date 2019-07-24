@@ -1,0 +1,37 @@
+<div id="gamedescription" class="body">
+  <div class="container">
+    <div class="center">
+      <ng-container>
+        <mat-card class="puzzle-card">
+          <img mat-card-image src={{game.image}} alt="{{game.name}} logo" />
+          <mat-card-actions>
+            <ng-container *ngFor="let diff of game.diffs">
+              <button mat-raised-button
+                      (click)="playGame(game.name, diff.diff)"
+                      [disabled]="(isLoggedIn() && level < diff.minLevel) ||
+                      (!isLoggedIn() && diff.requiresLogin)"
+                      [attr.data-tooltip]="(isLoggedIn() && level < diff.minLevel) ? 'Reach level ' +
+                      diff.minLevel + ' to play ' + diff.name + ' difficulty' : ((! isLoggedIn() &&
+                      diff.requiresLogin) ? 'Log in to play harder difficulties' :
+                      null)"
+                      [ngClass]="{'btn-diff-easy': diff.color=='green',
+                      'btn-diff-medium': diff.color=='cyan',
+                      'btn-diff-hard': diff.color=='blue',
+                      'btn-diff-extreme': diff.color=='red'}">
+                {{diff.name}}
+              </button>
+            </ng-container>
+          </mat-card-actions>
+          <mat-card-header>
+            <mat-card-title>{{game.name}}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ng-container *ngFor="let desc of game.longDesc">
+              <p>{{desc}}</p>
+            </ng-container>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+  </div>
+</div>
