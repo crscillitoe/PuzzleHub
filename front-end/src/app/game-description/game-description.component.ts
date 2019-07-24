@@ -23,7 +23,7 @@ export class GameDescriptionComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
-      let gameName = params.get('gameName')
+      let gameName = params.get('gameName').toLowerCase()
       this.game = GameListAllService.getGameByName(gameName)
       this.titleService.setTitle(`Puzzle Hub | Play ${this.game.name} Online`)
     }
