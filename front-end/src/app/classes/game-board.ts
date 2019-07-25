@@ -247,6 +247,16 @@ export class GameBoard implements OnInit, OnDestroy {
     this.subscription.add(subscription);
   }
 
+  public handleOptionsOption(callback: string) {
+    if (callback === 'newGame') {
+      this.newGame();
+    } else if (callback === 'clearBoard') {
+      this.clearBoard();
+    } else if (callback.split(',').length === 2) {
+      this.newGame(parseInt(callback.split(',')[1]));
+    }
+  }
+
   public handleOption(callback: () => void) {
     callback();
   }

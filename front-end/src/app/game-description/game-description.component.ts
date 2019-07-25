@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { UserService } from '../services/user/user.service';
 import { Game } from '../classes/game';
+import { RelayTrackerService } from '../services/relay/relay-tracker.service';
 
 @Component({
   selector: 'app-game-description',
@@ -17,6 +18,7 @@ export class GameDescriptionComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private user: UserService,
     private titleService: Title
   ) { }
@@ -28,6 +30,16 @@ export class GameDescriptionComponent implements OnInit {
       this.titleService.setTitle(`Puzzle Hub | Play ${this.game.name} Online`)
     }
     );
+  }
+
+  playGame(route, diff) {
+    const m = {
+      diff: diff
+    };
+
+    RelayTrackerService.playingQueue = false;
+
+    this.router.navigate([route, m]);
   }
 
   isLoggedIn() {
