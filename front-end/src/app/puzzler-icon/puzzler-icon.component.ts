@@ -16,7 +16,11 @@ export class PuzzlerIconComponent implements OnInit, OnChanges {
   ) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.iconService.iconDataObservable.subscribe(() => {
+      this.updatePuzzlerIcon();
+    })
+  }
 
   ngOnChanges() {}
 

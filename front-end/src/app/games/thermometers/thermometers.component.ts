@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -11,14 +11,14 @@ import { Board } from '../../services/boards/thermometers/board.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
-import { Title } from '@angular/platform-browser';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-thermometers',
   templateUrl: '../game-board/game-board.component.html',
   styleUrls: ['../game-board/game-board.component.css']
 })
-export class ThermometersComponent extends GameBoard implements OnInit {
+export class ThermometersComponent extends GameBoard {
 
   board: Board;
 
@@ -32,7 +32,7 @@ export class ThermometersComponent extends GameBoard implements OnInit {
     timer: TimerService,
     loader: LoaderService,
     optionsService: OptionsService,
-    private titleService: Title
+    meta: MetaService
   ) {
     super(
       platform,
@@ -43,12 +43,9 @@ export class ThermometersComponent extends GameBoard implements OnInit {
       userService,
       timer,
       loader,
-      optionsService
+      optionsService,
+      meta
     );
-
-    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Play Thermometers - Puzzle Hub');
-    }
 
     this.gameID = GameID.THERMOMETERS;
 

@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component } from '@angular/core';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
@@ -11,14 +11,14 @@ import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
-import { Title } from '@angular/platform-browser';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-sudoku',
   templateUrl: '../game-board/game-board.component.html',
   styleUrls: ['../game-board/game-board.component.css']
 })
-export class SudokuComponent extends GameBoard implements OnInit {
+export class SudokuComponent extends GameBoard {
 
   numCarved: number;
   board: any;
@@ -35,7 +35,7 @@ export class SudokuComponent extends GameBoard implements OnInit {
     timer: TimerService,
     loader: LoaderService,
     optionsService: OptionsService,
-    private titleService: Title
+    meta: MetaService
   ) {
     super(
       platform,
@@ -46,12 +46,9 @@ export class SudokuComponent extends GameBoard implements OnInit {
       userService,
       timer,
       loader,
-      optionsService
+      optionsService,
+      meta
     );
-
-    if (Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Play Sudoku - Puzzle Hub');
-    }
 
     this.gameID = GameID.SUDOKU;
 

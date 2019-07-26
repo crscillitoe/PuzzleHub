@@ -12,7 +12,7 @@ import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
-import { Title } from '@angular/platform-browser';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-takuzu',
@@ -41,7 +41,7 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     timer: TimerService,
     loader: LoaderService,
     optionsService: OptionsService,
-    private titleService: Title
+    meta: MetaService
   ) {
     super(
       platform,
@@ -52,12 +52,9 @@ export class TakuzuComponent extends GameBoard implements OnInit {
       userService,
       timer,
       loader,
-      optionsService
+      optionsService,
+      meta
     );
-
-    if (Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Play Takuzu - Puzzle Hub');
-    }
 
     this.gameID = GameID.TAKUZU;
 

@@ -4,29 +4,36 @@ import { TunnelService } from '../tunnel/tunnel.service';
 import { LoaderService } from '../loading-service/loader.service';
 import { BehaviorSubject } from 'rxjs';
 
+type IconData = {
+  AccentColor: string,
+  Color: string,
+  Default: number,
+  IconDescription: string,
+  IconID: number,
+  IconPath: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class IconService {
-  private iconData: {
-    AccentColor: string,
-    Color: string,
-    Default: number,
-    IconDescription: string,
-    IconID: number,
-    IconPath: string
-  }[];
+  iconDataObservable: BehaviorSubject<IconData[]>;
+  private iconData: IconData[];
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     loader: LoaderService,
     tunnelService: TunnelService
-  ) { 
-    this.iconData = [];
+  ) {
+    this.iconDataObservable = new BehaviorSubject<IconData[]>([]);
+    this.iconDataObservable.subscribe((iconData: IconData[]) => {
+      this.iconData = iconData;
+    })
+
     loader.startLoadingAnimation();
     if (isPlatformBrowser(this.platformId)) {
       tunnelService.getPuzzlerIcons().subscribe(data => {
-        this.iconData = data;
+        this.iconDataObservable.next(data);
         loader.stopLoadingAnimation();
       });
     }

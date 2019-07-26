@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { Subscription } from 'rxjs/Subscription';
-import { Title } from '@angular/platform-browser';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';
+import { MetaService } from '../services/meta.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -30,7 +30,7 @@ export class MainMenuComponent implements OnInit {
     private route: ActivatedRoute,
     private user: UserService,
     private loader: LoaderService,
-    private titleService: Title
+    private meta: MetaService
   ) { }
 
   ngOnInit() {
@@ -42,7 +42,7 @@ export class MainMenuComponent implements OnInit {
       }
     }
 
-    this.titleService.setTitle('Puzzle Hub');
+    this.meta.defaultTags();
 
     // TODO - this should listen to the updated profile model
     this.subscription = this.user.accountData

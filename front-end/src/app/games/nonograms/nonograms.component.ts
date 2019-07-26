@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID, HostListener, Component, OnInit } from '@angular/core';
+import { Inject, PLATFORM_ID, HostListener, Component } from '@angular/core';
 import { LoaderService } from '../../services/loading-service/loader.service';
 import { TimerService } from '../../services/timer/timer.service';
 import { TunnelService } from '../../services/tunnel/tunnel.service';
@@ -11,7 +11,7 @@ import { ColorService } from '../../services/colors/color.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
-import { Title } from '@angular/platform-browser';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-nonograms',
@@ -35,7 +35,7 @@ export class NonogramsComponent extends GameBoard {
     timer: TimerService,
     loader: LoaderService,
     optionsService: OptionsService,
-    private titleService: Title
+    meta: MetaService
   ) {
     super(
       platform,
@@ -46,12 +46,9 @@ export class NonogramsComponent extends GameBoard {
       userService,
       timer,
       loader,
-      optionsService
+      optionsService,
+      meta
     );
-
-    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Play Nonograms - Puzzle Hub');
-    }
 
     this.gameID = GameID.NONOGRAMS;
 

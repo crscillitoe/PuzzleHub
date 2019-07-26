@@ -1,31 +1,27 @@
-import { PLATFORM_ID, Inject, Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { Router } from '@angular/router';
 import { GameDataService } from '../services/games/game-data.service';
-import { UserService } from '../services/user/user.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
-import { Title } from '@angular/platform-browser';
+import { MetaService } from '../services/meta.service';
 import { IconService } from '../services/icons/icon.service';
-import { pipe, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { isPlatformBrowser } from '@angular/common';
+import { ProfileData } from '../classes/profile-data';
+import { UserService } from '../services/user/user.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
   searchUsername: string = '';
   profileFound: boolean;
   username: string;
-  profileData: any;
+  profileData: ProfileData;
   games: any = GameDataService.games;
   level: number;
-  currVal: number;
-  maxVal: number;
   progress: number;
 
   medalTypes = [
@@ -39,34 +35,16 @@ export class ProfileComponent implements OnInit {
     'Bronze'
   ];
 
-  puzzlerIconID: number;
   medalPath = '/assets/images/medals/';
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
     private route: ActivatedRoute,
     private tunnel: TunnelService,
-    private user: UserService,
-    private titleService: Title,
-    private iconService: IconService
+    private meta: MetaService,
+    private iconService: IconService,
+    private user: UserService
   ) { }
-
-  getLevel(xp) {
-    return this.user.calculateLevelFromXp(xp);
-  }
-
-  xpToNextLevel() {
-    return this.profileData.XP % this.user.xpPerLevel;
-  }
-
-  nextLevelThreshold() {
-    return this.user.xpPerLevel;
-  }
-
-  getProgress() {
-    return Math.floor((this.currVal / this.maxVal) * 100);
-  }
 
   searchUser(username: string = this.searchUsername) {
     const m = {
@@ -76,17 +54,20 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['profile'], {queryParams: m});
   }
 
+  ngOnDestroy() {
+    this.meta.defaultTags();
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
-      this.titleService.setTitle(this.username + '\'s Profile - Puzzle Hub');
 
       const m = {
         'Username': this.username
       };
 
       this.tunnel.getProfileData(m)
-        .subscribe(data => {
+        .subscribe((data: ProfileData) => {
           try {
             this.profileFound = (<any>data).length !== 0;
           } catch (e) {
@@ -98,31 +79,26 @@ export class ProfileComponent implements OnInit {
               (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
             }
 
-            this.profileData = data;
-            this.puzzlerIconID = data.PuzzlerIcon;
-
-            this.level = this.getLevel(this.profileData.XP);
-            this.currVal = this.xpToNextLevel();
-            this.maxVal = this.nextLevelThreshold();
-            this.progress = this.getProgress();
+            this.profileData = Object.assign(new ProfileData(this.user), data as ProfileData);
+            this.meta.profileTags(this.profileData);
           }
         });
     });
   }
 
   getColor() {
-    return this.iconService.getIconColor(this.puzzlerIconID);
+    return this.iconService.getIconColor(this.profileData.PuzzlerIcon);
   }
 
   getAccentColor() {
-    return this.iconService.getIconAccentColor(this.puzzlerIconID);
+    return this.iconService.getIconAccentColor(this.profileData.PuzzlerIcon);
   }
 
-  convertDate(dateStr) {
+  convertDate(dateStr: string) {
     return new Date(dateStr + 'Z');
   }
 
-  getGameName(id) {
+  getGameName(id: number) {
     for (let i = 0 ; i < this.games.length ; i++) {
       if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Name'];
@@ -145,7 +121,7 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  getGameImage(id) {
+  getGameImage(id: number) {
     for (let i = 0 ; i < this.games.length ; i++) {
       if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Image'];
@@ -153,7 +129,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  getDifficulty(num) {
+  getDifficulty(num: number) {
     switch (num) {
       case 1:
         return 'Easy';
@@ -167,7 +143,7 @@ export class ProfileComponent implements OnInit {
   }
 
   @HostListener('document:keydown', ['$event'])
-  keyPressed(keyEvent) {
+  keyPressed(keyEvent: KeyboardEvent) {
     if (keyEvent.keyCode === 13 && this.searchUsername !== '') {
       this.searchUser(this.searchUsername.trim());
       this.searchUsername = '';

@@ -30,7 +30,7 @@
         <app-puzzler-icon
           id="puzzleIcon"
           class="puzzler-icon"
-          [puzzlerIconID]="puzzlerIconID"
+          [puzzlerIconID]="profileData.PuzzlerIcon"
         >
         </app-puzzler-icon>
         <div class="col user-info">
@@ -45,9 +45,9 @@
             [color]="getColor()"
             [accentColor]="getAccentColor()"
             [className]="'profile-xp-bar'"
-            [progress]="progress">
+            [progress]="profileData.progress">
           </app-xp-bar>
-          <span>{{currVal}}/{{maxVal}}</span>
+          <span>{{profileData.currentXP}}/{{profileData.levelUpXP}}</span>
         </div>
       </div><!-- Info -->
       <div class="col-3 accolade-panel"><!-- Medals -->

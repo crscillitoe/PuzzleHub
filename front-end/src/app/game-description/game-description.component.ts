@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 
 import { GameListAllService } from '../services/games/game-list-all.service';
+import { MetaService } from '../services/meta.service';
 import { UserService } from '../services/user/user.service';
 import { Game } from '../classes/game';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';
@@ -12,7 +12,7 @@ import { RelayTrackerService } from '../services/relay/relay-tracker.service';
   templateUrl: './game-description.component.html',
   styleUrls: ['./game-description.component.scss']
 })
-export class GameDescriptionComponent implements OnInit {
+export class GameDescriptionComponent implements OnInit, OnDestroy {
 
   game: Game
 
@@ -20,19 +20,19 @@ export class GameDescriptionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private user: UserService,
-    private titleService: Title
+    private meta: MetaService
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      let gameName = params.get('gameName').toLowerCase()
-      this.game = GameListAllService.getGameByName(gameName)
-      this.titleService.setTitle(`Puzzle Hub | Play ${this.game.name} Online`)
-    }
+      this.route.paramMap.subscribe((params: ParamMap) => {
+        let gameName = params.get('gameName').toLowerCase()
+        this.game = GameListAllService.getGameByName(gameName)
+        this.meta.gameTags(this.game.id)
+      }
     );
   }
 
-  playGame(route, diff) {
+  playGame(route: ActivatedRoute, diff: number) {
     const m = {
       diff: diff
     };
@@ -40,6 +40,10 @@ export class GameDescriptionComponent implements OnInit {
     RelayTrackerService.playingQueue = false;
 
     this.router.navigate([route, m]);
+  }
+
+  ngOnDestroy() {
+    this.meta.defaultTags()
   }
 
   isLoggedIn() {

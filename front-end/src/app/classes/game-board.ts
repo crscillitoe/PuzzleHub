@@ -1,4 +1,4 @@
-import { HostListener, Component, OnInit, OnDestroy } from '@angular/core';
+import { HostListener, OnInit, OnDestroy } from '@angular/core';
 import { LoaderService } from '../services/loading-service/loader.service';
 import { TimerService } from '../services/timer/timer.service';
 import { TunnelService } from '../services/tunnel/tunnel.service';
@@ -14,9 +14,12 @@ import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser } from '@angular/common';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';
+import { MetaService } from '../services/meta.service';
 
 export class GameBoard implements OnInit, OnDestroy {
   private _gameID: number;
+  private game: Game;
+
   get gameID(): number {
     return this._gameID;
   }
@@ -25,8 +28,6 @@ export class GameBoard implements OnInit, OnDestroy {
     this.game = GameListAllService.getGameById(gameID);
     this.optionsService.setGameID(gameID);
   }
-
-  private game: Game;
 
   private _seed: number;
   get seed(): number {
@@ -135,7 +136,8 @@ export class GameBoard implements OnInit, OnDestroy {
     protected userService: UserService,
     protected timer: TimerService,
     protected loader: LoaderService,
-    protected optionsService: OptionsService
+    protected optionsService: OptionsService,
+    private meta: MetaService
   ) {
     this.colors = colorService.getColorScheme();
   }
@@ -148,6 +150,8 @@ export class GameBoard implements OnInit, OnDestroy {
     const that = this;
     GameStarterService.startGame(that);
     this.initializeOptions();
+
+    this.meta.gameTags(this.gameID);
   }
 
   public checkIsSolved(board: any) {
@@ -264,6 +268,7 @@ export class GameBoard implements OnInit, OnDestroy {
   public notesHandler($event: any) { }
 
   public ngOnDestroy() {
+    this.meta.defaultTags();
     this.subscription.unsubscribe();
   }
 }

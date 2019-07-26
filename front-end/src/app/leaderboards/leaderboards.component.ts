@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID, Component, OnInit, ViewChild } from '@angular/core';
+import { Inject, PLATFORM_ID, Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../services/user/user.service';
 import { isPlatformBrowser } from '@angular/common';
 import { TunnelService } from '../services/tunnel/tunnel.service';
@@ -9,16 +9,16 @@ import { LoaderService } from '../services/loading-service/loader.service';
 import { SettingsService } from '../services/persistence/settings.service';
 import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { Title } from '@angular/platform-browser';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { forkJoin } from 'rxjs';
+import { MetaService } from '../services/meta.service';
 
 @Component({
   selector: 'app-leaderboards',
   templateUrl: './leaderboards.component.html',
   styleUrls: ['./leaderboards.component.scss']
 })
-export class LeaderboardsComponent implements OnInit {
+export class LeaderboardsComponent implements OnInit, OnDestroy {
   games: Game[] = GameListAllService.games;
 
   resetDate: any;
@@ -50,7 +50,7 @@ export class LeaderboardsComponent implements OnInit {
   }
   set gameID(id: number) {
     this._gameID = id;
-    this.updateTitle();
+    this.updateMeta();
     if(isPlatformBrowser(this.platformId)) {
       SettingsService.storeData('selectedGameID', id);
     }
@@ -93,7 +93,7 @@ export class LeaderboardsComponent implements OnInit {
     private router: Router,
     private tunnel: TunnelService,
     private user: UserService,
-    private titleService: Title
+    private meta: MetaService
   ) { 
     user.accountData.subscribe(accountData => {
       if (accountData) {
@@ -102,18 +102,18 @@ export class LeaderboardsComponent implements OnInit {
     });
   }
 
-  updateTitle() {
-    this.titleService.setTitle(this.getGameName(this.gameID) + ' Leaderboards - Puzzle Hub');
-  }
-
-  getGameName(id) {
+  getGameName(id: number) {
     for (const game of this.games) {
       if (game.id === id) {
         return game.name;
       }
     }
 
-    return '';
+    return ''
+  }
+
+  updateMeta() {
+    this.meta.leaderboardsTags(this.gameID);
   }
 
   getGameDiffs(id) {
@@ -161,6 +161,10 @@ export class LeaderboardsComponent implements OnInit {
     return [];
   }
 
+  ngOnDestroy() {
+    this.meta.defaultTags()
+  }
+
   ngOnInit() {
     this.user.accountData
       .subscribe( (data) => {
@@ -179,7 +183,7 @@ export class LeaderboardsComponent implements OnInit {
       this.leaderboardDifficulty = 1;
     }
 
-    this.updateTitle();
+    this.updateMeta();
 
     this.countDownTimer();
 

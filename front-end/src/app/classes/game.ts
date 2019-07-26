@@ -44,6 +44,7 @@ export class Game {
   private _rules: string;
   private _controls: string;
   private _diffs: Difficulty[];
+  private _keywords: string;
 
   get id(): number {
     return this._id;
@@ -81,6 +82,10 @@ export class Game {
     return this._controls;
   }
 
+  get keywords(): string {
+    return this._keywords;
+  }
+
   get diffs(): Difficulty[] {
     return this._diffs;
   }
@@ -94,7 +99,9 @@ export class Game {
     longDesc: string[],
     rules: string,
     controls: string,
-    diffs?: Difficulty[]) {
+    keywords: string,
+    diffs?: Difficulty[],
+    ) {
     this._id = id;
     this._name = name;
     this._cleanName = cleanName;
@@ -103,6 +110,7 @@ export class Game {
     this._longDesc = longDesc;
     this._rules = rules;
     this._controls = controls;
+    this._keywords = keywords;
     this._diffs = diffs || Game._default_diffs;
   }
 }

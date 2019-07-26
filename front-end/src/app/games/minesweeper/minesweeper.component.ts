@@ -13,6 +13,7 @@ import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser } from '@angular/common';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-minesweeper',
@@ -41,7 +42,7 @@ export class MinesweeperComponent extends GameBoard {
     timer: TimerService,
     loader: LoaderService,
     optionsService: OptionsService,
-    private titleService: Title
+    meta: MetaService
   ) {
     super(
       platform,
@@ -52,12 +53,9 @@ export class MinesweeperComponent extends GameBoard {
       userService,
       timer,
       loader,
-      optionsService
+      optionsService,
+      meta
     );
-
-    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Play Minesweeper - Puzzle Hub');
-    }
 
     this.gameID = GameID.MINESWEEPER;
     this.gridBoxSize = 20; // needs to be dynamically adjusted by fixed sizes

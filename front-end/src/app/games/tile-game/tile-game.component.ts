@@ -12,7 +12,7 @@ import { SettingsService } from '../../services/persistence/settings.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
-import { Title } from '@angular/platform-browser';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-tile-game',
@@ -70,7 +70,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
     timer: TimerService,
     loader: LoaderService,
     optionsService: OptionsService,
-    private titleService: Title
+    meta: MetaService
   ) {
     super(
       platform,
@@ -81,12 +81,11 @@ export class TileGameComponent extends GameBoard implements OnInit {
       userService,
       timer,
       loader,
-      optionsService
+      optionsService,
+      meta
     );
 
-    if(Number(this.route.snapshot.paramMap.get('diff')) === 0) {
-      titleService.setTitle('Play Tile Game - Puzzle Hub');
-    }
+    this.gameID = GameID.TILE_GAME;
 
     const toggleAnimations = () => {
       this.toggleAnimations();
@@ -104,7 +103,6 @@ export class TileGameComponent extends GameBoard implements OnInit {
       this.updateColorScheme();
     };
 
-    this.gameID = GameID.TILE_GAME;
     this.options = [
       {
         'type': 'checkbox',
