@@ -77,6 +77,8 @@ export class MetaService {
                            // the value of the image tags if IconService updates.
                            // We want to clean this up here upon update of image tags.
     this.addOrUpdateTag({name: 'og:image', content: imagePath});
+    this.addOrUpdateTag({name: 'og:image:width', content: '200'});
+    this.addOrUpdateTag({name: 'og:image:height', content: '200'});
     this.addOrUpdateTag({name: 'twitter:image', content: imagePath});
   }
 
