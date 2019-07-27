@@ -161,7 +161,8 @@ def get_profile_data():
            M3.SilverMedals AS MonthlySilverMedals,
            M1.GoldMedals   AS DailyGoldMedals,
            M2.GoldMedals   AS WeeklyGoldMedals,
-           M3.GoldMedals   AS MonthlyGoldMedals
+           M3.GoldMedals   AS MonthlyGoldMedals,
+           U.Username
         FROM users AS U
         INNER JOIN userMedals AS M1
             ON M1.UserID = U.UserID AND
@@ -239,7 +240,8 @@ def get_profile_data():
         "HardDailies":ad[5],
         "ExtremeDailies":ad[6],
         "MatchHistory":match_history,
-        "GamesPlayed":games_played
+        "GamesPlayed":games_played,
+        "Username":d[9]
     }
 
     return jsonify(to_return)
