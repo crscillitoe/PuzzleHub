@@ -78,6 +78,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             for (let i = 0 ; i < data.MatchHistory.length ; i++) {
               (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
             }
+            
 
             this.profileData = Object.assign(new ProfileData(this.user), data as ProfileData);
             this.meta.profileTags(this.profileData);

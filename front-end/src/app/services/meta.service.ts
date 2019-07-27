@@ -127,7 +127,7 @@ export class MetaService {
     this.allIconTags(profileData.PuzzlerIcon);
 
     const description = `Level: ${profileData.level} | ${profileData.currentXP} / ${profileData.levelUpXP}
-    Games Played: ${profileData.GamesPlayed.length}
+    Total Games Played: ${profileData.totalGamesPlayed}
     Gold Medals: ${profileData.DailyGoldMedals + profileData.WeeklyGoldMedals + profileData.MonthlyGoldMedals} \
     | Silver Medals: ${profileData.DailySilverMedals + profileData.WeeklySilverMedals + profileData.MonthlySilverMedals} \
     | Bronze Medals: ${profileData.DailyBronzeMedals + profileData.WeeklyBronzeMedals + profileData.MonthlySilverMedals}`
