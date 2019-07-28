@@ -18,6 +18,7 @@ rm -rf backup_dist
 forever stop server_1/server.js
 cp -r server_1 backup_dist
 rm -rf server_1
+rm -rf dist
 unzip dist.zip
 cp -r dist server_1
 PORT=1234 forever start server_1/server.js
