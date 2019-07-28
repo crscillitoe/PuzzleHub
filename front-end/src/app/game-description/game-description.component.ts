@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 
 import { GameListAllService } from '../services/games/game-list-all.service';
-import { MetaService } from '../services/meta.service';
+import { MetaService } from '../services/meta/meta.service';
 import { UserService } from '../services/user/user.service';
 import { Game } from '../classes/game';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';

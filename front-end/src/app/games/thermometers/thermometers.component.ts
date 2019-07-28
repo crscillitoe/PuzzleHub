@@ -11,7 +11,7 @@ import { Board } from '../../services/boards/thermometers/board.service';
 import { GameStarterService } from '../../services/generators/game-starter.service';
 import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
-import { MetaService } from '../../services/meta.service';
+import { MetaService } from '../../services/meta/meta.service';
 
 @Component({
   selector: 'app-thermometers',
