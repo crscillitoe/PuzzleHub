@@ -26,4 +26,5 @@ rm -rf server_2
 cp -r dist server_2
 PORT=1235 forever start server_2/server.js
 rm -rf dist
+unzip dist.zip
 EOF
