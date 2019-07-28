@@ -51,7 +51,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       user: username
     };
 
+    this.username = username;
     this.router.navigate(['profile'], {queryParams: m});
+    this.loadUser(username);
   }
 
   ngOnDestroy() {
@@ -62,29 +64,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.username = params['user'];
 
-      const m = {
-        'Username': this.username
-      };
+      this.loadUser(this.username);
 
-      this.tunnel.getProfileData(m)
-        .subscribe((data: ProfileData) => {
-          try {
-            this.profileFound = (<any>data).length !== 0;
-          } catch (e) {
-            this.profileFound = true;
-          }
-
-          if (this.profileFound) {
-            for (let i = 0 ; i < data.MatchHistory.length ; i++) {
-              (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
-            }
-            
-
-            this.profileData = Object.assign(new ProfileData(this.user), data as ProfileData);
-            this.meta.profileTags(this.profileData);
-          }
-        });
     });
+  }
+
+  loadUser(username: string) {
+    const m = {
+      'Username': username
+    };
+
+    this.tunnel.getProfileData(m)
+      .subscribe((data: ProfileData) => {
+        try {
+          this.profileFound = (<any>data).length !== 0;
+        } catch (e) {
+          this.profileFound = true;
+        }
+
+        if (this.profileFound) {
+          for (let i = 0 ; i < data.MatchHistory.length ; i++) {
+            (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
+          }
+          
+
+          this.profileData = Object.assign(new ProfileData(this.user), data as ProfileData);
+          this.meta.profileTags(this.profileData);
+        }
+      });
   }
 
   getColor() {
