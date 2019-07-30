@@ -46,7 +46,7 @@ export class IconService {
   }
 
   getIconImagePath(iconID: number) {
-    if (!this.hasData) throw "Error: IconData has not loaded";
+    if (!this.hasData) 'puzzle-hub-profile-0.png';
     return this.getIcon(iconID).IconPath;
   }
 
