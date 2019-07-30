@@ -14,7 +14,7 @@ import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser } from '@angular/common';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';
-import { MetaService } from '../services/meta.service';
+import { MetaService } from '../services/meta/meta.service';
 
 export class GameBoard implements OnInit, OnDestroy {
   private _gameID: number;

@@ -1,5 +1,4 @@
-import { Injectable, PLATFORM_ID, Inject, Component, OnInit, HostListener } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
 import { TunnelService } from '../tunnel/tunnel.service';
 import { LoaderService } from '../loading-service/loader.service';
 import { BehaviorSubject } from 'rxjs';
@@ -21,7 +20,6 @@ export class IconService {
   private iconData: IconData[];
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
     loader: LoaderService,
     tunnelService: TunnelService
   ) {
@@ -31,12 +29,10 @@ export class IconService {
     })
 
     loader.startLoadingAnimation();
-    if (isPlatformBrowser(this.platformId)) {
-      tunnelService.getPuzzlerIcons().subscribe(data => {
-        this.iconDataObservable.next(data);
-        loader.stopLoadingAnimation();
-      });
-    }
+    tunnelService.getPuzzlerIcons().subscribe(data => {
+      this.iconDataObservable.next(data);
+      loader.stopLoadingAnimation();
+    });
   }
 
   getIconAccentColor(iconID: number) {
@@ -50,7 +46,7 @@ export class IconService {
   }
 
   getIconImagePath(iconID: number) {
-    if (this.iconData.length === 0) { return 'puzzle-hub-profile-0.png';}
+    if (!this.hasData) throw "Error: IconData has not loaded";
     return this.getIcon(iconID).IconPath;
   }
 
@@ -60,5 +56,9 @@ export class IconService {
         return this.iconData[i];
       }
     }
+  }
+
+  get hasData() {
+    return this.iconData.length > 0;
   }
 }

@@ -4,10 +4,9 @@ import { TunnelService } from '../services/tunnel/tunnel.service';
 import { Router } from '@angular/router';
 import { GameDataService } from '../services/games/game-data.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
-import { MetaService } from '../services/meta.service';
+import { MetaService } from '../services/meta/meta.service';
 import { IconService } from '../services/icons/icon.service';
 import { ProfileData } from '../classes/profile-data';
-import { UserService } from '../services/user/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -43,7 +42,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private tunnel: TunnelService,
     private meta: MetaService,
     private iconService: IconService,
-    private user: UserService
   ) { }
 
   searchUser(username: string = this.searchUsername) {
@@ -51,9 +49,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       user: username
     };
 
-    this.username = username;
     this.router.navigate(['profile'], {queryParams: m});
-    this.loadUser(username);
   }
 
   ngOnDestroy() {
@@ -61,37 +57,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.username = params['user'];
-
-      this.loadUser(this.username);
-
+    this.route.data.subscribe((data: {profileData: ProfileData}) => {
+      this.profileData = data.profileData;
+      if (this.profileData.Username === undefined){
+        this.profileFound = false;
+        return;
+      }
+      this.profileFound = true;
+      for (let i = 0 ; i < this.profileData.MatchHistory.length ; i++) {
+        (this.profileData.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((this.profileData.MatchHistory[i]).TimeElapsed);
+      }
     });
-  }
-
-  loadUser(username: string) {
-    const m = {
-      'Username': username
-    };
-
-    this.tunnel.getProfileData(m)
-      .subscribe((data: ProfileData) => {
-        try {
-          this.profileFound = (<any>data).length !== 0;
-        } catch (e) {
-          this.profileFound = true;
-        }
-
-        if (this.profileFound) {
-          for (let i = 0 ; i < data.MatchHistory.length ; i++) {
-            (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
-          }
-          
-
-          this.profileData = Object.assign(new ProfileData(this.user), data as ProfileData);
-          this.meta.profileTags(this.profileData);
-        }
-      });
   }
 
   getColor() {
