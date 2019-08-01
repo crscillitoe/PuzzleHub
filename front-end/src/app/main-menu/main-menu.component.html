@@ -4,6 +4,18 @@
 </h1>
 -->
 <div id="mainmenu" class="body">
+  <div *ngIf="!isLoggedIn()" class="container jumbotron">
+    <h1>Welcome to Puzzle Hub!</h1>
+    <p>
+    Puzzle Hub is the one-stop site for competitive puzzle games! Here we offer a wide variety of logic puzzles, both popular and obscure.
+    We offer games like Sudoku, Thermometers as popularized by The New York Times, and more!
+    Create an account to earn points for completing puzzles, level up, and unlock harder difficulties! To do so,
+    click Sign In on th top right, then Register.
+    </p>
+    <p>
+      If you'd prefer to play a few games first, just click on a difficulty of the game of your choice to get started.
+    </p>
+  </div>
   <div class="flex-container container-main-static">
     <ng-container *ngFor="let game of games">
         <mat-card class="puzzle-card">
