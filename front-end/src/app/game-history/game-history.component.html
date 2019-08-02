@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Game History</h1>
+<div mat-dialog-content>
+  <ng-container *ngFor="let game of profileData.MatchHistory; let i=index">
+    <div class="game-history container-flex-row">
+      <div class="game-icon"
+           [ngClass]="{
+           'easy': game.Difficulty === 1,
+           'medium': game.Difficulty === 2,
+           'hard': game.Difficulty === 3,
+           'extreme': game.Difficulty === 4
+           }">
+        <img src="{{getGameImageById(game.GameID)}}">
+      </div>
+      <div class="col">
+        <h5>{{getGameNameById(game.GameID)}} - {{getDifficulty(game.Difficulty)}}</h5>
+        <div>
+          <span class="monospace">{{game.TimeElapsed}}</span><br />
+          {{convertDate(game.TimeCompleted) | date: 'MM/dd/yyyy hh:mm a'}}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-button class="btn-diff-medium" (click)="loadMore()">Load More</button>
+</div>

@@ -1,95 +1,112 @@
-<div class="col-12 top-bar" *ngIf="profileFound === false">
-  <h1>Username not found</h1>
-  <mat-form-field>
-    <input matInput 
-      id="findAccount"
-      type="text"
-      name="userLookup"
-      size="10"
-      [(ngModel)]="searchUsername"
-      placeholder="Look up a Puzzler">
-  </mat-form-field>
-</div>
+<div class="container"><!-- main container -->
+  <div class="col-12" [ngClass]="{'top-bar': profileFound === true}">
+    <h1>{{profileFound === true ? "Profile" : profileFound === false ? "Puzzler not found" : ''}}</h1>
+    <mat-form-field>
+      <input matInput 
+        id="findAccount"
+        type="text"
+        name="userLookup"
+        size="10"
+        [(ngModel)]="searchUsername"
+        placeholder="Look up a Puzzler">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
 
-<ng-container *ngIf="profileFound">
-  <div class="container-stretch container-flex-column">
-    <div class="container-flex profile"><!-- Profile -->
-      <div class="col-12 top-bar">
-        <h1>Profile</h1>
-        <mat-form-field>
-          <input matInput 
-            id="findAccount"
-            type="text"
-            name="userLookup"
-            size="10"
-            [(ngModel)]="searchUsername"
-            placeholder="Look up a Puzzler">
-        </mat-form-field>
-      </div>
-      <div class="col-9 container-flex-row user-panel"><!-- Info -->
-        <app-puzzler-icon
-          id="puzzleIcon"
-          class="puzzler-icon"
-          [puzzlerIconID]="profileData.PuzzlerIcon"
-        >
-        </app-puzzler-icon>
-        <div class="col user-info">
-          <h2>{{profileData.Username}}
-            <ng-container *ngIf="profileData.Role">
-              - {{profileData.Role}}
-            </ng-container>
-          </h2>
-          <div>Level {{profileData.level}}</div>
-          <app-xp-bar
-            class="profile-xp-bar"
-            [color]="getColor()"
-            [accentColor]="getAccentColor()"
-            [className]="'profile-xp-bar'"
-            [progress]="profileData.progress">
-          </app-xp-bar>
-          <span>{{profileData.currentXP}}/{{profileData.levelUpXP}}</span>
-        </div>
-      </div><!-- Info -->
-      <div class="col-3 accolade-panel"><!-- Medals -->
-        <h2>Medals</h2>
-        <table class="medal-table">
-          <ng-container *ngFor="let medalType of medalTypes; let i = index">
-            <tr>
-              <td>{{medalType}}</td>
-              <ng-container *ngFor="let medalName of medalNames; let j index">
-                <td><img src="{{medalPath}}{{medalType}}_{{medalName}}.svg" width="16px">
-                  x{{profileData[medalType + medalName + 'Medals']}}</td>
-              </ng-container>
-            </tr>
-          </ng-container>
-        </table>
-      </div><!-- Medals -->
-      <div class="col-12"><!-- Game History -->
-        <h2>Recent Games</h2>
-        <ng-container *ngFor="let game of profileData.MatchHistory; let i=index">
-          <div class="game-history container-flex-row">
-            <div class="game-icon"
-                 [ngClass]="{
-                 'easy': game.Difficulty === 1,
-                 'medium': game.Difficulty === 2,
-                 'hard': game.Difficulty === 3,
-                 'extreme': game.Difficulty === 4
-                 }">
-              <img src="{{getGameImage(game.GameID)}}">
+  <ng-container *ngIf="profileFound">
+    <div class="container-flex-column"><!-- column container -->
+      <div class="container-flex profile"><!-- Profile -->
+        <div class="col-7"><!-- Info -->
+          <div class="col-12 container-flex-row user-panel"><!-- Puzzler Number/Level -->
+            <app-puzzler-icon
+              id="puzzleIcon"
+              class="puzzler-icon"
+              [puzzlerIconID]="profileData.PuzzlerIcon"
+            >
+            </app-puzzler-icon>
+            <div class="col user-info">
+              <h2>{{profileData.Username}}
+                <ng-container *ngIf="profileData.Role">
+                  - {{profileData.Role}}
+                </ng-container>
+              </h2>
+              <div>Level {{profileData.level}}</div>
+              <app-xp-bar
+                class="profile-xp-bar"
+                [color]="getColor()"
+                [accentColor]="getAccentColor()"
+                [className]="'profile-xp-bar'"
+                [progress]="profileData.progress">
+              </app-xp-bar>
+              <span>{{profileData.currentXP}}/{{profileData.levelUpXP}}</span>
             </div>
-            <div class="col">
-              <h5>{{getGameName(game.GameID)}} - {{getDifficulty(game.Difficulty)}}</h5>
-              <div>
-                <span class="monospace">{{game.TimeElapsed}}</span><br />
-                {{convertDate(game.TimeCompleted) | date: 'MM/dd/yyyy hh:mm a'}}
+          </div><!-- Puzzler Number/Level -->
+          <div class="col-12 accolade-panel"><!-- Medals -->
+            <h2>Medals</h2>
+            <table class="accolade-table">
+              <ng-container *ngFor="let medalType of medalTypes; let i = index">
+                <tr>
+                  <td>{{medalType}}</td>
+                  <ng-container *ngFor="let medalName of medalNames; let j index">
+                  <td><img src="{{medalPath}}{{medalType}}_{{medalName}}.svg" width="16px">
+                    x{{profileData[medalType + medalName + 'Medals']}}</td>
+                  </ng-container>
+                </tr>
+              </ng-container>
+            </table>
+          </div><!-- Medals -->
+          <div class="col-12 accolade-panel"><!-- Challenges -->
+            <h2>Daily Challenges</h2>
+            <table class="accolade-table">
+              <tr>
+                <td>Easy</td>
+                <td>{{profileData.EasyDailies}}</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>{{profileData.MediumDailies}}</td>
+              </tr>
+              <tr>
+                <td>Hard</td>
+                <td>{{profileData.HardDailies}}</td>
+              </tr>
+              <tr>
+                <td>Extreme</td>
+                <td>{{profileData.ExtremeDailies}}</td>
+              </tr>
+            </table>
+          </div><!-- Challenges -->
+        </div><!-- Info -->
+        <div class="col-5"><!-- Game Stats -->
+          <div class="col-12" *ngIf="favoriteGame !== undefined"><!-- Favorite Game -->
+            <h2>Most Played Game</h2>
+            <div class="games-played container-flex-row">
+              <div class="game-icon generic">
+                <img src="{{favoriteGame.GameImage}}">
+              </div>
+              <div class="col">
+                <h5>{{favoriteGame.GameName}}</h5>
+                Total: {{favoriteGame.TotalPlayed}}
               </div>
             </div>
-          </div>
-        </ng-container>
-        <div class="load-more">
-          <button mat-button class="btn-diff-medium" (click)="loadMore()">Load More</button>
-        </div>
-      </div><!-- Game History -->
-    </div><!-- Profile -->
-  </div>
-<ng-container>
+          </div><!-- Favorite Game -->
+          <div class="col-12" *ngIf="gameStats !== undefined"><!-- Games Played -->
+            <h2>Games Played</h2>
+            <button mat-raised-button color="primary" (click)="openGameHistory()" routerLinkActive="active">Game History</button>
+            <ng-container *ngFor="let g of gameStats | keyvalue">
+              <div class="games-played container-flex-row">
+                <div class="game-icon generic">
+                  <img src="{{g.value.GameImage}}">
+                </div>
+                <div class="col">
+                  <h5>{{g.value.GameName}}</h5>
+                  Total: {{g.value.TotalPlayed}}
+                </div>
+              </div>
+            </ng-container>
+          </div><!-- Games Played -->
+        </div><!-- Game Stats -->
+      </div><!-- Profile -->
+    </div><!-- column container -->
+  </ng-container>
+</div><!-- main container -->

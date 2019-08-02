@@ -8,5 +8,82 @@
   '../../sass/components/button';
 
 // Page-specific
-@import
-  '../../sass/pages/profile';
+.profile {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .col-12 {
+    margin-top: 1rem;
+  }
+}
+
+.user-panel {
+  flex-wrap: nowrap;
+}
+
+.puzzler-icon {
+  max-width: 7rem;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+.accolade-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-info {
+  margin-left: 20px;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-xp-bar {
+  height: 0.75rem;
+}
+
+.accolade-table {
+  td {
+    padding: 0 1rem;
+  }
+
+  tr {
+    & td:first-child {
+      padding-left: 0;
+    }
+    & td:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.games-played {
+  margin: 0.25rem 0;
+  padding: 0.25rem;
+  flex-wrap: nowrap;
+}
+
+.game-icon {
+  flex-grow: 0;
+  flex-shrink: 1;
+  max-width: 5.25rem;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+
+  img {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+}
+
+.generic {
+  background-color: $icon-bg;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+}

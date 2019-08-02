@@ -23,7 +23,7 @@ export class GameListAllService extends GameList {
         'Each number can only appear once in a row, column, or box.',
         'Hover over a box and input 1-9 on the keyboard, input a 0 to clear a box. Pressing "t" ' +
         'will switch Taking Notes mode on and off.',
-        "play sudoku online, sudoku online"
+        'play sudoku online, sudoku online'
       ),
       new Game(
         GameID.TAKUZU,
@@ -43,7 +43,7 @@ export class GameListAllService extends GameList {
         '1s and 0s in each row and column and no more than two of either number adjacent to ' +
         'each other. Additionally, there can be no identical rows or columns.',
         'Left/Right click',
-        "play takuzu online, takuzu online"
+        'play takuzu online, takuzu online'
       ),
       new Game(
         GameID.NONOGRAMS,
@@ -65,7 +65,7 @@ export class GameListAllService extends GameList {
         'colored in in the row or column. There must be at least one blank tile between each ' +
         'group.',
         'Left-click on a tile to fill it in, right-click on a tile to mark it blank.',
-        "play nonograms online, nonograms online",
+        'play nonograms online, nonograms online',
       ),
       new Game(
         GameID.THERMOMETERS,
@@ -83,7 +83,7 @@ export class GameListAllService extends GameList {
         'The numbers in the rows/columns indicate the amount of fluid that must be present in ' +
         'that given row/column.',
         'Click anywhere on the thermometer to insert fluid.',
-        "play thermometers online, thermometers online, new york times thermometers",
+        'play thermometers online, thermometers online, new york times thermometers',
       ),
       new Game(
         GameID.HASHI,
@@ -105,7 +105,7 @@ export class GameListAllService extends GameList {
         'drawing a series of bridges between the islands. The number of bridges coming off of ' +
         'an island must match the number written on that island.',
         'Click and drag from an island to build a bridge.',
-        "play hashi online, hashi online, puzzle bridges online",
+        'play hashi online, hashi online, puzzle bridges online',
       ),
       new Game(
         GameID.TILE_GAME,
@@ -121,7 +121,7 @@ export class GameListAllService extends GameList {
         ],
         'Order the numbers in sequential order from left to right, top to bottom',
         'Arrow Keys or WASD',
-        "play tiles game online, play 15-puzzle online, tile game online, 15-puzzle online, 15 puzzle online"
+        'play tiles game online, play 15-puzzle online, tile game online, 15-puzzle online, 15 puzzle online'
       )
     ];
 
@@ -147,6 +147,22 @@ export class GameListAllService extends GameList {
     return null;
   }
 
+  public static getGameNameById(id: number): string {
+    for (const g of GameListAllService.games) {
+      if (g.id === id) {
+        return g.name;
+      }
+    }
+  }
+
+  public static getGameImageById(id: number): string {
+    for (const g of GameListAllService.games) {
+      if (g.id === id) {
+        return g.image;
+      }
+    }
+  }
+
   public static getRandomDifficulty() {
     return Math.floor(Math.random() * 4) + 1;
   }
@@ -154,7 +170,7 @@ export class GameListAllService extends GameList {
   public static getRandomGameName() {
     let gameName = this.games[Math.floor(Math.random() * this.games.length)].name;
 
-    while (gameName == 'Minesweeper') {
+    while (gameName === 'Minesweeper') {
       gameName = this.games[Math.floor(Math.random() * this.games.length)].name;
     }
 

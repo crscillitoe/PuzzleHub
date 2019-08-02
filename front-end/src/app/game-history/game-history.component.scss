@@ -1,0 +1,44 @@
+// Configuration and helpers
+@import
+  '../../sass/abstracts/variables',
+  '../../sass/abstracts/mixins';
+
+// Components
+@import
+  '../../sass/components/button';
+
+// Page-specific
+.game-history {
+  margin: 0.25rem 0;
+  padding: 0.25rem;
+  flex-wrap: nowrap;
+}
+
+.game-icon {
+  flex-grow: 0;
+  flex-shrink: 1;
+  max-width: 5.25rem;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+
+  img {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+}
+
+.easy {
+  background-color: $diff-color-easy;
+}
+
+.medium {
+  background-color: $diff-color-medium;
+}
+
+.hard {
+  background-color: $diff-color-hard;
+}
+
+.extreme {
+  background-color: $diff-color-extreme;
+}

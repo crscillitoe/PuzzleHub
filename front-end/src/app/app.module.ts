@@ -46,6 +46,7 @@ import { DailyChallengesComponent } from './daily-challenges/daily-challenges.co
 import { PuzzlerIconComponent } from './puzzler-icon/puzzler-icon.component';
 import { XpBarComponent } from './xp-bar/xp-bar.component';
 import { GameDescriptionComponent } from './game-description/game-description.component';
+import { GameHistoryComponent } from './game-history/game-history.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainMenuComponent},
@@ -124,7 +125,8 @@ const appRoutes: Routes = [
     DailyChallengesComponent,
     PuzzlerIconComponent,
     XpBarComponent,
-    GameDescriptionComponent
+    GameDescriptionComponent,
+    GameHistoryComponent
   ],
   imports: [
     AngularFittextModule,
@@ -163,7 +165,8 @@ const appRoutes: Routes = [
   entryComponents: [
     PuzzleRelayPopupComponent,
     ProfileIconPickerComponent,
-    DailyChallengesComponent
+    DailyChallengesComponent,
+    GameHistoryComponent,
   ],
   bootstrap: [AppComponent]
 })
