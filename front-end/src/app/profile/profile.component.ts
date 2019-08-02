@@ -92,7 +92,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   loadMore() {
     const m = {
-      'Username': this.username,
+      'Username': this.profileData.Username,
       'Offset': this.profileData.MatchHistory.length
     };
 
