@@ -8,6 +8,24 @@ import { MetaService } from '../services/meta.service';
 import { IconService } from '../services/icons/icon.service';
 import { ProfileData } from '../classes/profile-data';
 import { UserService } from '../services/user/user.service';
+import { GameID } from '../enums/game-id.enum';
+
+interface GameDifficultyStats {
+  'Difficulty': number;
+  'Played': number;
+}
+
+interface GameStats {
+  'GameID': number;
+  'GameName': string;
+  'GameImage': string;
+  'TotalPlayed': number;
+  'Difficulties': GameDifficultyStats[];
+}
+
+interface GameStatsCollection {
+  [key: number]: GameStats;
+}
 
 @Component({
   selector: 'app-profile',
@@ -16,13 +34,15 @@ import { UserService } from '../services/user/user.service';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 
-  searchUsername: string = '';
+  searchUsername = '';
   profileFound: boolean;
   username: string;
   profileData: ProfileData;
   games: any = GameDataService.games;
   level: number;
   progress: number;
+  favoriteGame: GameStats;
+  gameStats: GameStatsCollection;
 
   medalTypes = [
     'Daily',
@@ -73,6 +93,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const m = {
       'Username': username
     };
+    this.gameStats = {};
+    this.favoriteGame = undefined;
 
     this.tunnel.getProfileData(m)
       .subscribe((data: ProfileData) => {
@@ -86,9 +108,52 @@ export class ProfileComponent implements OnInit, OnDestroy {
           for (let i = 0 ; i < data.MatchHistory.length ; i++) {
             (data.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((data.MatchHistory[i]).TimeElapsed);
           }
-          
 
           this.profileData = Object.assign(new ProfileData(this.user), data as ProfileData);
+
+          let gid: number;
+          let gameDiff: number;
+          let gamesPlayed: number;
+
+          for (let i = 0; i < this.profileData.GamesPlayed.length; i++) {
+            gid = this.profileData.GamesPlayed[i].GameID;
+            gameDiff = this.profileData.GamesPlayed[i].Difficulty;
+            gamesPlayed = this.profileData.GamesPlayed[i].GamesPlayed;
+
+            if (gid === GameID.MINESWEEPER) {
+              continue; // Skip Minesweeper
+            }
+
+            let g: GameStats = {
+              'GameID': gid,
+              'GameName': this.getGameName(gid),
+              'GameImage': this.getGameImage(gid),
+              'TotalPlayed': 0,
+              'Difficulties': []
+            };
+
+            if (this.gameStats[gid] === undefined) {
+              this.gameStats[gid] = g;
+            } else {
+              g = this.gameStats[gid];
+            }
+
+            g.TotalPlayed += gamesPlayed;
+
+            const d: GameDifficultyStats = {
+              'Difficulty': gameDiff,
+              'Played': gamesPlayed
+            };
+
+            g.Difficulties.push(d);
+          }
+          // console.log(this.gameStats);
+
+          for (const gameID in this.gameStats) {
+            if (this.favoriteGame === undefined || this.favoriteGame.TotalPlayed < this.gameStats[gameID].TotalPlayed) {
+              this.favoriteGame = this.gameStats[gameID];
+            }
+          }
           this.meta.profileTags(this.profileData);
         }
       });
@@ -106,7 +171,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return new Date(dateStr + 'Z');
   }
 
-  getGameName(id: number) {
+  public getGameName(id: number): string {
     for (let i = 0 ; i < this.games.length ; i++) {
       if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Name'];
@@ -129,12 +194,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
-  getGameImage(id: number) {
+  public getGameImage(id: number): string {
     for (let i = 0 ; i < this.games.length ; i++) {
       if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Image'];
       }
     }
+  }
+
+  public getGameStatsKeys(): Array<string> {
+    return Object.keys(this.gameStats);
   }
 
   getDifficulty(num: number) {
@@ -155,7 +224,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (keyEvent.keyCode === 13 && this.searchUsername !== '') {
       this.searchUser(this.searchUsername.trim());
       this.searchUsername = '';
-      document.getElementById("findAccount").blur();
+      document.getElementById('findAccount').blur();
     }
   }
 }
