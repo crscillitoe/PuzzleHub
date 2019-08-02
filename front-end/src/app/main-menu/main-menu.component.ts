@@ -9,7 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { Subscription } from 'rxjs/Subscription';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';
-import { MetaService } from '../services/meta.service';
+import { MetaService } from '../services/meta/meta.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -42,15 +42,15 @@ export class MainMenuComponent implements OnInit {
       }
     }
 
-    this.meta.defaultTags();
-
-    // TODO - this should listen to the updated profile model
     this.subscription = this.user.accountData
       .subscribe ( (data) => {
         if (data) {
           this.level = data.level;
         }
       });
+
+
+    this.meta.defaultTags();
   }
 
   isLoggedIn() {

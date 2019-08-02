@@ -21,7 +21,8 @@ export class XpBarComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.styleElement = document.createElement('style');
+    if(isPlatformBrowser(this.platformId))
+      this.styleElement = document.createElement('style');
     this.updateColors();
   }
 
