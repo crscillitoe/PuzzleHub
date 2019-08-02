@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Game History</h1>
+<h1 mat-dialog-title class="game-history-title">Game History</h1>
 <div mat-dialog-content>
   <ng-container *ngFor="let game of profileData.MatchHistory; let i=index">
     <div class="game-history container-flex-row">
@@ -21,6 +21,6 @@
     </div>
   </ng-container>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions class="load-more">
   <button mat-button class="btn-diff-medium" (click)="loadMore()">Load More</button>
 </div>
