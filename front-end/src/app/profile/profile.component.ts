@@ -4,7 +4,7 @@ import { TunnelService } from '../services/tunnel/tunnel.service';
 import { Router } from '@angular/router';
 import { GameDataService } from '../services/games/game-data.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
-import { MetaService } from '../services/meta/meta.service';
+import { MetaService } from '../services/meta.service';
 import { IconService } from '../services/icons/icon.service';
 import { ProfileData } from '../classes/profile-data';
 import { UserService } from '../services/user/user.service';
@@ -63,6 +63,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private tunnel: TunnelService,
     private meta: MetaService,
     private iconService: IconService,
+    private user: UserService
   ) { }
 
   searchUser(username: string = this.searchUsername) {
@@ -70,7 +71,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       user: username
     };
 
+    this.username = username;
     this.router.navigate(['profile'], {queryParams: m});
+    this.loadUser(username);
   }
 
   ngOnDestroy() {
@@ -78,16 +81,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.route.data.subscribe((data: {profileData: ProfileData}) => {
-      this.profileData = data.profileData;
-      if (this.profileData.Username === undefined){
-        this.profileFound = false;
-        return;
-      }
-      this.profileFound = true;
-      for (let i = 0 ; i < this.profileData.MatchHistory.length ; i++) {
-        (this.profileData.MatchHistory[i]).TimeElapsed = SharedFunctionsService.convertToDateString((this.profileData.MatchHistory[i]).TimeElapsed);
-      }
+    this.route.queryParams.subscribe(params => {
+      this.username = params['user'];
+
+      this.loadUser(this.username);
+
     });
   }
 
@@ -183,7 +181,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   loadMore() {
     const m = {
-      'Username': this.profileData.Username,
+      'Username': this.username,
       'Offset': this.profileData.MatchHistory.length
     };
 

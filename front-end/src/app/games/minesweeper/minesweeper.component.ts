@@ -13,7 +13,7 @@ import { GameBoard } from '../../classes/game-board';
 import { OptionsService } from '../../services/games/options.service';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser } from '@angular/common';
-import { MetaService } from '../../services/meta/meta.service';
+import { MetaService } from '../../services/meta.service';
 
 @Component({
   selector: 'app-minesweeper',

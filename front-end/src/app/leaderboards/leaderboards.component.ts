@@ -11,7 +11,7 @@ import { Game } from '../classes/game';
 import { GameListAllService } from '../services/games/game-list-all.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { forkJoin } from 'rxjs';
-import { MetaService } from '../services/meta/meta.service';
+import { MetaService } from '../services/meta.service';
 
 @Component({
   selector: 'app-leaderboards',

@@ -34,7 +34,6 @@ import { OptionsComponent } from './options/options.component';
 import { ProfileComponent } from './profile/profile.component';
 // import { KakuroComponent } from './games/kakuro/kakuro.component';
 import { ThermometersComponent } from './games/thermometers/thermometers.component';
-import { ProfileResolverService } from './services/profile-resolver/profile-resolver.service';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NonogramsComponent } from './games/nonograms/nonograms.component';
@@ -56,15 +55,8 @@ const appRoutes: Routes = [
   { path: 'ResetPassword', component: ForgotPasswordComponent},
   { path: 'EmailSuccess', component: EmailSuccessComponent},
   { path: 'patchNotes', component: TodoComponent},
+  { path: 'profile', component: ProfileComponent},
   { path: 'games/:gameName', component: GameDescriptionComponent },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
-    resolve: {
-      profileData: ProfileResolverService
-    }
-  },
   {
     path: 'Hashi',
         component: HashiComponent

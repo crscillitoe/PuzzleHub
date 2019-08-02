@@ -14,7 +14,7 @@ import { OptionsService } from '../services/games/options.service';
 import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser } from '@angular/common';
 import { RelayTrackerService } from '../services/relay/relay-tracker.service';
-import { MetaService } from '../services/meta/meta.service';
+import { MetaService } from '../services/meta.service';
 
 export class GameBoard implements OnInit, OnDestroy {
   private _gameID: number;
@@ -251,17 +251,13 @@ export class GameBoard implements OnInit, OnDestroy {
     this.subscription.add(subscription);
   }
 
-  public handleOptionsOption(callback: any) {
-    try {
-      this.handleOption(callback);
-    } catch(e) {
-      if (callback === 'newGame') {
-        this.newGame();
-      } else if (callback === 'clearBoard') {
-        this.clearBoard();
-      } else if (callback.split(',').length === 2) {
-        this.newGame(parseInt(callback.split(',')[1]));
-      }
+  public handleOptionsOption(callback: string) {
+    if (callback === 'newGame') {
+      this.newGame();
+    } else if (callback === 'clearBoard') {
+      this.clearBoard();
+    } else if (callback.split(',').length === 2) {
+      this.newGame(parseInt(callback.split(',')[1]));
     }
   }
 

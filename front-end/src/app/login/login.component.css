@@ -336,6 +336,10 @@
     height: 1.125rem;
     pointer-events: none;
     content: "";
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
     background-color: transparent;
     border: 2px solid #404040;
   }
