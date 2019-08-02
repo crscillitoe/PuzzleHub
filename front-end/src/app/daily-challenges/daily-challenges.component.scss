@@ -1,34 +1,35 @@
-.relay {
-    display: inline-block;
-    flex-direction: row;
-    justify-content: left;
-    width: 90%;
+// Configuration and helpers
+@import
+'../../sass/abstracts/variables';
+
+// Page-specific
+.challenge-title {
+  font-family: $alt-font-stack;
 }
 
-.challenge-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.relay {
+  display: flex;
+  justify-content: center;
+}
+
+.clickable {
+  cursor: hover;
+
+  &:hover {
+    background-color: rgba(0,0,0,0.2);
+  }
 }
 
 .challenge {
-    border-radius: 10px;
-    border: solid;
-    padding: 5px;
-}
+  padding: 0.25rem 0;
 
-h1 {
-    margin: 0;
-}
-
-.play {
-    display: inline-block;
+  h5 {
+    font-size: 1.2rem;
+  }
 }
 
 .game-icon {
-  margin-right: 20px;
+  margin: 0.5rem;
   display: inline-block;
   flex-grow: 0;
   flex-shrink: 1;
@@ -42,52 +43,35 @@ h1 {
   }
 }
 
-.easy {
-    color: #1e7e34 !important;
-}
-
-.medium {
-    color: #007bff !important;
-}
-
-.hard {
-    color: #f28c32 !important;
-}
-
-.extreme {
-    color: #dc3545 !important;
-}
-
 .icon-easy {
-    background-color: #1e7e34;
-    display: inline-block;
+  background-color: $diff-color-easy;
 }
 
 .icon-medium {
-    background-color: #007bff !important;
+  background-color: $diff-color-medium;
 }
 
 .icon-hard {
-    background-color: #f28c32 !important;
+  background-color: $diff-color-hard;
 }
 
 .icon-extreme {
-    background-color: #dc3545 !important;
+  background-color: $diff-color-extreme;
 }
 
 .btn-easy {
-    background-color: #1e7e34;
-    display: inline-block;
+  background-color: #1e7e34;
+  display: inline-block;
 }
 
 .btn-medium {
-    background-color: #007bff !important;
+  background-color: #007bff !important;
 }
 
 .btn-hard {
-    background-color: #f28c32 !important;
+  background-color: #f28c32 !important;
 }
 
 .btn-extreme {
-    background-color: #dc3545 !important;
+  background-color: #dc3545 !important;
 }

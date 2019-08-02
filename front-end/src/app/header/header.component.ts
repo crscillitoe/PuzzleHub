@@ -92,10 +92,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openDailyChallenges() {
-    const dialogRef = this.dialog.open(DailyChallengesComponent, {
-      width: '800px',
-      height: '700px'
-    });
+    const dialogRef = this.dialog.open(DailyChallengesComponent);
   }
 
   getEnum(name) {

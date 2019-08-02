@@ -24,7 +24,7 @@ export class DailyChallengesComponent implements OnInit {
     GameID.THERMOMETERS,
     GameID.TILE_GAME,
     GameID.NONOGRAMS
-  ]
+  ];
 
   games: any = GameDataService.games;
 
@@ -32,34 +32,33 @@ export class DailyChallengesComponent implements OnInit {
     private router: Router,
     public dialogRef: MatDialogRef<DailyChallengesComponent>,
     public tunnel: TunnelService
-  ) { 
+  ) {
     tunnel.getCompletedDailyChallenges()
       .subscribe(result => {
         this.completedChallenges = result;
-        console.log(this.completedChallenges);
         tunnel.getDailyChallenges()
           .subscribe(data => {
             this.dailyChallenges = [];
-            for (var i = 0 ; i < data.length ; i++) {
+            for (let i = 0 ; i < data.length ; i++) {
               const entry = data[i];
               const gameList: number[] = JSON.parse(entry.Relay);
 
-              let toAdd = {
+              const toAdd = {
                 Difficulty: entry.Difficulty,
                 XPReward: entry.XPReward,
                 Relay: gameList.slice(0, entry.Length),
                 Length: entry.Length
-              }
+              };
 
               this.dailyChallenges.push(toAdd);
             }
           });
       });
   }
-  
+
   getGame(id) {
     console.log(id);
-    for (var i = 0 ; i < this.games.length ; i++) {
+    for (let i = 0 ; i < this.games.length ; i++) {
       if (this.games[i].GameID === id) {
         return this.games[i];
       }
@@ -69,17 +68,20 @@ export class DailyChallengesComponent implements OnInit {
   }
 
   playChallenge(challenge) {
-    console.log(challenge);
-    let gameStack = [];
-    for (var i = 0 ; i < challenge.Relay.length ; i++) {
-      let game = this.getGame(this.mappedGames[challenge.Relay[i]]);
+    if (this.completedChallenges.includes(challenge.Difficulty)) {
+      return;
+    }
+
+    const gameStack = [];
+    for (let i = 0 ; i < challenge.Relay.length ; i++) {
+      const game = this.getGame(this.mappedGames[challenge.Relay[i]]);
       console.log(game);
 
-      let m = {
+      const m = {
         name: game.Name,
         id: game.GameID,
         difficulty: challenge.Difficulty
-      }
+      };
 
       gameStack.push(m);
     }
@@ -91,14 +93,14 @@ export class DailyChallengesComponent implements OnInit {
     RelayTrackerService.queueTimes = [];
     RelayTrackerService.challengeMode = challenge.Difficulty;
 
-    let route = gameStack[0].name;
-    let diffToAdd = gameStack[0].difficulty;
+    const route = gameStack[0].name;
+    const diffToAdd = gameStack[0].difficulty;
 
-    const m = {
+    const m2 = {
       diff: diffToAdd
-    }
+    };
 
-    this.router.navigate([route, m]);
+    this.router.navigate([route, m2]);
     this.close();
   }
 
@@ -107,6 +109,19 @@ export class DailyChallengesComponent implements OnInit {
       if ((this.games[i])['GameID'] === id) {
         return (this.games[i])['Image'];
       }
+    }
+  }
+
+  public getDifficulty(num: number): string {
+    switch (num) {
+      case 1:
+        return 'Easy';
+      case 2:
+        return 'Medium';
+      case 3:
+        return 'Hard';
+      case 4:
+        return 'Extreme';
     }
   }
 

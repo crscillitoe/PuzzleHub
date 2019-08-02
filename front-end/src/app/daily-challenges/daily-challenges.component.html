@@ -1,17 +1,17 @@
-<div class="challenge-container">
+<h1 mat-dialog-title class="challenge-title">Daily Challenges</h1>
+<div mat-dialog-content>
   <ng-container *ngFor="let challenge of dailyChallenges">
     <div class="challenge">
-      <h1
-        [ngClass]="{
-         'easy': challenge.Difficulty === 1,
-         'medium': challenge.Difficulty === 2,
-         'hard': challenge.Difficulty === 3,
-         'extreme': challenge.Difficulty === 4
-        }">
-        Challenge {{challenge.Difficulty}} - Reward: {{challenge.XPReward}}XP
-      </h1>
+      <h5>
+        {{getDifficulty(challenge.Difficulty)}} - {{completedChallenges.includes(challenge.Difficulty) ? "Complete!" : "Reward: " + challenge.XPReward + "XP"}}
+      </h5>
 
-      <div class="relay">
+      <div
+        class="relay"
+        (click)="playChallenge(challenge)"
+        [ngClass]="{
+          'clickable': ! completedChallenges.includes(challenge.Difficulty)
+        }">
         <ng-container *ngFor="let gameID of challenge.Relay">
           <div class="game-icon"
                [ngClass]="{
@@ -23,23 +23,6 @@
             <img src="{{getGameImage(mappedGames[gameID])}}">
           </div>
         </ng-container>
-      </div>
-      <div class="play">
-        <button mat-raised-button (click)="playChallenge(challenge)"
-          [disabled]="completedChallenges.includes(challenge.Difficulty)"
-          [ngClass]="{
-           'btn-easy': challenge.Difficulty === 1,
-           'btn-medium': challenge.Difficulty === 2,
-           'btn-hard': challenge.Difficulty === 3,
-           'btn-extreme': challenge.Difficulty === 4
-          }">
-          <ng-container *ngIf="completedChallenges.includes(challenge.Difficulty)">
-            Done
-          </ng-container>
-          <ng-container *ngIf="!completedChallenges.includes(challenge.Difficulty)">
-            Play
-          </ng-container>
-        </button>
       </div>
     </div>
   </ng-container>
