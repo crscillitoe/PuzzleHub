@@ -7,5 +7,25 @@
   '../../sass/components/card';
 
 // Page-specific
-@import
-  '../../sass/pages/login';
+.login-card {
+  color: rgba(255,255,255,0.7);
+  width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  section {
+    color: rgba(255,255,255,0.7);
+  }
+
+  button {
+    margin-top: 0.5rem;
+    background-color: $puz-blue;
+    font-size: 0.9rem;
+    font-family: $text-font-stack;
+    color: $white;
+  }
+}

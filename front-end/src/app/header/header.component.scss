@@ -3,5 +3,224 @@
   '../../sass/abstracts/variables';
 
 // Page-specific
-@import
-  '../../sass/pages/header';
+.puzzle-image {
+  padding: 3px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 50px;
+}
+
+.navbar-brand {
+  padding-top: 0rem !important;
+}
+
+.clickable {
+  -webkit-app-region: no-drag;
+}
+
+.imagecontainer {
+  position: absolute;
+  top:0px;
+  left:calc(50% - 90px);
+  height:3.5rem;
+  width: 179px;
+  z-index:0;
+}
+
+.image {
+  margin-top:5px;
+  height: 50px;
+}
+
+.imageholder {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width:179px;
+  height: 50px;
+}
+
+.draggable {
+  cursor: grabbing;
+  -webkit-app-region: drag;
+}
+
+* {
+  z-index:99;
+}
+
+.leftMore {
+  padding-right: 20px !important;
+}
+
+.traffic-lights {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  -webkit-app-region: no-drag;
+}
+.focus .traffic-lights > .traffic-light-close, .traffic-lights:hover > .traffic-light-close, .traffic-lights:active > .traffic-light-close {
+  background-color: #ff6159;
+}
+.focus .traffic-lights > .traffic-light-close:active:hover, .traffic-lights:hover > .traffic-light-close:active:hover, .traffic-lights:active > .traffic-light-close:active:hover {
+  background-color: #bf4942;
+}
+.focus .traffic-lights > .traffic-light-minimize, .traffic-lights:hover > .traffic-light-minimize, .traffic-lights:active > .traffic-light-minimize {
+  background-color: #ffbd2e;
+}
+.focus .traffic-lights > .traffic-light-minimize:active:hover, .traffic-lights:hover > .traffic-light-minimize:active:hover, .traffic-lights:active > .traffic-light-minimize:active:hover {
+  background-color: #bf8e22;
+}
+.focus .traffic-lights > .traffic-light-maximize, .traffic-lights:hover > .traffic-light-maximize, .traffic-lights:active > .traffic-light-maximize {
+  background-color: #28c941;
+}
+.focus .traffic-lights > .traffic-light-maximize:active:hover, .traffic-lights:hover > .traffic-light-maximize:active:hover, .traffic-lights:active > .traffic-light-maximize:active:hover {
+  background-color: #1d9730;
+}
+.traffic-lights > .traffic-light:before, .traffic-lights > .traffic-light:after {
+  visibility: visible;
+}
+.traffic-lights:hover > .traffic-light:before, .traffic-lights:hover > .traffic-light:after, .traffic-lights:active > .traffic-light:before, .traffic-lights:active > .traffic-light:after {
+  visibility: visible;
+}
+
+.traffic-light-minimize {
+  background-color: #ffbd2e;
+}
+
+.traffic-light-maximize {
+  background-color: #28c941;
+}
+
+.traffic-light-close {
+  background-color: #ff6159;
+}
+
+.traffic-light {
+  border-radius: 100%;
+  padding: 0;
+  height: 20px;
+  width: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  position: relative;
+  outline: none;
+}
+.traffic-light:before, .traffic-light:after {
+  content: '';
+  position: absolute;
+  border-radius: 1px;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.traffic-light-close:before, .traffic-light-close:after {
+  background-color: #4d0000;
+  width: 8px;
+  height: 1px;
+}
+.traffic-light-close:before {
+  transform: rotate(45deg);
+}
+.traffic-light-close:after {
+  transform: rotate(-45deg);
+}
+.traffic-light-close:active:hover:before, .traffic-light-close:active:hover:after {
+  background-color: #190000;
+}
+.traffic-light-minimize:before {
+  background-color: #995700;
+  width: 8px;
+  height: 1px;
+}
+.traffic-light-minimize:active:hover:before {
+  background-color: #592800;
+}
+.traffic-light-maximize:before {
+  background-color: #006500;
+  width: 6px;
+  height: 6px;
+}
+.traffic-light-maximize:after {
+  background-color: #28c941;
+  width: 10px;
+  height: 2px;
+  transform: rotate(45deg);
+}
+.traffic-light-maximize:active:hover:before {
+  background-color: #003200;
+}
+.traffic-light-maximize:active:hover:after {
+  background-color: #1d9730;
+}
+
+.col-account {
+  align-items: right;
+}
+
+.user-box {
+  width: 28rem;
+  color: rgba($white,0.5);
+  align-items: center;
+}
+
+.puzzler-icon {
+  width: 2.5rem;
+  max-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+
+  //img {
+    //width: 100%;
+    //height: 100%;
+    //background-color: lighten($cmp-color, 5%);
+  //}
+}
+
+.user-info {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 3;
+  flex-shrink: 1;
+}
+
+.username {
+  height: 1.2rem;
+  line-height: 1.2rem;
+  flex-shrink: 0;
+}
+
+.xp-row {
+  height: 0.3rem;
+  display: flex;
+  flex: row wrap;
+  flex-grow: 0;
+
+  .xp-bar {
+    width: 100%;
+    height: 0.3rem;
+  }
+}
+
+.lvl-tag {
+  flex-grow: 0;
+  padding-left: 0.2rem;
+}
+
+.lvl {
+  font-size: 0.5rem;
+}
+
+.level-xp {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  line-height: 0.85rem;
+}
+
+.sign-out {
+  display: flex;
+  flex-basis: content;
+  align-items: center;
+  line-height: 1rem;
+}
