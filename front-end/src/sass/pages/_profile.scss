@@ -1,10 +1,6 @@
 .profile {
   overflow-x: hidden;
   overflow-y: auto;
-
-  .col-12 {
-    margin-top: 1rem;
-  }
 }
 
 .user-panel {
@@ -12,7 +8,7 @@
 }
 
 .puzzler-icon {
-  max-width: 7rem;
+  max-width: 10rem;
   flex-grow: 0;
   flex-shrink: 1;
 }
@@ -50,30 +46,10 @@
   }
 }
 
-.games-played {
-  margin: 0.25rem 0;
-  padding: 0.25rem;
-  flex-wrap: nowrap;
-}
-
 .game-history {
   margin: 0.25rem 0;
   padding: 0.25rem;
   flex-wrap: nowrap;
-}
-
-.generic-game-icon {
-  flex-grow: 0;
-  flex-shrink: 1;
-  max-width: 4rem;
-  padding: 0.25rem;
-  border-radius: 0.3rem;
-  background-color: $icon-bg;
-
-  img {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
 }
 
 .game-icon {
@@ -87,10 +63,6 @@
     width: 4.25rem;
     height: 4.25rem;
   }
-}
-
-.generic {
-  background-color: $icon-bg;
 }
 
 .easy {
