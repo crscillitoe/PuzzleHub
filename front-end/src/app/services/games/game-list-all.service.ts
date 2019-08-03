@@ -104,7 +104,7 @@ export class GameListAllService extends GameList {
         'The goal is to connect all of the islands into a single connected group by ' +
         'drawing a series of bridges between the islands. The number of bridges coming off of ' +
         'an island must match the number written on that island.',
-        'Click and drag from an island to build a bridge.',
+        'Click and drag from an island to build a bridge. Alternatively, you can press WASD while hovering your mouse over an island. Shift+WASD will build two bridges.',
         'play hashi online, hashi online, puzzle bridges online',
       ),
       new Game(
@@ -120,7 +120,7 @@ export class GameListAllService extends GameList {
           'Order the numbers in sequential order from left to right, top to bottom',
         ],
         'Order the numbers in sequential order from left to right, top to bottom',
-        'Arrow Keys or WASD',
+        'With the Mouse Hover option enabled, hover your mouse over a tile to move it into the blank space. Alternatively, use the arrow keys or WASD.',
         'play tiles game online, play 15-puzzle online, tile game online, 15-puzzle online, 15 puzzle online'
       )
     ];
