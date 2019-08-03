@@ -5,7 +5,8 @@
 
 // Components
 @import
-  '../../sass/components/button';
+  '../../sass/components/button',
+  '../../sass/components/game-icon';
 
 // Page-specific
 .game-history {
@@ -18,35 +19,6 @@
   font-family: $alt-font-stack;
 }
 
-.game-icon {
-  flex-grow: 0;
-  flex-shrink: 1;
-  max-width: 5.25rem;
-  padding: 0.5rem;
-  border-radius: 0.3rem;
-
-  img {
-    width: 4.25rem;
-    height: 4.25rem;
-  }
-}
-
 .load-more {
   justify-content: center;
-}
-
-.easy {
-  background-color: $diff-color-easy;
-}
-
-.medium {
-  background-color: $diff-color-medium;
-}
-
-.hard {
-  background-color: $diff-color-hard;
-}
-
-.extreme {
-  background-color: $diff-color-extreme;
 }

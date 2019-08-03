@@ -4,4 +4,6 @@ export interface Difficulty {
   color: string;
   requiresLogin: boolean;
   minLevel: number;
+  cssBgColor: string;
+  cssTextColor: string;
 }

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TunnelService } from '../services/tunnel/tunnel.service';
 import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
 import { GameListAllService } from '../services/games/game-list-all.service';
+import { GameListService } from '../services/games/game-list.service';
 import { ProfileData } from '../classes/profile-data';
 import { MatDialogRef } from '@angular/material';
 
@@ -16,6 +17,7 @@ export class GameHistoryComponent implements OnInit {
 
   constructor(
     private tunnel: TunnelService,
+    public games: GameListService,
     public dialogRef: MatDialogRef<GameHistoryComponent>,
   ) { }
 
@@ -39,27 +41,6 @@ export class GameHistoryComponent implements OnInit {
 
   convertDate(dateStr: string) {
     return new Date(dateStr + 'Z');
-  }
-
-  getDifficulty(num: number) {
-    switch (num) {
-      case 1:
-        return 'Easy';
-      case 2:
-        return 'Medium';
-      case 3:
-        return 'Hard';
-      case 4:
-        return 'Extreme';
-    }
-  }
-
-  public getGameNameById(id: number): string {
-    return GameListAllService.getGameNameById(id);
-  }
-
-  public getGameImageById(id: number): string {
-    return GameListAllService.getGameImageById(id);
   }
 
   close() {

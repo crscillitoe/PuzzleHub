@@ -7,30 +7,36 @@ export class Game {
       name: 'easy',
       color: 'green',
       requiresLogin: false,
-      minLevel: 0
+      minLevel: 0,
+      cssBgColor: 'easy-bg',
+      cssTextColor: 'easy-color',
     },
     {
       diff: 2,
       name: 'medium',
       color: 'cyan',
       requiresLogin: false,
-      minLevel: 0
-
+      minLevel: 0,
+      cssBgColor: 'medium-bg',
+      cssTextColor: 'medium-color',
     },
     {
       diff: 3,
       name: 'hard',
       color: 'blue',
       requiresLogin: true,
-      minLevel: 5
-
+      minLevel: 5,
+      cssBgColor: 'hard-bg',
+      cssTextColor: 'hard-color',
     },
     {
       diff: 4,
       name: 'extreme',
       color: 'red',
       requiresLogin: true,
-      minLevel: 10
+      minLevel: 10,
+      cssBgColor: 'extreme-bg',
+      cssTextColor: 'extreme-color',
     }
   ];
 
@@ -112,5 +118,21 @@ export class Game {
     this._controls = controls;
     this._keywords = keywords;
     this._diffs = diffs || Game._default_diffs;
+  }
+
+  public getDifficultyById(id: number): Difficulty {
+    for (const d of this.diffs) {
+      if (d.diff === id) {
+        return d;
+      }
+    }
+  }
+
+  public getDifficultyNameById(id: number): string {
+    for (const d of this.diffs) {
+      if (d.diff === id) {
+        return d.name;
+      }
+    }
   }
 }
