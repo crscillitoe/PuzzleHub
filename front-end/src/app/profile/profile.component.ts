@@ -17,6 +17,7 @@ interface GameDifficultyStats {
 }
 
 interface GameStats {
+  'GameID': number;
   'GameName': string;
   'GameImage': string;
   'TotalPlayed': number;
@@ -38,8 +39,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   level: number;
   progress: number;
 
-  gameStats: Map<number, GameStats>;
+  gameStats: GameStats[];
   favoriteGame: GameStats;
+  favoriteDiff: number;
 
   medalTypes = [
     'Daily',
@@ -96,12 +98,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   setStats() {
-    this.gameStats = new Map();
+    this.gameStats = [];
     this.favoriteGame = undefined;
 
     for (const game of GameListAllService.games) {
-      this.gameStats.set(game.id,
+      this.gameStats.push(
         {
+          'GameID': game.id,
           'GameName': game.name,
           'GameImage': game.image,
           'TotalPlayed': 0,
@@ -109,7 +112,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         });
 
       for (const d of Object.keys(game.diffs)) {
-        this.gameStats.get(game.id).Difficulties.set(game.diffs[d].diff, {
+        this.gameStats[this.gameStats.length - 1].Difficulties.set(game.diffs[d].diff, {
           'Played': 0,
         });
       }
@@ -129,13 +132,38 @@ export class ProfileComponent implements OnInit, OnDestroy {
         continue;
       }
 
-      this.gameStats.get(gid).TotalPlayed += gamesPlayed;
-      this.gameStats.get(gid).Difficulties.get(gameDiff).Played += gamesPlayed;
-
-      if (this.gameStats.get(gid).TotalPlayed > favorite || favorite === 0) {
-        this.favoriteGame = this.gameStats.get(gid);
-        favorite = this.gameStats.get(gid).TotalPlayed;
+      let game: GameStats;
+      for (let i = 0 ; i < this.gameStats.length ; i++) {
+        if (this.gameStats[i].GameID === gid) {
+          game = this.gameStats[i];
+        }
       }
+
+      game.TotalPlayed += gamesPlayed;
+      game.Difficulties.get(gameDiff).Played += gamesPlayed;
+
+      if (gamesPlayed > favorite || favorite === 0) {
+        this.favoriteGame = game;
+        this.favoriteDiff = gameDiff;
+        favorite = gamesPlayed;
+      }
+    }
+
+    this.gameStats.sort((a: GameStats, b: GameStats) => {
+      return b.TotalPlayed - a.TotalPlayed
+    });
+  }
+
+  diffToString(diff: number) {
+    switch (diff) {
+      case 1:
+        return "Easy";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Hard";
+      case 4:
+        return "Extreme";
     }
   }
 

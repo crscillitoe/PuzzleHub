@@ -87,3 +87,19 @@
   display: flex;
   justify-content: space-between;
 }
+
+.easy {
+  background-color: $diff-color-easy;
+}
+
+.medium {
+  background-color: $diff-color-medium;
+}
+
+.hard {
+  background-color: $diff-color-hard;
+}
+
+.extreme {
+  background-color: $diff-color-extreme;
+}

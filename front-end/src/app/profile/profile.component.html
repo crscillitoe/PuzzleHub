@@ -81,12 +81,18 @@
           <div class="col-12" *ngIf="favoriteGame !== undefined"><!-- Favorite Game -->
             <h2>Most Played Game</h2>
             <div class="games-played container-flex-row">
-              <div class="game-icon generic">
+              <div class="game-icon"
+                    [ngClass]="{
+                      'easy': favoriteDiff === 1,
+                      'medium': favoriteDiff === 2,
+                      'hard': favoriteDiff === 3,
+                      'extreme': favoriteDiff === 4
+                    }">
                 <img src="{{favoriteGame.GameImage}}">
               </div>
               <div class="col">
-                <h5>{{favoriteGame.GameName}}</h5>
-                Total: {{favoriteGame.TotalPlayed}}
+                <h5>{{diffToString(favoriteDiff)}} {{favoriteGame.GameName}}</h5>
+                Total: {{favoriteGame.Difficulties.get(favoriteDiff).Played}}
               </div>
             </div>
           </div><!-- Favorite Game -->
