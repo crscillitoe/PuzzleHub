@@ -148,7 +148,7 @@ export class LoginComponent implements OnInit {
           const m = {
             Username: that.registerUsername,
             Password: that.registerPass1,
-            Email: that.email1,
+            Email: that.email1.toLowerCase(),
             Token: that.captchaToken,
             Refer: that.getCookie('Referral')
           };
@@ -193,7 +193,7 @@ export class LoginComponent implements OnInit {
               this.loader.stopLoadingAnimation();
               this.router.navigate(['/']);
             } else {
-              this.loginError = 'Invalid login credentials, please try again.'; 
+              this.loginError = 'Invalid login credentials, please try again.';
               this.loader.stopLoadingAnimation();
             }
 

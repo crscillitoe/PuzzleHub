@@ -12,23 +12,23 @@ export class TunnelService {
   constructor(private http: HttpClient) { }
 
   changePasswordWithCode(model: {Code: string, NewPassword: string}) {
-    return this.http.post(this.ipAddress + '/changePasswordWithCode', model);
+    return this.http.post<any>(this.ipAddress + '/changePasswordWithCode', model);
   }
 
   forgotPassword(model: {Email: string}) {
-    return this.http.post(this.ipAddress + '/requestPasswordReset', model);
+    return this.http.post<any>(this.ipAddress + '/requestPasswordReset', model);
   }
 
   getLevel() {
-    return this.http.get(this.ipAddress + '/getLevel');
+    return this.http.get<any>(this.ipAddress + '/getLevel');
   }
 
   setProfileIcon(model: {PuzzlerIconID: number}) {
-    return this.http.post(this.ipAddress + '/setPuzzlerIcon', model);
+    return this.http.post<any>(this.ipAddress + '/setPuzzlerIcon', model);
   }
 
   completeDailyChallenge(model: {Difficulty: number}) {
-    return this.http.post(this.ipAddress + '/completeDailyChallenge', model);
+    return this.http.post<any>(this.ipAddress + '/completeDailyChallenge', model);
   }
 
   getCompletedDailyChallenges() {
@@ -53,42 +53,42 @@ export class TunnelService {
       IconID: number,
       IconPath: string
     }[]>(this.ipAddress + '/getPuzzlerIcons');
-  }  
+  }
 
   getUserData() {
-    return this.http.get(this.ipAddress + '/getUserData');
+    return this.http.get<any>(this.ipAddress + '/getUserData');
   }
 
   getMoreMatchHistory(model: {Username: string, Offset: number}) {
-    return this.http.post(this.ipAddress + '/getMoreMatchHistory', model);
+    return this.http.post<any>(this.ipAddress + '/getMoreMatchHistory', model);
   }
 
   getProfileData(model: {Username: string}) {
-    return this.http.post(this.ipAddress + '/getProfileData', model);
+    return this.http.post<any>(this.ipAddress + '/getProfileData', model);
   }
 
   getUsername() {
-    return this.http.get(this.ipAddress + '/getUsername');
+    return this.http.get<any>(this.ipAddress + '/getUsername');
   }
 
   startTimer(model: {GameID: number, Difficulty: number}) {
-    return this.http.post(this.ipAddress + '/startTimer', model);
+    return this.http.post<any>(this.ipAddress + '/startTimer', model);
   }
 
   stopTimer(model: {GameID: number, Difficulty: number}) {
-    return this.http.post(this.ipAddress + '/stopTimer', model);
+    return this.http.post<any>(this.ipAddress + '/stopTimer', model);
   }
 
   registerUser(model: {Username: string, Password: string, Email: string, Token: string}) {
-    return this.http.post(this.ipAddress + '/registerUser', model);
+    return this.http.post<any>(this.ipAddress + '/registerUser', model);
   }
 
   verifyEmail(path: string) {
-    return this.http.get(this.ipAddress + '/validateUser/' + path);
+    return this.http.get<any>(this.ipAddress + '/validateUser/' + path);
   }
 
   login(model: {Username: string, Password: string}) {
-    return this.http.post(this.ipAddress + '/login', model);
+    return this.http.post<any>(this.ipAddress + '/login', model);
   }
 
   getLeaderboards(m: {Position: number,
@@ -96,18 +96,18 @@ export class TunnelService {
                       GameID: number,
                       Difficulty: number,
                       Leaderboard: number}) {
-    return this.http.post(this.ipAddress + '/getLeaderboards', m);
+    return this.http.post<any>(this.ipAddress + '/getLeaderboards', m);
   }
 
   getPersonalBest(m: {GameID: number, Difficulty: number}) {
-    return this.http.post(this.ipAddress + '/getPersonalBest', m);
+    return this.http.post<any>(this.ipAddress + '/getPersonalBest', m);
   }
 
   getNumEntries(m: {GameID: number, Difficulty: number, Leaderboard: number}) {
-    return this.http.post(this.ipAddress + '/getNumEntries', m);
+    return this.http.post<any>(this.ipAddress + '/getNumEntries', m);
   }
 
   getFooter(m: {GameID: number, Difficulty: number, Leaderboard: number}) {
-    return this.http.post(this.ipAddress + '/getFooter', m);
+    return this.http.post<any>(this.ipAddress + '/getFooter', m);
   }
 }

@@ -1,28 +1,47 @@
 import { Injectable } from '@angular/core';
 import { TunnelService } from '../tunnel/tunnel.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimerService {
-  constructor(private tunnel: TunnelService) { 
-  }
+  constructor(private tunnel: TunnelService) {}
 
-  startTimer(GameID, Difficulty) { 
-    let m = {
+  /**
+   * Tells the API to start the timer for the currently logged in
+   * client for the given GameID and Difficulty.
+   * @param GameID Game to start the timer for
+   * @param Difficulty Difficulty to start the timer for
+   */
+  startTimer(GameID: number, Difficulty: number): Observable<{seed: number}> {
+    const m = {
       'GameID':GameID,
       'Difficulty':Difficulty
     }
+
     return this.tunnel.startTimer(m);
   }
 
-  stopTimer(Seed, GameID, Difficulty, Solution) {
-    let m = {
-      'Seed':Seed,
-      'GameID':GameID,
-      'Difficulty':Difficulty,
-      'BoardSolution':Solution
+  /**
+   * Requests for the API to stop the timer for the user, logs the users
+   * solution/seed for future verification. XP will be awarded.
+   * @param Seed
+   * @param GameID
+   * @param Difficulty
+   * @param Solution
+   */
+  stopTimer(Seed: number, GameID: number, Difficulty: number, Solution: any): Observable<{
+    TimeElapsed: number,
+    XPGain: number
+  }> {
+    const m = {
+      'Seed': Seed,
+      'GameID': GameID,
+      'Difficulty': Difficulty,
+      'BoardSolution': Solution
     }
+
     return this.tunnel.stopTimer(m);
   }
 }
