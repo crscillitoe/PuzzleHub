@@ -7,10 +7,10 @@
       (click)="setDifficulty(diff)"
       class="diff"
       value="{{diff.name}}"
-      [ngClass]="{'diff-easy': diff.color=='green', 
-                  'diff-medium': diff.color=='cyan', 
-                  'diff-hard': diff.color=='blue', 
-                  'diff-random': diff.color=='purple', 
+      [ngClass]="{'diff-easy': diff.color=='green',
+                  'diff-medium': diff.color=='cyan',
+                  'diff-hard': diff.color=='blue',
+                  'diff-random': diff.color=='purple',
                   'diff-extreme': diff.color=='red'}">
                   {{diff.name | titlecase}}
     </mat-button-toggle>
@@ -61,10 +61,10 @@
           <img src={{item.image}} alt="{{item.name}} logo" class="game-icon" />
         <p>
           <ng-container *ngIf="multiplier > 1">{{multiplier}}x</ng-container>
-          <a [ngClass]="{'easy': difficulty.color=='green', 
-                          'medium': difficulty.color=='cyan', 
-                          'hard': difficulty.color=='blue', 
-                          'random': difficulty.color=='purple', 
+          <a [ngClass]="{'easy': difficulty.color=='green',
+                          'medium': difficulty.color=='cyan',
+                          'hard': difficulty.color=='blue',
+                          'random': difficulty.color=='purple',
                           'extreme': difficulty.color=='red'}">
                           {{difficulty.name | titlecase}}
           </a>
@@ -85,19 +85,24 @@
       (cdkDropListDropped)="moveToQueue($event)">
       <div class="puzzle-box" *ngFor="let item of gameQueue; let i = index" cdkDragLockAxis="y" cdkDrag>
         <p class="left">
-            <ng-container *ngIf="item.multiplier > 1">{{item.multiplier}}x</ng-container>
-            <a [ngClass]="{'easy': item.difficulty.color=='green', 
-                            'medium': item.difficulty.color=='cyan', 
-                            'hard': item.difficulty.color=='blue', 
-                            'random': item.difficulty.color=='purple', 
-                            'extreme': item.difficulty.color=='red'}">
-              {{item.difficulty.name | titlecase}}
-            </a>
-            
-            {{item.name}}
+          <ng-container *ngIf="item.multiplier > 1">
+            {{item.multiplier}}x
+          </ng-container>
+
+          <a [ngClass]="{'easy': item.difficulty.color=='green',
+                          'medium': item.difficulty.color=='cyan',
+                          'hard': item.difficulty.color=='blue',
+                          'random': item.difficulty.color=='purple',
+                          'extreme': item.difficulty.color=='red'}">
+            {{item.difficulty.name | titlecase}}
+          </a>
+
+          {{item.name}}
         </p>
         <div (click)="removeQueueItem(i)" class="right clickable">
-          [-]
+          <mat-icon>
+            close
+          </mat-icon>
         </div>
       </div>
     </div>
