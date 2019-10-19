@@ -59,8 +59,8 @@ EOM
 }
 
 deploy() {
-  #rm -rf $BUILD_PATH/$BUILD_DIR
-  #npm run build:ssr
+  rm -rf $BUILD_PATH/$BUILD_DIR
+  npm run build:ssr
   rm -f $BUILD_DIR.zip
   zip -r $BUILD_DIR.zip $BUILD_PATH/$BUILD_DIR
   scp -i $PUZZLEHUB_KEY $BUILD_DIR.zip $DEPLOY_USER@$DEPLOY_IP:$DEPLOY_DIR
