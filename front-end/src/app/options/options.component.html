@@ -13,7 +13,7 @@
       <b>
         RELAY TIMER
       </b>
-  
+
       <a id="relay-timer"
          class="monospace time">{{getRelayTime()}}</a>
   </div>
@@ -22,25 +22,30 @@
       <b>
         RELAY AVERAGE
       </b>
-  
+
       <a id="relay-timer"
          class="monospace time">{{getRelayAverage()}}</a>
   </div>
 
-  
+
   <div class="descriptionBlock">
-    <a class="descriptionHeader clickable"
+    <button mat-button
+        class="descriptionHeader clickable left-button"
        (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
       <ng-container *ngIf="timerMinimized">
-        [+]
+        <mat-icon>
+          keyboard_arrow_right
+        </mat-icon>
       </ng-container>
       <ng-container *ngIf="!timerMinimized">
-        [-]
+        <mat-icon>
+          keyboard_arrow_down
+        </mat-icon>
       </ng-container>
-      <b class="clickable">
+      <b class="button-text">
         TIMER
       </b>
-    </a>
+    </button>
 
     <a id="timer"
        [ngClass]="timerMinimized ? 'hidden' : 'none'"
@@ -50,18 +55,23 @@
 
   <ng-container *ngIf="!playingQueue()">
     <div class="descriptionBlock" *ngIf="isLoggedIn()">
-      <a class="descriptionHeader clickable"
+      <button mat-button
+        class="descriptionHeader clickable left-button"
         (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
         <ng-container *ngIf="highscoresMinimized">
-          [+]
+        <mat-icon>
+          keyboard_arrow_right
+        </mat-icon>
         </ng-container>
         <ng-container *ngIf="!highscoresMinimized">
-          [-]
+        <mat-icon>
+          keyboard_arrow_down
+        </mat-icon>
         </ng-container>
-        <b class="clickable">
+        <b class="button-text">
           HIGH SCORES
         </b>
-      </a>
+      </button>
 
       <ng-container *ngIf="!highscoresMinimized">
         <a class="descriptionText topPad">Monthly</a>
@@ -76,18 +86,23 @@
     </div>
 
     <div class="descriptionBlock" *ngIf="controls != undefined">
-      <a class="descriptionHeader clickable"
+      <button mat-button
+        class="descriptionHeader clickable left-button"
         (click)="controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)">
         <ng-container *ngIf="controlsMinimized">
-          [+]
+        <mat-icon>
+          keyboard_arrow_right
+        </mat-icon>
         </ng-container>
         <ng-container *ngIf="!controlsMinimized">
-          [-]
+        <mat-icon>
+          keyboard_arrow_down
+        </mat-icon>
         </ng-container>
-        <b class="clickable">
+        <b class="button-text">
           CONTROLS
         </b>
-      </a>
+      </button>
 
       <ng-container *ngIf="!controlsMinimized">
         <a class="descriptionText">
@@ -97,18 +112,23 @@
     </div>
 
     <div class="descriptionBlock" *ngIf="rules != undefined">
-      <a class="descriptionHeader clickable"
+      <button mat-button
+        class="descriptionHeader clickable left-button"
         (click)="rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)">
         <ng-container *ngIf="rulesMinimized">
-          [+]
+        <mat-icon>
+          keyboard_arrow_right
+        </mat-icon>
         </ng-container>
         <ng-container *ngIf="!rulesMinimized">
-          [-]
+        <mat-icon>
+          keyboard_arrow_down
+        </mat-icon>
         </ng-container>
-        <b class="clickable">
+        <b class="button-text">
           RULES
         </b>
-      </a>
+      </button>
       <ng-container *ngIf="!rulesMinimized">
         <h1 class="descriptionText">
           {{rules}}
@@ -118,18 +138,23 @@
   </ng-container>
 
     <div class="descriptionBlock" *ngIf="options != undefined">
-      <a class="descriptionHeader clickable"
+      <button mat-button
+        class="descriptionHeader clickable left-button"
         (click)="optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)">
         <ng-container *ngIf="optionsMinimized">
-          [+]
+        <mat-icon>
+          keyboard_arrow_right
+        </mat-icon>
         </ng-container>
         <ng-container *ngIf="!optionsMinimized">
-          [-]
+        <mat-icon>
+          keyboard_arrow_down
+        </mat-icon>
         </ng-container>
-        <b class="clickable">
+        <b class="button-text">
           OPTIONS
         </b>
-      </a>
+      </button>
 
       <ng-container *ngIf="!optionsMinimized">
         <ng-container *ngFor="let option of options; let i=index">
@@ -163,18 +188,23 @@
 
   <ng-container *ngIf="!playingQueue()">
     <div class="descriptionBlock" *ngIf="hotkeys != undefined">
-      <a class="descriptionHeader clickable"
+      <button mat-button
+        class="descriptionHeader clickable left-button"
         (click)="hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)">
         <ng-container *ngIf="hotkeysMinimized">
-          [+]
+        <mat-icon>
+          keyboard_arrow_right
+        </mat-icon>
         </ng-container>
         <ng-container *ngIf="!hotkeysMinimized">
-          [-]
+        <mat-icon>
+          keyboard_arrow_down
+        </mat-icon>
         </ng-container>
-        <b class="clickable">
+        <b class="button-text">
           HOTKEYS
         </b>
-      </a>
+      </button>
       <ng-container *ngIf="!hotkeysMinimized">
         <ng-container *ngFor="let hotkey of hotkeys; let i=index">
           <div class="container-flex-row">
@@ -182,7 +212,7 @@
               {{hotkey.name}}
             </div>
             <div class="col-6">
-              <div 
+              <div
                 class="key"
                 (click)="editHotkey(i)">
                 <span>
@@ -227,7 +257,7 @@
             <ng-container *ngIf="item.diff == 99">
               <a class="random">Random</a>
             </ng-container>
-            
+
             {{item.name}} <br> {{item.time}}
           </div>
         </ng-container>

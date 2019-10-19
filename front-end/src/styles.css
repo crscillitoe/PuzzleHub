@@ -5,12 +5,16 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
-/* 
- * This is allowed by googles TOS as long as we provide a message 
+/*
+ * This is allowed by googles TOS as long as we provide a message
  * in the user flow notifying them that we are using reCAPTCHA
  */
 .grecaptcha-badge {
   visibility: hidden !important;
+}
+
+button:focus, button:active {
+  outline: none !important;
 }
 
 html {
@@ -25,20 +29,20 @@ html {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #afafb0; 
+  background: #afafb0;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #888; 
+  background: #888;
 }
 
-::-webkit-scrollbar-thumb:active { 
+::-webkit-scrollbar-thumb:active {
   background-color: #777;
-}  
+}
 
 ::-webkit-scrollbar-track {
-  background: #3a3a3a; 
+  background: #3a3a3a;
   border-radius: 10px;
 }
 

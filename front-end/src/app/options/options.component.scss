@@ -8,6 +8,15 @@
   font-size: 11px;
 }
 
+.button-text {
+  font-size: 20px;
+}
+
+.left-button {
+    display: flex;
+    justify-content: left;
+}
+
 #focusMe:focus {
   display: none;
 }
@@ -77,9 +86,9 @@ div.key {
     width: 2.125rem;
     height: 2.125rem;
     border: 0.0625rem solid #a9a9a9;
-    border-radius: 0.125 0.125 0.125 0.125; 
-    -moz-border-radius: 0.125 0.125 0.125 0.125; 
-    -webkit-border-radius: 0.125 0.125 0.125 0.125; 
+    border-radius: 0.125 0.125 0.125 0.125;
+    -moz-border-radius: 0.125 0.125 0.125 0.125;
+    -webkit-border-radius: 0.125 0.125 0.125 0.125;
     font-size: 0.75rem;
     box-sizing: border-box !important;
     -moz-box-sizing: border-box !important;

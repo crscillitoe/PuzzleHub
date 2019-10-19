@@ -1,3 +1,4 @@
 /dist
 dist.zip
 tags
+/node_modules
