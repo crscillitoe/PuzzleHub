@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    if (this.email1 !== this.email2) {
+    if (this.email1.toLowerCase() !== this.email2.toLowerCase()) {
       this.errorMessage = 'Emails must match';
       return false;
     }
