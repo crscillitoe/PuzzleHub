@@ -17,7 +17,7 @@ deploy_server() {
   BACKUP_DIR=$3
   read -r -d '' RETURN << EOM
 cd $SERVER
-forver stop dist/server.js
+forever stop dist/server.js
 cd ..
 mkdir -p $BACKUP_DIR
 cp -r $SERVER/dist $BACKUP_DIR/$SERVER
@@ -25,7 +25,7 @@ rm -rf $SERVER
 mkdir $SERVER
 cp -r dist $SERVER/dist
 cd $SERVER
-PORT=$PORT forever start dist/server
+PORT=$PORT forever start dist/server.js
 cd ..
 EOM
   echo "$RETURN"
@@ -37,10 +37,11 @@ get_commands() {
     read -r -d '' RETURN << EOM
 set -x
 cd SSR
+rm -rf dist
+unzip $BUILD_DIR.zip
 rm -rf backup_dist_prod
 $(deploy_server server_1 1234 backup_dist_prod)
 $(deploy_server server_2 1235 backup_dist_prod)
-rm -rf dist
 EOM
   echo "$RETURN"
   fi
@@ -58,10 +59,11 @@ EOM
 }
 
 deploy() {
-  # rm -rf $BUILD_PATH/$BUILD_DIR
-  # npm run build:ssr
-  # zip -r $BUILD_DIR.zip $BUILD_PATH/$BUILD_DIR
-  # scp -i $PUZZLEHUB_KEY $BUILD_DIR.zip $DEPLOY_USER@$DEPLOY_IP:$DEPLOY_DIR
+  #rm -rf $BUILD_PATH/$BUILD_DIR
+  #npm run build:ssr
+  rm -f $BUILD_DIR.zip
+  zip -r $BUILD_DIR.zip $BUILD_PATH/$BUILD_DIR
+  scp -i $PUZZLEHUB_KEY $BUILD_DIR.zip $DEPLOY_USER@$DEPLOY_IP:$DEPLOY_DIR
   ssh -i $PUZZLEHUB_KEY $DEPLOY_USER@$DEPLOY_IP << EOM
 $(get_commands $1)
 EOM
@@ -72,9 +74,7 @@ EOM
 ENVIRONMENTS="prod:dev"
 
 if [[ ":$ENVIRONMENTS:" = *:$1:* ]]; then
-  #deploy $1
-  DEPLOY_COMMANDS=$(get_commands $1)
-  echo "$DEPLOY_COMMANDS"
+  deploy $1
 else
   error_and_exit "Please specify one of the following: {prod, dev}"
 fi
