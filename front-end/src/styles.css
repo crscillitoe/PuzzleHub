@@ -14,7 +14,7 @@
 }
 
 button:focus, button:active {
-  outline: none !important;
+  outline: none !important; /* Fuck you bootstrap, no blue outlines for you */
 }
 
 html {

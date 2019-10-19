@@ -1,31 +1,71 @@
-<nav 
+<nav
   [ngClass]="isElectron() ? 'draggable' : 'not-draggable'"
   class="navbar navbar-dark bg-dark">
-  <a routerLink="/" routerLinkActive="active" class="clickable navbar-brand">
+  <button mat-button
+    routerLink="/" routerLinkActive="active" class="clickable navbar-brand puzzle-hub-logo-button">
     <img class="clickable" src="/assets/images/logos/headerLogo.svg" height="24" width="180">
-  </a>
+  </button>
   <div class="navbar-expand mr-auto">
     <div class="navbar-nav">
-      <a routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">Leaderboards</a>
+      <button mat-button
+        routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">
+        <mat-icon>
+          timer
+        </mat-icon>
+        <div class="inline">
+          Leaderboards
+        </div>
+      </button>
       <ng-container *ngIf="username != ''">
-        <a [routerLink]="['/profile']" [queryParams]="{user:username}" routerLinkActive="active" class="nav-item nav-link clickable">Profile</a>
+        <button mat-button
+          [routerLink]="['/profile']"
+          [queryParams]="{user:username}"
+          routerLinkActive="active"
+          class="nav-item nav-link clickable">
+          <mat-icon>
+            person
+          </mat-icon>
+          <div class="inline">
+            Profile
+          </div>
+        </button>
         <ng-container *ngIf="isMainMenu()">
-          <a (click)="openPuzzleRelay()" routerLinkActive="active" class="nav-item nav-link clickable">Puzzle Relay</a>
+          <button mat-button
+            (click)="openPuzzleRelay()"
+            routerLinkActive="active"
+            class="nav-item nav-link clickable">
+            <mat-icon>
+              directions_run
+            </mat-icon>
+            <div class="inline">
+              Puzzle Relay
+            </div>
+          </button>
         </ng-container>
         <ng-container *ngIf="isMainMenu()">
-          <a (click)="openDailyChallenges()" routerLinkActive="active" class="nav-item nav-link clickable">Daily Challenges</a>
+          <button mat-button
+            (click)="openDailyChallenges()"
+            routerLinkActive="active"
+            class="nav-item nav-link clickable">
+            <mat-icon>
+              today
+            </mat-icon>
+            <div class="inline">
+              Daily Challenges
+            </div>
+          </button>
         </ng-container>
       </ng-container>
     </div>
   </div>
   <div class="container-flex col-account">
     <ng-container *ngIf="username==''">
-      <a 
+      <button mat-button
        [ngClass]="isElectron() ? 'leftMore' : 'not-electron'"
        style="color: rgba(255, 255, 255, 0.5);"
        routerLink="/login" routerLinkActive="active" class="nav-item nav-link clickable">
         <i style="margin-right:5px" class="fa fa-lock clickable"></i> Sign In
-      </a>
+    </button>
     </ng-container>
     <ng-container *ngIf="username!=''">
       <div class="container-flex-row user-box">
@@ -54,11 +94,11 @@
           </div>
         </div>
         <div class="col sign-out">
-          <a
+          <button mat-button
              [ngClass]="isElectron() ? 'leftMore' : 'not-electron'"
-             class="clickable" (click)="signOut()">
+             class="clickable button-font" (click)="signOut()">
             Sign Out <i style="margin-left:5px" class="fa fa-sign-in clickable"></i>
-          </a>
+          </button>
         </div>
       </div>
     </ng-container>
