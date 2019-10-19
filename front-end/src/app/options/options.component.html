@@ -1,37 +1,41 @@
 <div class="panel-body">
   <ng-container *ngIf="takingNotesMode">
-    <div class=notes>
+    <div class="notes">
       <a
-     (click)="onNotesChange()"
-     [ngClass]="takingNotes ? 'btn-warning' : 'btn-danger'"
-     class="center btn"
-     > Taking Notes: {{takingNotes}}</a>
+        (click)="onNotesChange()"
+        [ngClass]="takingNotes ? 'btn-warning' : 'btn-danger'"
+        class="center btn"
+      >
+        Taking Notes: {{ takingNotes }}</a
+      >
     </div>
   </ng-container>
 
   <div class="descriptionBlock" *ngIf="playingQueue()">
-      <b>
-        RELAY TIMER
-      </b>
+    <b>
+      RELAY TIMER
+    </b>
 
-      <a id="relay-timer"
-         class="monospace time">{{getRelayTime()}}</a>
+    <a id="relay-timer" class="monospace time">{{ getRelayTime() }}</a>
   </div>
 
   <div class="descriptionBlock" *ngIf="playingQueue()">
-      <b>
-        RELAY AVERAGE
-      </b>
+    <b>
+      RELAY AVERAGE
+    </b>
 
-      <a id="relay-timer"
-         class="monospace time">{{getRelayAverage()}}</a>
+    <a id="relay-timer" class="monospace time">{{ getRelayAverage() }}</a>
   </div>
 
-
   <div class="descriptionBlock">
-    <button mat-button
-        class="descriptionHeader clickable left-button"
-       (click)="timerMinimized = !timerMinimized; minimize('timerMinimized', timerMinimized)">
+    <button
+      mat-button
+      class="descriptionHeader clickable left-button"
+      (click)="
+        timerMinimized = !timerMinimized;
+        minimize('timerMinimized', timerMinimized)
+      "
+    >
       <ng-container *ngIf="timerMinimized">
         <mat-icon>
           keyboard_arrow_right
@@ -47,26 +51,33 @@
       </b>
     </button>
 
-    <a id="timer"
-       [ngClass]="timerMinimized ? 'hidden' : 'none'"
-       class="monospace time">00:00.000</a>
+    <a
+      id="timer"
+      [ngClass]="timerMinimized ? 'hidden' : 'none'"
+      class="monospace time"
+      >00:00.000</a
+    >
   </div>
-
 
   <ng-container *ngIf="!playingQueue()">
     <div class="descriptionBlock" *ngIf="isLoggedIn()">
-      <button mat-button
+      <button
+        mat-button
         class="descriptionHeader clickable left-button"
-        (click)="highscoresMinimized = !highscoresMinimized; minimize('highscoresMinimized', highscoresMinimized)">
+        (click)="
+          highscoresMinimized = !highscoresMinimized;
+          minimize('highscoresMinimized', highscoresMinimized)
+        "
+      >
         <ng-container *ngIf="highscoresMinimized">
-        <mat-icon>
-          keyboard_arrow_right
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_right
+          </mat-icon>
         </ng-container>
         <ng-container *ngIf="!highscoresMinimized">
-        <mat-icon>
-          keyboard_arrow_down
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_down
+          </mat-icon>
         </ng-container>
         <b class="button-text">
           HIGH SCORES
@@ -75,29 +86,34 @@
 
       <ng-container *ngIf="!highscoresMinimized">
         <a class="descriptionText topPad">Monthly</a>
-        <a class="monospace timeSave">{{personalBestMonthly}}</a>
+        <a class="monospace timeSave">{{ personalBestMonthly }}</a>
 
         <a class="descriptionText topPad">Weekly</a>
-        <a class="monospace timeSave">{{personalBestWeekly}}</a>
+        <a class="monospace timeSave">{{ personalBestWeekly }}</a>
 
         <a class="descriptionText topPad">Daily</a>
-        <a class="monospace timeSave">{{personalBestDaily}}</a>
+        <a class="monospace timeSave">{{ personalBestDaily }}</a>
       </ng-container>
     </div>
 
     <div class="descriptionBlock" *ngIf="controls != undefined">
-      <button mat-button
+      <button
+        mat-button
         class="descriptionHeader clickable left-button"
-        (click)="controlsMinimized = !controlsMinimized; minimize('controlsMinimized', controlsMinimized)">
+        (click)="
+          controlsMinimized = !controlsMinimized;
+          minimize('controlsMinimized', controlsMinimized)
+        "
+      >
         <ng-container *ngIf="controlsMinimized">
-        <mat-icon>
-          keyboard_arrow_right
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_right
+          </mat-icon>
         </ng-container>
         <ng-container *ngIf="!controlsMinimized">
-        <mat-icon>
-          keyboard_arrow_down
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_down
+          </mat-icon>
         </ng-container>
         <b class="button-text">
           CONTROLS
@@ -106,24 +122,29 @@
 
       <ng-container *ngIf="!controlsMinimized">
         <a class="descriptionText">
-          {{controls}}
+          {{ controls }}
         </a>
       </ng-container>
     </div>
 
     <div class="descriptionBlock" *ngIf="rules != undefined">
-      <button mat-button
+      <button
+        mat-button
         class="descriptionHeader clickable left-button"
-        (click)="rulesMinimized = !rulesMinimized; minimize('rulesMinimized', rulesMinimized)">
+        (click)="
+          rulesMinimized = !rulesMinimized;
+          minimize('rulesMinimized', rulesMinimized)
+        "
+      >
         <ng-container *ngIf="rulesMinimized">
-        <mat-icon>
-          keyboard_arrow_right
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_right
+          </mat-icon>
         </ng-container>
         <ng-container *ngIf="!rulesMinimized">
-        <mat-icon>
-          keyboard_arrow_down
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_down
+          </mat-icon>
         </ng-container>
         <b class="button-text">
           RULES
@@ -131,93 +152,105 @@
       </button>
       <ng-container *ngIf="!rulesMinimized">
         <h1 class="descriptionText">
-          {{rules}}
+          {{ rules }}
         </h1>
       </ng-container>
     </div>
   </ng-container>
 
-    <div class="descriptionBlock" *ngIf="options != undefined">
-      <button mat-button
-        class="descriptionHeader clickable left-button"
-        (click)="optionsMinimized = !optionsMinimized; minimize('optionsMinimized', optionsMinimized)">
-        <ng-container *ngIf="optionsMinimized">
+  <div class="descriptionBlock" *ngIf="options != undefined">
+    <button
+      mat-button
+      class="descriptionHeader clickable left-button"
+      (click)="
+        optionsMinimized = !optionsMinimized;
+        minimize('optionsMinimized', optionsMinimized)
+      "
+    >
+      <ng-container *ngIf="optionsMinimized">
         <mat-icon>
           keyboard_arrow_right
         </mat-icon>
-        </ng-container>
-        <ng-container *ngIf="!optionsMinimized">
+      </ng-container>
+      <ng-container *ngIf="!optionsMinimized">
         <mat-icon>
           keyboard_arrow_down
         </mat-icon>
+      </ng-container>
+      <b class="button-text">
+        OPTIONS
+      </b>
+    </button>
+
+    <ng-container *ngIf="!optionsMinimized">
+      <ng-container *ngFor="let option of options; let i = index">
+        <ng-container *ngIf="option.type == 'checkbox'">
+          <div class="custom-control custom-checkbox">
+            <mat-checkbox
+              id="{{ option.bindTo }}"
+              [(ngModel)]="optionVals[i]"
+              (click)="callback(option.callback)"
+            >
+              {{ option.name }}
+            </mat-checkbox>
+          </div>
         </ng-container>
-        <b class="button-text">
-          OPTIONS
-        </b>
-      </button>
 
-      <ng-container *ngIf="!optionsMinimized">
-        <ng-container *ngFor="let option of options; let i=index">
-          <ng-container *ngIf="option.type == 'checkbox'">
-            <div class="custom-control custom-checkbox">
-              <mat-checkbox
-                id="{{option.bindTo}}"
-                [(ngModel)]="optionVals[i]"
-                (click)="callback(option.callback)">
-                {{option.name}}
-              </mat-checkbox>
-            </div>
-          </ng-container>
-
-          <ng-container *ngIf="option.type == 'dropdown'">
-            <div class="custom-control custom-dropdown">
-              <mat-label>Color Scheme</mat-label>
-              <mat-select
-                id="{{option.bindTo}}"
-                [(ngModel)]="optionVals[i]"
-                (ngModelChange)="updateAndCallback(option.callback, option.storedName, $event)">
-                <mat-option *ngFor="let o of option.options" [value]="o">
-                  {{o}}
-                </mat-option>
-              </mat-select>
-            </div>
-          </ng-container>
+        <ng-container *ngIf="option.type == 'dropdown'">
+          <div class="custom-control custom-dropdown">
+            <mat-label>Color Scheme</mat-label>
+            <mat-select
+              id="{{ option.bindTo }}"
+              [(ngModel)]="optionVals[i]"
+              (ngModelChange)="
+                updateAndCallback(option.callback, option.storedName, $event)
+              "
+            >
+              <mat-option *ngFor="let o of option.options" [value]="o">
+                {{ o }}
+              </mat-option>
+            </mat-select>
+          </div>
         </ng-container>
       </ng-container>
-    </div>
+    </ng-container>
+  </div>
 
   <ng-container *ngIf="!playingQueue()">
     <div class="descriptionBlock" *ngIf="hotkeys != undefined">
-      <button mat-button
+      <button
+        mat-button
         class="descriptionHeader clickable left-button"
-        (click)="hotkeysMinimized = !hotkeysMinimized; minimize('hotkeysMinimized', hotkeysMinimized)">
+        (click)="
+          hotkeysMinimized = !hotkeysMinimized;
+          minimize('hotkeysMinimized', hotkeysMinimized)
+        "
+      >
         <ng-container *ngIf="hotkeysMinimized">
-        <mat-icon>
-          keyboard_arrow_right
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_right
+          </mat-icon>
         </ng-container>
         <ng-container *ngIf="!hotkeysMinimized">
-        <mat-icon>
-          keyboard_arrow_down
-        </mat-icon>
+          <mat-icon>
+            keyboard_arrow_down
+          </mat-icon>
         </ng-container>
         <b class="button-text">
           HOTKEYS
         </b>
       </button>
       <ng-container *ngIf="!hotkeysMinimized">
-        <ng-container *ngFor="let hotkey of hotkeys; let i=index">
+        <ng-container *ngFor="let hotkey of hotkeys; let i = index">
           <div class="container-flex-row">
             <div class="col-6 hotkey-label">
-              {{hotkey.name}}
+              {{ hotkey.name }}
             </div>
             <div class="col-6">
-              <div
-                class="key"
-                (click)="editHotkey(i)">
+              <div class="key" (click)="editHotkey(i)">
                 <span>
                   <ng-container *ngIf="editIndex != i">
-                    {{convertCodeToStr(hotkeyVals[i])}}
+                    {{ convertCodeToStr(hotkeyVals[i]) }}
                   </ng-container>
                   <ng-container *ngIf="editIndex == i">
                     ...
@@ -240,7 +273,7 @@
       </a>
 
       <a class="descriptionText">
-        <ng-container *ngFor="let item of getRelayHistory() ; let i = index">
+        <ng-container *ngFor="let item of getRelayHistory(); let i = index">
           <div class="relay-block">
             <ng-container *ngIf="item.diff == 1">
               <a class="easy">Easy</a>
@@ -258,7 +291,8 @@
               <a class="random">Random</a>
             </ng-container>
 
-            {{item.name}} <br> {{item.time}}
+            {{ item.name }} <br />
+            {{ item.time }}
           </div>
         </ng-container>
       </a>
@@ -266,37 +300,45 @@
   </ng-container>
 </div>
 <div class="panel-footer">
-  <mat-select *ngIf="!playingQueue()"
-    class="difficulty-select clickable" [(ngModel)]="selectedDifficulty"
-    (ngModelChange)="difficultyChangeHandler($event)">
+  <mat-select
+    *ngIf="!playingQueue()"
+    class="difficulty-select clickable"
+    [(ngModel)]="selectedDifficulty"
+    (ngModelChange)="difficultyChangeHandler($event)"
+  >
     <mat-option *ngFor="let diff of diffs" [value]="diff.diff">
-      {{diff.name | titlecase}}
+      {{ diff.name | titlecase }}
     </mat-option>
   </mat-select>
   <button
-        mat-raised-button
-        *ngIf="gameID != undefined"
-        id="copyGameLink"
-        class="game-button"
-        (click)="copyGameLink()">
+    mat-raised-button
+    *ngIf="gameID != undefined"
+    id="copyGameLink"
+    class="game-button"
+    (click)="copyGameLink()"
+  >
     <b class="clickable">SHARE GAME</b>
   </button>
-  <button *ngIf="!playingQueue()"
-        mat-raised-button
-        color="primary"
-        class="game-button"
-        (click)="callback('newGame')">
+  <button
+    *ngIf="!playingQueue()"
+    mat-raised-button
+    color="primary"
+    class="game-button"
+    (click)="callback('newGame')"
+  >
     <b class="clickable">NEW GAME</b>
-    <br>
+    <br />
     <span class="buttonSubtext clickable">spacebar</span>
   </button>
-  <button *ngIf="playingQueue()"
-        mat-raised-button
-        color="primary"
-        class="game-button"
-        (click)="callback('clearBoard')">
+  <button
+    *ngIf="playingQueue()"
+    mat-raised-button
+    color="primary"
+    class="game-button"
+    (click)="callback('clearBoard')"
+  >
     <b class="clickable">CLEAR BOARD</b>
-    <br>
+    <br />
     <span class="buttonSubtext clickable">spacebar</span>
   </button>
 </div>
