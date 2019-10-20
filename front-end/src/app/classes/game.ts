@@ -22,7 +22,7 @@ export class Game {
       name: 'hard',
       color: 'blue',
       requiresLogin: true,
-      minLevel: 5
+      minLevel: 0
 
     },
     {
@@ -30,7 +30,7 @@ export class Game {
       name: 'extreme',
       color: 'red',
       requiresLogin: true,
-      minLevel: 10
+      minLevel: 0
     }
   ];
 

@@ -85,12 +85,13 @@
                       </app-puzzler-icon>
                   </td>
                   <td>
-                    <a [routerLink]="['/profile']"
+                    <button mat-button
+                       [routerLink]="['/profile']"
                        [queryParams]="{user: row.username}"
                        routerLinkActive="active"
                        class="leaderboard-profile-link">
                       {{row.username}}
-                    </a>
+                    </button>
                   </td>
                   <td>{{row.goldMedals}}</td>
                   <td>{{row.silverMedals}}</td>

@@ -13,7 +13,6 @@
   cursor: pointer;
 }
 
-
 .leaderboard-nav {
   min-width: 10px;
   padding-left: 5px;
@@ -154,11 +153,6 @@ tr {
 
 .leaderboard-profile-link {
   color: $text-color;
-
-  &:hover {
-    text-decoration: none;
-    color: $puz-blue;
-  }
 }
 
 .medals {
