@@ -33,9 +33,9 @@
     <div class="col-6" style="text-align: right">
       <mat-button-toggle-group>
         <ng-container *ngFor="let game of games">
-          <mat-button-toggle 
-                       (click)="gameID = game.id" 
-                       [checked]="gameID == game.id"> 
+          <mat-button-toggle
+                       (click)="gameID = game.id"
+                       [checked]="gameID == game.id">
             <img src={{game.image}} alt="{{game.name}} logo" class="game-icon" />
           </mat-button-toggle>
         </ng-container>
@@ -138,35 +138,48 @@
           </table>
         </mat-card-content>
         <mat-card-actions *ngIf="leaderboardEntries[diff.diff] > pageSize">
-          <span
+          <button mat-button
+                class="leaderboard-nav"
                 (click)="pageChange(diff.diff, 1)"
-                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === 1}">
-            &lt;&lt;
-          </span>
-          <span
+                [disabled] = "leaderboardCurrentPage[diff.diff] === 1">
+            <mat-icon>
+              first_page
+            </mat-icon>
+          </button>
+          <button mat-button
+                class="leaderboard-nav"
                 (click)="pageChange(diff.diff, leaderboardCurrentPage[diff.diff]-1)"
-                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === 1}">
-            &lt;
-          </span>
+                [disabled] = "leaderboardCurrentPage[diff.diff] === 1">
+            <mat-icon>
+              chevron_left
+            </mat-icon>
+          </button>
           <ng-container *ngFor="let page of leaderboardPageGroup[diff.diff]">
-            <span
+            <button mat-button
+                class="leaderboard-nav"
                 (click)="pageChange(diff.diff, page)"
-                [ngClass]="{'current': leaderboardCurrentPage[diff.diff] === page}">
+                [disabled] = "leaderboardCurrentPage[diff.diff] === page">
             {{page}}
-            </span>
+            </button>
           </ng-container>
-          <span
+          <button mat-button
+                class="leaderboard-nav"
                 (click)="pageChange(diff.diff, leaderboardCurrentPage[diff.diff]+1)"
-                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === leaderboardPages[diff.diff]}">
-            &gt;
-          </span>
-          <span
+                [disabled] = "leaderboardCurrentPage[diff.diff] === leaderboardPages[diff.diff]">
+            <mat-icon>
+              chevron_right
+            </mat-icon>
+          </button>
+          <button mat-button
+                class="leaderboard-nav"
                 (click)="pageChange(diff.diff, leaderboardPages[diff.diff])"
-                [ngClass]="{'disabled': leaderboardCurrentPage[diff.diff] === leaderboardPages[diff.diff]}">
-            &gt;&gt;
-          </span>
+                [disabled] = "leaderboardCurrentPage[diff.diff] === leaderboardPages[diff.diff]">
+            <mat-icon>
+              last_page
+            </mat-icon>
+          </button>
         </mat-card-actions>
       </mat-card>
-    </ng-container> 
+    </ng-container>
   </div>
 </div>

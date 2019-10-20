@@ -37,7 +37,7 @@ export class LeaderboardsComponent implements OnInit, OnDestroy {
   leaderboardName = 'Daily';
   private _leaderboardDifficulty = 1;
 
-  pageSize = 25;
+  pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25];
   username = '';
 
@@ -94,7 +94,7 @@ export class LeaderboardsComponent implements OnInit, OnDestroy {
     private tunnel: TunnelService,
     private user: UserService,
     private meta: MetaService
-  ) { 
+  ) {
     user.accountData.subscribe(accountData => {
       if (accountData) {
         this.userPuzzlerIcon = accountData.puzzlerIcon;
@@ -327,7 +327,7 @@ export class LeaderboardsComponent implements OnInit, OnDestroy {
             } catch { }
             this.footerData[diff['diff']] = data;
           }
-        } 
+        }
 
         this.loader.stopLoadingAnimation();
       })
