@@ -17,15 +17,37 @@
   </div>
   <div class="game-board">
     <span style="font-family: 'Poppins', sans-serif;">&nbsp;</span>
-    <ng-container *ngIf="gameID !== 4">
-      <canvas
-        id="myCanvas"
-        (window:resize)="fixSizes()"
-        (contextmenu)="(false)"
-      ></canvas>
-    </ng-container>
+    <canvas
+      id="myCanvas"
+      (window:resize)="fixSizes()"
+      (contextmenu)="(false)"
+    ></canvas>
     <ng-container *ngIf="gameID === 4">
-      <div id="myCanvas"></div>
+      <div id="takuzu-game" [ngClass]="{ 'animated-takuzu-game': animated }">
+        <div
+          class="takuzu-row"
+          *ngFor="let row of board.takuzuPuzzle; let x = index"
+        >
+          <div
+            [style.font-size.px]="getFontSize()"
+            [style.background]="getTileColor(x, y)"
+            (contextmenu)="select(x, y, true, $event)"
+            (mouseenter)="playTick()"
+            (click)="select(x, y, false)"
+            class="takuzu-tile"
+            *ngFor="let tile of row; let y = index"
+          >
+            <div class="takuzu-monospace un-editable">
+              <ng-container *ngIf="tile !== -1">
+                {{ tile }}
+              </ng-container>
+              <ng-container *ngIf="tile === -1">
+                &nbsp;
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-container>
   </div>
 </div>

@@ -1,9 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~font-awesome/css/font-awesome.css";
-@import url('https://fonts.googleapis.com/css?family=Poppins');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono");
+@import url("https://fonts.googleapis.com/css?family=Courier+Prime&display=swap");
 
 /*
  * This is allowed by googles TOS as long as we provide a message
@@ -13,19 +14,19 @@
   visibility: hidden !important;
 }
 
-button:focus, button:active {
+button:focus,
+button:active {
   outline: none !important; /* Fuck you bootstrap, no blue outlines for you */
 }
 
 html {
-  background-color: #2C2C2C;
+  background-color: #2c2c2c;
 }
 
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
@@ -47,7 +48,7 @@ html {
 }
 
 * {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 .clickable {
@@ -59,13 +60,13 @@ html {
 }
 
 .monospace {
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
 }
 
 /* Game page side panel styles */
 
 #leftControlPanel {
-  background-color: #2C2C2C;
+  background-color: #2c2c2c;
   height: calc(100vh - 3.5rem);
   width: 200px;
   position: absolute;
@@ -92,7 +93,7 @@ hr {
 .timer {
   top: 100px;
   left: 22px;
-  text-align:center;
+  text-align: center;
   color: white;
 }
 
@@ -143,7 +144,8 @@ hr {
   font-size: 8pt;
 }
 
-.buttonFooter, .buttonHeader{
+.buttonFooter,
+.buttonHeader {
   display: inline-block;
   width: 100%;
 }

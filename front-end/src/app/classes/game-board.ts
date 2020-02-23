@@ -1,20 +1,20 @@
-import { HostListener, OnInit, OnDestroy } from '@angular/core';
-import { LoaderService } from '../services/loading-service/loader.service';
-import { TimerService } from '../services/timer/timer.service';
-import { TunnelService } from '../services/tunnel/tunnel.service';
-import { UserService } from '../services/user/user.service';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
-import { GameID } from '../enums/game-id.enum';
-import { Game } from './game';
-import { ColorService } from '../services/colors/color.service';
-import { GameStarterService } from '../services/generators/game-starter.service';
-import { GameListAllService } from '../services/games/game-list-all.service';
-import { OptionsService } from '../services/games/options.service';
-import { Subscription } from 'rxjs/Subscription';
-import { isPlatformBrowser } from '@angular/common';
-import { RelayTrackerService } from '../services/relay/relay-tracker.service';
-import { MetaService } from '../services/meta/meta.service';
+import { HostListener, OnInit, OnDestroy } from "@angular/core";
+import { LoaderService } from "../services/loading-service/loader.service";
+import { TimerService } from "../services/timer/timer.service";
+import { TunnelService } from "../services/tunnel/tunnel.service";
+import { UserService } from "../services/user/user.service";
+import { ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
+import { GameID } from "../enums/game-id.enum";
+import { Game } from "./game";
+import { ColorService } from "../services/colors/color.service";
+import { GameStarterService } from "../services/generators/game-starter.service";
+import { GameListAllService } from "../services/games/game-list-all.service";
+import { OptionsService } from "../services/games/options.service";
+import { Subscription } from "rxjs/Subscription";
+import { isPlatformBrowser } from "@angular/common";
+import { RelayTrackerService } from "../services/relay/relay-tracker.service";
+import { MetaService } from "../services/meta/meta.service";
 
 export class GameBoard implements OnInit, OnDestroy {
   private _gameID: number;
@@ -143,8 +143,8 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.difficulty = Number(this.route.snapshot.paramMap.get('diff'));
-    if(this.difficulty === 0) this.difficulty = 1;
+    this.difficulty = Number(this.route.snapshot.paramMap.get("diff"));
+    if (this.difficulty === 0) this.difficulty = 1;
 
     this.setupBoard();
     const that = this;
@@ -162,9 +162,9 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public setupBoard() {
-    if(isPlatformBrowser(this.platformId)) {
-      this.canvas = document.getElementById('myCanvas');
-      this.context = this.canvas.getContext('2d');
+    if (isPlatformBrowser(this.platformId) && this.gameID !== 4) {
+      this.canvas = document.getElementById("myCanvas");
+      this.context = this.canvas.getContext("2d");
     }
   }
 
@@ -177,23 +177,31 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public add(that) {
-    if(isPlatformBrowser(this.platformId)) {
-      const display = document.getElementById('timer');
+    if (isPlatformBrowser(this.platformId)) {
+      const display = document.getElementById("timer");
       const now = +new Date();
 
-      const diff = ((now - that.startDate));
+      const diff = now - that.startDate;
 
-      const hours   = Math.trunc(diff / (60 * 60 * 1000));
+      const hours = Math.trunc(diff / (60 * 60 * 1000));
       const minutes = Math.trunc(diff / (60 * 1000)) % 60;
-      const seconds = Math.trunc(diff / (1000)) % 60;
-      const millis  = diff % 1000;
+      const seconds = Math.trunc(diff / 1000) % 60;
+      const millis = diff % 1000;
 
       try {
         if (!that.solved) {
           display.textContent =
-            (minutes ? (minutes > 9 ? minutes : '0' + minutes) : '00') + ':' +
-            (seconds ? (seconds > 9 ? seconds : '0' + seconds) : '00') + '.' +
-            (millis  ? (millis > 99 ? millis : millis > 9 ? '0' + millis : '00' + millis) : '000');
+            (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") +
+            ":" +
+            (seconds ? (seconds > 9 ? seconds : "0" + seconds) : "00") +
+            "." +
+            (millis
+              ? millis > 99
+                ? millis
+                : millis > 9
+                ? "0" + millis
+                : "00" + millis
+              : "000");
 
           that.displayTimer();
         }
@@ -206,7 +214,9 @@ export class GameBoard implements OnInit, OnDestroy {
   public displayTimer() {
     if (!this.solved) {
       const _this = this;
-      this.t = setTimeout(function() { _this.add(_this); }, 50);
+      this.t = setTimeout(function() {
+        _this.add(_this);
+      }, 50);
     }
   }
 
@@ -222,10 +232,15 @@ export class GameBoard implements OnInit, OnDestroy {
 
   public drawBackground() {
     this.context.fillStyle = this.colors.BACKGROUND; // Background color
-    this.context.fillRect(0, 0, this.canvas.offsetWidth * 2, this.canvas.offsetHeight * 2);
+    this.context.fillRect(
+      0,
+      0,
+      this.canvas.offsetWidth * 2,
+      this.canvas.offsetHeight * 2
+    );
   }
 
-  @HostListener('document:keydown', ['$event'])
+  @HostListener("document:keydown", ["$event"])
   public keyPressed(keyEvent) {
     if (keyEvent.keyCode === 32 && !RelayTrackerService.playingQueue) {
       this.newGame();
@@ -242,25 +257,27 @@ export class GameBoard implements OnInit, OnDestroy {
   }
 
   public keyReleased(keyEvent) {
-    console.log({'keyReleased': keyEvent.keyCode});
+    console.log({ keyReleased: keyEvent.keyCode });
   }
 
   protected initializeOptions() {
     let subscription: Subscription;
-    subscription = this.optionsService.takingNotes.subscribe(takingNotes => this.takingNotes = takingNotes);
+    subscription = this.optionsService.takingNotes.subscribe(
+      takingNotes => (this.takingNotes = takingNotes)
+    );
     this.subscription.add(subscription);
   }
 
   public handleOptionsOption(callback: any) {
     try {
       this.handleOption(callback);
-    } catch(e) {
-      if (callback === 'newGame') {
+    } catch (e) {
+      if (callback === "newGame") {
         this.newGame();
-      } else if (callback === 'clearBoard') {
+      } else if (callback === "clearBoard") {
         this.clearBoard();
-      } else if (callback.split(',').length === 2) {
-        this.newGame(parseInt(callback.split(',')[1]));
+      } else if (callback.split(",").length === 2) {
+        this.newGame(parseInt(callback.split(",")[1]));
       }
     }
   }
@@ -269,7 +286,7 @@ export class GameBoard implements OnInit, OnDestroy {
     callback();
   }
 
-  public notesHandler($event: any) { }
+  public notesHandler($event: any) {}
 
   public ngOnDestroy() {
     this.meta.defaultTags();
