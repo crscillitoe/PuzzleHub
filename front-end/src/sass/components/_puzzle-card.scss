@@ -8,6 +8,9 @@
   margin: 1.4rem;
   padding: 2rem;
   border-radius: 1.5rem;
+  transition: 300ms;
+  -webkit-font-smoothing: subpixel-antialiased;
+  backface-visibility: hidden;
 
   img:first-of-type {
     width: 100%;
@@ -33,11 +36,12 @@
 
   .mat-card-actions {
     display: flex;
-    flex-row: row no-wrap;
     justify-content: space-between;
 
     button {
       max-width: 22%;
+      -webkit-font-smoothing: subpixel-antialiased;
+      backface-visibility: hidden;
       flex: 1 0 auto;
       flex-basis: 0;
       margin: 0;
@@ -49,6 +53,18 @@
       &:last-of-type {
         margin-right: 0.5rem;
       }
+
+      transition: 300ms;
+    }
+
+    button:hover {
+      transform: translate(3px, -3px);
+      box-shadow: -3px 3px 4px #101010;
     }
   }
+}
+
+.puzzle-card:hover {
+  transform: translate(3px, -3px);
+  box-shadow: -3px 3px 4px #101010;
 }
