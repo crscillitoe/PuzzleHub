@@ -19,7 +19,6 @@ import { GameStarterService } from "../../services/generators/game-starter.servi
 import { GameBoard } from "../../classes/game-board";
 import { OptionsService } from "../../services/games/options.service";
 import { MetaService } from "../../services/meta/meta.service";
-import { SoundEffectService } from "src/app/services/audio/sound-effect.service";
 
 @Component({
   selector: "app-takuzu",
@@ -36,9 +35,6 @@ export class TakuzuComponent extends GameBoard implements OnInit {
   Takuzu1Key: number;
   Takuzu0Key: number;
 
-  animated: boolean = false;
-  warned: boolean = false;
-
   board: Board;
 
   constructor(
@@ -47,7 +43,6 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     colorService: ColorService,
     router: Router,
     tunnel: TunnelService,
-    private soundService: SoundEffectService,
     userService: UserService,
     timer: TimerService,
     loader: LoaderService,
@@ -176,110 +171,6 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     //   this.drawBorder();
     // }
     // this.drawValues();
-  }
-
-  select(x: number, y: number, right: boolean, event: any) {
-    if (event) {
-      event.preventDefault();
-    }
-
-    if (!this.solved && !this.board.isOriginal(y, x)) {
-      if (this.invertedControls) {
-        this.board.rotateValue(y, x, !right);
-        this.playSound(!right);
-      } else {
-        this.board.rotateValue(y, x, right);
-        this.playSound(right);
-      }
-
-      this.checkIsSolved(this.board);
-
-      if (this.board.hasError() && !this.warned) {
-        this.animateBoard();
-        this.playMash();
-        this.warned = true;
-      } else {
-        this.warned = false;
-      }
-    }
-  }
-
-  playTick() {}
-
-  playSound(left: boolean) {
-    const choice = this.randomInt(8);
-
-    if (choice === 0) {
-      this.soundService.playC();
-    } else if (choice === 1) {
-      this.soundService.playD();
-    } else if (choice === 2) {
-      this.soundService.playE();
-    } else if (choice === 3) {
-      this.soundService.playF();
-    } else if (choice === 4) {
-      this.soundService.playG();
-    } else if (choice === 5) {
-      this.soundService.playA();
-    } else if (choice === 6) {
-      this.soundService.playB();
-    } else if (choice === 7) {
-      this.soundService.playC2();
-    }
-  }
-
-  playMash() {
-    this.soundService.playC();
-    this.soundService.playD();
-    this.soundService.playE();
-    this.soundService.playF();
-    this.soundService.playG();
-    this.soundService.playA();
-    this.soundService.playB();
-    this.soundService.playC2();
-  }
-
-  private randomInt(max: number) {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
-
-  animateBoard() {
-    if (!this.animated) {
-      this.animated = true;
-      this.delay(100).then(() => (this.animated = false));
-    }
-  }
-
-  async delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  getTileColor(x: number, y: number) {
-    const original = this.board.isOriginal(y, x);
-    const invalid = this.board.isInvalidTile(y, x);
-
-    if (original) {
-      if (invalid) {
-        return this.colors.COLOR_7;
-      } else {
-        return this.oColor;
-      }
-    } else {
-      if (invalid) {
-        return this.colors.COLOR_7_ALT;
-      } else if (this.board.takuzuPuzzle[x][y] !== -1) {
-        return this.cColor;
-      }
-    }
-
-    return "#303030";
-  }
-
-  getFontSize() {
-    const game = document.getElementById("takuzu-game");
-    const gridBoxSize = Math.min(game.offsetWidth, game.offsetHeight);
-
-    return Math.floor(gridBoxSize / this.board.size / 1.4);
   }
 
   drawSelectedBox() {
@@ -535,7 +426,80 @@ export class TakuzuComponent extends GameBoard implements OnInit {
     GameStarterService.done(that);
   }
 
-  fixSizes() {}
+  fixSizes() {
+    this.context.beginPath();
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.canvas.width = window.innerWidth - this.canvasOffsetX;
+    this.canvas.height = window.innerHeight - this.canvasOffsetY * 2;
+    this.context.translate(0.5, 0.5);
+
+    this.gridOffsetX = this.canvas.width / 20;
+    this.gridOffsetY = this.canvas.height / 20;
+
+    const boardSize = Math.min(
+      this.canvas.offsetWidth - this.gridOffsetX * 2,
+      this.canvas.offsetHeight - this.gridOffsetY * 2
+    );
+
+    const w = this.canvas.offsetWidth;
+    const h = this.canvas.offsetHeight;
+    if (w > h) {
+      this.gridOffsetX = Math.round((w - h) / 2) + this.gridOffsetX;
+    } else {
+      this.gridOffsetY = Math.round((h - w) / 2) + this.gridOffsetY;
+    }
+
+    this.gridBoxSize = Math.round(boardSize / this.board.size);
+    this.draw();
+  }
+
+  /* EVENT LISTENERS */
+  @HostListener("document:mousedown", ["$event"])
+  mousePressed(mouseEvent) {
+    let x = mouseEvent.clientX - this.canvasOffsetX;
+    let y = mouseEvent.clientY - this.canvasOffsetY;
+
+    if (!this.solved) {
+      x = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      y = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+
+      if (this.invertedControls) {
+        if (mouseEvent.button === 2) {
+          this.board.rotateValue(x, y, false);
+        } else {
+          this.board.rotateValue(x, y, true);
+        }
+      } else {
+        if (mouseEvent.button === 2) {
+          this.board.rotateValue(x, y, true);
+        } else {
+          this.board.rotateValue(x, y, false);
+        }
+      }
+
+      this.draw();
+
+      this.checkIsSolved(this.board);
+    }
+  }
+  mouseReleased(mouseEvent) {
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+    console.log({ mouseReleasedX: x, mouseReleasedY: y });
+  }
+
+  @HostListener("document:mousemove", ["$event"])
+  mouseMove(mouseEvent) {
+    const x = mouseEvent.clientX - this.canvasOffsetX;
+    const y = mouseEvent.clientY - this.canvasOffsetY;
+
+    if (!this.solved) {
+      this.selectedX = Math.floor((x - this.gridOffsetX) / this.gridBoxSize);
+      this.selectedY = Math.floor((y - this.gridOffsetY) / this.gridBoxSize);
+      this.draw();
+    }
+  }
 
   @HostListener("document:keydown", ["$event"])
   keyPressed(keyEvent) {

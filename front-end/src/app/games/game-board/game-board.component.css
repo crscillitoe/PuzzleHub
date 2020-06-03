@@ -1,111 +1,50 @@
 * {
-  line-height: 1;
+    line-height: 1;
 }
 
-.takuzu-row {
-  display: flex;
-  justify-content: space-around;
-  /* line-height: 30px; */
-}
-
-.un-editable {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-  height: 110%;
-}
-
-.takuzu-monospace {
-  font-family: "Courier Prime";
-}
-
-.takuzu-tile {
-  cursor: pointer;
-  color: #303030;
-  flex: 1 0 auto;
-  height: auto;
-  margin: 5px;
-  text-align: center;
-}
-
-.takuzu-tile:hover {
-  transform: scale(1.1) !important;
-  background: gray !important;
-}
-
-.takuzu-tile:before {
-  content: "";
-  float: left;
-  padding-top: 100%;
-}
-
-html,
-body {
-  min-height: 100vh;
-  margin: 0;
+html, body {
+    min-height: 100vh;
+    margin: 0;
 }
 
 .game-screen {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  max-height: calc(100vh - 3.5rem);
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  background-color: #2c2c2c;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    max-height: calc(100vh - 3.5rem);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background-color: #2c2c2c;
 }
 
 .options-panel {
-  display: flex;
-  flex-direction: column;
-  width: 225px;
-  height: calc(100vh - 3.5rem);
-  padding: 1.25em;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 225px;
+    height: calc(100vh - 3.5rem);
+    padding: 1.25em;
+    overflow: hidden;
 }
 
 .options-panel app-options {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .game-board {
-  display: flex;
-  flex-basis: 0;
-  height: 100%;
-}
-
-#takuzu-game {
-  padding: 50px;
-  position: absolute;
-  left: 225px;
-  top: 3.5rem;
-  height: min(calc(100vh - 4rem), calc(100vw - 250px));
-  width: min(calc(100vh - 4rem), calc(100vw - 250px));
-}
-
-#takuzu-game,
-.animated-takuzu-game {
-  transition: all 100ms;
-}
-
-.animated-takuzu-game {
-  transform: scale(1.1);
+    display: flex;
+    flex-basis: 0;
+    height: 100%;
 }
 
 #myCanvas {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
