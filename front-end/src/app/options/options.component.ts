@@ -1,25 +1,34 @@
-import { Inject, PLATFORM_ID, HostListener, Input, Output, Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
-import { SettingsService } from '../services/persistence/settings.service';
-import { UserService } from '../services/user/user.service';
-import { Router, NavigationStart } from '@angular/router';
-import { Difficulty } from '../interfaces/difficulty';
-import { Game } from '../classes/game';
-import { GameListAllService } from '../services/games/game-list-all.service';
-import { OptionsService } from '../services/games/options.service';
-import { Subject, Subscription } from 'rxjs';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
-import { isPlatformBrowser } from '@angular/common';
-import { RelayTrackerService } from '../services/relay/relay-tracker.service';
-import { SharedFunctionsService } from '../services/shared-functions/shared-functions.service';
+import {
+  Inject,
+  PLATFORM_ID,
+  HostListener,
+  Input,
+  Output,
+  Component,
+  OnInit,
+  OnDestroy,
+  EventEmitter,
+} from "@angular/core";
+import { SettingsService } from "../services/persistence/settings.service";
+import { UserService } from "../services/user/user.service";
+import { Router, NavigationStart } from "@angular/router";
+import { Difficulty } from "../interfaces/difficulty";
+import { Game } from "../classes/game";
+import { GameListAllService } from "../services/games/game-list-all.service";
+import { OptionsService } from "../services/games/options.service";
+import { Subject, Subscription } from "rxjs";
+import { MatSnackBar } from "@angular/material";
+import { Title } from "@angular/platform-browser";
+import { isPlatformBrowser } from "@angular/common";
+import { RelayTrackerService } from "../services/relay/relay-tracker.service";
+import { SharedFunctionsService } from "../services/shared-functions/shared-functions.service";
 
 @Component({
-  selector: 'app-options',
-  templateUrl: './options.component.html',
-  styleUrls: ['./options.component.scss']
+  selector: "app-options",
+  templateUrl: "./options.component.html",
+  styleUrls: ["./options.component.scss"],
 })
 export class OptionsComponent implements OnInit, OnDestroy {
-
   @Input() gameID: number;
   @Input() seed: number;
   @Input() difficulty: number;
@@ -72,15 +81,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private titleService: Title
   ) {
-    if(isPlatformBrowser(platformId)) {
-      user.accountData
-        .subscribe( (data) => {
-          if (data) {
-            this.level = data.level;
-          }
+    if (isPlatformBrowser(platformId)) {
+      user.accountData.subscribe((data) => {
+        if (data) {
+          this.level = data.level;
+        }
 
-          this.populateDifficulties();
-        });
+        this.populateDifficulties();
+      });
     }
   }
 
@@ -93,42 +101,50 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   getRelayTime() {
-    return SharedFunctionsService.convertToDateString(RelayTrackerService.timeElapsed);
+    return SharedFunctionsService.convertToDateString(
+      RelayTrackerService.timeElapsed
+    );
   }
 
   ngOnInit() {
-    if(isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       if (this.options !== undefined) {
         for (const option of this.options) {
-          if (option['type'] === 'checkbox') {
-            this.optionVals.push(SettingsService.getDataBool(option['storedName']));
-          } else if (option['type'] === 'dropdown') {
-            this.optionVals.push(SettingsService.getDataStr(option['storedName']));
+          if (option["type"] === "checkbox") {
+            this.optionVals.push(
+              SettingsService.getDataBool(option["storedName"])
+            );
+          } else if (option["type"] === "dropdown") {
+            this.optionVals.push(
+              SettingsService.getDataStr(option["storedName"])
+            );
           }
         }
       }
 
       if (this.hotkeys !== undefined) {
         for (const hotkey of this.hotkeys) {
-          this.hotkeyVals.push(SettingsService.getDataNum(hotkey['bindTo']));
+          this.hotkeyVals.push(SettingsService.getDataNum(hotkey["bindTo"]));
         }
       }
 
       this.editingHotkey = false;
       this.editIndex = -1;
-      this.highscoresMinimized = SettingsService.getDataBool('highscoresMinimized');
-      this.rulesMinimized = SettingsService.getDataBool('rulesMinimized');
-      this.optionsMinimized = SettingsService.getDataBool('optionsMinimized');
-      this.controlsMinimized = SettingsService.getDataBool('controlsMinimized');
-      this.timerMinimized = SettingsService.getDataBool('timerMinimized');
-      this.hotkeysMinimized = SettingsService.getDataBool('hotkeysMinimized');
+      this.highscoresMinimized = SettingsService.getDataBool(
+        "highscoresMinimized"
+      );
+      this.rulesMinimized = SettingsService.getDataBool("rulesMinimized");
+      this.optionsMinimized = SettingsService.getDataBool("optionsMinimized");
+      this.controlsMinimized = SettingsService.getDataBool("controlsMinimized");
+      this.timerMinimized = SettingsService.getDataBool("timerMinimized");
+      this.hotkeysMinimized = SettingsService.getDataBool("hotkeysMinimized");
 
       this.game = GameListAllService.getGameById(this.gameID);
       this.rules = this.game.rules;
       this.controls = this.game.controls;
       this.populateDifficulties();
 
-      if(this.difficulty != undefined) {
+      if (this.difficulty != undefined) {
         this.selectedDifficulty = this.difficulty;
       } else {
         this.selectedDifficulty = 1;
@@ -139,26 +155,19 @@ export class OptionsComponent implements OnInit, OnDestroy {
     }
   }
 
-
   getDifficultyName() {
-    for(var i = 0 ; i < this.diffs.length ; i++) {
-      if(this.diffs[i].diff === this.selectedDifficulty) {
+    for (var i = 0; i < this.diffs.length; i++) {
+      if (this.diffs[i].diff === this.selectedDifficulty) {
         this.difficultyName = this.diffs[i].name;
-        this.difficultyName = this.difficultyName.charAt(0).toUpperCase() + this.difficultyName.substr(1);
+        this.difficultyName =
+          this.difficultyName.charAt(0).toUpperCase() +
+          this.difficultyName.substr(1);
       }
     }
   }
 
   populateDifficulties() {
-    this.diffs = this.game.diffs.filter(
-      d => (
-        d.minLevel === 0 ||
-        (this.user.isLoggedIn() && this.getLevel() >= d.minLevel)
-      ) &&
-      (
-        ! d.requiresLogin || this.isLoggedIn()
-      )
-    );
+    this.diffs = this.game.diffs;
   }
 
   minimize(name, val) {
@@ -171,14 +180,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   setCopyButtonText(text) {
-    if(isPlatformBrowser(this.platformId)) {
-      const button = document.getElementById('shareButtonText');
+    if (isPlatformBrowser(this.platformId)) {
+      const button = document.getElementById("shareButtonText");
       button.textContent = text;
     }
   }
 
   copyGameLink() {
-    this.snackBar.open('Copied!', '', {
+    this.snackBar.open("Copied!", "", {
       duration: 1500,
     });
 
@@ -186,33 +195,36 @@ export class OptionsComponent implements OnInit, OnDestroy {
   }
 
   generatePuzzleLink() {
-    const link = 'https://puzzlehub.io/' +
-      this.game.name + ';diff=' +
-      this.difficulty + ';seed=' +
+    const link =
+      "https://puzzlehub.woohoojin.dev/" +
+      this.game.name +
+      ";diff=" +
+      this.difficulty +
+      ";seed=" +
       this.seed;
 
-    return link.replace(/ /g, '%20');
+    return link.replace(/ /g, "%20");
   }
 
   copyMessage(val: string) {
-    if(isPlatformBrowser(this.platformId)) {
-      const selBox = document.createElement('textarea');
-      selBox.style.position = 'fixed';
-      selBox.style.left = '0';
-      selBox.style.top = '0';
-      selBox.style.opacity = '0';
+    if (isPlatformBrowser(this.platformId)) {
+      const selBox = document.createElement("textarea");
+      selBox.style.position = "fixed";
+      selBox.style.left = "0";
+      selBox.style.top = "0";
+      selBox.style.opacity = "0";
       selBox.value = val;
       document.body.appendChild(selBox);
       selBox.focus();
       selBox.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(selBox);
     }
   }
 
   callback(func: string) {
-    if(isPlatformBrowser(this.platformId)) {
-      document.getElementById('focusMe').focus();
+    if (isPlatformBrowser(this.platformId)) {
+      document.getElementById("focusMe").focus();
       this.optionSelected.emit(func);
     }
   }
@@ -226,7 +238,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
     return String.fromCharCode(code);
   }
 
-  @HostListener('document:keydown', ['$event'])
+  @HostListener("document:keydown", ["$event"])
   keyPressed(keyEvent) {
     const numPressed = keyEvent.keyCode;
     if (numPressed === 84) {
@@ -234,9 +246,12 @@ export class OptionsComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.editingHotkey) {
-      SettingsService.storeData( (this.hotkeys[this.editIndex])['bindTo'], keyEvent.keyCode );
+      SettingsService.storeData(
+        this.hotkeys[this.editIndex]["bindTo"],
+        keyEvent.keyCode
+      );
       this.hotkeyVals[this.editIndex] = keyEvent.keyCode;
-      this.callback( (this.hotkeys[this.editIndex])['callback'] );
+      this.callback(this.hotkeys[this.editIndex]["callback"]);
 
       this.editingHotkey = false;
       this.editIndex = -1;
@@ -245,12 +260,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   getRelayHistory() {
     let toReturn = [];
-    for (var i = 0 ; i < RelayTrackerService.queueTimes.length ; i++) {
+    for (var i = 0; i < RelayTrackerService.queueTimes.length; i++) {
       let m = {
         name: RelayTrackerService.queue[i].name,
         diff: RelayTrackerService.queue[i].difficulty,
-        time: SharedFunctionsService.convertToDateString(RelayTrackerService.queueTimes[i])
-      }
+        time: SharedFunctionsService.convertToDateString(
+          RelayTrackerService.queueTimes[i]
+        ),
+      };
 
       toReturn.push(m);
     }
@@ -264,11 +281,13 @@ export class OptionsComponent implements OnInit, OnDestroy {
     }
 
     let total = 0;
-    for (let i = 0 ; i < RelayTrackerService.queueTimes.length ; i++) {
+    for (let i = 0; i < RelayTrackerService.queueTimes.length; i++) {
       total += RelayTrackerService.queueTimes[i];
     }
 
-    return SharedFunctionsService.convertToDateString(total/RelayTrackerService.queueTimes.length);
+    return SharedFunctionsService.convertToDateString(
+      total / RelayTrackerService.queueTimes.length
+    );
   }
 
   isRelayHistory() {
@@ -285,19 +304,19 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   playGame(route, diff) {
     const m = {
-      diff: diff
+      diff: diff,
     };
-    this.optionSelected.emit('this.newGame(' + diff + ')');
+    this.optionSelected.emit("this.newGame(" + diff + ")");
   }
 
   onNotesChange() {
-    this.takingNotes = ! this.takingNotes;
+    this.takingNotes = !this.takingNotes;
     this.notesEvent.emit(this.takingNotes);
   }
 
   public difficultyChangeHandler(newDiff: any) {
     const m = {
-      diff: newDiff
+      diff: newDiff,
     };
     const route = this.game.name;
     this.getDifficultyName();

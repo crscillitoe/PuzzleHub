@@ -1,5 +1,5 @@
 # PuzzleHub
 
-https://puzzle-hub.com/
+https://puzzlehub.woohoojin.dev/
 
 This is the source code for the competitive puzzle game website, puzzle-hub.

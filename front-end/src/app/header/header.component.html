@@ -1,27 +1,30 @@
 <nav
   [ngClass]="isElectron() ? 'draggable' : 'not-draggable'"
-  class="navbar navbar-dark bg-dark">
-  <button mat-button
-    routerLink="/" routerLinkActive="active" class="clickable navbar-brand puzzle-hub-logo-button">
-    <img class="clickable" src="/assets/images/logos/headerLogo.svg" height="24" width="180">
+  class="navbar navbar-dark bg-dark"
+>
+  <button
+    mat-button
+    routerLink="/"
+    routerLinkActive="active"
+    class="clickable navbar-brand puzzle-hub-logo-button"
+  >
+    <img
+      class="clickable"
+      src="/assets/images/logos/headerLogo.svg"
+      height="24"
+      width="180"
+    />
   </button>
   <div class="navbar-expand mr-auto">
     <div class="navbar-nav">
-      <button mat-button
-        routerLink="/leaderboards" routerLinkActive="active" class="nav-item nav-link clickable">
-        <mat-icon>
-          timer
-        </mat-icon>
-        <div class="inline">
-          Leaderboards
-        </div>
-      </button>
       <ng-container *ngIf="username != ''">
-        <button mat-button
+        <button
+          mat-button
           [routerLink]="['/profile']"
-          [queryParams]="{user:username}"
+          [queryParams]="{ user: username }"
           routerLinkActive="active"
-          class="nav-item nav-link clickable">
+          class="nav-item nav-link clickable"
+        >
           <mat-icon>
             person
           </mat-icon>
@@ -30,10 +33,12 @@
           </div>
         </button>
         <ng-container *ngIf="isMainMenu()">
-          <button mat-button
+          <button
+            mat-button
             (click)="openPuzzleRelay()"
             routerLinkActive="active"
-            class="nav-item nav-link clickable">
+            class="nav-item nav-link clickable"
+          >
             <mat-icon>
               directions_run
             </mat-icon>
@@ -43,10 +48,12 @@
           </button>
         </ng-container>
         <ng-container *ngIf="isMainMenu()">
-          <button mat-button
+          <button
+            mat-button
             (click)="openDailyChallenges()"
             routerLinkActive="active"
-            class="nav-item nav-link clickable">
+            class="nav-item nav-link clickable"
+          >
             <mat-icon>
               today
             </mat-icon>
@@ -59,52 +66,49 @@
     </div>
   </div>
   <div class="container-flex col-account">
-    <ng-container *ngIf="username==''">
-      <button mat-button
-       [ngClass]="isElectron() ? 'leftMore' : 'not-electron'"
-       style="color: rgba(255, 255, 255, 0.5);"
-       routerLink="/login" routerLinkActive="active" class="nav-item nav-link clickable">
-        <i style="margin-right:5px" class="fa fa-lock clickable"></i> Sign In
-    </button>
-    </ng-container>
-    <ng-container *ngIf="username!=''">
+    <ng-container *ngIf="username != ''">
       <div class="container-flex-row user-box">
         <app-puzzler-icon
-          id ="header-icon"
+          id="header-icon"
           (click)="openIconPicker()"
           [puzzlerIconID]="puzzlerIconID"
           class="col puzzler-icon clickable"
         >
         </app-puzzler-icon>
         <div class="col user-info">
-          <div class="username">
-            {{username}} - Level {{level}}
-          </div>
+          <div class="username">{{ username }} - Level {{ level }}</div>
           <div class="xp-row">
-              <app-xp-bar
-                class="xp-bar"
-                [color]="getColor()"
-                [accentColor]="getAccentColor()"
-                [className]="'header-xp-bar'"
-                [progress]="progress">
-              </app-xp-bar>
+            <app-xp-bar
+              class="xp-bar"
+              [color]="getColor()"
+              [accentColor]="getAccentColor()"
+              [className]="'header-xp-bar'"
+              [progress]="progress"
+            >
+            </app-xp-bar>
           </div>
-          <div class="level-xp">
-            {{xpToNextLevel}}/2000
-          </div>
+          <div class="level-xp">{{ xpToNextLevel }}/2000</div>
         </div>
         <div class="col sign-out">
-          <button mat-button
-             [ngClass]="isElectron() ? 'leftMore' : 'not-electron'"
-             class="clickable button-font" (click)="signOut()">
-            Sign Out <i style="margin-left:5px" class="fa fa-sign-in clickable"></i>
+          <button
+            mat-button
+            [ngClass]="isElectron() ? 'leftMore' : 'not-electron'"
+            class="clickable button-font"
+            (click)="signOut()"
+          >
+            Sign Out
+            <i style="margin-left: 5px;" class="fa fa-sign-in clickable"></i>
           </button>
         </div>
       </div>
     </ng-container>
     <ng-container *ngIf="isElectron()">
       <div class="traffic-lights">
-        <button (click)="close()" class="clickable traffic-light traffic-light-close" id="close"></button>
+        <button
+          (click)="close()"
+          class="clickable traffic-light traffic-light-close"
+          id="close"
+        ></button>
       </div>
     </ng-container>
   </div>
