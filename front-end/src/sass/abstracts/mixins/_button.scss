@@ -1,7 +1,7 @@
 // Button variants
 
 @mixin button-variant(
-  $background,
+  $background, 
   $border,
   $hover-background: darken($background, 7.5%),
   $hover-border: darken($border, 10%),
@@ -9,7 +9,7 @@
   $disabled-border: darken($border, 42.5%),
   $active-background: darken($background, 10%),
   $active-border: darken($border, 12.5%)
-) {
+  ) {
   color: $btn-diff-color;
   background-color: $background;
   border-color: $border;
@@ -24,76 +24,6 @@
   &:disabled,
   &.mat-raised-button:disabled {
     color: darken($btn-diff-color, 30%);
-    background-color: $disabled-background;
-    border-color: $disabled-border;
-  }
-
-  &:not(:disabled):active {
-    color: $btn-diff-color;
-    background-color: $active-background;
-    border-color: $active-border;
-  }
-}
-
-@mixin button-variant-2(
-  $background,
-  $border,
-  $hover-background: darken($background, 7.5%),
-  $hover-border: darken($border, 10%),
-  $disabled-background: darken(white, 30%),
-  $disabled-border: darken($border, 42.5%),
-  $active-background: darken($background, 10%),
-  $active-border: darken($border, 12.5%)
-) {
-  color: black;
-  background-color: white;
-  border-color: $border;
-
-  &:hover {
-    color: $btn-diff-color;
-    background-color: $hover-background;
-    border-color: $hover-border;
-  }
-
-  // Includes Material override
-  &:disabled,
-  &.mat-raised-button:disabled {
-    color: darken(black, 30%);
-    background-color: $disabled-background;
-    border-color: $disabled-border;
-  }
-
-  &:not(:disabled):active {
-    color: $btn-diff-color;
-    background-color: $active-background;
-    border-color: $active-border;
-  }
-}
-
-@mixin button-variant-3(
-  $background,
-  $border,
-  $hover-background: darken($background, 7.5%),
-  $hover-border: darken($border, 10%),
-  $disabled-background: darken($background, 30%),
-  $disabled-border: darken($border, 42.5%),
-  $active-background: darken($background, 10%),
-  $active-border: darken($border, 12.5%)
-) {
-  color: black;
-  background-color: lighten($background, 40%);
-  border-color: $border;
-
-  &:hover {
-    color: $btn-diff-color;
-    background-color: $background;
-    border-color: $hover-border;
-  }
-
-  // Includes Material override
-  &:disabled,
-  &.mat-raised-button:disabled {
-    background-color: lighten($background, 35%);
     background-color: $disabled-background;
     border-color: $disabled-border;
   }

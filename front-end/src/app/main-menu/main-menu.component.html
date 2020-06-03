@@ -7,61 +7,44 @@
   <div *ngIf="!isLoggedIn()" class="container jumbotron">
     <h1>Welcome to Puzzle Hub!</h1>
     <p>
-      Puzzle Hub is the one-stop site for competitive puzzle games! Here we
-      offer a wide variety of logic puzzles, both popular and obscure. We offer
-      games like Sudoku, Thermometers as popularized by The New York Times, and
-      more! Create an account to earn points for completing puzzles, level up,
-      and unlock harder difficulties! To do so, click Sign In on the top right,
-      then Register.
+    Puzzle Hub is the one-stop site for competitive puzzle games! Here we offer a wide variety of logic puzzles, both popular and obscure.
+    We offer games like Sudoku, Thermometers as popularized by The New York Times, and more!
+    Create an account to earn points for completing puzzles, level up, and unlock harder difficulties! To do so,
+    click Sign In on the top right, then Register.
     </p>
     <p>
-      If you'd prefer to play a few games first, just click on a difficulty of
-      the game of your choice to get started.
+      If you'd prefer to play a few games first, just click on a difficulty of the game of your choice to get started.
     </p>
   </div>
   <div class="flex-container container-main-static">
     <ng-container *ngFor="let game of games">
-      <mat-card class="puzzle-card">
-        <img mat-card-image src="{{ game.image }}" alt="{{ game.name }} logo" />
-        <mat-card-actions>
-          <ng-container *ngFor="let diff of game.diffs">
-            <button
-              mat-raised-button
-              (mouseenter)="hover()"
-              (click)="playGame(game.name, diff.diff)"
-              [disabled]="
-                (isLoggedIn() && level < diff.minLevel) ||
-                (!isLoggedIn() && diff.requiresLogin)
-              "
-              [attr.data-tooltip]="
-                isLoggedIn() && level < diff.minLevel
-                  ? 'Reach level ' +
-                    diff.minLevel +
-                    ' to play ' +
-                    diff.name +
-                    ' difficulty'
-                  : !isLoggedIn() && diff.requiresLogin
-                  ? 'Log in to play harder difficulties'
-                  : null
-              "
-              [ngClass]="{
-                'btn-diff-easy': diff.color == 'green',
-                'btn-diff-medium': diff.color == 'cyan',
-                'btn-diff-hard': diff.color == 'blue',
-                'btn-diff-extreme': diff.color == 'red'
-              }"
-            >
-              {{ diff.name }}
-            </button>
-          </ng-container>
-        </mat-card-actions>
-        <mat-card-header>
-          <mat-card-title>{{ game.name }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ game.desc }}</p>
-        </mat-card-content>
-      </mat-card>
+        <mat-card class="puzzle-card">
+          <img mat-card-image src={{game.image}} alt="{{game.name}} logo" />
+          <mat-card-actions>
+            <ng-container *ngFor="let diff of game.diffs">
+              <button mat-raised-button
+                 (click)="playGame(game.name, diff.diff)" 
+                 [disabled]="(isLoggedIn() && level < diff.minLevel) ||
+                 (!isLoggedIn() && diff.requiresLogin)"
+                 [attr.data-tooltip]="(isLoggedIn() && level < diff.minLevel) ? 'Reach level ' +  
+                 diff.minLevel + ' to play ' + diff.name + ' difficulty' : ((! isLoggedIn() &&
+                 diff.requiresLogin) ? 'Log in to play harder difficulties' : 
+                 null)"
+                 [ngClass]="{'btn-diff-easy': diff.color=='green', 
+                 'btn-diff-medium': diff.color=='cyan', 
+                 'btn-diff-hard': diff.color=='blue', 
+                 'btn-diff-extreme': diff.color=='red'}">
+                {{diff.name}}
+              </button>
+            </ng-container>
+          </mat-card-actions>
+          <mat-card-header>
+            <mat-card-title>{{game.name}}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{game.desc}}</p>
+          </mat-card-content>
+        </mat-card>
     </ng-container>
   </div>
 </div>

@@ -50,7 +50,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
   showAnimations: boolean;
   mouseHover: boolean;
 
-  animationDelta = 1;
+  animationDelta = 10;
   animationSpeed = 10;
 
   up: boolean;
@@ -402,23 +402,23 @@ export class TileGameComponent extends GameBoard implements OnInit {
 
         if ((i !== this.animatingX || j !== this.animatingY) || !this.showAnimations) {
           if (boardValue !== 0) {
-            this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing,
+            this.roundRect(this.context, (this.gridOffsetX + (i * this.gridBoxSize )) + spacing, 
                                   (this.gridOffsetY + (j * this.gridBoxSize )) + spacing,
-                                  this.gridBoxSize - (spacing * 2),
-                                  this.gridBoxSize - (spacing * 2),
-                                  (this.gridBoxSize/20),
-                                  true,
+                                  this.gridBoxSize - (spacing * 2), 
+                                  this.gridBoxSize - (spacing * 2), 
+                                  (this.gridBoxSize/20), 
+                                  true, 
                                   false);
 
             if (this.colorScheme === 'Quadrants' && (this.board.width * this.board.height) >= 100) {
               this.context.fillStyle = innerColor;
-              this.roundRect(this.context,
-                                    ((this.gridOffsetX + (i * this.gridBoxSize )) + spacing) + (0.1 * this.gridBoxSize),
+              this.roundRect(this.context, 
+                                    ((this.gridOffsetX + (i * this.gridBoxSize )) + spacing) + (0.1 * this.gridBoxSize), 
                                     ((this.gridOffsetY + (j * this.gridBoxSize )) + spacing) + (0.8 * this.gridBoxSize),
-                                    (this.gridBoxSize - (spacing * 2)) - (0.2 * this.gridBoxSize),
-                                    (this.gridBoxSize - (spacing * 2)) - (0.85 * this.gridBoxSize),
-                                    (this.gridBoxSize/20),
-                                    true,
+                                    (this.gridBoxSize - (spacing * 2)) - (0.2 * this.gridBoxSize), 
+                                    (this.gridBoxSize - (spacing * 2)) - (0.85 * this.gridBoxSize), 
+                                    (this.gridBoxSize/20), 
+                                    true, 
                                     true);
             }
           }
@@ -448,7 +448,7 @@ export class TileGameComponent extends GameBoard implements OnInit {
     this.gridOffsetY = this.canvas.height / 20;
 
     let boardLength = Math.max(this.board.width, this.board.height);
-    let size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2),
+    let size = Math.min(this.canvas.offsetWidth - (this.gridOffsetX * 2), 
                         this.canvas.offsetHeight - (this.gridOffsetY * 2));
 
     let w = this.canvas.offsetWidth;
@@ -653,8 +653,8 @@ export class TileGameComponent extends GameBoard implements OnInit {
     this.roundRect(this.context, x, y,
                           this.gridBoxSize - (spacing * 2),
                           this.gridBoxSize - (spacing * 2),
-                          (this.gridBoxSize / 20),
-                          true,
+                          (this.gridBoxSize / 20), 
+                          true, 
                           false);
 
     if (this.colorScheme === 'Quadrants' && (this.board.width * this.board.height) >= 100) {
@@ -879,11 +879,11 @@ export class TileGameComponent extends GameBoard implements OnInit {
 
       if (this.left && repeat && !this.solved) {
         let that = this;
-        this.leftTimeout =
-        setTimeout(
+        this.leftTimeout = 
+        setTimeout( 
           function() {
             that.moveLeft(true, false);
-          },
+          }, 
           this.continuedDelay );
       }
     }

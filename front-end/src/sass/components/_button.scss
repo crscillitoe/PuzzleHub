@@ -22,6 +22,6 @@ button {
 
 @each $diff, $value in $difficulty-colors {
   .btn-diff-#{$diff} {
-    @include button-variant-3($value, $value);
+    @include button-variant($value, $value);
   }
 }

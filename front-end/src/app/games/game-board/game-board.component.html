@@ -1,31 +1,22 @@
 <div class="game-screen">
   <div class="options-panel">
     <app-options
-      [gameID]="gameID"
-      [seed]="seed"
-      [difficulty]="difficulty"
-      [hotkeys]="hotkeys"
-      [options]="options"
-      [takingNotesMode]="takingNotesMode"
-      [personalBestMonthly]="personalBestMonthly"
-      [personalBestWeekly]="personalBestWeekly"
-      [personalBestDaily]="personalBestDaily"
-      (optionSelected)="handleOptionsOption($event)"
-      (notesEvent)="notesHandler($event)"
-    >
+        [gameID]="gameID"
+        [seed]="seed"
+        [difficulty]="difficulty"
+        [hotkeys]="hotkeys"
+        [options]="options"
+        [takingNotesMode]="takingNotesMode"
+        [personalBestMonthly]="personalBestMonthly"
+        [personalBestWeekly]="personalBestWeekly"
+        [personalBestDaily]="personalBestDaily"
+        (optionSelected)="handleOptionsOption($event)"
+        (notesEvent)="notesHandler($event)"
+        >
     </app-options>
   </div>
   <div class="game-board">
     <span style="font-family: 'Poppins', sans-serif;">&nbsp;</span>
-    <ng-container *ngIf="gameID !== 4">
-      <canvas
-        id="myCanvas"
-        (window:resize)="fixSizes()"
-        (contextmenu)="(false)"
-      ></canvas>
-    </ng-container>
-    <ng-container *ngIf="gameID === 4">
-      <div id="myCanvas"></div>
-    </ng-container>
+    <canvas id="myCanvas" (window:resize)="fixSizes()" (contextmenu)="false"></canvas>
   </div>
 </div>
